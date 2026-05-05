@@ -54,9 +54,10 @@ const pinkValley = {
     },
     {
       heading: "Total Land Area",
-      content: "10 Acres\nPhase 1: 6.5 acres – Sold\nPhase 2: 3.5 acres – Selling",
+      content: "10 Acres\n→ Phase 1: 6.5 acres – Sold\n→ Phase 2: 3.5 acres – Selling",
       sideHeading: "Scale & Growth",
-      showArrow: true
+      showArrow: true,
+      isPointed: true
     },
     {
       heading: "Location Advantages",

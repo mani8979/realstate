@@ -169,51 +169,68 @@ const PropertyDetails = () => {
               </div>
             )}
 
-            <div className="space-y-12">
-              <div className="flex items-center gap-4 mb-12">
-                <span className="w-12 h-[2px] bg-primary"></span>
-                <h2 className="text-2xl md:text-4xl font-black uppercase tracking-widest">Property Details</h2>
-              </div>
-
-              {property.details && property.details.length > 0 ? (
-                <div className="space-y-16">
-                  {property.details.map((detail: any, idx: number) => (
-                    <div key={idx} className="flex flex-col md:flex-row gap-6 md:gap-12 border-b border-white/10 pb-16 group">
-                      <div className="md:w-1/3 relative">
-                        {detail.sideHeading && (
-                          <div className="mb-4">
-                            <span className="text-primary/60 font-black uppercase tracking-[0.3em] text-[10px] block mb-2">{detail.sideHeading}</span>
-                            {detail.showArrow && <span className="text-primary inline-block animate-pulse">→</span>}
-                          </div>
-                        )}
-                        <h3 className="text-xl font-black text-white uppercase tracking-widest">{detail.heading}</h3>
-                      </div>
-                      <div className="md:w-2/3">
-                        {detail.isPointed ? (
-                          <ul className="space-y-4">
-                            {detail.content.split('\n').filter((line: string) => line.trim()).map((line: string, lIdx: number) => (
-                              <li key={lIdx} className="flex gap-4 text-gray-400 text-lg md:text-xl leading-relaxed font-medium">
-                                <span className="text-primary mt-2 flex-shrink-0 w-2 h-2 rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]"></span>
-                                <span>{line.replace(/^[-\u2022]\s*/, '')}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <p className="text-gray-400 text-lg md:text-xl leading-relaxed whitespace-pre-wrap font-medium">
-                            {detail.content}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="border-b border-white/10 pb-16">
-                  <p className="text-gray-400 text-lg md:text-xl leading-relaxed whitespace-pre-wrap font-medium">
-                    {property.description}
-                  </p>
+            <div className="space-y-12 relative overflow-hidden rounded-[3rem]">
+              {/* Background Image for Details */}
+              {property.images[0] && (
+                <div className="absolute inset-0 z-0 opacity-[0.03] scale-110 blur-sm pointer-events-none">
+                  <Image src={property.images[0]} alt="Background" fill className="object-cover" />
                 </div>
               )}
+
+              <div className="relative z-10 p-8 md:p-12">
+                <div className="flex items-center gap-4 mb-12">
+                  <span className="w-12 h-[2px] bg-primary"></span>
+                  <h2 className="text-2xl md:text-4xl font-black uppercase tracking-widest">Property Details</h2>
+                </div>
+
+                {property.details && property.details.length > 0 ? (
+                  <div className="space-y-16">
+                    {property.details.map((detail: any, idx: number) => (
+                      <div key={idx} className="flex flex-col md:flex-row gap-6 md:gap-12 border-b border-white/10 pb-16 group">
+                        <div className="md:w-1/3 relative">
+                          {detail.sideHeading && (
+                            <div className="mb-4">
+                              <span className="text-primary/60 font-black uppercase tracking-[0.3em] text-[10px] block mb-2">{detail.sideHeading}</span>
+                              {detail.showArrow && <span className="text-primary inline-block animate-pulse">→</span>}
+                            </div>
+                          )}
+                          <h3 className="text-xl font-black text-white uppercase tracking-widest">{detail.heading}</h3>
+                        </div>
+                        <div className="md:w-2/3">
+                            {detail.isPointed ? (
+                            <ul className="space-y-4">
+                              {detail.content.split('\n').filter((line: string) => line.trim()).map((line: string, lIdx: number) => {
+                                const hasArrow = line.trim().startsWith('→') || line.trim().startsWith('->');
+                                const cleanLine = line.trim().replace(/^[-\u2022\u2192]|^(->)\s*/, '');
+                                return (
+                                  <li key={lIdx} className="flex gap-4 text-gray-400 text-lg md:text-xl leading-relaxed font-medium">
+                                    {hasArrow ? (
+                                      <span className="text-primary mt-1 flex-shrink-0 font-black text-2xl">→</span>
+                                    ) : (
+                                      <span className="text-primary mt-2 flex-shrink-0 w-2 h-2 rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]"></span>
+                                    )}
+                                    <span>{cleanLine}</span>
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          ) : (
+                            <p className="text-gray-400 text-lg md:text-xl leading-relaxed whitespace-pre-wrap font-medium">
+                              {detail.content}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="border-b border-white/10 pb-16">
+                    <p className="text-gray-400 text-lg md:text-xl leading-relaxed whitespace-pre-wrap font-medium">
+                      {property.description}
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
 
               {/* 3D Element Section */}
@@ -326,37 +343,58 @@ const PropertyDetails = () => {
       {/* Fruit Info Popup */}
       {showFruitPopup && property.fruitImage && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 bg-black/95 backdrop-blur-md transition-all duration-500" onClick={() => setShowFruitPopup(false)}>
-          <div className="bg-[#0a0a0a] border border-white/10 w-full max-w-2xl rounded-[3rem] overflow-hidden shadow-2xl relative flex flex-col" onClick={e => e.stopPropagation()}>
-            {/* Image on top */}
-            <div className="relative w-full h-[250px] md:h-[350px]">
-              <Image src={property.fruitImage} alt="Cultivation" fill className="object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] to-transparent"></div>
-              <button 
-                onClick={() => setShowFruitPopup(false)}
-                className="absolute top-6 right-6 bg-black/50 text-white p-3 rounded-full hover:bg-primary hover:text-black transition-colors backdrop-blur-md border border-white/10"
-              >
-                <X size={24} />
-              </button>
+          <div className="bg-[#0a0a0a] border border-white/10 w-full max-w-4xl rounded-[3rem] overflow-hidden shadow-2xl relative flex flex-col md:flex-row h-[90vh] md:h-auto md:aspect-video" onClick={e => e.stopPropagation()}>
+            {/* Background Image Container */}
+            <div className="absolute inset-0 z-0">
+              <Image src={property.fruitImage} alt="Cultivation" fill className="object-cover opacity-60" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent"></div>
             </div>
-            
-            {/* Content below */}
-            <div className="p-8 md:p-12 flex flex-col items-center text-center">
-              <div className="bg-[#10b981]/10 p-4 rounded-2xl mb-6">
-                <Leaf className="text-primary" size={32} />
+
+            {/* Content Overlay */}
+            <div className="relative z-10 p-8 md:p-16 flex flex-col justify-center items-start text-left w-full md:w-2/3 h-full overflow-y-auto">
+              <div className="bg-primary/20 backdrop-blur-md p-4 rounded-2xl mb-8 border border-primary/20">
+                <Leaf className="text-primary" size={40} />
               </div>
-              <h3 className="text-3xl md:text-4xl font-black uppercase tracking-tighter text-white mb-4">Cultivation Info</h3>
-              <div className="w-16 h-1 bg-primary mb-8 rounded-full"></div>
-              <p className="text-gray-300 text-lg md:text-xl leading-relaxed whitespace-pre-wrap font-medium max-h-[40vh] overflow-y-auto scrollbar-hide px-2">
-                {property.fruitInfo || "No additional details provided for this crop."}
-              </p>
+              
+              <h3 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white mb-6 leading-tight">
+                Dragon Fruit<br/><span className="text-primary">Plantation & Profit Model</span>
+              </h3>
+              
+              <div className="w-24 h-2 bg-primary mb-10 rounded-full shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)]"></div>
+              
+              <div className="space-y-6">
+                <p className="text-gray-100 text-lg md:text-2xl leading-relaxed font-medium">
+                  {property.fruitInfo || "No additional details provided for this crop."}
+                </p>
+                
+                <div className="grid grid-cols-2 gap-8 pt-8">
+                  <div className="border-l-2 border-primary/50 pl-6">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-1">Yield Period</p>
+                    <p className="text-2xl font-black text-white">Up to 30 Years</p>
+                  </div>
+                  <div className="border-l-2 border-primary/50 pl-6">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-1">Profit Share</p>
+                    <p className="text-2xl font-black text-white">50% to Client</p>
+                  </div>
+                </div>
+              </div>
               
               <button 
                 onClick={() => setShowFruitPopup(false)}
-                className="mt-10 bg-primary text-black font-black uppercase tracking-widest px-10 py-4 rounded-2xl hover:bg-white transition-all shadow-xl shadow-primary/20"
+                className="mt-12 bg-primary text-black font-black uppercase tracking-widest px-12 py-5 rounded-2xl hover:bg-white transition-all shadow-2xl shadow-primary/40 group flex items-center gap-3"
               >
-                Close Info
+                <span>Close Model</span>
+                <X size={18} className="group-hover:rotate-90 transition-transform" />
               </button>
             </div>
+
+            {/* Close Button Mobile */}
+            <button 
+              onClick={() => setShowFruitPopup(false)}
+              className="absolute top-6 right-6 z-20 bg-black/50 text-white p-3 rounded-full hover:bg-primary hover:text-black transition-colors backdrop-blur-md border border-white/10 md:hidden"
+            >
+              <X size={24} />
+            </button>
           </div>
         </div>
       )}
