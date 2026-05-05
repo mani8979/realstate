@@ -69,7 +69,7 @@ const Hero = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-5xl md:text-8xl font-black text-white mb-6 leading-tight tracking-tighter"
           >
-            {content.heroTitle.split(' ').map((word: string, i: number) => (
+            {(content.heroTitle || 'Find Your Perfect Property').split(' ').map((word: string, i: number) => (
               <span key={i} className={word.toLowerCase() === 'perfect' ? "text-transparent bg-clip-text bg-gradient-to-r from-primary via-yellow-500 to-primary animate-gradient-x" : ""}>
                 {word}{' '}
               </span>
