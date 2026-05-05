@@ -108,37 +108,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     }));
   };
 
-  const [uploading3D, setUploading3D] = useState(false);
-  const threeDInputRef = useRef<HTMLInputElement>(null);
-
-  const handle3DUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
-
-    setUploading3D(true);
-    try {
-      const file = files[0];
-      const uploadFormData = new FormData();
-      uploadFormData.append('file', file);
-
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: uploadFormData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setFormData((prev: any) => ({ ...prev, threeDElement: data.url }));
-      }
-    } catch (error) {
-      console.error('Upload failed:', error);
-      alert('Upload failed. Please try again.');
-    } finally {
-      setUploading3D(false);
-      if (threeDInputRef.current) threeDInputRef.current.value = '';
-    }
-  };
-
   const remove3DModel = () => {
     setFormData((prev: any) => ({ ...prev, threeDElement: '' }));
   };
@@ -455,35 +424,18 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           {/* 3D Visual Experience */}
           <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">3D Visual Experience (Optional)</h3>
-            <p className="text-sm text-gray-500">Provide a link to a 3D model (e.g. Matterport) or upload a 3D file (GLB, GLTF).</p>
+            <p className="text-sm text-gray-500">Provide a link to a 3D model (e.g. Matterport or a custom GLB viewer URL).</p>
             
             <div className="space-y-4">
-              <div className="flex gap-4">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 px-1">3D Model URL</label>
                 <input
                   type="url"
-                  className="flex-1 px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
+                  className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
                   placeholder="https://my.matterport.com/show/?m=..."
                   value={formData.threeDElement || ''}
                   onChange={(e) => setFormData({ ...formData, threeDElement: e.target.value })}
                 />
-                
-                <input
-                  type="file"
-                  accept=".glb,.gltf"
-                  className="hidden"
-                  ref={threeDInputRef}
-                  onChange={handle3DUpload}
-                />
-                
-                <button
-                  type="button"
-                  onClick={() => threeDInputRef.current?.click()}
-                  disabled={uploading3D}
-                  className="px-6 py-4 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 font-bold rounded-2xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all flex items-center gap-2 whitespace-nowrap disabled:opacity-50"
-                >
-                  {uploading3D ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
-                  <span>Upload 3D File</span>
-                </button>
               </div>
               
               {formData.threeDElement && (

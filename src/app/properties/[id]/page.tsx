@@ -6,6 +6,7 @@ import { MapPin, Phone, MessageSquare, Send, ArrowLeft, Share2, X, Leaf } from '
 import Link from 'next/link';
 import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 const PropertyDetails = () => {
   const { id } = useParams();
@@ -20,6 +21,10 @@ const PropertyDetails = () => {
   });
   const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [showFruitPopup, setShowFruitPopup] = useState(false);
+
+  const { scrollYProgress } = useScroll();
+  const fruitX = useTransform(scrollYProgress, [0, 1], ['-20%', '120%']);
+  const fruitRotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -340,48 +345,60 @@ const PropertyDetails = () => {
         </div>
       </div>
 
+      {/* Floating Scroll Effect Dragon Fruit */}
+      {property.fruitImage && (
+        <motion.div 
+          style={{ x: fruitX, rotate: fruitRotate }}
+          className="fixed top-1/4 left-0 w-32 h-32 md:w-48 md:h-48 pointer-events-none z-50 opacity-20 md:opacity-30 blur-[1px]"
+        >
+          <Image src={property.fruitImage} alt="Floating Fruit" fill className="object-contain" />
+        </motion.div>
+      )}
+
       {/* Fruit Info Popup */}
       {showFruitPopup && property.fruitImage && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 bg-black/95 backdrop-blur-md transition-all duration-500" onClick={() => setShowFruitPopup(false)}>
-          <div className="bg-[#0a0a0a] border border-white/10 w-full max-w-4xl rounded-[3rem] overflow-hidden shadow-2xl relative flex flex-col md:flex-row h-[90vh] md:h-auto md:aspect-video" onClick={e => e.stopPropagation()}>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 bg-black/95 backdrop-blur-xl transition-all duration-500" onClick={() => setShowFruitPopup(false)}>
+          <div className="bg-[#0a0a0a] border border-white/10 w-full max-w-5xl rounded-[3rem] overflow-hidden shadow-[0_0_100px_rgba(var(--primary-rgb),0.2)] relative flex flex-col md:flex-row h-auto max-h-[90vh] md:aspect-video" onClick={e => e.stopPropagation()}>
             {/* Background Image Container */}
             <div className="absolute inset-0 z-0">
-              <Image src={property.fruitImage} alt="Cultivation" fill className="object-cover opacity-60" />
-              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent"></div>
+              <Image src={property.fruitImage} alt="Cultivation" fill className="object-cover opacity-40" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/90 to-transparent"></div>
             </div>
 
             {/* Content Overlay */}
-            <div className="relative z-10 p-8 md:p-16 flex flex-col justify-start items-start text-left w-full md:w-2/3 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">
-              <div className="bg-primary/20 backdrop-blur-md p-4 rounded-2xl mb-8 border border-primary/20 mt-10 md:mt-0">
+            <div className="relative z-10 p-8 md:p-16 flex flex-col justify-start items-start text-left w-full md:w-3/4 h-full overflow-y-auto custom-scrollbar">
+              <div className="bg-primary/20 backdrop-blur-md p-4 rounded-2xl mb-8 border border-primary/20 mt-10 md:mt-0 flex-shrink-0">
                 <Leaf className="text-primary" size={40} />
               </div>
               
-              <h3 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white mb-6 leading-tight">
+              <h3 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white mb-6 leading-tight flex-shrink-0">
                 Dragon Fruit<br/><span className="text-primary">Plantation & Profit Model</span>
               </h3>
               
-              <div className="w-24 h-2 bg-primary mb-10 rounded-full shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)]"></div>
+              <div className="w-24 h-2 bg-primary mb-10 rounded-full shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)] flex-shrink-0"></div>
               
-              <div className="space-y-6 pb-20">
+              <div className="space-y-8 pb-12">
                 <p className="text-gray-100 text-lg md:text-2xl leading-relaxed font-medium whitespace-pre-wrap">
                   {property.fruitInfo || "No additional details provided for this crop."}
                 </p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
-                  <div className="border-l-2 border-primary/50 pl-6">
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-1">Yield Period</p>
-                    <p className="text-2xl font-black text-white">Up to 30 Years</p>
+                  <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10 group hover:border-primary/50 transition-all">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-2">Yield Period</p>
+                    <p className="text-3xl font-black text-white">Up to 30 Years</p>
+                    <p className="text-gray-500 text-sm mt-2">Sustainable long-term agricultural asset</p>
                   </div>
-                  <div className="border-l-2 border-primary/50 pl-6">
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-1">Profit Share</p>
-                    <p className="text-2xl font-black text-white">50% to Client</p>
+                  <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10 group hover:border-primary/50 transition-all">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-2">Profit Share</p>
+                    <p className="text-3xl font-black text-white">50% to Client</p>
+                    <p className="text-gray-500 text-sm mt-2">Transparent revenue sharing model</p>
                   </div>
                 </div>
               </div>
               
               <button 
                 onClick={() => setShowFruitPopup(false)}
-                className="mt-auto md:mt-12 mb-8 bg-primary text-black font-black uppercase tracking-widest px-12 py-5 rounded-2xl hover:bg-white transition-all shadow-2xl shadow-primary/40 group flex items-center gap-3"
+                className="mt-6 mb-8 bg-primary text-black font-black uppercase tracking-widest px-12 py-5 rounded-2xl hover:bg-white transition-all shadow-2xl shadow-primary/40 group flex items-center gap-3 flex-shrink-0"
               >
                 <span>Close Model</span>
                 <X size={18} className="group-hover:rotate-90 transition-transform" />
