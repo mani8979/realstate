@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { Github, Linkedin, Instagram, Mail, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, MapPin, Leaf } from 'lucide-react';
 import Link from 'next/link';
 import StarBorder from './StarBorder';
 import './ScrollStack.css';
