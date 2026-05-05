@@ -257,7 +257,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                 </span>
               </button>
             </div>
-            <p className="text-xs text-gray-400 font-medium">* Images will be saved locally in the public/uploads folder.</p>
+            <p className="text-xs text-gray-400 font-medium">* Images are securely hosted on Cloudinary.</p>
           </div>
 
           {/* Description */}

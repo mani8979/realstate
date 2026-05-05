@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import path from 'path';
-import fs from 'fs/promises';
+import { v2 as cloudinary } from 'cloudinary';
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,19 +19,15 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Create a unique filename
-    const filename = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads');
-    
-    // Ensure directory exists (though we created it, safe to check)
-    await fs.mkdir(uploadDir, { recursive: true });
-    
-    const filePath = path.join(uploadDir, filename);
-    await fs.writeFile(filePath, buffer);
+    // Convert buffer to base64 for Cloudinary
+    const base64Image = `data:${file.type};base64,${buffer.toString('base64')}`;
 
-    const publicPath = `/uploads/${filename}`;
+    // Upload to Cloudinary
+    const result = await cloudinary.uploader.upload(base64Image, {
+      folder: 'realstate_uploads',
+    });
 
-    return NextResponse.json({ url: publicPath });
+    return NextResponse.json({ url: result.secure_url });
   } catch (error) {
     console.error('Upload error:', error);
     return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
