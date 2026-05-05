@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Image as ImageIcon, X, Plus, Save, Loader2 } from 'lucide-react';
+import { Image as ImageIcon, X, Plus, Save, Loader2, ChevronUp, ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 
 interface PropertyFormProps {
@@ -329,13 +329,43 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
             <div className="space-y-8">
               {formData.details.map((detail: any, idx: number) => (
                 <div key={idx} className="p-6 bg-gray-50 dark:bg-gray-800 rounded-[2rem] border border-gray-100 dark:border-gray-700 relative space-y-4">
-                  <button
-                    type="button"
-                    onClick={() => setFormData({ ...formData, details: formData.details.filter((_: any, i: number) => i !== idx) })}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors"
-                  >
-                    <X size={20} />
-                  </button>
+                  <div className="absolute top-4 right-4 flex items-center gap-2">
+                    {/* Reorder Buttons */}
+                    <div className="flex flex-col gap-1 mr-4">
+                      <button
+                        type="button"
+                        disabled={idx === 0}
+                        onClick={() => {
+                          const newDetails = [...formData.details];
+                          [newDetails[idx], newDetails[idx - 1]] = [newDetails[idx - 1], newDetails[idx]];
+                          setFormData({ ...formData, details: newDetails });
+                        }}
+                        className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md transition-colors disabled:opacity-30"
+                      >
+                        <ChevronUp size={16} />
+                      </button>
+                      <button
+                        type="button"
+                        disabled={idx === formData.details.length - 1}
+                        onClick={() => {
+                          const newDetails = [...formData.details];
+                          [newDetails[idx], newDetails[idx + 1]] = [newDetails[idx + 1], newDetails[idx]];
+                          setFormData({ ...formData, details: newDetails });
+                        }}
+                        className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md transition-colors disabled:opacity-30"
+                      >
+                         <ChevronDown size={16} />
+                      </button>
+                    </div>
+                    
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, details: formData.details.filter((_: any, i: number) => i !== idx) })}
+                      className="text-gray-400 hover:text-red-500 transition-colors"
+                    >
+                      <X size={20} />
+                    </button>
+                  </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">

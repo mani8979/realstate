@@ -351,8 +351,8 @@ const PropertyDetails = () => {
             </div>
 
             {/* Content Overlay */}
-            <div className="relative z-10 p-8 md:p-16 flex flex-col justify-center items-start text-left w-full md:w-2/3 h-full overflow-y-auto">
-              <div className="bg-primary/20 backdrop-blur-md p-4 rounded-2xl mb-8 border border-primary/20">
+            <div className="relative z-10 p-8 md:p-16 flex flex-col justify-start items-start text-left w-full md:w-2/3 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">
+              <div className="bg-primary/20 backdrop-blur-md p-4 rounded-2xl mb-8 border border-primary/20 mt-10 md:mt-0">
                 <Leaf className="text-primary" size={40} />
               </div>
               
@@ -362,12 +362,12 @@ const PropertyDetails = () => {
               
               <div className="w-24 h-2 bg-primary mb-10 rounded-full shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)]"></div>
               
-              <div className="space-y-6">
-                <p className="text-gray-100 text-lg md:text-2xl leading-relaxed font-medium">
+              <div className="space-y-6 pb-20">
+                <p className="text-gray-100 text-lg md:text-2xl leading-relaxed font-medium whitespace-pre-wrap">
                   {property.fruitInfo || "No additional details provided for this crop."}
                 </p>
                 
-                <div className="grid grid-cols-2 gap-8 pt-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
                   <div className="border-l-2 border-primary/50 pl-6">
                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-1">Yield Period</p>
                     <p className="text-2xl font-black text-white">Up to 30 Years</p>
@@ -381,7 +381,7 @@ const PropertyDetails = () => {
               
               <button 
                 onClick={() => setShowFruitPopup(false)}
-                className="mt-12 bg-primary text-black font-black uppercase tracking-widest px-12 py-5 rounded-2xl hover:bg-white transition-all shadow-2xl shadow-primary/40 group flex items-center gap-3"
+                className="mt-auto md:mt-12 mb-8 bg-primary text-black font-black uppercase tracking-widest px-12 py-5 rounded-2xl hover:bg-white transition-all shadow-2xl shadow-primary/40 group flex items-center gap-3"
               >
                 <span>Close Model</span>
                 <X size={18} className="group-hover:rotate-90 transition-transform" />

@@ -45,6 +45,30 @@ const pinkValley = {
   images: ["/luxury_villa_hero_1777953581914.png"],
   area: "10 Acres",
   featured: true,
+  fruitImage: "/luxury_villa_hero_1777953581914.png", // Use a relevant image or keep existing
+  fruitInfo: `Dragon fruit cultivation is a high-demand and profitable farming option with long-term benefits.
+
+Plantation Details (Per 100 Sq. Yards):
+• 40 dragon fruit plants
+• 4 plants per pole
+• 10 poles in each 100 sq. yards
+
+Plantation Period:
+• Ideal season: May to November (approx.)
+
+Yield Duration:
+• Dragon fruit plants can yield fruits for up to 30 years
+
+Profit Sharing (from the yield of dragon fruits crop):
+• 50% to the company
+• 50% to the client
+
+This model ensures:
+• Land ownership
+• Continuous agricultural income
+• Long-term asset appreciation
+
+Additionally, the plantation can be removed anytime if the client wishes to convert the land for residential or other purposes.`,
   details: [
     {
       heading: "Land Type",
@@ -89,7 +113,7 @@ const pinkValley = {
       sideHeading: "Passive Income"
     }
   ],
-  threeDElement: "https://my.matterport.com/show/?m=7XNfP2vG6f1" // Example 3D model link
+  threeDElement: "https://my.matterport.com/show/?m=7XNfP2vG6f1"
 };
 
 async function seed() {
