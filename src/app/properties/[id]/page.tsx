@@ -68,8 +68,8 @@ const PropertyDetails = () => {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white font-sans selection:bg-primary selection:text-black">
       
-      {/* Hero Section */}
-      <div className="relative w-full h-[60vh] md:h-[80vh]">
+      {/* Hero Section - Clean Image */}
+      <div className="relative w-full h-[50vh] md:h-[70vh] overflow-hidden">
         <Image
           src={property.images[activeImage] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=2000'}
           alt={property.title}
@@ -77,9 +77,9 @@ const PropertyDetails = () => {
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-black/50 to-transparent"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/20"></div>
         
+        {/* Navigation - Top Left */}
         <div className="absolute top-24 left-6 md:left-16 z-10">
           <button 
             onClick={() => router.back()}
@@ -89,35 +89,41 @@ const PropertyDetails = () => {
             <span>Go Back</span>
           </button>
         </div>
+      </div>
 
-        <div className="absolute bottom-0 left-0 w-full p-6 md:p-16 flex flex-col md:flex-row md:items-end justify-between gap-8 z-10">
-          <div className="max-w-4xl">
-            <div className="flex items-center gap-4 mb-6">
-              <span className="bg-primary text-black font-black uppercase tracking-[0.2em] px-4 py-2 text-xs rounded-none">
-                {property.type}
-              </span>
-              <span className="text-primary font-bold uppercase tracking-widest text-sm flex items-center gap-2">
-                <MapPin size={16} /> {property.location}
-              </span>
+      {/* Property Information Section - Below Image */}
+      <div className="bg-black border-b border-white/5 relative z-10">
+        <div className="container mx-auto px-6 md:px-16 py-12 md:py-20">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10">
+            <div className="max-w-4xl space-y-6">
+              <div className="flex items-center gap-4">
+                <span className="bg-primary text-black font-black uppercase tracking-[0.2em] px-4 py-2 text-[10px] rounded-none">
+                  {property.type}
+                </span>
+                <span className="text-primary/70 font-bold uppercase tracking-widest text-xs flex items-center gap-2">
+                  <MapPin size={14} /> {property.location}
+                </span>
+              </div>
+              
+              <h1 className="text-5xl md:text-8xl font-black uppercase tracking-tighter leading-[0.9] text-white">
+                {property.title}
+              </h1>
+
+              {property.fruitImage && (
+                <button 
+                  onClick={() => setShowFruitPopup(true)}
+                  className="inline-flex items-center gap-3 bg-[#10b981] hover:bg-white text-black px-6 md:px-10 py-4 rounded-full font-black uppercase tracking-widest text-xs transition-all duration-300 shadow-[0_0_30px_rgba(16,185,129,0.3)] hover:scale-105 group"
+                >
+                  <Leaf size={18} className="group-hover:scale-110 transition-transform" />
+                  <span>View Cultivation Info</span>
+                </button>
+              )}
             </div>
-            <h1 className="text-5xl md:text-8xl font-black uppercase tracking-tighter leading-[0.9] text-white drop-shadow-2xl">
-              {property.title}
-            </h1>
 
-            {/* Cultivation Info Quick Access */}
-            {property.fruitImage && (
-              <button 
-                onClick={() => setShowFruitPopup(true)}
-                className="mt-8 flex items-center gap-3 bg-[#10b981] hover:bg-white text-black px-6 md:px-8 py-3 md:py-4 rounded-full font-black uppercase tracking-widest text-xs md:text-sm transition-all duration-300 shadow-[0_0_30px_rgba(16,185,129,0.4)] hover:shadow-[0_0_40px_rgba(255,255,255,0.5)] group"
-              >
-                <Leaf size={18} className="group-hover:scale-110 transition-transform" />
-                <span>View Cultivation Info</span>
-              </button>
-            )}
-          </div>
-          <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-6 md:p-10 rounded-[2rem]">
-            <p className="text-primary font-black uppercase tracking-[0.2em] text-xs mb-2">Asking Price</p>
-            <p className="text-4xl md:text-6xl font-black tracking-tighter">₹{property.price?.toLocaleString('en-IN')}</p>
+            <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-8 md:p-12 rounded-[2.5rem] flex flex-col items-center md:items-start min-w-[300px]">
+              <p className="text-primary font-black uppercase tracking-[0.2em] text-[10px] mb-2">Asking Price</p>
+              <p className="text-5xl md:text-7xl font-black tracking-tighter text-white">₹{property.price?.toLocaleString('en-IN')}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -128,22 +134,37 @@ const PropertyDetails = () => {
           {/* Main Content */}
           <div className="lg:col-span-8 space-y-24">
             
-            {/* Gallery Thumbnails */}
-            {property.images.length > 1 && (
+            {/* Visual Gallery */}
+            {(property.images.length > 1 || property.fruitImage) && (
               <div>
-                <h3 className="text-xs font-black uppercase tracking-[0.3em] text-white/40 mb-6">Property Gallery</h3>
-                <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-8">Visual Gallery</h3>
+                <div className="flex flex-wrap gap-4">
+                  {/* Property Images */}
                   {property.images.map((img: string, i: number) => (
                     <button
                       key={i}
                       onClick={() => setActiveImage(i)}
-                      className={`relative min-w-[120px] h-24 rounded-2xl overflow-hidden border-2 transition-all ${
-                        activeImage === i ? 'border-primary shadow-lg scale-105 opacity-100' : 'border-transparent opacity-40 hover:opacity-100'
+                      className={`relative w-24 h-24 md:w-32 md:h-32 rounded-3xl overflow-hidden border-2 transition-all ${
+                        activeImage === i ? 'border-primary shadow-lg scale-105 opacity-100' : 'border-white/10 opacity-40 hover:opacity-100 hover:border-white/30'
                       }`}
                     >
                       <Image src={img} alt={`Gallery ${i}`} fill className="object-cover" />
                     </button>
                   ))}
+                  
+                  {/* Cultivation Image Thumbnail */}
+                  {property.fruitImage && (
+                    <button
+                      onClick={() => setShowFruitPopup(true)}
+                      className="relative w-24 h-24 md:w-32 md:h-32 rounded-3xl overflow-hidden border-2 border-[#10b981]/30 bg-[#10b981]/10 flex flex-col items-center justify-center gap-2 group transition-all hover:border-[#10b981] hover:bg-[#10b981]/20"
+                    >
+                      <Image src={property.fruitImage} alt="Cultivation Thumbnail" fill className="object-cover opacity-60 group-hover:opacity-100 transition-opacity" />
+                      <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 group-hover:bg-transparent transition-all">
+                        <Leaf className="text-[#10b981]" size={24} />
+                        <span className="text-[8px] font-black uppercase tracking-widest text-white mt-1">Farming</span>
+                      </div>
+                    </button>
+                  )}
                 </div>
               </div>
             )}
