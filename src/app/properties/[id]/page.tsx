@@ -78,6 +78,7 @@ const PropertyDetails = () => {
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-black/50 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent"></div>
         
         <div className="absolute top-24 left-6 md:left-16 z-10">
           <button 
@@ -178,26 +179,7 @@ const PropertyDetails = () => {
               )}
             </div>
 
-            {/* Farm/Fruit Section */}
-            {property.fruitImage && (
-              <div className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-[#10b981]/20 to-transparent border border-[#10b981]/30 p-10 md:p-16 flex flex-col md:flex-row items-center gap-12 group cursor-pointer" onClick={() => setShowFruitPopup(true)}>
-                <div className="flex-1 space-y-6">
-                  <div className="flex items-center gap-3">
-                    <Leaf className="text-primary" size={24} />
-                    <h3 className="text-2xl md:text-3xl font-black uppercase tracking-widest text-white">Cultivation Info</h3>
-                  </div>
-                  <p className="text-gray-400 text-lg line-clamp-3">
-                    {property.fruitInfo || "Click to view detailed information about the active cultivation on this farm land."}
-                  </p>
-                  <button className="text-primary font-bold uppercase tracking-widest text-sm flex items-center gap-2 hover:text-white transition-colors">
-                    Read Full Info <ArrowLeft className="rotate-180" size={16} />
-                  </button>
-                </div>
-                <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-[#10b981] shadow-[0_0_50px_rgba(16,185,129,0.3)] group-hover:scale-105 transition-transform duration-500">
-                  <Image src={property.fruitImage} alt="Farm Fruit" fill className="object-cover" />
-                </div>
-              </div>
-            )}
+
           </div>
 
           {/* Sidebar */}
@@ -285,30 +267,37 @@ const PropertyDetails = () => {
 
       {/* Fruit Info Popup */}
       {showFruitPopup && property.fruitImage && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/90 backdrop-blur-md transition-all duration-500" onClick={() => setShowFruitPopup(false)}>
-          <div className="bg-[#0a0a0a] border border-white/10 w-full max-w-4xl rounded-[3rem] overflow-hidden shadow-2xl relative flex flex-col md:flex-row" onClick={e => e.stopPropagation()}>
-            <div className="relative w-full md:w-1/2 h-[300px] md:h-auto">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 bg-black/95 backdrop-blur-md transition-all duration-500" onClick={() => setShowFruitPopup(false)}>
+          <div className="bg-[#0a0a0a] border border-white/10 w-full max-w-2xl rounded-[3rem] overflow-hidden shadow-2xl relative flex flex-col" onClick={e => e.stopPropagation()}>
+            {/* Image on top */}
+            <div className="relative w-full h-[250px] md:h-[350px]">
               <Image src={property.fruitImage} alt="Cultivation" fill className="object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] to-transparent"></div>
               <button 
                 onClick={() => setShowFruitPopup(false)}
-                className="absolute md:hidden top-6 right-6 bg-black/50 text-white p-3 rounded-full hover:bg-primary hover:text-black transition-colors"
+                className="absolute top-6 right-6 bg-black/50 text-white p-3 rounded-full hover:bg-primary hover:text-black transition-colors backdrop-blur-md border border-white/10"
               >
-                <X size={20} />
+                <X size={24} />
               </button>
             </div>
-            <div className="w-full md:w-1/2 p-10 md:p-16 flex flex-col justify-center relative">
-              <button 
-                onClick={() => setShowFruitPopup(false)}
-                className="hidden md:block absolute top-6 right-6 text-white/50 hover:text-primary transition-colors"
-              >
-                <X size={32} />
-              </button>
-              <Leaf className="text-primary mb-6" size={40} />
-              <h3 className="text-3xl md:text-4xl font-black uppercase tracking-tighter text-white mb-6">Cultivation Info</h3>
-              <div className="w-12 h-1 bg-primary mb-8"></div>
-              <p className="text-gray-400 text-lg leading-relaxed whitespace-pre-wrap font-medium max-h-[50vh] overflow-y-auto scrollbar-hide">
+            
+            {/* Content below */}
+            <div className="p-8 md:p-12 flex flex-col items-center text-center">
+              <div className="bg-[#10b981]/10 p-4 rounded-2xl mb-6">
+                <Leaf className="text-primary" size={32} />
+              </div>
+              <h3 className="text-3xl md:text-4xl font-black uppercase tracking-tighter text-white mb-4">Cultivation Info</h3>
+              <div className="w-16 h-1 bg-primary mb-8 rounded-full"></div>
+              <p className="text-gray-300 text-lg md:text-xl leading-relaxed whitespace-pre-wrap font-medium max-h-[40vh] overflow-y-auto scrollbar-hide px-2">
                 {property.fruitInfo || "No additional details provided for this crop."}
               </p>
+              
+              <button 
+                onClick={() => setShowFruitPopup(false)}
+                className="mt-10 bg-primary text-black font-black uppercase tracking-widest px-10 py-4 rounded-2xl hover:bg-white transition-all shadow-xl shadow-primary/20"
+              >
+                Close Info
+              </button>
             </div>
           </div>
         </div>
