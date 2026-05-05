@@ -31,6 +31,7 @@ export default function BrandAdmin() {
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingHeader, setUploadingHeader] = useState(false);
 
   useEffect(() => {
     fetch('/api/content')
@@ -97,26 +98,44 @@ export default function BrandAdmin() {
                       onClick={() => setContent({ ...content, headerLogoImage: '' })}
                       className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                     >
-                      <Save size={14} />
+                      <Save size={14} className="hidden" />
+                      <span className="text-xs font-bold">X</span>
                     </button>
                   </div>
                 ) : (
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={async (e) => {
-                      const file = e.target.files?.[0];
-                      if (!file) return;
-                      const formData = new FormData();
-                      formData.append('file', file);
-                      const res = await fetch('/api/upload', { method: 'POST', body: formData });
-                      if (res.ok) {
-                        const data = await res.json();
-                        setContent({ ...content, headerLogoImage: data.url });
-                      }
-                    }}
-                    className="w-full p-4 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
-                  />
+                  <div className="relative">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      disabled={uploadingHeader}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setUploadingHeader(true);
+                        try {
+                          const formData = new FormData();
+                          formData.append('file', file);
+                          const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                          if (res.ok) {
+                            const data = await res.json();
+                            setContent({ ...content, headerLogoImage: data.url });
+                          } else {
+                            alert('Upload failed. Please check your Cloudinary settings.');
+                          }
+                        } catch (err) {
+                          alert('Upload error: ' + (err as any).message);
+                        } finally {
+                          setUploadingHeader(false);
+                        }
+                      }}
+                      className="w-full p-4 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
+                    />
+                    {uploadingHeader && (
+                      <div className="absolute inset-0 bg-black/20 flex items-center justify-center rounded-xl">
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
               <div>

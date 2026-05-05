@@ -18,6 +18,7 @@ export default function FooterAdmin() {
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingFooter, setUploadingFooter] = useState(false);
 
   useEffect(() => {
     fetch('/api/content')
@@ -94,26 +95,44 @@ export default function FooterAdmin() {
                       onClick={() => setContent({ ...content, footerLogoImage: '' })}
                       className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                     >
-                      <Save size={12} />
+                      <Save size={12} className="hidden" />
+                      <span className="text-[10px] font-bold">X</span>
                     </button>
                   </div>
                 ) : (
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={async (e) => {
-                      const file = e.target.files?.[0];
-                      if (!file) return;
-                      const formData = new FormData();
-                      formData.append('file', file);
-                      const res = await fetch('/api/upload', { method: 'POST', body: formData });
-                      if (res.ok) {
-                        const data = await res.json();
-                        setContent({ ...content, footerLogoImage: data.url });
-                      }
-                    }}
-                    className="w-full p-2 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
-                  />
+                  <div className="relative">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      disabled={uploadingFooter}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setUploadingFooter(true);
+                        try {
+                          const formData = new FormData();
+                          formData.append('file', file);
+                          const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                          if (res.ok) {
+                            const data = await res.json();
+                            setContent({ ...content, footerLogoImage: data.url });
+                          } else {
+                            alert('Upload failed. Please check your Cloudinary settings.');
+                          }
+                        } catch (err) {
+                          alert('Upload error: ' + (err as any).message);
+                        } finally {
+                          setUploadingFooter(false);
+                        }
+                      }}
+                      className="w-full p-2 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
+                    />
+                    {uploadingFooter && (
+                      <div className="absolute inset-0 bg-black/20 flex items-center justify-center rounded-xl">
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
             </div>
