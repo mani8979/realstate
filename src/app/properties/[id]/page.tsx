@@ -238,26 +238,6 @@ const PropertyDetails = () => {
               </div>
             </div>
 
-              {/* 3D Element Section */}
-              {property.threeDElement && (
-                <div className="mt-16 bg-white/5 rounded-[3rem] p-8 md:p-12 border border-white/10">
-                  <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-                    <div>
-                      <h3 className="text-2xl font-black uppercase tracking-widest text-white mb-4">3D Visual Experience</h3>
-                      <p className="text-gray-400 font-medium max-w-md">Explore the property in a fully immersive 3D environment to get a better sense of the layout and landscape.</p>
-                    </div>
-                    <a 
-                      href={property.threeDElement} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="bg-primary text-black font-black uppercase tracking-widest px-10 py-5 rounded-2xl hover:bg-white transition-all shadow-xl shadow-primary/20 flex items-center gap-3 whitespace-nowrap"
-                    >
-                      <div className="w-2 h-2 rounded-full bg-black animate-ping"></div>
-                      <span>Open 3D Model</span>
-                    </a>
-                  </div>
-                </div>
-              )}
 
 
           </div>

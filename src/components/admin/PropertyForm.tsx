@@ -24,8 +24,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     featured: false,
     fruitImage: '',
     fruitInfo: '',
-    details: [],
-    threeDElement: ''
+    details: []
   });
   const [uploading, setUploading] = useState(false);
   const [uploadingFruit, setUploadingFruit] = useState(false);
@@ -106,10 +105,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
       ...prev,
       images: prev.images.filter((img: string) => img !== url)
     }));
-  };
-
-  const remove3DModel = () => {
-    setFormData((prev: any) => ({ ...prev, threeDElement: '' }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -416,38 +411,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
               {formData.details.length === 0 && (
                 <div className="text-center py-10 border-2 border-dashed border-gray-100 dark:border-gray-800 rounded-[2rem]">
                   <p className="text-gray-400 text-sm font-medium">No structured details added yet.</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* 3D Visual Experience */}
-          <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">3D Visual Experience (Optional)</h3>
-            <p className="text-sm text-gray-500">Provide a link to a 3D model (e.g. Matterport or a custom GLB viewer URL).</p>
-            
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 px-1">3D Model URL</label>
-                <input
-                  type="url"
-                  className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
-                  placeholder="https://my.matterport.com/show/?m=..."
-                  value={formData.threeDElement || ''}
-                  onChange={(e) => setFormData({ ...formData, threeDElement: e.target.value })}
-                />
-              </div>
-              
-              {formData.threeDElement && (
-                <div className="flex items-center justify-between p-4 bg-primary/5 rounded-2xl border border-primary/10">
-                  <span className="text-xs font-bold text-primary truncate max-w-[80%]">{formData.threeDElement}</span>
-                  <button
-                    type="button"
-                    onClick={remove3DModel}
-                    className="text-red-500 hover:text-red-700 font-bold text-xs uppercase tracking-widest"
-                  >
-                    Remove
-                  </button>
                 </div>
               )}
             </div>
