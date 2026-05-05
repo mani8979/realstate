@@ -1,5 +1,13 @@
 import mongoose, { Schema, Document, models, model } from 'mongoose';
 
+export interface IPropertyDetail {
+  heading: string;
+  content: string;
+  sideHeading?: string;
+  showArrow?: boolean;
+  isPointed?: boolean;
+}
+
 export interface IProperty extends Document {
   title: string;
   price: number;
@@ -15,6 +23,8 @@ export interface IProperty extends Document {
   createdAt: Date;
   fruitImage?: string;
   fruitInfo?: string;
+  details?: IPropertyDetail[];
+  threeDElement?: string;
 }
 
 const PropertySchema = new Schema<IProperty>(
@@ -36,6 +46,14 @@ const PropertySchema = new Schema<IProperty>(
     featured: { type: Boolean, default: false },
     fruitImage: { type: String },
     fruitInfo: { type: String },
+    details: [{
+      heading: String,
+      content: String,
+      sideHeading: String,
+      showArrow: { type: Boolean, default: false },
+      isPointed: { type: Boolean, default: false },
+    }],
+    threeDElement: { type: String },
   },
   { 
     timestamps: true,

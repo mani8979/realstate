@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
     // Upload to Cloudinary
     const result = await cloudinary.uploader.upload(base64Image, {
       folder: 'realstate_uploads',
+      resource_type: 'auto',
     });
 
     return NextResponse.json({ url: result.secure_url });

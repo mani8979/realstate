@@ -169,7 +169,6 @@ const PropertyDetails = () => {
               </div>
             )}
 
-            {/* Structured Details */}
             <div className="space-y-12">
               <div className="flex items-center gap-4 mb-12">
                 <span className="w-12 h-[2px] bg-primary"></span>
@@ -179,14 +178,31 @@ const PropertyDetails = () => {
               {property.details && property.details.length > 0 ? (
                 <div className="space-y-16">
                   {property.details.map((detail: any, idx: number) => (
-                    <div key={idx} className="flex flex-col md:flex-row gap-6 md:gap-12 border-b border-white/10 pb-16">
-                      <div className="md:w-1/3">
+                    <div key={idx} className="flex flex-col md:flex-row gap-6 md:gap-12 border-b border-white/10 pb-16 group">
+                      <div className="md:w-1/3 relative">
+                        {detail.sideHeading && (
+                          <div className="mb-4">
+                            <span className="text-primary/60 font-black uppercase tracking-[0.3em] text-[10px] block mb-2">{detail.sideHeading}</span>
+                            {detail.showArrow && <span className="text-primary inline-block animate-pulse">→</span>}
+                          </div>
+                        )}
                         <h3 className="text-xl font-black text-white uppercase tracking-widest">{detail.heading}</h3>
                       </div>
                       <div className="md:w-2/3">
-                        <p className="text-gray-400 text-lg md:text-xl leading-relaxed whitespace-pre-wrap font-medium">
-                          {detail.content}
-                        </p>
+                        {detail.isPointed ? (
+                          <ul className="space-y-4">
+                            {detail.content.split('\n').filter((line: string) => line.trim()).map((line: string, lIdx: number) => (
+                              <li key={lIdx} className="flex gap-4 text-gray-400 text-lg md:text-xl leading-relaxed font-medium">
+                                <span className="text-primary mt-2 flex-shrink-0 w-2 h-2 rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]"></span>
+                                <span>{line.replace(/^[-\u2022]\s*/, '')}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="text-gray-400 text-lg md:text-xl leading-relaxed whitespace-pre-wrap font-medium">
+                            {detail.content}
+                          </p>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -199,6 +215,27 @@ const PropertyDetails = () => {
                 </div>
               )}
             </div>
+
+              {/* 3D Element Section */}
+              {property.threeDElement && (
+                <div className="mt-16 bg-white/5 rounded-[3rem] p-8 md:p-12 border border-white/10">
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+                    <div>
+                      <h3 className="text-2xl font-black uppercase tracking-widest text-white mb-4">3D Visual Experience</h3>
+                      <p className="text-gray-400 font-medium max-w-md">Explore the property in a fully immersive 3D environment to get a better sense of the layout and landscape.</p>
+                    </div>
+                    <a 
+                      href={property.threeDElement} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="bg-primary text-black font-black uppercase tracking-widest px-10 py-5 rounded-2xl hover:bg-white transition-all shadow-xl shadow-primary/20 flex items-center gap-3 whitespace-nowrap"
+                    >
+                      <div className="w-2 h-2 rounded-full bg-black animate-ping"></div>
+                      <span>Open 3D Model</span>
+                    </a>
+                  </div>
+                </div>
+              )}
 
 
           </div>

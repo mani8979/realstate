@@ -23,7 +23,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     area: '',
     featured: false,
     fruitImage: '',
-    fruitInfo: ''
+    fruitInfo: '',
+    details: [],
+    threeDElement: ''
   });
   const [uploading, setUploading] = useState(false);
   const [uploadingFruit, setUploadingFruit] = useState(false);
@@ -104,6 +106,41 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
       ...prev,
       images: prev.images.filter((img: string) => img !== url)
     }));
+  };
+
+  const [uploading3D, setUploading3D] = useState(false);
+  const threeDInputRef = useRef<HTMLInputElement>(null);
+
+  const handle3DUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploading3D(true);
+    try {
+      const file = files[0];
+      const uploadFormData = new FormData();
+      uploadFormData.append('file', file);
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: uploadFormData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setFormData((prev: any) => ({ ...prev, threeDElement: data.url }));
+      }
+    } catch (error) {
+      console.error('Upload failed:', error);
+      alert('Upload failed. Please try again.');
+    } finally {
+      setUploading3D(false);
+      if (threeDInputRef.current) threeDInputRef.current.value = '';
+    }
+  };
+
+  const remove3DModel = () => {
+    setFormData((prev: any) => ({ ...prev, threeDElement: '' }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -273,8 +310,169 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
             ></textarea>
           </div>
 
-          {/* Farm/Fruit Details (Optional for any property) */}
-          <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+          {/* Structured Details */}
+          <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white">Structured Property Details</h3>
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, details: [...formData.details, { heading: '', content: '', sideHeading: '', showArrow: false, isPointed: false }] })}
+                className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest hover:underline"
+              >
+                <Plus size={16} />
+                <span>Add Section</span>
+              </button>
+            </div>
+            
+            <p className="text-sm text-gray-500 mb-6">Add extra side headings, arrow marks, and bullet points (dots) for complex property info.</p>
+
+            <div className="space-y-8">
+              {formData.details.map((detail: any, idx: number) => (
+                <div key={idx} className="p-6 bg-gray-50 dark:bg-gray-800 rounded-[2rem] border border-gray-100 dark:border-gray-700 relative space-y-4">
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, details: formData.details.filter((_: any, i: number) => i !== idx) })}
+                    className="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors"
+                  >
+                    <X size={20} />
+                  </button>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 px-1">Section Heading</label>
+                      <input
+                        type="text"
+                        className="w-full px-4 py-3 bg-white dark:bg-gray-900 rounded-xl border-none focus:ring-2 focus:ring-primary/50 text-sm"
+                        placeholder="e.g. Location Advantages"
+                        value={detail.heading}
+                        onChange={(e) => {
+                          const newDetails = [...formData.details];
+                          newDetails[idx].heading = e.target.value;
+                          setFormData({ ...formData, details: newDetails });
+                        }}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 px-1">Side Heading (Optional)</label>
+                      <input
+                        type="text"
+                        className="w-full px-4 py-3 bg-white dark:bg-gray-900 rounded-xl border-none focus:ring-2 focus:ring-primary/50 text-sm"
+                        placeholder="e.g. Prime Location"
+                        value={detail.sideHeading}
+                        onChange={(e) => {
+                          const newDetails = [...formData.details];
+                          newDetails[idx].sideHeading = e.target.value;
+                          setFormData({ ...formData, details: newDetails });
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 px-1">Content</label>
+                    <textarea
+                      rows={4}
+                      className="w-full px-4 py-3 bg-white dark:bg-gray-900 rounded-xl border-none focus:ring-2 focus:ring-primary/50 text-sm resize-none"
+                      placeholder="Write the section content here... (New lines will be used for dots if 'Use Dots' is enabled)"
+                      value={detail.content}
+                      onChange={(e) => {
+                        const newDetails = [...formData.details];
+                        newDetails[idx].content = e.target.value;
+                        setFormData({ ...formData, details: newDetails });
+                      }}
+                    ></textarea>
+                  </div>
+
+                  <div className="flex flex-wrap gap-6 pt-2">
+                    <label className="flex items-center gap-2 cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        className="w-4 h-4 accent-primary"
+                        checked={detail.showArrow}
+                        onChange={(e) => {
+                          const newDetails = [...formData.details];
+                          newDetails[idx].showArrow = e.target.checked;
+                          setFormData({ ...formData, details: newDetails });
+                        }}
+                      />
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-hover:text-primary transition-colors">Show Arrow (→)</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        className="w-4 h-4 accent-primary"
+                        checked={detail.isPointed}
+                        onChange={(e) => {
+                          const newDetails = [...formData.details];
+                          newDetails[idx].isPointed = e.target.checked;
+                          setFormData({ ...formData, details: newDetails });
+                        }}
+                      />
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-hover:text-primary transition-colors">Use Dots for Points</span>
+                    </label>
+                  </div>
+                </div>
+              ))}
+
+              {formData.details.length === 0 && (
+                <div className="text-center py-10 border-2 border-dashed border-gray-100 dark:border-gray-800 rounded-[2rem]">
+                  <p className="text-gray-400 text-sm font-medium">No structured details added yet.</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* 3D Visual Experience */}
+          <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">3D Visual Experience (Optional)</h3>
+            <p className="text-sm text-gray-500">Provide a link to a 3D model (e.g. Matterport) or upload a 3D file (GLB, GLTF).</p>
+            
+            <div className="space-y-4">
+              <div className="flex gap-4">
+                <input
+                  type="url"
+                  className="flex-1 px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
+                  placeholder="https://my.matterport.com/show/?m=..."
+                  value={formData.threeDElement || ''}
+                  onChange={(e) => setFormData({ ...formData, threeDElement: e.target.value })}
+                />
+                
+                <input
+                  type="file"
+                  accept=".glb,.gltf"
+                  className="hidden"
+                  ref={threeDInputRef}
+                  onChange={handle3DUpload}
+                />
+                
+                <button
+                  type="button"
+                  onClick={() => threeDInputRef.current?.click()}
+                  disabled={uploading3D}
+                  className="px-6 py-4 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 font-bold rounded-2xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all flex items-center gap-2 whitespace-nowrap disabled:opacity-50"
+                >
+                  {uploading3D ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
+                  <span>Upload 3D File</span>
+                </button>
+              </div>
+              
+              {formData.threeDElement && (
+                <div className="flex items-center justify-between p-4 bg-primary/5 rounded-2xl border border-primary/10">
+                  <span className="text-xs font-bold text-primary truncate max-w-[80%]">{formData.threeDElement}</span>
+                  <button
+                    type="button"
+                    onClick={remove3DModel}
+                    className="text-red-500 hover:text-red-700 font-bold text-xs uppercase tracking-widest"
+                  >
+                    Remove
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Farm/Fruit Details */}
+          <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Farm/Fruit Details (Optional)</h3>
             <p className="text-sm text-gray-500 mb-6">If this is a farm land with active cultivation, you can add a picture of the fruit/crop and some details. Users can click the image to view the details in a popup.</p>
             
