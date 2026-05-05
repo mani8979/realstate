@@ -12,14 +12,7 @@ const Hero = () => {
   const router = useRouter();
   
   const [content, setContent] = useState<any>({
-    heroBadgeText: 'World-Class Real Estate',
-    heroTitle: 'Find Your Perfect Property',
-    heroSubtitle: "Invest in a lifestyle defined by luxury, comfort, and exceptional value. Your dream home awaits in Vizag's most prestigious locations.",
-    heroCtaText: 'Explore Properties',
-    heroCta1Link: '/properties',
-    heroCta2Text: 'Book Site Visit',
-    heroCta2Link: 'https://wa.me/1234567890',
-    heroBgImage: '/luxury_villa_hero_1777953581914.png'
+    heroBgImage: '' // Initialize empty to prevent flicker
   });
 
   useEffect(() => {
@@ -43,13 +36,15 @@ const Hero = () => {
           transition={{ duration: 10, ease: "easeOut" }}
           className="relative h-full w-full"
         >
-          <Image
-            src={content.heroBgImage}
-            alt="Luxury Real Estate"
-            fill
-            className="object-cover"
-            priority
-          />
+          {content.heroBgImage && (
+            <Image
+              src={content.heroBgImage}
+              alt="Luxury Real Estate"
+              fill
+              className="object-cover"
+              priority
+            />
+          )}
           {/* Enhanced Overlays */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10 pointer-events-none" />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/20 z-10 pointer-events-none" />

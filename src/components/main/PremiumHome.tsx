@@ -328,15 +328,15 @@ const PremiumHome = ({ properties, content }: PremiumHomeProps) => {
       </div>
 
       {/* Footer Reveal Section */}
-      <div ref={footerContainerRef} className="relative z-0 h-screen w-full overflow-hidden bg-[#050505] text-white flex flex-col items-center justify-center">
-        <motion.div style={{ y: footerY }} className="text-center px-6 w-full max-w-6xl">
+      <div ref={footerContainerRef} className="relative z-0 min-h-screen py-24 md:py-0 md:h-screen w-full overflow-hidden bg-[#050505] text-white flex flex-col items-center justify-center">
+        <motion.div style={{ y: isMobile ? 0 : footerY }} className="text-center px-6 w-full max-w-6xl">
            <p className="text-[#10b981] uppercase text-[10px] font-black tracking-[0.5em] mb-8">Ready to Invest?</p>
-           <h2 className="text-6xl md:text-9xl font-black uppercase tracking-tighter mb-16 md:mb-24">{content?.footerTitle || 'GET IN TOUCH'}</h2>
+           <h2 className="text-5xl md:text-9xl font-black uppercase tracking-tighter mb-16 md:mb-24">{content?.footerTitle || 'GET IN TOUCH'}</h2>
            
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 text-left border-t border-white/10 pt-16">
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 text-center md:text-left border-t border-white/10 pt-16">
               <div>
                  <p className="text-gray-500 uppercase text-[10px] font-black tracking-widest mb-6">{content?.footerInquiriesLabel || 'Inquiries'}</p>
-                 <p className="text-2xl md:text-5xl font-black tracking-tighter hover:text-[#10b981] transition-colors cursor-pointer">{content?.footerPhone || '+91 91234 56789'}</p>
+                 <p className="text-3xl md:text-5xl font-black tracking-tighter hover:text-[#10b981] transition-colors cursor-pointer">{content?.footerPhone || '+91 91234 56789'}</p>
                  <p className="text-lg md:text-xl text-white/40 mt-2">{content?.footerPhoneSub || 'Available Mon-Sat, 9AM-7PM'}</p>
               </div>
               <div>
