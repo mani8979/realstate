@@ -73,6 +73,8 @@ export interface ISiteContent extends Document {
   ctaSectionBtn2: string;
   globalFooterDesc: string;
   globalFooterCopyright: string;
+  headerLogoImage: string;
+  footerLogoImage: string;
 }
 
 const SiteContentSchema = new Schema<ISiteContent>(
