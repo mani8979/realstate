@@ -15,7 +15,7 @@ export const ScrollProvider = ({ children }: { children: ReactNode }) => {
         infinite: false,
       }}
     >
-      {children}
+      {children as any}
     </ReactLenis>
   );
 };
