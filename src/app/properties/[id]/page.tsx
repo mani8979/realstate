@@ -28,8 +28,15 @@ const PropertyDetails = () => {
   const { scrollYProgress } = useScroll();
   const fruitX = useTransform(scrollYProgress, [0, 1], ['-20%', '120%']);
   const fruitRotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
-  const modelY = useTransform(scrollYProgress, [0, 1], ['0vh', '100vh']);
-  const modelRotate = useTransform(scrollYProgress, [0, 1], [0, 720]);
+  
+  // Swaying movement logic from snippet: Math.sin(scrollPercent * Math.PI * 2) * 28
+  const modelX = useTransform(scrollYProgress, (pos) => {
+    const horizontalMove = Math.sin(pos * Math.PI * 2) * 28;
+    return `${horizontalMove}vw`;
+  });
+  
+  const modelY = useTransform(scrollYProgress, [0, 1], ['0vh', '80vh']);
+  const modelRotate = useTransform(scrollYProgress, (pos) => pos * 360 * 3);
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -138,15 +145,20 @@ const PropertyDetails = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-6 md:px-16 py-16 md:py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+      <div className="container mx-auto px-6 md:px-16 py-16 md:py-24 relative">
+        <div className="flex flex-col gap-32">
           
-          {/* Main Content */}
-          <div className="lg:col-span-8 space-y-24">
+          {/* Main Content Area - Now with alternating alignment for empty spaces */}
+          <div className="space-y-48">
             
-            {/* Visual Gallery */}
+            {/* Visual Gallery - Left Aligned */}
             {(property.images.length > 1 || property.fruitImage) && (
-              <div>
+              <motion.div 
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="max-w-3xl"
+              >
                 <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-8">Visual Gallery</h3>
                 <div className="flex flex-wrap gap-4">
                   {/* Property Images */}
@@ -176,11 +188,18 @@ const PropertyDetails = () => {
                     </button>
                   )}
                 </div>
-              </div>
+              </motion.div>
             )}
 
-            <div className="space-y-12 relative overflow-hidden rounded-[3rem]">
-              {/* Background Image for Details */}
+            {/* Property Details - Right Aligned to create empty space on left */}
+            <motion.div 
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="flex justify-end"
+            >
+              <div className="max-w-4xl w-full space-y-12 relative overflow-hidden rounded-[3rem] bg-white/5 border border-white/10 p-8 md:p-12">
+                {/* Background Image for Details */}
               {property.images[0] && (
                 <div className="absolute inset-0 z-0 opacity-[0.03] scale-110 blur-sm pointer-events-none">
                   <Image src={property.images[0]} alt="Background" fill className="object-cover" />
@@ -241,9 +260,16 @@ const PropertyDetails = () => {
                   </div>
                 )}
               </div>
+            </motion.div>
 
-              {/* Dragon Fruit Plantation Section */}
-              <div className="relative z-10 p-8 md:p-12 mt-12 bg-white/5 rounded-[3rem] border border-white/10 overflow-hidden group hover:border-primary/30 transition-all">
+            {/* Dragon Fruit Plantation Section - Left Aligned */}
+            <motion.div 
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="flex justify-start"
+            >
+              <div className="max-w-3xl w-full relative z-10 p-8 md:p-12 bg-white/5 rounded-[3rem] border border-white/10 overflow-hidden group hover:border-primary/30 transition-all">
                 <div className="flex items-center gap-4 mb-12">
                   <span className="w-12 h-[2px] bg-primary"></span>
                   <h2 className="text-2xl md:text-4xl font-black uppercase tracking-widest text-white">Dragon Fruit Plantation & Profit Model</h2>
@@ -263,9 +289,16 @@ const PropertyDetails = () => {
 
                 <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[100px] rounded-full -mr-32 -mt-32"></div>
               </div>
+            </motion.div>
 
-              {/* Passive Income Section */}
-              <div className="relative z-10 p-8 md:p-12 mt-12 mb-12 bg-gradient-to-br from-primary/10 to-transparent rounded-[3rem] border border-primary/20">
+            {/* Passive Income Section - Right Aligned */}
+            <motion.div 
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="flex justify-end"
+            >
+              <div className="max-w-3xl w-full relative z-10 p-8 md:p-12 bg-gradient-to-br from-primary/10 to-transparent rounded-[3rem] border border-primary/20">
                 <div className="flex items-center gap-4 mb-8">
                   <span className="w-12 h-[2px] bg-primary"></span>
                   <h2 className="text-2xl md:text-4xl font-black uppercase tracking-widest text-white">Passive Income</h2>
@@ -285,9 +318,15 @@ const PropertyDetails = () => {
                   </div>
                 </div>
               </div>
+            </motion.div>
 
-              {/* Bottom Enquiry Form */}
-              <div className="relative z-10 p-10 md:p-16 mt-20 bg-white/5 rounded-[4rem] border border-white/10">
+            {/* Bottom Enquiry Form - Center Aligned */}
+            <motion.div 
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="relative z-10 p-10 md:p-16 mt-20 bg-white/5 rounded-[4rem] border border-white/10"
+            >
                  <div className="max-w-2xl mx-auto text-center mb-12">
                     <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white mb-4">Start Your Journey</h2>
                     <p className="text-gray-500 font-medium uppercase tracking-widest text-xs">Fill out the form below to get detailed information</p>
@@ -353,12 +392,15 @@ const PropertyDetails = () => {
 
           </div>
 
-          {/* Sidebar */}
-          <div className="lg:col-span-4">
-            <div className="sticky top-32 space-y-8">
+            </motion.div>
+          </div>
+
+          {/* Sidebar - Integrated as a floating element or moved to top/bottom */}
+          <div className="max-w-lg mx-auto w-full lg:max-w-none">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               
               {/* Quick Actions */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4 lg:col-span-1">
                 <a
                   href={`tel:+919876543210`}
                   className="bg-white/5 hover:bg-primary border border-white/10 hover:border-primary text-white hover:text-black font-bold p-6 rounded-3xl flex flex-col items-center justify-center gap-3 transition-all group"
@@ -376,80 +418,29 @@ const PropertyDetails = () => {
                   <span className="text-[10px] uppercase tracking-[0.2em]">WhatsApp</span>
                 </a>
               </div>
-
-              {/* Inquiry Form */}
-              <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-[3rem]">
-                <h3 className="text-2xl font-black uppercase tracking-widest text-white mb-8">Inquire Now</h3>
-                <form onSubmit={handleEnquiry} className="space-y-6">
-                  <div>
-                    <label className="text-[10px] text-white/50 font-black uppercase tracking-[0.2em] mb-2 block">Full Name</label>
-                    <input
-                      type="text"
-                      required
-                      className="w-full px-6 py-4 bg-black/50 text-white rounded-2xl focus:ring-2 focus:ring-primary/50 border border-white/10 transition-all placeholder:text-white/20"
-                      placeholder="John Doe"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-white/50 font-black uppercase tracking-[0.2em] mb-2 block">Phone Number</label>
-                    <input
-                      type="tel"
-                      required
-                      className="w-full px-6 py-4 bg-black/50 text-white rounded-2xl focus:ring-2 focus:ring-primary/50 border border-white/10 transition-all placeholder:text-white/20"
-                      placeholder="+91 00000 00000"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-white/50 font-black uppercase tracking-[0.2em] mb-2 block">Message</label>
-                    <textarea
-                      required
-                      rows={4}
-                      className="w-full px-6 py-4 bg-black/50 text-white rounded-2xl focus:ring-2 focus:ring-primary/50 border border-white/10 transition-all resize-none placeholder:text-white/20"
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    ></textarea>
-                  </div>
-                  <button
-                    type="submit"
-                    disabled={formStatus === 'loading'}
-                    className="w-full bg-primary hover:bg-white text-black font-black uppercase tracking-widest py-5 rounded-2xl transition-all flex items-center justify-center gap-2 disabled:opacity-70"
-                  >
-                    {formStatus === 'loading' ? (
-                      <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
-                    ) : (
-                      <>
-                        <Send size={18} />
-                        <span>Send Enquiry</span>
-                      </>
-                    )}
-                  </button>
-                  {formStatus === 'success' && <p className="text-primary font-bold text-center mt-4 text-sm uppercase tracking-widest">Enquiry sent successfully!</p>}
-                </form>
-              </div>
-
             </div>
           </div>
         </div>
       </div>
 
-      {/* 3D Model Scroll Effect */}
+      {/* 3D Model Swaying Effect */}
       {property.threeDElement && (
         <motion.div 
-          style={{ y: modelY, rotateY: modelRotate }}
-          className="fixed top-20 right-0 w-[40vw] h-[60vh] pointer-events-none z-0 opacity-40 mix-blend-screen hidden lg:block"
+          style={{ x: modelX, y: modelY, rotateY: modelRotate }}
+          className="fixed top-0 left-0 w-full h-screen pointer-events-none z-0 flex items-center justify-center"
         >
-          <ModelViewer
-            src={property.threeDElement}
-            auto-rotate
-            camera-controls
-            shadow-intensity="1"
-            environment-image="neutral"
-            style={{ width: '100%', height: '100%' }}
-          ></ModelViewer>
+          <div className="w-[300px] h-[400px] pointer-events-auto cursor-pointer" onClick={() => setShowFruitPopup(true)}>
+            <ModelViewer
+              src={property.threeDElement}
+              auto-rotate
+              camera-controls
+              shadow-intensity="2"
+              environment-image="neutral"
+              exposure="1.2"
+              style={{ width: '100%', height: '100%' }}
+              interaction-prompt="none"
+            ></ModelViewer>
+          </div>
         </motion.div>
       )}
 
