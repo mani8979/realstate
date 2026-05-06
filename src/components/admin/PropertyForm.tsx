@@ -24,12 +24,14 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     featured: false,
     fruitImage: '',
     fruitInfo: '',
+    threeDElement: '',
     details: []
   });
   const [uploading, setUploading] = useState(false);
   const [uploadingFruit, setUploadingFruit] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const fruitInputRef = useRef<HTMLInputElement>(null);
+  const threeDInputRef = useRef<HTMLInputElement>(null);
 
   const handleFruitUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -61,6 +63,38 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
 
   const removeFruitImage = () => {
     setFormData((prev: any) => ({ ...prev, fruitImage: '' }));
+  };
+
+  const handleThreeDUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploading(true);
+    try {
+      const file = files[0];
+      const uploadFormData = new FormData();
+      uploadFormData.append('file', file);
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: uploadFormData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setFormData((prev: any) => ({ ...prev, threeDElement: data.url }));
+      }
+    } catch (error) {
+      console.error('Upload failed:', error);
+      alert('Upload failed. Please try again.');
+    } finally {
+      setUploading(false);
+      if (threeDInputRef.current) threeDInputRef.current.value = '';
+    }
+  };
+
+  const removeThreeD = () => {
+    setFormData((prev: any) => ({ ...prev, threeDElement: '' }));
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -413,6 +447,59 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                   <p className="text-gray-400 text-sm font-medium">No structured details added yet.</p>
                 </div>
               )}
+            </div>
+          </div>
+
+          {/* 3D Model Details */}
+          <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">3D Model (GLB/GLTF)</h3>
+            <p className="text-sm text-gray-500 mb-6">Upload a 3D model that will scroll through the page. Supports .glb or .gltf files.</p>
+            
+            <div className="space-y-6">
+              <div>
+                <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1 mb-2 block">3D Model File</label>
+                {formData.threeDElement ? (
+                  <div className="flex items-center gap-4 p-4 bg-primary/10 rounded-2xl border border-primary/20">
+                    <div className="bg-primary text-black p-3 rounded-xl">
+                      <Save size={20} />
+                    </div>
+                    <div className="flex-grow min-w-0">
+                      <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{formData.threeDElement.split('/').pop()}</p>
+                      <p className="text-xs text-gray-500">3D Model Loaded</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={removeThreeD}
+                      className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-colors"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <input
+                      type="file"
+                      accept=".glb,.gltf"
+                      className="hidden"
+                      ref={threeDInputRef}
+                      onChange={handleThreeDUpload}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => threeDInputRef.current?.click()}
+                      disabled={uploading}
+                      className="w-full h-32 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-all group disabled:opacity-50"
+                    >
+                      <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-xl group-hover:bg-primary group-hover:text-white transition-all">
+                        {uploading ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
+                      </div>
+                      <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                        {uploading ? 'Uploading...' : 'Upload GLB/GLTF Model'}
+                      </span>
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           </div>
 

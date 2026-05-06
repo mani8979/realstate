@@ -8,6 +8,9 @@ import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
+// Bypass TypeScript error for custom element
+const ModelViewer = 'model-viewer' as any;
+
 const PropertyDetails = () => {
   const { id } = useParams();
   const router = useRouter();
@@ -25,6 +28,8 @@ const PropertyDetails = () => {
   const { scrollYProgress } = useScroll();
   const fruitX = useTransform(scrollYProgress, [0, 1], ['-20%', '120%']);
   const fruitRotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
+  const modelY = useTransform(scrollYProgress, [0, 1], ['0vh', '100vh']);
+  const modelRotate = useTransform(scrollYProgress, [0, 1], [0, 720]);
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -236,6 +241,112 @@ const PropertyDetails = () => {
                   </div>
                 )}
               </div>
+
+              {/* Dragon Fruit Plantation Section */}
+              <div className="relative z-10 p-8 md:p-12 mt-12 bg-white/5 rounded-[3rem] border border-white/10 overflow-hidden group hover:border-primary/30 transition-all">
+                <div className="flex items-center gap-4 mb-12">
+                  <span className="w-12 h-[2px] bg-primary"></span>
+                  <h2 className="text-2xl md:text-4xl font-black uppercase tracking-widest text-white">Dragon Fruit Plantation & Profit Model</h2>
+                </div>
+                
+                <div className="space-y-8 relative z-10">
+                  <p className="text-gray-300 text-lg md:text-xl leading-relaxed font-medium">
+                    Dragon fruit cultivation is a high-demand and profitable farming option with long-term benefits.
+                  </p>
+                  <p className="text-gray-400 text-lg md:text-xl leading-relaxed font-medium">
+                    Dragon fruit plants can yield fruits for up to 30 years, providing long-term income stability. The produce generated will be sold, and the profits will be shared as per the model mentioned above.
+                  </p>
+                  <p className="text-gray-400 text-lg md:text-xl leading-relaxed font-medium">
+                    Additionally, the plantation can be removed anytime if the client wishes to convert the land for residential or other purposes.
+                  </p>
+                </div>
+
+                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[100px] rounded-full -mr-32 -mt-32"></div>
+              </div>
+
+              {/* Passive Income Section */}
+              <div className="relative z-10 p-8 md:p-12 mt-12 mb-12 bg-gradient-to-br from-primary/10 to-transparent rounded-[3rem] border border-primary/20">
+                <div className="flex items-center gap-4 mb-8">
+                  <span className="w-12 h-[2px] bg-primary"></span>
+                  <h2 className="text-2xl md:text-4xl font-black uppercase tracking-widest text-white">Passive Income</h2>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="p-6 bg-black/40 rounded-2xl border border-white/5">
+                    <p className="text-primary font-black text-2xl mb-2">Sustainable</p>
+                    <p className="text-gray-500 text-sm">Long-term agricultural returns</p>
+                  </div>
+                  <div className="p-6 bg-black/40 rounded-2xl border border-white/5">
+                    <p className="text-primary font-black text-2xl mb-2">Hassle-Free</p>
+                    <p className="text-gray-500 text-sm">Full management provided</p>
+                  </div>
+                  <div className="p-6 bg-black/40 rounded-2xl border border-white/5">
+                    <p className="text-primary font-black text-2xl mb-2">Secure</p>
+                    <p className="text-gray-500 text-sm">Asset-backed investment</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Enquiry Form */}
+              <div className="relative z-10 p-10 md:p-16 mt-20 bg-white/5 rounded-[4rem] border border-white/10">
+                 <div className="max-w-2xl mx-auto text-center mb-12">
+                    <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white mb-4">Start Your Journey</h2>
+                    <p className="text-gray-500 font-medium uppercase tracking-widest text-xs">Fill out the form below to get detailed information</p>
+                 </div>
+                 
+                 <form onSubmit={handleEnquiry} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-4">
+                        <div>
+                          <label className="text-[10px] text-white/50 font-black uppercase tracking-[0.2em] mb-2 block px-2">Full Name</label>
+                          <input
+                            type="text"
+                            required
+                            className="w-full px-8 py-5 bg-black/50 text-white rounded-[2rem] focus:ring-2 focus:ring-primary/50 border border-white/10 transition-all placeholder:text-white/10"
+                            placeholder="John Doe"
+                            value={formData.name}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-white/50 font-black uppercase tracking-[0.2em] mb-2 block px-2">Phone Number</label>
+                          <input
+                            type="tel"
+                            required
+                            className="w-full px-8 py-5 bg-black/50 text-white rounded-[2rem] focus:ring-2 focus:ring-primary/50 border border-white/10 transition-all placeholder:text-white/10"
+                            placeholder="+91 00000 00000"
+                            value={formData.phone}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          />
+                        </div>
+                    </div>
+                    <div className="space-y-6">
+                        <div>
+                          <label className="text-[10px] text-white/50 font-black uppercase tracking-[0.2em] mb-2 block px-2">Message</label>
+                          <textarea
+                            required
+                            rows={5}
+                            className="w-full px-8 py-5 bg-black/50 text-white rounded-[2rem] focus:ring-2 focus:ring-primary/50 border border-white/10 transition-all resize-none placeholder:text-white/10"
+                            value={formData.message}
+                            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                          ></textarea>
+                        </div>
+                        <button
+                          type="submit"
+                          disabled={formStatus === 'loading'}
+                          className="w-full bg-primary hover:bg-white text-black font-black uppercase tracking-widest py-6 rounded-[2rem] transition-all flex items-center justify-center gap-3 disabled:opacity-70 group shadow-[0_0_30px_rgba(var(--primary-rgb),0.2)]"
+                        >
+                          {formStatus === 'loading' ? (
+                            <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                          ) : (
+                            <>
+                              <Send size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                              <span>Send Enquiry</span>
+                            </>
+                          )}
+                        </button>
+                    </div>
+                    {formStatus === 'success' && <div className="col-span-full bg-primary/20 p-4 rounded-2xl text-primary font-bold text-center animate-bounce uppercase tracking-widest text-xs">Enquiry sent successfully! We will contact you soon.</div>}
+                 </form>
+              </div>
             </div>
 
 
@@ -325,8 +436,25 @@ const PropertyDetails = () => {
         </div>
       </div>
 
+      {/* 3D Model Scroll Effect */}
+      {property.threeDElement && (
+        <motion.div 
+          style={{ y: modelY, rotateY: modelRotate }}
+          className="fixed top-20 right-0 w-[40vw] h-[60vh] pointer-events-none z-0 opacity-40 mix-blend-screen hidden lg:block"
+        >
+          <ModelViewer
+            src={property.threeDElement}
+            auto-rotate
+            camera-controls
+            shadow-intensity="1"
+            environment-image="neutral"
+            style={{ width: '100%', height: '100%' }}
+          ></ModelViewer>
+        </motion.div>
+      )}
+
       {/* Floating Scroll Effect Dragon Fruit */}
-      {property.fruitImage && (
+      {property.fruitImage && !property.threeDElement && (
         <motion.div 
           style={{ x: fruitX, rotate: fruitRotate }}
           className="fixed top-1/4 left-0 w-32 h-32 md:w-48 md:h-48 pointer-events-none z-50 opacity-20 md:opacity-30 blur-[1px]"
