@@ -163,7 +163,48 @@ export default function SiteContentAdmin() {
           </div>
         </div>
 
-        {/* Contact Information */}
+        </div>
+ 
++        {/* Global 3D Experience */}
++        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
++          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Global 3D Experience</h2>
++          
++          <div className="space-y-4">
++            <div>
++              <label className="block text-sm font-bold text-gray-500 mb-2">Global 3D Model (.glb URL)</label>
++              <input 
++                name="globalThreeDModel"
++                value={content.globalThreeDModel || ''}
++                onChange={handleChange}
++                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
++                placeholder="e.g. /models/dragon_fruit.glb or https://..."
++              />
++            </div>
++            
++            <div>
++              <label className="block text-sm font-bold text-gray-500 mb-2">Popup Title</label>
++              <input 
++                name="globalPopupTitle"
++                value={content.globalPopupTitle || ''}
++                onChange={handleChange}
++                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
++              />
++            </div>
++
++            <div>
++              <label className="block text-sm font-bold text-gray-500 mb-2">Popup Content</label>
++              <textarea 
++                name="globalPopupContent"
++                rows={4}
++                value={content.globalPopupContent || ''}
++                onChange={handleChange}
++                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
++              />
++            </div>
++          </div>
++        </div>
++
+         {/* Contact Information */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Contact Details</h2>
           

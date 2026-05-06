@@ -3,14 +3,32 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Leaf, X } from 'lucide-react';
-import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
 const ModelViewer = 'model-viewer' as any;
 
 const FloatingDragon = () => {
   const [showPopup, setShowPopup] = useState(false);
+  const [settings, setSettings] = useState<any>(null);
+  const pathname = usePathname();
   const modelViewerRef = useRef<any>(null);
   const { scrollYProgress } = useScroll();
+
+  useEffect(() => {
+    fetch('/api/content')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.data) {
+          setSettings(data.data);
+        }
+      });
+  }, []);
+
+  // Don't show on admin pages
+  if (pathname?.startsWith('/admin')) return null;
+
+  // Don't show if no model is set
+  if (!settings?.globalThreeDModel) return null;
 
   // Swaying logic
   const modelX = useTransform(scrollYProgress, (pos) => {
@@ -29,9 +47,6 @@ const FloatingDragon = () => {
     });
   }, [scrollYProgress]);
 
-  // Default dragon fruit model - using a placeholder if not provided
-  const defaultModel = "https://modelviewer.dev/shared-assets/models/Astronaut.glb"; 
-
   return (
     <>
       <motion.div 
@@ -41,8 +56,8 @@ const FloatingDragon = () => {
         <div className="w-[150px] h-[200px] md:w-[250px] md:h-[300px] pointer-events-auto cursor-pointer" onClick={() => setShowPopup(true)}>
           <ModelViewer
             ref={modelViewerRef}
-            src={defaultModel}
-            alt="Dragon Fruit Experience"
+            src={settings.globalThreeDModel}
+            alt="Global 3D Experience"
             camera-controls
             disable-zoom
             disable-pan
@@ -67,27 +82,19 @@ const FloatingDragon = () => {
             onClick={e => e.stopPropagation()}
           >
             {/* Content Side */}
-            <div data-lenis-prevent className="w-full md:w-1/2 p-8 md:p-12 overflow-y-auto custom-scrollbar flex flex-col">
+            <div data-lenis-prevent className="w-full md:w-1/2 p-8 md:p-12 overflow-y-auto custom-scrollbar flex flex-col text-left">
               <div className="bg-primary/20 p-4 rounded-2xl mb-8 border border-primary/20 flex-shrink-0 w-fit">
                 <Leaf className="text-primary" size={32} />
               </div>
               
-              <h3 className="text-4xl font-black text-primary uppercase tracking-widest mb-6">Pitaya Secrets</h3>
+              <h3 className="text-4xl font-black text-primary uppercase tracking-widest mb-6">
+                {settings.globalPopupTitle || '3D Experience'}
+              </h3>
               
               <div className="space-y-8 flex-grow">
-                <div className="space-y-4">
-                  <p className="text-primary/60 font-black uppercase tracking-[0.2em] text-xs">Origin & Profit</p>
-                  <p className="text-gray-300 text-lg leading-relaxed">
-                    Dragon fruit is a high-demand tropical crop. Our plantations offer long-term stability with yields lasting up to 30 years. Profits are shared 50/50 with clients.
-                  </p>
-                </div>
-
-                <div className="space-y-4">
-                  <p className="text-primary/60 font-black uppercase tracking-[0.2em] text-xs">Nutritional Power</p>
-                  <p className="text-gray-300 text-lg leading-relaxed">
-                    Rich in Vitamin C, fiber, and iron. It's a perfect sustainable agricultural investment that combines health and wealth.
-                  </p>
-                </div>
+                <p className="text-gray-300 text-lg leading-relaxed whitespace-pre-wrap">
+                  {settings.globalPopupContent || 'Information about this 3D model will appear here.'}
+                </p>
               </div>
 
               <button 
@@ -101,7 +108,7 @@ const FloatingDragon = () => {
             {/* Model Preview Side */}
             <div className="hidden md:block w-1/2 h-full bg-black/50 relative border-l border-white/10">
               <ModelViewer
-                src={defaultModel}
+                src={settings.globalThreeDModel}
                 auto-rotate
                 camera-controls
                 shadow-intensity="2"
