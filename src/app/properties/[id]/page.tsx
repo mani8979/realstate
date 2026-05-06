@@ -416,8 +416,6 @@ const PropertyDetails = () => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
       {/* 3D Model Swaying Effect */}
       {property.threeDElement && (
