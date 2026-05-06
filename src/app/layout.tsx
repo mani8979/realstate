@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import MobileStickyBar from "@/components/layout/MobileStickyBar";
+import FloatingDragon from "@/components/layout/FloatingDragon";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { ScrollProvider } from "@/components/providers/ScrollProvider";
 
@@ -40,6 +41,7 @@ export default function RootLayout({
             <main className="flex-grow">
               {children}
             </main>
+            <FloatingDragon />
             <Footer />
             <MobileStickyBar />
           </ScrollProvider>
