@@ -23,9 +23,11 @@ export async function POST(request: NextRequest) {
     const base64Image = `data:${file.type};base64,${buffer.toString('base64')}`;
 
     // Upload to Cloudinary
+    const is3DModel = file.name.toLowerCase().endsWith('.glb') || file.name.toLowerCase().endsWith('.gltf');
+    
     const result = await cloudinary.uploader.upload(base64Image, {
       folder: 'realstate_uploads',
-      resource_type: 'auto',
+      resource_type: is3DModel ? 'raw' : 'auto',
     });
 
     return NextResponse.json({ url: result.secure_url });

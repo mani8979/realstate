@@ -169,14 +169,46 @@ export default function SiteContentAdmin() {
           
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-bold text-gray-500 mb-2">Global 3D Model (.glb URL)</label>
-              <input 
-                name="globalThreeDModel"
-                value={content.globalThreeDModel || ''}
-                onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                placeholder="e.g. /models/dragon_fruit.glb or https://..."
-              />
+              <label className="block text-sm font-bold text-gray-500 mb-2">Global 3D Model (.glb)</label>
+              <div className="flex gap-4 items-center">
+                <input 
+                  name="globalThreeDModel"
+                  value={content.globalThreeDModel || ''}
+                  onChange={handleChange}
+                  className="flex-grow p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  placeholder="e.g. /models/untitled.glb or https://..."
+                />
+                <label className="bg-gray-900 dark:bg-white text-white dark:text-black px-6 py-4 rounded-xl font-bold cursor-pointer hover:opacity-80 transition-all flex-shrink-0">
+                  Upload GLB
+                  <input 
+                    type="file"
+                    accept=".glb"
+                    className="hidden"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      
+                      const formData = new FormData();
+                      formData.append('file', file);
+                      
+                      try {
+                        const res = await fetch('/api/upload', {
+                          method: 'POST',
+                          body: formData
+                        });
+                        const data = await res.json();
+                        if (data.url) {
+                          setContent({ ...content, globalThreeDModel: data.url });
+                          alert('3D Model uploaded successfully!');
+                        }
+                      } catch (err) {
+                        alert('Upload failed');
+                      }
+                    }}
+                  />
+                </label>
+              </div>
+              <p className="mt-2 text-xs text-gray-500 font-medium italic">Current: {content.globalThreeDModel || 'None'}</p>
             </div>
             
             <div>

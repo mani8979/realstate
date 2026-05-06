@@ -75,6 +75,9 @@ export interface ISiteContent extends Document {
   globalFooterCopyright: string;
   headerLogoImage: string;
   footerLogoImage: string;
+  globalThreeDModel: string;
+  globalPopupTitle: string;
+  globalPopupContent: string;
 }
 
 const SiteContentSchema = new Schema<ISiteContent>(
@@ -152,7 +155,10 @@ const SiteContentSchema = new Schema<ISiteContent>(
     globalFooterDesc: { type: String, default: "Find your dream property with our expert real estate services. We specialize in buying, selling, and renting premium properties." },
     globalFooterCopyright: { type: String, default: "© 2026 REAL ESTATE. All rights reserved." },
     headerLogoImage: { type: String, default: "" },
-    footerLogoImage: { type: String, default: "" }
+    footerLogoImage: { type: String, default: "" },
+    globalThreeDModel: { type: String, default: "/models/untitled.glb" },
+    globalPopupTitle: { type: String, default: "Pitaya Secrets" },
+    globalPopupContent: { type: String, default: "Dragon fruit cultivation is a high-demand tropical crop. Our plantations offer long-term stability with yields lasting up to 30 years. Profits are shared 50/50 with clients." }
   },
   { timestamps: true }
 );
