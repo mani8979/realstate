@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Property from '@/lib/models/Property';
+import { revalidatePath } from 'next/cache';
 
 export async function GET(request: Request) {
   try {
@@ -44,8 +45,14 @@ export async function POST(request: Request) {
     // but in reality we'd check a session or header
     
     const property = await Property.create(data);
+    
+    // Trigger revalidation
+    revalidatePath('/');
+    revalidatePath('/properties');
+    
     return NextResponse.json(property, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+

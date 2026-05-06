@@ -8,6 +8,9 @@ import FeaturedProperties from '@/components/main/FeaturedProperties';
 import CTA from '@/components/main/CTA';
 import BrandValues from '@/components/main/BrandValues';
 
+export const revalidate = 0; // Disable static caching for the home page
+
+
 async function getLands() {
   try {
     await dbConnect();

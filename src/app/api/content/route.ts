@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import SiteContent from '@/lib/models/SiteContent';
+import { revalidatePath } from 'next/cache';
 
 export async function GET() {
   try {
@@ -27,8 +28,12 @@ export async function PUT(req: Request) {
       content = await SiteContent.create(body);
     }
     
+    // Trigger revalidation for the home page
+    revalidatePath('/');
+    
     return NextResponse.json({ success: true, data: content });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Failed to update content' }, { status: 500 });
   }
 }
+
