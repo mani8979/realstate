@@ -483,7 +483,7 @@ const PropertyDetails = () => {
       {/* Fruit Info Popup */}
       {showFruitPopup && property.fruitImage && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 bg-black/95 backdrop-blur-xl transition-all duration-500" onClick={() => setShowFruitPopup(false)}>
-          <div className="bg-[#0a0a0a] border border-white/10 w-full max-w-5xl rounded-[3rem] overflow-hidden shadow-[0_0_100px_rgba(var(--primary-rgb),0.2)] relative flex flex-col md:flex-row h-auto max-h-[90vh]" onClick={e => e.stopPropagation()}>
+          <div className="bg-[#0a0a0a] border border-white/10 w-full max-w-5xl rounded-[3rem] overflow-hidden shadow-[0_0_100px_rgba(var(--primary-rgb),0.2)] relative flex flex-col md:flex-row h-auto md:h-[85vh] max-h-[90vh]" onClick={e => e.stopPropagation()}>
             {/* Background Image Container */}
             <div className="absolute inset-0 z-0">
               <Image src={property.fruitImage} alt="Cultivation" fill className="object-cover opacity-40" />
@@ -491,7 +491,10 @@ const PropertyDetails = () => {
             </div>
 
             {/* Content Overlay - Improved Scrollability */}
-            <div className="relative z-10 p-8 md:p-16 flex flex-col justify-start items-start text-left w-full h-full overflow-y-auto custom-scrollbar bg-black/60 backdrop-blur-md">
+            <div 
+              data-lenis-prevent
+              className="relative z-10 p-8 md:p-16 flex flex-col justify-start items-start text-left w-full md:w-3/4 h-full overflow-y-auto custom-scrollbar bg-black/60 backdrop-blur-md"
+            >
               <div className="bg-primary/20 p-4 rounded-2xl mb-8 border border-primary/20 mt-10 md:mt-0 flex-shrink-0">
                 <Leaf className="text-primary" size={40} />
               </div>
@@ -530,6 +533,21 @@ const PropertyDetails = () => {
                   <X size={18} className="group-hover:rotate-90 transition-transform" />
                 </button>
               </div>
+            </div>
+
+            {/* Model Preview Side */}
+            <div className="w-full md:w-1/2 h-[300px] md:h-auto bg-black/50 relative border-t md:border-t-0 md:border-l border-white/10 flex-shrink-0">
+              {property.threeDElement && (
+                <ModelViewer
+                  src={property.threeDElement}
+                  auto-rotate
+                  camera-controls
+                  shadow-intensity="2"
+                  environment-image="neutral"
+                  exposure="1.2"
+                  style={{ width: '100%', height: '100%' }}
+                ></ModelViewer>
+              )}
             </div>
 
             {/* Close Button Mobile */}
