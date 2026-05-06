@@ -408,16 +408,13 @@ const PropertyDetails = () => {
                     {formStatus === 'success' && <div className="col-span-full bg-primary/20 p-4 rounded-2xl text-primary font-bold text-center animate-bounce uppercase tracking-widest text-xs">Enquiry sent successfully! We will contact you soon.</div>}
                  </form>
               </motion.div>
-            </div>
-          </div>
-        </div>
 
-          {/* Sidebar - Integrated as a floating element or moved to top/bottom */}
-          <div className="max-w-lg mx-auto w-full lg:max-w-none">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Quick Actions & Contact Section */}
+          <div className="max-w-4xl mx-auto w-full mt-32">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               
               {/* Quick Actions */}
-              <div className="grid grid-cols-2 gap-4 lg:col-span-1">
+              <div className="grid grid-cols-2 gap-4 md:col-span-1">
                 <a
                   href={`tel:+919876543210`}
                   className="bg-white/5 hover:bg-primary border border-white/10 hover:border-primary text-white hover:text-black font-bold p-6 rounded-3xl flex flex-col items-center justify-center gap-3 transition-all group"
@@ -437,9 +434,11 @@ const PropertyDetails = () => {
               </div>
             </div>
           </div>
-
-      {/* Global Dragon is now handled in layout.tsx */}
-
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
