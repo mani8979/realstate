@@ -260,9 +260,10 @@ const PropertyDetails = () => {
                   </div>
                 )}
               </div>
-            </motion.div>
+            </div>
+          </motion.div>
 
-            {/* Dragon Fruit Plantation Section - Left Aligned */}
+          {/* Dragon Fruit Plantation Section - Left Aligned */}
             <motion.div 
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
