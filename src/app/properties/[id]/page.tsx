@@ -386,15 +386,10 @@ const PropertyDetails = () => {
                     </div>
                     {formStatus === 'success' && <div className="col-span-full bg-primary/20 p-4 rounded-2xl text-primary font-bold text-center animate-bounce uppercase tracking-widest text-xs">Enquiry sent successfully! We will contact you soon.</div>}
                  </form>
-              </div>
+              </motion.div>
             </div>
-
-
-
           </div>
-
-            </motion.div>
-          </div>
+        </div>
 
           {/* Sidebar - Integrated as a floating element or moved to top/bottom */}
           <div className="max-w-lg mx-auto w-full lg:max-w-none">
