@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 import { Leaf, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
@@ -10,11 +10,13 @@ const ModelViewer = 'model-viewer' as any;
 const FloatingDragon = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [settings, setSettings] = useState<any>(null);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const modelViewerRef = useRef<any>(null);
   const { scrollYProgress } = useScroll();
 
   useEffect(() => {
+    setMounted(true);
     fetch('/api/content')
       .then(res => res.json())
       .then(data => {
@@ -24,8 +26,8 @@ const FloatingDragon = () => {
       });
   }, []);
 
-  // Don't show on admin pages
-  if (pathname?.startsWith('/admin')) return null;
+  // Don't show on admin pages or during SSR
+  if (!mounted || pathname?.startsWith('/admin')) return null;
 
   // Don't show if no model is set
   if (!settings?.globalThreeDModel) return null;
@@ -38,14 +40,12 @@ const FloatingDragon = () => {
 
   const modelY = useTransform(scrollYProgress, [0, 1], ['0vh', '80vh']);
 
-  useEffect(() => {
-    return scrollYProgress.onChange((pos) => {
-      if (modelViewerRef.current) {
-        const rotation = pos * 360 * 3;
-        modelViewerRef.current.cameraOrbit = `${rotation}deg 75deg 10m`;
-      }
-    });
-  }, [scrollYProgress]);
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    if (modelViewerRef.current) {
+      const rotation = latest * 360 * 3;
+      modelViewerRef.current.cameraOrbit = `${rotation}deg 75deg 10m`;
+    }
+  });
 
   return (
     <>
@@ -78,7 +78,7 @@ const FloatingDragon = () => {
       {showPopup && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-10 bg-black/90 backdrop-blur-xl" onClick={() => setShowPopup(false)}>
           <div 
-            className="relative w-full max-w-4xl bg-[#111] border-2 border-primary rounded-[3rem] overflow-hidden flex flex-col md:flex-row shadow-[0_0_50px_rgba(var(--primary-rgb),0.3)] h-auto md:h-[80vh] max-h-[90vh]"
+            className="relative w-full max-w-4xl bg-[#111] border-2 border-primary rounded-[3rem] overflow-hidden flex flex-col md:flex-row shadow-[0_0_50px_rgba(16,185,129,0.3)] h-auto md:h-[80vh] max-h-[90vh]"
             onClick={e => e.stopPropagation()}
           >
             {/* Content Side */}

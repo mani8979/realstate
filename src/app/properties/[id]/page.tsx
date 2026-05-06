@@ -6,7 +6,7 @@ import { MapPin, Phone, MessageSquare, Send, ArrowLeft, Share2, X, Leaf } from '
 import Link from 'next/link';
 import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 
 // Bypass TypeScript error for custom element
 const ModelViewer = 'model-viewer' as any;
@@ -26,6 +26,11 @@ const PropertyDetails = () => {
   const [showFruitPopup, setShowFruitPopup] = useState(false);
   const [isReadMore, setIsReadMore] = useState(false);
   const modelViewerRef = useRef<any>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const { scrollYProgress } = useScroll();
   const fruitX = useTransform(scrollYProgress, [0, 1], ['-20%', '120%']);
@@ -39,14 +44,12 @@ const PropertyDetails = () => {
   });
 
   // Sync camera orbit with scroll for exact rotation effect
-  useEffect(() => {
-    return scrollYProgress.onChange((pos) => {
-      if (modelViewerRef.current) {
-        const rotation = pos * 360 * 3;
-        modelViewerRef.current.cameraOrbit = `${rotation}deg 75deg 10m`;
-      }
-    });
-  }, [scrollYProgress]);
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    if (modelViewerRef.current) {
+      const rotation = latest * 360 * 3;
+      modelViewerRef.current.cameraOrbit = `${rotation}deg 75deg 10m`;
+    }
+  });
   
   const modelY = useTransform(scrollYProgress, [0, 1], ['0vh', '80vh']);
 
@@ -393,7 +396,7 @@ const PropertyDetails = () => {
                         <button
                           type="submit"
                           disabled={formStatus === 'loading'}
-                          className="w-full bg-primary hover:bg-white text-black font-black uppercase tracking-widest py-6 rounded-[2rem] transition-all flex items-center justify-center gap-3 disabled:opacity-70 group shadow-[0_0_30px_rgba(var(--primary-rgb),0.2)]"
+                          className="w-full bg-primary hover:bg-white text-black font-black uppercase tracking-widest py-6 rounded-[2rem] transition-all flex items-center justify-center gap-3 disabled:opacity-70 group shadow-[0_0_30px_rgba(16,185,129,0.2)]"
                         >
                           {formStatus === 'loading' ? (
                             <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
