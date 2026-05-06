@@ -143,7 +143,7 @@ const PropertyDetails = () => {
                 {property.title}
               </h1>
 
-              {property.fruitImage && (
+              {property.fruitImage && property.title.toLowerCase().includes('lendy pink valley') && (
                 <button 
                   onClick={() => setShowFruitPopup(true)}
                   className="inline-flex items-center gap-3 bg-[#10b981] hover:bg-white text-black px-6 md:px-10 py-4 rounded-full font-black uppercase tracking-widest text-xs transition-all duration-300 shadow-[0_0_30px_rgba(16,185,129,0.3)] hover:scale-105 group"

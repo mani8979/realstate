@@ -10,6 +10,7 @@ const ModelViewer = 'model-viewer' as any;
 const FloatingDragon = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [settings, setSettings] = useState<any>(null);
+  const [currentProperty, setCurrentProperty] = useState<any>(null);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const modelViewerRef = useRef<any>(null);
@@ -25,6 +26,7 @@ const FloatingDragon = () => {
 
   useEffect(() => {
     setMounted(true);
+    // Fetch global settings
     fetch('/api/content')
       .then(res => res.json())
       .then(data => {
@@ -34,6 +36,21 @@ const FloatingDragon = () => {
       });
   }, []);
 
+  // Fetch current property if on property page
+  useEffect(() => {
+    const propertyId = pathname?.split('/properties/')?.[1];
+    if (propertyId && propertyId.length > 10) { // Simple ID check
+      fetch(`/api/properties/${propertyId}`)
+        .then(res => res.json())
+        .then(data => {
+          setCurrentProperty(data);
+        })
+        .catch(() => setCurrentProperty(null));
+    } else {
+      setCurrentProperty(null);
+    }
+  }, [pathname]);
+
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (modelViewerRef.current) {
       const rotation = latest * 360 * 3;
@@ -41,8 +58,17 @@ const FloatingDragon = () => {
     }
   });
 
-  // Don't show on admin pages or during SSR - Moved below hooks
+  // --- RESTRICTION LOGIC ---
+  
+  // Don't show if not mounted or on admin pages
   if (!mounted || pathname?.startsWith('/admin')) return null;
+
+  // ONLY show on property pages
+  if (!pathname?.includes('/properties/')) return null;
+
+  // ONLY show if property is 'Lendy Pink Valley'
+  const isLendyPinkValley = currentProperty?.title?.toLowerCase().includes('lendy pink valley');
+  if (!isLendyPinkValley) return null;
 
   // Don't show if no model is set
   if (!settings?.globalThreeDModel) return null;
