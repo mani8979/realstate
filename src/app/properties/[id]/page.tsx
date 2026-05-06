@@ -158,190 +158,189 @@ const PropertyDetails = () => {
       </div>
 
       <div className="container mx-auto px-6 md:px-16 py-16 md:py-24 relative z-20">
-        <div className="flex flex-col gap-32">
-          
-          {/* Main Content Area - Narrower to leave more room for 3D model */}
-          <div className="space-y-48 w-full max-w-6xl mx-auto">
-            
-            {/* Visual Gallery - Left Aligned */}
-            {(property.images.length > 1 || property.fruitImage) && (
-              <motion.div 
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="md:w-1/2"
-              >
-                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-8">Visual Gallery</h3>
-                <div className="flex flex-wrap gap-4">
-                  {/* Property Images */}
-                  {property.images.map((img: string, i: number) => (
-                    <button
-                      key={i}
-                      onClick={() => setActiveImage(i)}
-                      className={`relative w-24 h-24 md:w-32 md:h-32 rounded-3xl overflow-hidden border-2 transition-all ${
-                        activeImage === i ? 'border-primary shadow-lg scale-105 opacity-100' : 'border-white/10 opacity-40 hover:opacity-100 hover:border-white/30'
-                      }`}
-                    >
-                      <Image src={img} alt={`Gallery ${i}`} fill className="object-cover" />
-                    </button>
-                  ))}
-                  
-                  {/* Cultivation Image Thumbnail */}
-                  {property.fruitImage && (
-                    <button
-                      onClick={() => setShowFruitPopup(true)}
-                      className="relative w-24 h-24 md:w-32 md:h-32 rounded-3xl overflow-hidden border-2 border-[#10b981]/30 bg-[#10b981]/10 flex flex-col items-center justify-center gap-2 group transition-all hover:border-[#10b981] hover:bg-[#10b981]/20"
-                    >
-                      <Image src={property.fruitImage} alt="Cultivation Thumbnail" fill className="object-cover opacity-60 group-hover:opacity-100 transition-opacity" />
-                      <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 group-hover:bg-transparent transition-all">
-                        <Leaf className="text-[#10b981]" size={24} />
-                        <span className="text-[8px] font-black uppercase tracking-widest text-white mt-1">Farming</span>
-                      </div>
-                    </button>
-                  )}
-                </div>
-              </motion.div>
-            )}
-
-            {/* Property Details - Right Aligned */}
-            <motion.div 
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="flex justify-end"
-            >
-              <div className="md:w-1/2 w-full space-y-12 relative overflow-hidden rounded-[3rem] bg-white/5 border border-white/10 p-8 md:p-12">
-                {/* Background Image for Details */}
-              {property.images[0] && (
-                <div className="absolute inset-0 z-0 opacity-[0.03] scale-110 blur-sm pointer-events-none">
-                  <Image src={property.images[0]} alt="Background" fill className="object-cover" />
-                </div>
-              )}
-
-              <div className="relative z-10 p-8 md:p-12">
-                <div className="flex items-center gap-4 mb-12">
-                  <span className="w-12 h-[2px] bg-primary"></span>
-                  <h2 className="text-2xl md:text-4xl font-black uppercase tracking-widest">Property Details</h2>
-                </div>
-
-                {property.details && property.details.length > 0 ? (
-                  <div className="space-y-16">
-                    {property.details.slice(0, isReadMore ? undefined : 2).map((detail: any, idx: number) => (
-                      <div key={idx} className="flex flex-col md:flex-row gap-6 md:gap-12 border-b border-white/10 pb-16 group">
-                        <div className="md:w-1/3 relative">
-                          {detail.sideHeading && (
-                            <div className="mb-4">
-                              <span className="text-primary/60 font-black uppercase tracking-[0.3em] text-[10px] block mb-2">{detail.sideHeading}</span>
-                              {detail.showArrow && <span className="text-primary inline-block animate-pulse">→</span>}
-                            </div>
-                          )}
-                          <h3 className="text-xl font-black text-white uppercase tracking-widest">{detail.heading}</h3>
-                        </div>
-                        <div className="md:w-2/3">
-                            {detail.isPointed ? (
-                            <ul className="space-y-4">
-                              {detail.content.split('\n').filter((line: string) => line.trim()).map((line: string, lIdx: number) => {
-                                const hasArrow = line.trim().startsWith('→') || line.trim().startsWith('->');
-                                const cleanLine = line.trim().replace(/^[-\u2022\u2192]|^(->)\s*/, '');
-                                return (
-                                  <li key={lIdx} className="flex gap-4 text-gray-400 text-lg md:text-xl leading-relaxed font-medium">
-                                    {hasArrow ? (
-                                      <span className="text-primary mt-1 flex-shrink-0 font-black text-2xl">→</span>
-                                    ) : (
-                                      <span className="text-primary mt-2 flex-shrink-0 w-2 h-2 rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]"></span>
-                                    )}
-                                    <span>{cleanLine}</span>
-                                  </li>
-                                );
-                              })}
-                            </ul>
-                          ) : (
-                            <p className="text-gray-400 text-lg md:text-xl leading-relaxed whitespace-pre-wrap font-medium">
-                              {detail.content}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                    {property.details.length > 2 && (
-                      <div className="flex justify-center pt-8">
-                        <button 
-                          onClick={() => setIsReadMore(!isReadMore)}
-                          className="text-primary font-black uppercase tracking-widest text-xs border-b-2 border-primary pb-1 hover:text-white hover:border-white transition-all"
-                        >
-                          {isReadMore ? 'Read Less' : 'Read More Details'}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="border-b border-white/10 pb-16">
-                    <p className="text-gray-400 text-lg md:text-xl leading-relaxed whitespace-pre-wrap font-medium">
-                      {property.description}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Dragon Fruit Plantation Section - Left Aligned */}
+          <div className="space-y-64 w-full max-w-7xl mx-auto pb-32" id="content-anchor">
+            {/* Section 1: Productive Asset (Left) */}
             <motion.div 
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               className="flex justify-start"
             >
-              <div className="md:w-1/2 w-full relative z-10 p-8 md:p-12 bg-white/5 rounded-[3rem] border border-white/10 overflow-hidden group hover:border-primary/30 transition-all">
-                <div className="flex items-center gap-4 mb-12">
-                  <span className="w-12 h-[2px] bg-primary"></span>
-                  <h2 className="text-2xl md:text-4xl font-black uppercase tracking-widest text-white">Dragon Fruit Plantation & Profit Model</h2>
+              <div className="md:w-1/2 w-full glass-card p-8 md:p-16 relative group hover:border-primary/50 transition-all duration-700">
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                    <Leaf size={24} />
+                  </div>
+                  <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white">Productive Asset</h2>
                 </div>
-                
-                <div className="space-y-8 relative z-10">
-                  <p className="text-gray-300 text-lg md:text-xl leading-relaxed font-medium">
-                    Dragon fruit cultivation is a high-demand and profitable farming option with long-term benefits.
-                  </p>
-                  <p className="text-gray-400 text-lg md:text-xl leading-relaxed font-medium">
-                    Dragon fruit plants can yield fruits for up to 30 years, providing long-term income stability. The produce generated will be sold, and the profits will be shared as per the model mentioned above.
-                  </p>
-                  <p className="text-gray-400 text-lg md:text-xl leading-relaxed font-medium">
-                    Additionally, the plantation can be removed anytime if the client wishes to convert the land for residential or other purposes.
+                <div className="space-y-6">
+                  <div className="flex gap-4">
+                    <span className="text-primary font-bold text-2xl mt-1">→</span>
+                    <div>
+                      <h3 className="text-xl font-bold text-white mb-2">Land Type</h3>
+                      <p className="text-gray-400 text-lg leading-relaxed">
+                        Farm land where fruit cultivation (dragon fruit) is actively done.
+                      </p>
+                    </div>
+                  </div>
+                  <p className="text-gray-400 text-lg leading-relaxed bg-white/5 p-6 rounded-2xl border-l-4 border-primary">
+                    However, the plantation can be removed anytime and the land can be made ready immediately for residential or any other use as per the client’s requirement.
                   </p>
                 </div>
-
-                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[100px] rounded-full -mr-32 -mt-32"></div>
               </div>
             </motion.div>
 
-            {/* Passive Income Section - Right Aligned */}
+            {/* Section 2: Scale & Growth (Right) */}
             <motion.div 
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               className="flex justify-end"
             >
-              <div className="md:w-1/2 w-full relative z-10 p-8 md:p-12 bg-gradient-to-br from-primary/10 to-transparent rounded-[3rem] border border-primary/20">
+              <div className="md:w-1/2 w-full glass-card p-8 md:p-16 border-r-4 border-primary">
                 <div className="flex items-center gap-4 mb-8">
-                  <span className="w-12 h-[2px] bg-primary"></span>
-                  <h2 className="text-2xl md:text-4xl font-black uppercase tracking-widest text-white">Passive Income</h2>
+                  <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white">Scale & Growth</h2>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="p-6 bg-black/40 rounded-2xl border border-white/5">
-                    <p className="text-primary font-black text-2xl mb-2">Sustainable</p>
-                    <p className="text-gray-500 text-sm">Long-term agricultural returns</p>
+                <div className="space-y-8">
+                  <div className="flex items-center gap-4">
+                    <span className="text-primary font-bold text-2xl">→</span>
+                    <p className="text-2xl font-black text-white">Total Land Area: <span className="text-primary">10 Acres</span></p>
                   </div>
-                  <div className="p-6 bg-black/40 rounded-2xl border border-white/5">
-                    <p className="text-primary font-black text-2xl mb-2">Hassle-Free</p>
-                    <p className="text-gray-500 text-sm">Full management provided</p>
-                  </div>
-                  <div className="p-6 bg-black/40 rounded-2xl border border-white/5">
-                    <p className="text-primary font-black text-2xl mb-2">Secure</p>
-                    <p className="text-gray-500 text-sm">Asset-backed investment</p>
+                  <div className="grid grid-cols-1 gap-4">
+                    <div className="bg-white/5 p-6 rounded-2xl flex items-center justify-between group hover:bg-primary/10 transition-colors">
+                      <span className="text-gray-400 font-bold uppercase tracking-widest text-sm">Phase 1 (6.5 Acres)</span>
+                      <span className="px-4 py-1 bg-red-500/20 text-red-400 rounded-full text-xs font-black uppercase">Sold</span>
+                    </div>
+                    <div className="bg-white/5 p-6 rounded-2xl flex items-center justify-between group hover:bg-primary/20 transition-colors border border-primary/30">
+                      <span className="text-white font-bold uppercase tracking-widest text-sm">Phase 2 (3.5 Acres)</span>
+                      <span className="px-4 py-1 bg-primary/20 text-primary rounded-full text-xs font-black uppercase animate-pulse">Selling Now</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </motion.div>
+
+            {/* Section 3: Prime Spot (Center - Big Highlight) */}
+            <motion.div 
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="flex justify-center"
+            >
+              <div className="w-full max-w-4xl glass-card p-8 md:p-20 text-center relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+                <h2 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white mb-12">Prime Spot</h2>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-left">
+                  <div className="space-y-6">
+                    <h3 className="text-primary font-black uppercase tracking-widest text-xs">Location Advantages</h3>
+                    <ul className="space-y-4 text-gray-300 text-lg">
+                      <li className="flex gap-3">
+                        <span className="text-primary font-bold">→</span>
+                        Located at Vepada Mandal Headquarters
+                      </li>
+                      <li className="flex gap-3">
+                        <span className="text-primary font-bold">→</span>
+                        Just 500 meters from MRO Office
+                      </li>
+                      <li className="flex gap-3">
+                        <span className="text-primary font-bold">→</span>
+                        Close to Police Station & Vet Hospital
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="space-y-6">
+                    <h3 className="text-primary font-black uppercase tracking-widest text-xs">Connectivity</h3>
+                    <div className="bg-white/5 p-6 rounded-2xl">
+                      <p className="text-white font-bold mb-2">Distance Info</p>
+                      <p className="text-gray-400">Gajuwaka – 52 KM</p>
+                      <p className="text-gray-400">Highway (Araku-Vizag) – 8.5 KM</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Section 4: Amenities (Right) */}
+            <motion.div 
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="flex justify-end"
+            >
+              <div className="md:w-1/2 w-full glass-card p-8 md:p-16">
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                    <MapPin size={24} />
+                  </div>
+                  <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white">Amenities</h2>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {[
+                    "20 ft & 24 ft Roads", "Guest House Facility", "Compound Fencing",
+                    "Solar Lighting", "Drip Irrigation", "18 Years Maintenance",
+                    "50/50 Profit Sharing", "Vastu Compliant", "Clear Title"
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-3 text-gray-300 group">
+                      <span className="text-primary font-bold group-hover:translate-x-1 transition-transform">→</span>
+                      <span className="text-lg">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Section 5: Growing Hub (Left) */}
+            <motion.div 
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="flex justify-start"
+            >
+              <div className="md:w-1/2 w-full glass-card p-8 md:p-16 bg-gradient-to-br from-primary/5 to-transparent">
+                <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-8">Growing Hub</h2>
+                <h3 className="text-primary font-black uppercase tracking-widest text-xs mb-6">About Vepada</h3>
+                <p className="text-gray-400 text-lg leading-relaxed mb-6">
+                  Vepada is rapidly developing as a mandal headquarters and serves as an administrative hub for around 18 nearby villages.
+                </p>
+                <p className="text-gray-300 text-lg leading-relaxed bg-primary/10 p-6 rounded-2xl border border-primary/20">
+                  Land prices are expected to appreciate significantly, making it a smart investment choice for both residential and agricultural purposes.
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Section 6: Passive Income (Center - Wide & Dynamic) */}
+            <motion.div 
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="flex justify-center"
+            >
+              <div className="w-full glass-card p-8 md:p-20 bg-gradient-to-t from-primary/10 to-transparent relative group">
+                <div className="flex flex-col md:flex-row items-center gap-12">
+                  <div className="md:w-2/3 space-y-8">
+                    <h2 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white">Passive Income</h2>
+                    <h3 className="text-primary font-black uppercase tracking-widest text-xl">Dragon Fruit Plantation & Profit Model</h3>
+                    <p className="text-gray-300 text-xl leading-relaxed">
+                      Dragon fruit cultivation is a high-demand and profitable farming option with long-term benefits. 
+                      Plants can yield fruits for <strong>up to 30 years</strong>, providing long-term income stability.
+                    </p>
+                    <div className="p-6 bg-white/5 rounded-2xl border-l-4 border-primary italic text-gray-400">
+                      "Additionally, the plantation can be removed anytime if the client wishes to convert the land for residential or other purposes."
+                    </div>
+                  </div>
+                  <div className="md:w-1/3 flex justify-center">
+                    <div className="w-48 h-48 rounded-full bg-primary/20 flex items-center justify-center animate-pulse border-2 border-primary/30">
+                      <div className="text-center">
+                        <p className="text-primary font-black text-4xl">50%</p>
+                        <p className="text-white text-xs font-bold uppercase tracking-widest">Client Profit</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
 
             {/* Bottom Enquiry Form - Center Aligned */}
             <motion.div 
