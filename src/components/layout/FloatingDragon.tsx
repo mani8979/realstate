@@ -27,7 +27,7 @@ const FloatingDragon = () => {
   useEffect(() => {
     setMounted(true);
     // Fetch global settings
-    fetch('/api/content')
+    fetch(`/api/content?t=${Date.now()}`)
       .then(res => res.json())
       .then(data => {
         if (data.success && data.data) {
@@ -40,7 +40,7 @@ const FloatingDragon = () => {
   useEffect(() => {
     const propertyId = pathname?.split('/properties/')?.[1];
     if (propertyId && propertyId.length > 10) { // Simple ID check
-      fetch(`/api/properties/${propertyId}`)
+      fetch(`/api/properties/${propertyId}?t=${Date.now()}`)
         .then(res => res.json())
         .then(data => {
           setCurrentProperty(data);
