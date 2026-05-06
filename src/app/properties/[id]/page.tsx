@@ -29,14 +29,16 @@ const PropertyDetails = () => {
   const fruitX = useTransform(scrollYProgress, [0, 1], ['-20%', '120%']);
   const fruitRotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
   
-  // Swaying movement logic from snippet: Math.sin(scrollPercent * Math.PI * 2) * 28
+  // Enhanced Swaying movement with multi-axis rotation for 3D depth
   const modelX = useTransform(scrollYProgress, (pos) => {
-    const horizontalMove = Math.sin(pos * Math.PI * 2) * 28;
+    const horizontalMove = Math.sin(pos * Math.PI * 2) * 35; // Increased range
     return `${horizontalMove}vw`;
   });
   
-  const modelY = useTransform(scrollYProgress, [0, 1], ['0vh', '80vh']);
-  const modelRotate = useTransform(scrollYProgress, (pos) => pos * 360 * 3);
+  const modelY = useTransform(scrollYProgress, [0, 1], ['0vh', '90vh']);
+  const modelRotateY = useTransform(scrollYProgress, (pos) => pos * 360 * 4);
+  const modelRotateX = useTransform(scrollYProgress, (pos) => Math.cos(pos * Math.PI * 4) * 20); // Add tilt
+  const modelScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.2, 1]); // Add breathing effect
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -145,11 +147,11 @@ const PropertyDetails = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-6 md:px-16 py-16 md:py-24 relative">
+      <div className="container mx-auto px-6 md:px-16 py-16 md:py-24 relative z-20">
         <div className="flex flex-col gap-32">
           
-          {/* Main Content Area - Now with alternating alignment for empty spaces */}
-          <div className="space-y-48">
+          {/* Main Content Area - Narrower to leave more room for 3D model */}
+          <div className="space-y-48 w-full max-w-6xl mx-auto">
             
             {/* Visual Gallery - Left Aligned */}
             {(property.images.length > 1 || property.fruitImage) && (
@@ -157,7 +159,7 @@ const PropertyDetails = () => {
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="max-w-3xl"
+                className="md:w-3/5"
               >
                 <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-8">Visual Gallery</h3>
                 <div className="flex flex-wrap gap-4">
@@ -191,14 +193,14 @@ const PropertyDetails = () => {
               </motion.div>
             )}
 
-            {/* Property Details - Right Aligned to create empty space on left */}
+            {/* Property Details - Right Aligned */}
             <motion.div 
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               className="flex justify-end"
             >
-              <div className="max-w-4xl w-full space-y-12 relative overflow-hidden rounded-[3rem] bg-white/5 border border-white/10 p-8 md:p-12">
+              <div className="md:w-3/5 w-full space-y-12 relative overflow-hidden rounded-[3rem] bg-white/5 border border-white/10 p-8 md:p-12">
                 {/* Background Image for Details */}
               {property.images[0] && (
                 <div className="absolute inset-0 z-0 opacity-[0.03] scale-110 blur-sm pointer-events-none">
@@ -270,7 +272,7 @@ const PropertyDetails = () => {
               viewport={{ once: true }}
               className="flex justify-start"
             >
-              <div className="max-w-3xl w-full relative z-10 p-8 md:p-12 bg-white/5 rounded-[3rem] border border-white/10 overflow-hidden group hover:border-primary/30 transition-all">
+              <div className="md:w-3/5 w-full relative z-10 p-8 md:p-12 bg-white/5 rounded-[3rem] border border-white/10 overflow-hidden group hover:border-primary/30 transition-all">
                 <div className="flex items-center gap-4 mb-12">
                   <span className="w-12 h-[2px] bg-primary"></span>
                   <h2 className="text-2xl md:text-4xl font-black uppercase tracking-widest text-white">Dragon Fruit Plantation & Profit Model</h2>
@@ -299,7 +301,7 @@ const PropertyDetails = () => {
               viewport={{ once: true }}
               className="flex justify-end"
             >
-              <div className="max-w-3xl w-full relative z-10 p-8 md:p-12 bg-gradient-to-br from-primary/10 to-transparent rounded-[3rem] border border-primary/20">
+              <div className="md:w-3/5 w-full relative z-10 p-8 md:p-12 bg-gradient-to-br from-primary/10 to-transparent rounded-[3rem] border border-primary/20">
                 <div className="flex items-center gap-4 mb-8">
                   <span className="w-12 h-[2px] bg-primary"></span>
                   <h2 className="text-2xl md:text-4xl font-black uppercase tracking-widest text-white">Passive Income</h2>
@@ -417,22 +419,31 @@ const PropertyDetails = () => {
             </div>
           </div>
 
-      {/* 3D Model Swaying Effect */}
+      {/* 3D Model Swaying Effect - Enhanced for 3D depth and mobile accuracy */}
       {property.threeDElement && (
         <motion.div 
-          style={{ x: modelX, y: modelY, rotateY: modelRotate }}
-          className="fixed top-0 left-0 w-full h-screen pointer-events-none z-0 flex items-center justify-center"
+          style={{ 
+            x: modelX, 
+            y: modelY, 
+            rotateY: modelRotateY,
+            rotateX: modelRotateX,
+            scale: modelScale
+          }}
+          className="fixed top-0 left-0 w-full h-screen pointer-events-none z-0 flex items-center justify-center overflow-visible"
         >
-          <div className="w-[300px] h-[400px] pointer-events-auto cursor-pointer" onClick={() => setShowFruitPopup(true)}>
+          <div className="w-[200px] h-[300px] md:w-[350px] md:h-[450px] pointer-events-auto cursor-pointer perspective-1000" onClick={() => setShowFruitPopup(true)}>
             <ModelViewer
               src={property.threeDElement}
               auto-rotate
               camera-controls
               shadow-intensity="2"
               environment-image="neutral"
-              exposure="1.2"
+              exposure="1.5"
               style={{ width: '100%', height: '100%' }}
               interaction-prompt="none"
+              ar
+              ar-modes="webxr scene-viewer quick-look"
+              camera-orbit="auto auto auto"
             ></ModelViewer>
           </div>
         </motion.div>
