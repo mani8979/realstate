@@ -74,8 +74,8 @@ const PropertyDetails = () => {
     try {
       await axios.post('/api/enquiries', {
         ...formData,
-        propertyTitle: property.title,
-        propertyId: property._id
+        propertyTitle: property?.title,
+        propertyId: property?._id
       });
       setFormStatus('success');
       setTimeout(() => setFormStatus('idle'), 5000);
@@ -84,13 +84,15 @@ const PropertyDetails = () => {
     }
   };
 
+  // --- EARLY RETURNS (MUST BE AFTER ALL HOOKS) ---
+  
   if (loading) return (
     <div className="min-h-screen bg-[#050505] flex items-center justify-center">
       <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
     </div>
   );
 
-  if (!property) return (
+  if (!property || !mounted) return (
     <div className="min-h-screen bg-[#050505] text-white flex flex-col items-center justify-center">
       <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6">Property Not Found</h2>
       <Link href="/properties" className="text-primary hover:text-white transition-colors font-bold uppercase tracking-widest text-sm underline">Return to Properties</Link>

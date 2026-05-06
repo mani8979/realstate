@@ -15,6 +15,14 @@ const FloatingDragon = () => {
   const modelViewerRef = useRef<any>(null);
   const { scrollYProgress } = useScroll();
 
+  // Swaying logic - Must be above early returns
+  const modelX = useTransform(scrollYProgress, (pos) => {
+    const horizontalMove = Math.cos(pos * Math.PI * 3) * 30;
+    return `${horizontalMove}vw`;
+  });
+
+  const modelY = useTransform(scrollYProgress, [0, 1], ['0vh', '80vh']);
+
   useEffect(() => {
     setMounted(true);
     fetch('/api/content')
@@ -26,26 +34,18 @@ const FloatingDragon = () => {
       });
   }, []);
 
-  // Don't show on admin pages or during SSR
-  if (!mounted || pathname?.startsWith('/admin')) return null;
-
-  // Don't show if no model is set
-  if (!settings?.globalThreeDModel) return null;
-
-  // Swaying logic
-  const modelX = useTransform(scrollYProgress, (pos) => {
-    const horizontalMove = Math.cos(pos * Math.PI * 3) * 30;
-    return `${horizontalMove}vw`;
-  });
-
-  const modelY = useTransform(scrollYProgress, [0, 1], ['0vh', '80vh']);
-
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (modelViewerRef.current) {
       const rotation = latest * 360 * 3;
       modelViewerRef.current.cameraOrbit = `${rotation}deg 75deg 10m`;
     }
   });
+
+  // Don't show on admin pages or during SSR - Moved below hooks
+  if (!mounted || pathname?.startsWith('/admin')) return null;
+
+  // Don't show if no model is set
+  if (!settings?.globalThreeDModel) return null;
 
   return (
     <>
