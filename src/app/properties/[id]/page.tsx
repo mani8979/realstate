@@ -435,9 +435,7 @@ const PropertyDetails = () => {
             </div>
           </div>
         </div>
-        </div>
       </div>
-    </div>
   );
 };
 
