@@ -28,6 +28,8 @@ const PropertyDetails = () => {
   const modelViewerRef = useRef<any>(null);
 
   const { scrollYProgress } = useScroll();
+  const fruitX = useTransform(scrollYProgress, [0, 1], ['-20%', '120%']);
+  const fruitRotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
   
   // Exact horizontal move logic from snippet: Math.sin(scrollPercent * Math.PI * 2) * 28
   const modelX = useTransform(scrollYProgress, (pos) => {
