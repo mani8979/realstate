@@ -31,9 +31,10 @@ const PropertyDetails = () => {
   const fruitX = useTransform(scrollYProgress, [0, 1], ['-20%', '120%']);
   const fruitRotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
   
-  // Exact horizontal move logic from snippet: Math.sin(scrollPercent * Math.PI * 2) * 28
+  // Synchronized horizontal move to stay in empty spaces (opposite to content)
   const modelX = useTransform(scrollYProgress, (pos) => {
-    const horizontalMove = Math.sin(pos * Math.PI * 2) * 28;
+    // Using Cosine to start on the opposite side of the first Left-aligned section
+    const horizontalMove = Math.cos(pos * Math.PI * 3) * 30; 
     return `${horizontalMove}vw`;
   });
 
@@ -168,7 +169,7 @@ const PropertyDetails = () => {
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="md:w-3/5"
+                className="md:w-1/2"
               >
                 <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-8">Visual Gallery</h3>
                 <div className="flex flex-wrap gap-4">
@@ -209,7 +210,7 @@ const PropertyDetails = () => {
               viewport={{ once: true }}
               className="flex justify-end"
             >
-              <div className="md:w-3/5 w-full space-y-12 relative overflow-hidden rounded-[3rem] bg-white/5 border border-white/10 p-8 md:p-12">
+              <div className="md:w-1/2 w-full space-y-12 relative overflow-hidden rounded-[3rem] bg-white/5 border border-white/10 p-8 md:p-12">
                 {/* Background Image for Details */}
               {property.images[0] && (
                 <div className="absolute inset-0 z-0 opacity-[0.03] scale-110 blur-sm pointer-events-none">
@@ -291,7 +292,7 @@ const PropertyDetails = () => {
               viewport={{ once: true }}
               className="flex justify-start"
             >
-              <div className="md:w-3/5 w-full relative z-10 p-8 md:p-12 bg-white/5 rounded-[3rem] border border-white/10 overflow-hidden group hover:border-primary/30 transition-all">
+              <div className="md:w-1/2 w-full relative z-10 p-8 md:p-12 bg-white/5 rounded-[3rem] border border-white/10 overflow-hidden group hover:border-primary/30 transition-all">
                 <div className="flex items-center gap-4 mb-12">
                   <span className="w-12 h-[2px] bg-primary"></span>
                   <h2 className="text-2xl md:text-4xl font-black uppercase tracking-widest text-white">Dragon Fruit Plantation & Profit Model</h2>
@@ -320,7 +321,7 @@ const PropertyDetails = () => {
               viewport={{ once: true }}
               className="flex justify-end"
             >
-              <div className="md:w-3/5 w-full relative z-10 p-8 md:p-12 bg-gradient-to-br from-primary/10 to-transparent rounded-[3rem] border border-primary/20">
+              <div className="md:w-1/2 w-full relative z-10 p-8 md:p-12 bg-gradient-to-br from-primary/10 to-transparent rounded-[3rem] border border-primary/20">
                 <div className="flex items-center gap-4 mb-8">
                   <span className="w-12 h-[2px] bg-primary"></span>
                   <h2 className="text-2xl md:text-4xl font-black uppercase tracking-widest text-white">Passive Income</h2>
@@ -482,16 +483,16 @@ const PropertyDetails = () => {
       {/* Fruit Info Popup */}
       {showFruitPopup && property.fruitImage && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 bg-black/95 backdrop-blur-xl transition-all duration-500" onClick={() => setShowFruitPopup(false)}>
-          <div className="bg-[#0a0a0a] border border-white/10 w-full max-w-5xl rounded-[3rem] overflow-hidden shadow-[0_0_100px_rgba(var(--primary-rgb),0.2)] relative flex flex-col md:flex-row h-auto max-h-[90vh] md:aspect-video" onClick={e => e.stopPropagation()}>
+          <div className="bg-[#0a0a0a] border border-white/10 w-full max-w-5xl rounded-[3rem] overflow-hidden shadow-[0_0_100px_rgba(var(--primary-rgb),0.2)] relative flex flex-col md:flex-row h-auto max-h-[90vh]" onClick={e => e.stopPropagation()}>
             {/* Background Image Container */}
             <div className="absolute inset-0 z-0">
               <Image src={property.fruitImage} alt="Cultivation" fill className="object-cover opacity-40" />
               <div className="absolute inset-0 bg-gradient-to-r from-black via-black/90 to-transparent"></div>
             </div>
 
-            {/* Content Overlay */}
-            <div className="relative z-10 p-8 md:p-16 flex flex-col justify-start items-start text-left w-full md:w-3/4 h-full overflow-y-auto custom-scrollbar">
-              <div className="bg-primary/20 backdrop-blur-md p-4 rounded-2xl mb-8 border border-primary/20 mt-10 md:mt-0 flex-shrink-0">
+            {/* Content Overlay - Improved Scrollability */}
+            <div className="relative z-10 p-8 md:p-16 flex flex-col justify-start items-start text-left w-full h-full overflow-y-auto custom-scrollbar bg-black/60 backdrop-blur-md">
+              <div className="bg-primary/20 p-4 rounded-2xl mb-8 border border-primary/20 mt-10 md:mt-0 flex-shrink-0">
                 <Leaf className="text-primary" size={40} />
               </div>
               
@@ -501,12 +502,12 @@ const PropertyDetails = () => {
               
               <div className="w-24 h-2 bg-primary mb-10 rounded-full shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)] flex-shrink-0"></div>
               
-              <div className="space-y-8 pb-12">
+              <div className="space-y-8 flex-grow">
                 <p className="text-gray-100 text-lg md:text-2xl leading-relaxed font-medium whitespace-pre-wrap">
-                  {property.fruitInfo || "No additional details provided for this crop."}
+                  {property.fruitInfo || "Dragon fruit cultivation is a high-demand and profitable farming option with long-term benefits. Our model ensures sustainable growth and consistent returns for investors while maintaining the highest quality standards."}
                 </p>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 pb-12">
                   <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10 group hover:border-primary/50 transition-all">
                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-2">Yield Period</p>
                     <p className="text-3xl font-black text-white">Up to 30 Years</p>
@@ -520,13 +521,15 @@ const PropertyDetails = () => {
                 </div>
               </div>
               
-              <button 
-                onClick={() => setShowFruitPopup(false)}
-                className="mt-6 mb-8 bg-primary text-black font-black uppercase tracking-widest px-12 py-5 rounded-2xl hover:bg-white transition-all shadow-2xl shadow-primary/40 group flex items-center gap-3 flex-shrink-0"
-              >
-                <span>Close Model</span>
-                <X size={18} className="group-hover:rotate-90 transition-transform" />
-              </button>
+              <div className="mt-auto w-full pt-8 pb-4">
+                <button 
+                  onClick={() => setShowFruitPopup(false)}
+                  className="bg-primary text-black font-black uppercase tracking-widest px-12 py-5 rounded-2xl hover:bg-white transition-all shadow-2xl shadow-primary/40 group flex items-center gap-3 w-full md:w-auto justify-center"
+                >
+                  <span>Close Details</span>
+                  <X size={18} className="group-hover:rotate-90 transition-transform" />
+                </button>
+              </div>
             </div>
 
             {/* Close Button Mobile */}
