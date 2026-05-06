@@ -24,21 +24,28 @@ const PropertyDetails = () => {
   });
   const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [showFruitPopup, setShowFruitPopup] = useState(false);
+  const [isReadMore, setIsReadMore] = useState(false);
+  const modelViewerRef = useRef<any>(null);
 
   const { scrollYProgress } = useScroll();
-  const fruitX = useTransform(scrollYProgress, [0, 1], ['-20%', '120%']);
-  const fruitRotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
   
-  // Enhanced Swaying movement with multi-axis rotation for 3D depth
+  // Exact horizontal move logic from snippet: Math.sin(scrollPercent * Math.PI * 2) * 28
   const modelX = useTransform(scrollYProgress, (pos) => {
-    const horizontalMove = Math.sin(pos * Math.PI * 2) * 35; // Increased range
+    const horizontalMove = Math.sin(pos * Math.PI * 2) * 28;
     return `${horizontalMove}vw`;
   });
+
+  // Sync camera orbit with scroll for exact rotation effect
+  useEffect(() => {
+    return scrollYProgress.onChange((pos) => {
+      if (modelViewerRef.current) {
+        const rotation = pos * 360 * 3;
+        modelViewerRef.current.cameraOrbit = `${rotation}deg 75deg 10m`;
+      }
+    });
+  }, [scrollYProgress]);
   
-  const modelY = useTransform(scrollYProgress, [0, 1], ['0vh', '90vh']);
-  const modelRotateY = useTransform(scrollYProgress, (pos) => pos * 360 * 4);
-  const modelRotateX = useTransform(scrollYProgress, (pos) => Math.cos(pos * Math.PI * 4) * 20); // Add tilt
-  const modelScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.2, 1]); // Add breathing effect
+  const modelY = useTransform(scrollYProgress, [0, 1], ['0vh', '80vh']);
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -216,7 +223,7 @@ const PropertyDetails = () => {
 
                 {property.details && property.details.length > 0 ? (
                   <div className="space-y-16">
-                    {property.details.map((detail: any, idx: number) => (
+                    {property.details.slice(0, isReadMore ? undefined : 2).map((detail: any, idx: number) => (
                       <div key={idx} className="flex flex-col md:flex-row gap-6 md:gap-12 border-b border-white/10 pb-16 group">
                         <div className="md:w-1/3 relative">
                           {detail.sideHeading && (
@@ -253,6 +260,16 @@ const PropertyDetails = () => {
                         </div>
                       </div>
                     ))}
+                    {property.details.length > 2 && (
+                      <div className="flex justify-center pt-8">
+                        <button 
+                          onClick={() => setIsReadMore(!isReadMore)}
+                          className="text-primary font-black uppercase tracking-widest text-xs border-b-2 border-primary pb-1 hover:text-white hover:border-white transition-all"
+                        >
+                          {isReadMore ? 'Read Less' : 'Read More Details'}
+                        </button>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="border-b border-white/10 pb-16">
@@ -419,31 +436,32 @@ const PropertyDetails = () => {
             </div>
           </div>
 
-      {/* 3D Model Swaying Effect - Enhanced for 3D depth and mobile accuracy */}
+      {/* 3D Model Swaying Effect - Exact Logic from Snippet */}
       {property.threeDElement && (
         <motion.div 
           style={{ 
             x: modelX, 
-            y: modelY, 
-            rotateY: modelRotateY,
-            rotateX: modelRotateX,
-            scale: modelScale
+            y: modelY
           }}
           className="fixed top-0 left-0 w-full h-screen pointer-events-none z-0 flex items-center justify-center overflow-visible"
         >
-          <div className="w-[200px] h-[300px] md:w-[350px] md:h-[450px] pointer-events-auto cursor-pointer perspective-1000" onClick={() => setShowFruitPopup(true)}>
+          <div className="w-[300px] h-[400px] pointer-events-auto cursor-pointer" onClick={() => setShowFruitPopup(true)}>
             <ModelViewer
+              ref={modelViewerRef}
               src={property.threeDElement}
-              auto-rotate
+              alt="3D Property Experience"
               camera-controls
+              disable-zoom
+              disable-pan
               shadow-intensity="2"
-              environment-image="neutral"
-              exposure="1.5"
-              style={{ width: '100%', height: '100%' }}
+              exposure="1.2"
+              bounds="tight"
+              camera-orbit="0deg 75deg 10m"
+              min-camera-orbit="auto auto 10m"
+              max-camera-orbit="auto auto 10m"
+              field-of-view="25deg"
               interaction-prompt="none"
-              ar
-              ar-modes="webxr scene-viewer quick-look"
-              camera-orbit="auto auto auto"
+              style={{ width: '100%', height: '100%' }}
             ></ModelViewer>
           </div>
         </motion.div>
