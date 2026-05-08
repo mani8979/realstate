@@ -39,6 +39,7 @@ export async function PUT(
     revalidatePath('/');
     revalidatePath('/properties');
     revalidatePath(`/properties/${id}`);
+    revalidatePath(`/properties/${id}/media`);
     
     return NextResponse.json(property);
   } catch (error: any) {

@@ -28,7 +28,7 @@ const MediaPage = () => {
   useEffect(() => {
     const fetchProperty = async () => {
       try {
-        const res = await axios.get(`/api/properties/${id}`);
+        const res = await axios.get(`/api/properties/${id}?t=${Date.now()}`);
         setProperty(res.data);
       } catch (error) {
         console.error('Error fetching property:', error);
