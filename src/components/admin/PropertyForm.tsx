@@ -951,6 +951,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
               </div>
             </div>
           </div>
+          
+          {/* Land Brochure Section */}
+          <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Land Brochure (Optional)</h3>
             <p className="text-sm text-gray-500 mb-6">Upload multiple PDF or image brochures for the land.</p>
             
