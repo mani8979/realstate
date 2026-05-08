@@ -32,10 +32,10 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     landBrochure: [],
     details: [],
     layoutImage: '',
-    plots: initialData?.plots?.map((p: any) => ({
+    plots: initialData?.plots?.map((p: any, i: number) => ({
       ...p,
-      x: p.x ?? 50,
-      y: p.y ?? 50,
+      x: p.x ?? (50 + i),
+      y: p.y ?? (50 + i),
       width: p.width ?? 5,
       height: p.height ?? 3
     })) || []
@@ -51,10 +51,10 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
         landPhotos: initialData.landPhotos || [],
         landBrochure: initialData.landBrochure || [],
         details: initialData.details || [],
-        plots: initialData.plots?.map((p: any) => ({
+        plots: initialData.plots?.map((p: any, i: number) => ({
           ...p,
-          x: p.x ?? 50,
-          y: p.y ?? 50,
+          x: p.x ?? (50 + i),
+          y: p.y ?? (50 + i),
           width: p.width ?? 5,
           height: p.height ?? 3
         })) || []
