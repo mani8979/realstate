@@ -308,7 +308,7 @@ const MediaPage = () => {
               <div className="w-full h-full bg-white/5 rounded-[3rem] overflow-hidden border border-white/10 relative shadow-2xl">
                  <iframe
                   src={property.mapUrl}
-                  className="absolute inset-0 w-full h-full grayscale invert opacity-80 contrast-125"
+                  className="absolute inset-0 w-full h-full border-none"
                   loading="lazy"
                 ></iframe>
               </div>
