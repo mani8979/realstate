@@ -1253,82 +1253,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
               </motion.div>
             )}
           </AnimatePresence>
-                ) : (
-                  <>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      ref={layoutImageInputRef}
-                      onChange={handleLayoutImageUpload}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => layoutImageInputRef.current?.click()}
-                      disabled={uploading}
-                      className="w-full py-16 rounded-[3rem] border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-4 hover:border-primary hover:bg-primary/5 transition-all group disabled:opacity-50"
-                    >
-                      <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-3xl group-hover:bg-primary group-hover:text-white transition-all">
-                        {uploading ? <Loader2 size={32} className="animate-spin" /> : <Plus size={32} />}
-                      </div>
-                      <div className="text-center">
-                        <span className="block text-sm font-black text-gray-900 dark:text-white uppercase tracking-widest mb-1">Upload Layout Map</span>
-                        <span className="text-xs text-gray-400 font-medium">JPEG or PNG recommended</span>
-                      </div>
-                    </button>
-                  </>
-                )}
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center justify-between mb-4">
-                  <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1">Plot Status Board</label>
-                  <button
-                    type="button"
-                    onClick={addPlot}
-                    className="flex items-center gap-2 text-primary hover:text-primary-dark transition-all text-sm font-bold"
-                  >
-                    <Plus size={16} /> Add Plot
-                  </button>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {formData.plots?.map((plot: any, index: number) => (
-                    <div key={index} className="flex items-center gap-3 bg-gray-50 dark:bg-gray-800/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700/50">
-                      <input
-                        type="text"
-                        placeholder="Plot #"
-                        className="w-20 bg-white dark:bg-gray-800 p-2 rounded-lg text-xs font-bold border border-gray-200 dark:border-gray-700"
-                        value={plot.number}
-                        onChange={(e) => updatePlot(index, 'number', e.target.value)}
-                      />
-                      <select
-                        className="flex-grow bg-white dark:bg-gray-800 p-2 rounded-lg text-xs font-bold border border-gray-200 dark:border-gray-700"
-                        value={plot.status}
-                        onChange={(e) => updatePlot(index, 'status', e.target.value)}
-                      >
-                        <option value="unsold">Unsold (White)</option>
-                        <option value="booked">Booked (Green)</option>
-                        <option value="sold">Sold (Yellow)</option>
-                      </select>
-                      <button
-                        type="button"
-                        onClick={() => removePlot(index)}
-                        className="text-red-500 hover:text-red-600 p-1"
-                      >
-                        <X size={16} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-                {(!formData.plots || formData.plots.length === 0) && (
-                  <div className="text-center py-10 bg-gray-50 dark:bg-gray-800/20 rounded-[2rem] border-2 border-dashed border-gray-100 dark:border-gray-800">
-                    <p className="text-gray-400 text-sm font-bold">No plots added yet.</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+        </div>
+      </div>
           
           {/* Land Brochure Section */}
           <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
