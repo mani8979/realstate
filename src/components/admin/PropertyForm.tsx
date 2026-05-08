@@ -1021,6 +1021,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                       <span className="text-[10px] font-black uppercase tracking-widest text-white/50">Active Editor Mode</span>
                     </div>
                     <button 
+                      type="button"
                       onClick={() => setShowLayoutEditor(false)}
                       className="px-10 py-4 bg-primary text-white font-black uppercase tracking-widest text-xs rounded-2xl shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
                     >
@@ -1088,25 +1089,30 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                             {/* Hover Status & Delete Bar */}
                             <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-black/90 backdrop-blur-xl border border-white/20 rounded-full p-1.5 flex items-center gap-2 opacity-0 group-hover/marker:opacity-100 transition-all scale-75 group-hover/marker:scale-100 pointer-events-auto z-[60] shadow-2xl">
                               <button 
+                                type="button"
                                 onClick={(e) => { e.stopPropagation(); updatePlotField(idx, 'status', 'unsold'); }}
                                 className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'unsold' ? 'bg-white scale-110 shadow-[0_0_10px_rgba(255,255,255,0.5)]' : 'bg-white/20'}`}
                               />
                               <button 
+                                type="button"
                                 onClick={(e) => { e.stopPropagation(); updatePlotField(idx, 'status', 'booked'); }}
                                 className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'booked' ? 'bg-green-500 scale-110 shadow-[0_0_10px_rgba(34,197,94,0.5)]' : 'bg-green-500/20'}`}
                               />
                               <button 
+                                type="button"
                                 onClick={(e) => { e.stopPropagation(); updatePlotField(idx, 'status', 'sold'); }}
                                 className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'sold' ? 'bg-yellow-400 scale-110 shadow-[0_0_10px_rgba(250,204,21,0.5)]' : 'bg-yellow-400/20'}`}
                               />
                               <div className="w-px h-3 bg-white/20 mx-1"></div>
                               <button 
+                                type="button"
                                 onClick={(e) => { e.stopPropagation(); setEditingPlotIndex(idx); }}
                                 className="text-gray-400 hover:text-white transition-colors"
                               >
                                 <Settings size={12} />
                               </button>
                               <button 
+                                type="button"
                                 onClick={(e) => { e.stopPropagation(); removePlot(idx); }}
                                 className="text-red-500 hover:text-red-400 transition-colors ml-1"
                               >
@@ -1290,6 +1296,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
 
                         <div className="flex items-center gap-4 pt-6">
                           <button 
+                            type="button"
                             onClick={() => {
                               removePlot(editingPlotIndex);
                               setEditingPlotIndex(null);
@@ -1300,6 +1307,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                             <span>Delete Plot</span>
                           </button>
                           <button 
+                            type="button"
                             onClick={() => setEditingPlotIndex(null)}
                             className="flex-grow py-5 bg-primary text-white font-black uppercase tracking-widest rounded-2xl shadow-2xl shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
                           >
