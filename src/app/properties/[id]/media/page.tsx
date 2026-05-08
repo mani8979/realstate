@@ -98,10 +98,10 @@ const MediaPage = () => {
       <div className="flex items-center justify-between p-6 md:p-8 bg-gradient-to-b from-black/80 to-transparent z-50">
         <button 
           onClick={() => router.back()}
-          className="flex items-center gap-3 bg-white/5 hover:bg-white/10 px-6 py-3 rounded-full border border-white/10 transition-all group"
+          className="flex items-center gap-3 bg-white/10 hover:bg-white/20 px-4 md:px-6 py-2 md:py-3 rounded-full border border-white/20 transition-all group backdrop-blur-md"
         >
-          <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-          <span className="font-bold uppercase tracking-widest text-xs">Exit Viewer</span>
+          <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+          <span className="font-bold uppercase tracking-widest text-[10px] md:text-xs">Exit</span>
         </button>
 
         <div className="hidden md:flex items-center gap-2">
@@ -242,13 +242,13 @@ const MediaPage = () => {
                         transition={{ duration: 0.4 }}
                         className="w-full h-full flex items-center justify-center perspective-1000"
                      >
-                        <div className="w-full h-[60vh] md:h-[70vh] flex items-center justify-center gap-4">
+                        <div className="w-full h-[65vh] md:h-[75vh] flex items-center justify-center gap-4 px-2 md:px-10">
                            {getBrochurePages(property.landBrochure)[brochurePageIndex]?.map((img: string, i: number) => (
                               <div 
                                 key={i} 
-                                className={`relative h-full bg-white rounded-xl overflow-hidden shadow-2xl transition-all duration-700 ${
+                                className={`relative h-full bg-white rounded-xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 transition-all duration-700 ${
                                   getBrochurePages(property.landBrochure)[brochurePageIndex].length === 1 
-                                    ? 'aspect-[1/1.414] max-w-[90%]' 
+                                    ? 'aspect-[1/1.414] w-full max-w-[95%] md:max-w-[80%]' 
                                     : 'flex-1 aspect-[1/1.414]'
                                 }`}
                               >
@@ -256,7 +256,7 @@ const MediaPage = () => {
                                    src={img} 
                                    alt="Brochure Page" 
                                    fill 
-                                   className="object-contain p-2 md:p-6"
+                                   className="object-contain"
                                    priority
                                  />
                                  <div className="absolute inset-0 shadow-[inset_0_0_100px_rgba(0,0,0,0.05)] pointer-events-none"></div>

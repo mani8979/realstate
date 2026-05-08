@@ -19,20 +19,24 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Convert buffer to base64 for Cloudinary
-    const base64Image = `data:${file.type};base64,${buffer.toString('base64')}`;
-
-    // Upload to Cloudinary
-    const is3DModel = file.name.toLowerCase().endsWith('.glb') || file.name.toLowerCase().endsWith('.gltf');
-    
-    const result = await cloudinary.uploader.upload(base64Image, {
-      folder: 'realstate_uploads',
-      resource_type: is3DModel ? 'raw' : 'auto',
-    });
+    // Upload to Cloudinary using stream for better performance with large files (videos)
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: 'realstate_uploads',
+          resource_type: 'auto',
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+      uploadStream.end(buffer);
+    }) as any;
 
     return NextResponse.json({ url: result.secure_url });
   } catch (error) {
     console.error('Upload error:', error);
-    return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
+    return NextResponse.json({ error: 'Upload failed: ' + (error as any).message }, { status: 500 });
   }
 }

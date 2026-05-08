@@ -48,7 +48,7 @@ const Header = () => {
     { name: content.navContact || 'Contact', href: '/contact' },
   ];
 
-  const isAdmin = pathname.startsWith('/admin') || pathname.startsWith('/studio');
+  const isAdmin = pathname.startsWith('/admin') || pathname.startsWith('/studio') || pathname.endsWith('/media');
   if (isAdmin) return null;
 
   return (
