@@ -38,7 +38,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
   // Sync state with initialData when it updates (e.g. after save)
   React.useEffect(() => {
     if (initialData) {
-      setFormData(prev => ({
+      setFormData((prev: any) => ({
         ...prev,
         ...initialData,
         // Ensure arrays are handled correctly
