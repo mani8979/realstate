@@ -16,27 +16,41 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    const buffer = Buffer.from(await file.arrayBuffer());
 
-    // Upload to Cloudinary using stream for better performance with large files (videos)
+    // Determine resource type
+    const isVideo = file.type.startsWith('video/');
+    const is3DModel = file.name.toLowerCase().endsWith('.glb') || file.name.toLowerCase().endsWith('.gltf');
+    const resourceType = isVideo ? 'video' : (is3DModel ? 'raw' : 'auto');
+
+    console.log(`Uploading file: ${file.name}, Type: ${file.type}, ResourceType: ${resourceType}`);
+
+    // Upload to Cloudinary using stream
     const result = await new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
           folder: 'realstate_uploads',
-          resource_type: 'auto',
+          resource_type: resourceType,
+          chunk_size: 6000000, // 6MB chunks for videos
         },
         (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
+          if (error) {
+            console.error('Cloudinary Error:', error);
+            reject(error);
+          } else {
+            resolve(result);
+          }
         }
       );
       uploadStream.end(buffer);
     }) as any;
 
     return NextResponse.json({ url: result.secure_url });
-  } catch (error) {
-    console.error('Upload error:', error);
-    return NextResponse.json({ error: 'Upload failed: ' + (error as any).message }, { status: 500 });
+  } catch (error: any) {
+    console.error('Upload API catch block:', error);
+    return NextResponse.json({ 
+      error: 'Upload failed', 
+      details: error.message || 'Unknown error' 
+    }, { status: 500 });
   }
 }

@@ -203,10 +203,14 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
       if (response.ok) {
         const data = await response.json();
         setFormData((prev: any) => ({ ...prev, videoUrl: data.url }));
+        alert('Video uploaded successfully!');
+      } else {
+        const errorData = await response.json();
+        alert(`Upload failed: ${errorData.error || response.statusText}. ${errorData.details || ''}`);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Upload failed:', error);
-      alert('Upload failed. Please try again.');
+      alert('Upload failed: ' + error.message);
     } finally {
       setUploading(false);
       if (videoInputRef.current) videoInputRef.current.value = '';
