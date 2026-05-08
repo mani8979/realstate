@@ -85,6 +85,8 @@ const MediaPage = () => {
 
   if (!property) return null;
 
+  if (!property) return null;
+
   const tabs = [
     { id: 'photos', label: 'Land Gallery', icon: <ImageIcon size={20} />, show: property.landPhotos?.length > 0 },
     { id: 'video', label: 'Video Tour', icon: <Play size={20} />, show: !!property.videoUrl },
@@ -242,14 +244,14 @@ const MediaPage = () => {
                         transition={{ duration: 0.4 }}
                         className="w-full h-full flex items-center justify-center perspective-1000"
                      >
-                        <div className="w-full h-[65vh] md:h-[75vh] flex items-center justify-center gap-4 px-2 md:px-10">
+                        <div className="w-full h-[70vh] md:h-[80vh] flex items-center justify-center gap-4 px-2 md:px-10">
                            {getBrochurePages(property.landBrochure)[brochurePageIndex]?.map((img: string, i: number) => (
                               <div 
                                 key={i} 
-                                className={`relative h-full bg-white rounded-xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 transition-all duration-700 ${
+                                className={`relative h-full transition-all duration-700 ${
                                   getBrochurePages(property.landBrochure)[brochurePageIndex].length === 1 
-                                    ? 'aspect-[1/1.414] w-full max-w-[95%] md:max-w-[80%]' 
-                                    : 'flex-1 aspect-[1/1.414]'
+                                    ? 'w-full max-w-[95%] md:max-w-[85%]' 
+                                    : 'flex-1'
                                 }`}
                               >
                                  <Image 
@@ -259,7 +261,6 @@ const MediaPage = () => {
                                    className="object-contain"
                                    priority
                                  />
-                                 <div className="absolute inset-0 shadow-[inset_0_0_100px_rgba(0,0,0,0.05)] pointer-events-none"></div>
                               </div>
                            ))}
                         </div>
