@@ -29,7 +29,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     videoUrl: initialData?.videoUrl || '',
     mapUrl: initialData?.mapUrl || '',
     landBrochure: initialData?.landBrochure || [],
-    details: initialData?.details || []
+    details: initialData?.details || [],
+    layoutImage: initialData?.layoutImage || '',
+    plots: initialData?.plots || []
   });
   const [uploading, setUploading] = useState(false);
   const [uploadingFruit, setUploadingFruit] = useState(false);
@@ -39,6 +41,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
   const threeDInputRef = useRef<HTMLInputElement>(null);
   const brochureInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
+  const layoutImageInputRef = useRef<HTMLInputElement>(null);
 
   const handleFruitUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -230,6 +233,47 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
       setUploading(false);
       if (videoInputRef.current) videoInputRef.current.value = '';
     }
+  };
+
+  const handleLayoutImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploading(true);
+    try {
+      const file = files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      if (res.ok) {
+        const data = await res.json();
+        setFormData((prev: any) => ({ ...prev, layoutImage: data.url }));
+      }
+    } catch (error) {
+      console.error('Upload failed:', error);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const addPlot = () => {
+    setFormData((prev: any) => ({
+      ...prev,
+      plots: [...(prev.plots || []), { number: '', status: 'unsold' }]
+    }));
+  };
+
+  const updatePlot = (index: number, field: string, value: string) => {
+    const newPlots = [...(formData.plots || [])];
+    newPlots[index] = { ...newPlots[index], [field]: value };
+    setFormData({ ...formData, plots: newPlots });
+  };
+
+  const removePlot = (index: number) => {
+    setFormData((prev: any) => ({
+      ...prev,
+      plots: prev.plots.filter((_: any, i: number) => i !== index)
+    }));
   };
 
   const removeVideo = () => {
@@ -815,8 +859,98 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
             </div>
           </div>
 
-          {/* Land Brochure Section */}
+          {/* Plot Layout Section */}
           <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Plot Layout & Availability</h3>
+            <p className="text-sm text-gray-500 mb-6">Upload the layout map and manage plot availability status.</p>
+            
+            <div className="space-y-8">
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1">Layout Map Image</label>
+                {formData.layoutImage ? (
+                  <div className="relative aspect-video rounded-2xl overflow-hidden border-2 border-gray-100 dark:border-gray-800 group">
+                    <Image src={formData.layoutImage} alt="Layout Map" fill className="object-contain bg-gray-50 dark:bg-gray-800" />
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, layoutImage: '' })}
+                      className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-xl hover:bg-red-600 transition-all shadow-lg"
+                    >
+                      <X size={20} />
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      ref={layoutImageInputRef}
+                      onChange={handleLayoutImageUpload}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => layoutImageInputRef.current?.click()}
+                      disabled={uploading}
+                      className="w-full py-12 rounded-[2rem] border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-4 hover:border-primary hover:bg-primary/5 transition-all group disabled:opacity-50"
+                    >
+                      <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-2xl group-hover:bg-primary group-hover:text-white transition-all">
+                        {uploading ? <Loader2 size={24} className="animate-spin" /> : <Plus size={24} />}
+                      </div>
+                      <span className="text-sm font-black text-gray-400 uppercase tracking-widest">Upload Layout Map Image</span>
+                    </button>
+                  </>
+                )}
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between mb-4">
+                  <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1">Plot Status Board</label>
+                  <button
+                    type="button"
+                    onClick={addPlot}
+                    className="flex items-center gap-2 text-primary hover:text-primary-dark transition-all text-sm font-bold"
+                  >
+                    <Plus size={16} /> Add Plot
+                  </button>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {formData.plots?.map((plot: any, index: number) => (
+                    <div key={index} className="flex items-center gap-3 bg-gray-50 dark:bg-gray-800/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700/50">
+                      <input
+                        type="text"
+                        placeholder="Plot #"
+                        className="w-20 bg-white dark:bg-gray-800 p-2 rounded-lg text-xs font-bold border border-gray-200 dark:border-gray-700"
+                        value={plot.number}
+                        onChange={(e) => updatePlot(index, 'number', e.target.value)}
+                      />
+                      <select
+                        className="flex-grow bg-white dark:bg-gray-800 p-2 rounded-lg text-xs font-bold border border-gray-200 dark:border-gray-700"
+                        value={plot.status}
+                        onChange={(e) => updatePlot(index, 'status', e.target.value)}
+                      >
+                        <option value="unsold">Unsold (White)</option>
+                        <option value="booked">Booked (Green)</option>
+                        <option value="sold">Sold (Yellow)</option>
+                      </select>
+                      <button
+                        type="button"
+                        onClick={() => removePlot(index)}
+                        className="text-red-500 hover:text-red-600 p-1"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                {(!formData.plots || formData.plots.length === 0) && (
+                  <div className="text-center py-10 bg-gray-50 dark:bg-gray-800/20 rounded-[2rem] border-2 border-dashed border-gray-100 dark:border-gray-800">
+                    <p className="text-gray-400 text-sm font-bold">No plots added yet.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Land Brochure (Optional)</h3>
             <p className="text-sm text-gray-500 mb-6">Upload multiple PDF or image brochures for the land.</p>
             

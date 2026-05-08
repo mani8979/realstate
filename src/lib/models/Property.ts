@@ -29,6 +29,9 @@ export interface IProperty extends Document {
   videoUrl?: string;
   mapUrl?: string;
   landBrochure?: string[];
+  layoutImage?: string;
+  plots?: { number: string; status: 'unsold' | 'booked' | 'sold' }[];
+  status: 'active' | 'sold' | 'draft';
 }
 
 const PropertySchema = new Schema<IProperty>(
@@ -62,6 +65,12 @@ const PropertySchema = new Schema<IProperty>(
     videoUrl: { type: String },
     mapUrl: { type: String },
     landBrochure: { type: [String] },
+    layoutImage: { type: String },
+    plots: [{
+      number: { type: String },
+      status: { type: String, enum: ['unsold', 'booked', 'sold'], default: 'unsold' }
+    }],
+    status: { type: String, enum: ['active', 'sold', 'draft'], default: 'active' },
   },
   { 
     timestamps: true,

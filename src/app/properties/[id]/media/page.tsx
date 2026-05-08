@@ -90,6 +90,7 @@ const MediaPage = () => {
   const tabs = [
     { id: 'photos', label: 'Land Gallery', icon: <ImageIcon size={20} />, show: property.landPhotos?.length > 0 },
     { id: 'video', label: 'Video Tour', icon: <Play size={20} />, show: !!property.videoUrl },
+    { id: 'plot_plan', label: 'Plot Plan', icon: <MapIcon size={20} />, show: !!property.layoutImage },
     { id: 'brochure', label: 'Brochure', icon: <Download size={20} />, show: property.landBrochure?.length > 0 },
     { id: 'map', label: 'Location Map', icon: <MapIcon size={20} />, show: !!property.mapUrl },
   ];

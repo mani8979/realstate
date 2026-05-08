@@ -156,6 +156,17 @@ const PropertyDetails = () => {
               <span className="text-[8px] uppercase font-black tracking-widest opacity-0 group-hover:opacity-100 transition-all">Brochure</span>
             </Link>
           )}
+          {property.layoutImage && (
+            <Link 
+              href={`/properties/${property._id}/media?type=plot_plan`}
+              className="flex flex-col items-center gap-1 group transition-all"
+            >
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:bg-primary group-hover:text-black transition-all">
+                <MapIcon size={18} />
+              </div>
+              <span className="text-[8px] uppercase font-black tracking-widest opacity-0 group-hover:opacity-100 transition-all">Plot Plan</span>
+            </Link>
+          )}
           {property.mapUrl && (
             <Link 
               href={`/properties/${property._id}/media?type=map`}
