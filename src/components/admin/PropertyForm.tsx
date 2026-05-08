@@ -305,8 +305,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
   const removePlot = (index: number) => {
     setFormData((prev: any) => ({
       ...prev,
-      plots: prev.plots.filter((_: any, i: number) => i !== index)
+      plots: (prev.plots || []).filter((_: any, i: number) => i !== index)
     }));
+    setEditingPlotIndex(null);
   };
 
   const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -336,9 +337,13 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
   };
 
   const updatePlotField = (index: number, field: string, value: any) => {
-    const newPlots = [...(formData.plots || [])];
-    newPlots[index] = { ...newPlots[index], [field]: value };
-    setFormData({ ...formData, plots: newPlots });
+    setFormData((prev: any) => {
+      const newPlots = [...(prev.plots || [])];
+      if (newPlots[index]) {
+        newPlots[index] = { ...newPlots[index], [field]: value };
+      }
+      return { ...prev, plots: newPlots };
+    });
   };
 
   const removeVideo = () => {
@@ -1114,9 +1119,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                               <button 
                                 type="button"
                                 onClick={(e) => { e.stopPropagation(); removePlot(idx); }}
-                                className="text-red-500 hover:text-red-400 transition-colors ml-1"
+                                className="text-red-500 hover:text-red-400 transition-colors ml-2 p-1 hover:bg-red-500/10 rounded-lg"
                               >
-                                <Trash size={12} />
+                                <Trash size={16} />
                               </button>
                             </div>
                           </motion.div>
