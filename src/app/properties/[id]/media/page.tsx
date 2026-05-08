@@ -120,7 +120,7 @@ const MediaPage = () => {
       </div>
 
       {/* Main Viewer Area */}
-      <div className="flex-grow relative flex items-center justify-center">
+      <div className="flex-grow relative flex items-center justify-center h-[70vh] md:h-[80vh]">
         <AnimatePresence mode="wait">
           {activeTab === 'photos' && (
             <motion.div 
