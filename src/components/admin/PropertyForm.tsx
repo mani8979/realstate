@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Image as ImageIcon, X, Plus, Save, Loader2, ChevronUp, ChevronDown, Play } from 'lucide-react';
+import { Image as ImageIcon, X, Plus, Save, Loader2, ChevronUp, ChevronDown, Play, Target, Hash } from 'lucide-react';
 import Image from 'next/image';
 
 interface PropertyFormProps {
@@ -35,6 +35,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
   });
   const [uploading, setUploading] = useState(false);
   const [uploadingFruit, setUploadingFruit] = useState(false);
+  const [mappingPlot, setMappingPlot] = useState<{ x: number, y: number } | null>(null);
+  const [newPlotNumber, setNewPlotNumber] = useState('');
+  const [newPlotStatus, setNewPlotStatus] = useState<'unsold' | 'booked' | 'sold'>('unsold');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const landPhotosInputRef = useRef<HTMLInputElement>(null);
   const fruitInputRef = useRef<HTMLInputElement>(null);
@@ -274,6 +277,30 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
       ...prev,
       plots: prev.plots.filter((_: any, i: number) => i !== index)
     }));
+  };
+
+  const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setMappingPlot({ x, y });
+  };
+
+  const saveMappedPlot = () => {
+    if (!mappingPlot || !newPlotNumber) return;
+    
+    setFormData((prev: any) => ({
+      ...prev,
+      plots: [...(prev.plots || []), { 
+        number: newPlotNumber, 
+        status: newPlotStatus, 
+        x: mappingPlot.x, 
+        y: mappingPlot.y 
+      }]
+    }));
+    
+    setMappingPlot(null);
+    setNewPlotNumber('');
   };
 
   const removeVideo = () => {
@@ -865,18 +892,114 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
             <p className="text-sm text-gray-500 mb-6">Upload the layout map and manage plot availability status.</p>
             
             <div className="space-y-8">
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1">Layout Map Image</label>
+              <div className="space-y-4">
+                <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1">Interactive Layout Mapper</label>
+                <p className="text-xs text-gray-400 mb-4">Click anywhere on the image below to add a plot marker.</p>
+                
                 {formData.layoutImage ? (
-                  <div className="relative aspect-video rounded-2xl overflow-hidden border-2 border-gray-100 dark:border-gray-800 group">
-                    <Image src={formData.layoutImage} alt="Layout Map" fill className="object-contain bg-gray-50 dark:bg-gray-800" />
+                  <div className="relative rounded-3xl overflow-hidden border-4 border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 shadow-2xl">
+                    <div 
+                      className="relative cursor-crosshair group"
+                      onClick={handleImageClick}
+                    >
+                      <Image 
+                        src={formData.layoutImage} 
+                        alt="Layout Map" 
+                        width={1200} 
+                        height={800} 
+                        className="w-full h-auto select-none" 
+                      />
+                      
+                      {/* Existing Markers */}
+                      {formData.plots?.map((plot: any, idx: number) => (
+                        <div 
+                          key={idx}
+                          style={{ left: `${plot.x}%`, top: `${plot.y}%` }}
+                          className={`absolute -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-[8px] font-black pointer-events-none transition-all ${
+                            plot.status === 'sold' ? 'bg-yellow-400 text-black' :
+                            plot.status === 'booked' ? 'bg-green-500 text-white' :
+                            'bg-white text-black'
+                          }`}
+                        >
+                          {plot.number}
+                        </div>
+                      ))}
+
+                      <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-all pointer-events-none flex items-center justify-center">
+                        <div className="opacity-0 group-hover:opacity-100 flex flex-col items-center gap-2">
+                          <Target size={32} className="text-primary animate-pulse" />
+                          <span className="text-[10px] font-black uppercase tracking-widest text-primary">Click to add plot</span>
+                        </div>
+                      </div>
+                    </div>
+
                     <button
                       type="button"
                       onClick={() => setFormData({ ...formData, layoutImage: '' })}
-                      className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-xl hover:bg-red-600 transition-all shadow-lg"
+                      className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-xl hover:bg-red-600 transition-all shadow-lg z-10"
                     >
                       <X size={20} />
                     </button>
+
+                    {/* Mapping Modal Overlay */}
+                    <AnimatePresence>
+                      {mappingPlot && (
+                        <motion.div 
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-20 p-6"
+                        >
+                          <motion.div 
+                            initial={{ scale: 0.9, y: 20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            className="bg-white dark:bg-gray-900 rounded-[2.5rem] p-8 w-full max-w-md shadow-2xl space-y-6"
+                          >
+                            <div className="flex items-center justify-between">
+                              <h4 className="text-lg font-black uppercase tracking-tighter text-gray-900 dark:text-white">New Plot Marker</h4>
+                              <button onClick={() => setMappingPlot(null)} className="text-gray-400 hover:text-gray-600"><X size={24} /></button>
+                            </div>
+
+                            <div className="space-y-4">
+                              <div className="space-y-2">
+                                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Plot Number</label>
+                                <div className="relative">
+                                  <Hash className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                                  <input 
+                                    autoFocus
+                                    type="text"
+                                    value={newPlotNumber}
+                                    onChange={(e) => setNewPlotNumber(e.target.value)}
+                                    className="w-full pl-12 pr-6 py-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border-none focus:ring-2 focus:ring-primary/50 font-bold"
+                                    placeholder="e.g. 101"
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="space-y-2">
+                                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Availability Status</label>
+                                <select
+                                  value={newPlotStatus}
+                                  onChange={(e: any) => setNewPlotStatus(e.target.value)}
+                                  className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border-none focus:ring-2 focus:ring-primary/50 font-bold appearance-none"
+                                >
+                                  <option value="unsold">Available (White)</option>
+                                  <option value="booked">Booked (Green)</option>
+                                  <option value="sold">Sold (Yellow)</option>
+                                </select>
+                              </div>
+                            </div>
+
+                            <button 
+                              onClick={saveMappedPlot}
+                              className="w-full py-4 bg-primary text-white font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all"
+                            >
+                              Place Marker
+                            </button>
+                          </motion.div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 ) : (
                   <>
@@ -891,12 +1014,15 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                       type="button"
                       onClick={() => layoutImageInputRef.current?.click()}
                       disabled={uploading}
-                      className="w-full py-12 rounded-[2rem] border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-4 hover:border-primary hover:bg-primary/5 transition-all group disabled:opacity-50"
+                      className="w-full py-16 rounded-[3rem] border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-4 hover:border-primary hover:bg-primary/5 transition-all group disabled:opacity-50"
                     >
-                      <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-2xl group-hover:bg-primary group-hover:text-white transition-all">
-                        {uploading ? <Loader2 size={24} className="animate-spin" /> : <Plus size={24} />}
+                      <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-3xl group-hover:bg-primary group-hover:text-white transition-all">
+                        {uploading ? <Loader2 size={32} className="animate-spin" /> : <Plus size={32} />}
                       </div>
-                      <span className="text-sm font-black text-gray-400 uppercase tracking-widest">Upload Layout Map Image</span>
+                      <div className="text-center">
+                        <span className="block text-sm font-black text-gray-900 dark:text-white uppercase tracking-widest mb-1">Upload Layout Map</span>
+                        <span className="text-xs text-gray-400 font-medium">JPEG or PNG recommended</span>
+                      </div>
                     </button>
                   </>
                 )}

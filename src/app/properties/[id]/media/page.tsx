@@ -307,16 +307,51 @@ const MediaPage = () => {
               className="w-full h-full flex flex-col gap-8 p-4 md:p-10 overflow-y-auto"
             >
               <div className="flex flex-col md:flex-row gap-8 min-h-0">
-                {/* Layout Image */}
+                {/* Layout Image with Markers */}
                 <div className="flex-grow bg-white/5 rounded-[2.5rem] border border-white/10 overflow-hidden relative shadow-2xl group min-h-[400px]">
-                  <Image 
-                    src={property.layoutImage} 
-                    alt="Plot Layout" 
-                    fill 
-                    className="object-contain"
-                    priority
-                  />
-                  <div className="absolute top-6 right-6 flex flex-col gap-2">
+                  <div className="relative w-full h-full">
+                    <Image 
+                      src={property.layoutImage} 
+                      alt="Plot Layout" 
+                      fill 
+                      className="object-contain"
+                      priority
+                    />
+                    
+                    {/* Interactive Plot Markers */}
+                    {property.plots?.filter((p: any) => p.x !== undefined && p.y !== undefined).map((plot: any, idx: number) => (
+                      <motion.div 
+                        key={idx}
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ delay: idx * 0.05 }}
+                        style={{ left: `${plot.x}%`, top: `${plot.y}%` }}
+                        className={`absolute -translate-x-1/2 -translate-y-1/2 group/plot cursor-pointer z-10`}
+                      >
+                        {/* The Marker */}
+                        <div className={`w-4 h-4 md:w-6 md:h-6 rounded-full border-2 border-white shadow-lg flex items-center justify-center transition-all group-hover/plot:scale-125 ${
+                          plot.status === 'sold' ? 'bg-yellow-400 text-black' :
+                          plot.status === 'booked' ? 'bg-green-500 text-white' :
+                          'bg-white text-black'
+                        }`}>
+                          <span className="text-[6px] md:text-[8px] font-black">{plot.number}</span>
+                        </div>
+
+                        {/* Tooltip on Hover */}
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover/plot:opacity-100 transition-all pointer-events-none whitespace-nowrap z-20">
+                          <div className="bg-black/90 backdrop-blur-md text-white px-3 py-1.5 rounded-lg border border-white/10 text-[10px] font-bold shadow-2xl">
+                            Plot {plot.number} • <span className={
+                              plot.status === 'sold' ? 'text-yellow-400' :
+                              plot.status === 'booked' ? 'text-green-500' :
+                              'text-white'
+                            }>{plot.status.toUpperCase()}</span>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  <div className="absolute top-6 right-6 flex flex-col gap-2 z-20">
                     <button className="bg-black/60 backdrop-blur-md text-white p-3 rounded-full hover:bg-primary hover:text-black transition-all">
                       <Maximize2 size={20} />
                     </button>

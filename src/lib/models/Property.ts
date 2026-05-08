@@ -68,7 +68,9 @@ const PropertySchema = new Schema<IProperty>(
     layoutImage: { type: String },
     plots: [{
       number: { type: String },
-      status: { type: String, enum: ['unsold', 'booked', 'sold'], default: 'unsold' }
+      status: { type: String, enum: ['unsold', 'booked', 'sold'], default: 'unsold' },
+      x: { type: Number },
+      y: { type: Number }
     }],
     status: { type: String, enum: ['active', 'sold', 'draft'], default: 'active' },
   },
