@@ -104,19 +104,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     }
   };
 
-  const updatePlotField = (index: number, field: string, value: any) => {
-    const newPlots = [...formData.plots];
-    newPlots[index] = { ...newPlots[index], [field]: value };
-    setFormData({ ...formData, plots: newPlots });
-  };
-
-  const removePlot = (index: number) => {
-    setFormData({
-      ...formData,
-      plots: formData.plots.filter((_: any, i: number) => i !== index)
-    });
-  };
-
   const removeFruitImage = () => {
     setFormData((prev: any) => ({ ...prev, fruitImage: '' }));
   };
