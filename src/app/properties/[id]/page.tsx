@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { MapPin, Phone, MessageSquare, Send, ArrowLeft, Share2, X, Leaf } from 'lucide-react';
+import { MapPin, Phone, MessageSquare, Send, ArrowLeft, Share2, X, Leaf, Download } from 'lucide-react';
 import Link from 'next/link';
 import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
@@ -162,9 +162,23 @@ const PropertyDetails = () => {
               )}
             </div>
 
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-8 md:p-12 rounded-[2.5rem] flex flex-col items-center md:items-start min-w-[300px]">
-              <p className="text-primary font-black uppercase tracking-[0.2em] text-[10px] mb-2">Asking Price</p>
-              <p className="text-5xl md:text-7xl font-black tracking-tighter text-white">₹{property.price?.toLocaleString('en-IN')}</p>
+            <div className="flex flex-col items-center md:items-end gap-4">
+              <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-8 md:p-12 rounded-[2.5rem] flex flex-col items-center md:items-start min-w-[300px]">
+                <p className="text-primary font-black uppercase tracking-[0.2em] text-[10px] mb-2">Asking Price</p>
+                <p className="text-5xl md:text-7xl font-black tracking-tighter text-white">₹{property.price?.toLocaleString('en-IN')}</p>
+              </div>
+              
+              {property.landBrochure && (
+                <a 
+                  href={property.landBrochure}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 bg-primary/20 hover:bg-primary text-primary hover:text-black font-black uppercase tracking-widest text-[10px] px-8 py-4 rounded-full border border-primary/30 transition-all group"
+                >
+                  <Download size={16} className="group-hover:translate-y-0.5 transition-transform" />
+                  <span>Download Brochure</span>
+                </a>
+              )}
             </div>
           </div>
         </div>

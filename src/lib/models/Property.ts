@@ -28,6 +28,7 @@ export interface IProperty extends Document {
   threeDElement?: string;
   videoUrl?: string;
   mapUrl?: string;
+  landBrochure?: string;
 }
 
 const PropertySchema = new Schema<IProperty>(
@@ -60,6 +61,7 @@ const PropertySchema = new Schema<IProperty>(
     threeDElement: { type: String },
     videoUrl: { type: String },
     mapUrl: { type: String },
+    landBrochure: { type: String },
   },
   { 
     timestamps: true,
