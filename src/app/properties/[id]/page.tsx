@@ -205,17 +205,15 @@ const PropertyDetails = () => {
                 <p className="text-5xl md:text-7xl font-black tracking-tighter text-white">₹{property.price?.toLocaleString('en-IN')}</p>
               </div>
               
-              {property.landBrochure && (
-                <a 
-                  href={property.landBrochure}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  id="land-brochure"
-                  className="flex items-center gap-2 bg-primary/20 hover:bg-primary text-primary hover:text-black font-black uppercase tracking-widest text-[10px] px-8 py-4 rounded-full border border-primary/30 transition-all group scroll-mt-32"
+              {property.landBrochure?.length > 0 && (
+                <button 
+                  onClick={() => document.getElementById('land-brochure')?.scrollIntoView({ behavior: 'smooth' })}
+                  id="brochure-nav-btn"
+                  className="flex items-center gap-2 bg-primary/20 hover:bg-primary text-primary hover:text-black font-black uppercase tracking-widest text-[10px] px-8 py-4 rounded-full border border-primary/30 transition-all group"
                 >
                   <Download size={16} className="group-hover:translate-y-0.5 transition-transform" />
-                  <span>Download Brochure</span>
-                </a>
+                  <span>View Brochure</span>
+                </button>
               )}
             </div>
           </div>
@@ -477,7 +475,7 @@ const PropertyDetails = () => {
             )}
 
             {/* Land Gallery Section */}
-            {property.landPhotos && property.landPhotos.length > 0 && (
+            {property.landPhotos?.length > 0 && (
               <motion.div 
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -496,8 +494,7 @@ const PropertyDetails = () => {
                   <div className="flex gap-6 overflow-x-auto pb-8 custom-scrollbar scroll-smooth snap-x">
                     {property.landPhotos.map((photo: string, i: number) => (
                       <div key={i} className="relative min-w-[300px] md:min-w-[500px] aspect-[4/3] rounded-3xl overflow-hidden border border-white/10 group cursor-pointer snap-center" onClick={() => {
-                        // Optional: Open in lightbox or set as main image
-                        setActiveImage(-1); // Use this to toggle if needed, or just let it be
+                        setActiveImage(-1);
                       }}>
                         <Image src={photo} alt={`Land Photo ${i+1}`} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
@@ -506,6 +503,71 @@ const PropertyDetails = () => {
                       </div>
                     ))}
                   </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Land Brochure / Documents Section */}
+            {property.landBrochure?.length > 0 && (
+              <motion.div 
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="flex justify-center scroll-mt-32"
+                id="land-brochure"
+              >
+                <div className="w-full glass-card p-8 md:p-16 bg-gradient-to-t from-primary/5 to-transparent overflow-hidden">
+                  <div className="flex items-center gap-4 mb-12">
+                    <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                      <Download size={24} />
+                    </div>
+                    <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white">Brochure & Docs</h2>
+                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em] ml-auto animate-pulse">Swipe to View →</p>
+                  </div>
+
+                  {/* Brochure Images Scroll */}
+                  <div className="flex gap-6 overflow-x-auto pb-10 custom-scrollbar snap-x">
+                    {property.landBrochure.map((item: string, i: number) => (
+                      !item.endsWith('.pdf') ? (
+                        <div key={i} className="relative min-w-[280px] md:min-w-[400px] aspect-[1/1.414] rounded-3xl overflow-hidden border border-white/10 group snap-center bg-white/5">
+                          <Image src={item} alt={`Brochure Page ${i+1}`} fill className="object-contain p-4 group-hover:scale-105 transition-transform duration-700" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
+                             <p className="text-white font-black uppercase tracking-widest text-[10px] mb-2">Brochure Page {i+1}</p>
+                             <a href={item} download target="_blank" className="text-primary text-[10px] font-bold uppercase underline">Save Image</a>
+                          </div>
+                        </div>
+                      ) : null
+                    ))}
+                  </div>
+
+                  {/* PDF Downloads List */}
+                  {property.landBrochure.some((item: string) => item.endsWith('.pdf')) && (
+                    <div className="mt-12 space-y-4">
+                      <h3 className="text-primary font-black uppercase tracking-widest text-xs mb-4">Downloadable PDF Files</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {property.landBrochure.filter((item: string) => item.endsWith('.pdf')).map((pdf: string, i: number) => (
+                          <a 
+                            key={i}
+                            href={pdf} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-between p-6 bg-white/5 rounded-2xl border border-white/10 hover:border-primary transition-all group"
+                          >
+                            <div className="flex items-center gap-4">
+                              <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center text-red-500">
+                                <Save size={20} />
+                              </div>
+                              <div>
+                                <p className="text-white font-bold text-sm truncate max-w-[200px]">{pdf.split('/').pop()}</p>
+                                <p className="text-gray-500 text-[10px] uppercase font-black tracking-widest">PDF Document</p>
+                              </div>
+                            </div>
+                            <Download size={20} className="text-primary group-hover:translate-y-1 transition-transform" />
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             )}

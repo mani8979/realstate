@@ -28,7 +28,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     threeDElement: initialData?.threeDElement || '',
     videoUrl: initialData?.videoUrl || '',
     mapUrl: initialData?.mapUrl || '',
-    landBrochure: initialData?.landBrochure || '',
+    landBrochure: initialData?.landBrochure || [],
     details: initialData?.details || []
   });
   const [uploading, setUploading] = useState(false);
@@ -223,19 +223,28 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
 
     setUploading(true);
     try {
-      const file = files[0];
-      const uploadFormData = new FormData();
-      uploadFormData.append('file', file);
+      const newBrochures = [...formData.landBrochure];
+      
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const uploadFormData = new FormData();
+        uploadFormData.append('file', file);
 
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: uploadFormData,
-      });
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: uploadFormData,
+        });
 
-      if (response.ok) {
-        const data = await response.json();
-        setFormData((prev: any) => ({ ...prev, landBrochure: data.url }));
+        if (response.ok) {
+          const data = await response.json();
+          newBrochures.push(data.url);
+        }
       }
+
+      setFormData((prev: any) => ({
+        ...prev,
+        landBrochure: newBrochures
+      }));
     } catch (error) {
       console.error('Upload failed:', error);
       alert('Upload failed. Please try again.');
@@ -245,8 +254,11 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     }
   };
 
-  const removeBrochure = () => {
-    setFormData((prev: any) => ({ ...prev, landBrochure: '' }));
+  const removeBrochure = (url: string) => {
+    setFormData((prev: any) => ({
+      ...prev,
+      landBrochure: prev.landBrochure.filter((item: string) => item !== url)
+    }));
   };
 
   const removeImage = (url: string) => {
@@ -787,50 +799,50 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           {/* Land Brochure Section */}
           <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Land Brochure (Optional)</h3>
-            <p className="text-sm text-gray-500 mb-6">Upload a PDF or image brochure for the land.</p>
+            <p className="text-sm text-gray-500 mb-6">Upload multiple PDF or image brochures for the land.</p>
             
             <div className="space-y-6">
-              {formData.landBrochure ? (
-                <div className="flex items-center gap-4 p-4 bg-primary/10 rounded-2xl border border-primary/20">
-                  <div className="bg-primary text-black p-3 rounded-xl">
-                    <ImageIcon size={20} />
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {formData.landBrochure?.map((item: string, i: number) => (
+                  <div key={i} className="relative aspect-video rounded-2xl overflow-hidden border-2 border-gray-100 dark:border-gray-800 group bg-gray-50 dark:bg-gray-800 flex items-center justify-center p-4">
+                    {item.endsWith('.pdf') ? (
+                      <div className="text-center">
+                         <Save size={24} className="mx-auto mb-2 text-primary" />
+                         <p className="text-[10px] font-bold truncate max-w-[100px]">{item.split('/').pop()}</p>
+                      </div>
+                    ) : (
+                      <Image src={item} alt={`Brochure ${i+1}`} fill className="object-cover" />
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeBrochure(item)}
+                      className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X size={14} />
+                    </button>
                   </div>
-                  <div className="flex-grow min-w-0">
-                    <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{formData.landBrochure.split('/').pop()}</p>
-                    <p className="text-xs text-gray-500">Brochure Loaded</p>
+                ))}
+                
+                <input
+                  type="file"
+                  accept=".pdf,image/*"
+                  multiple
+                  className="hidden"
+                  ref={brochureInputRef}
+                  onChange={handleBrochureUpload}
+                />
+                <button
+                  type="button"
+                  onClick={() => brochureInputRef.current?.click()}
+                  disabled={uploading}
+                  className="aspect-video rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-all group disabled:opacity-50"
+                >
+                  <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-xl group-hover:bg-primary group-hover:text-white transition-all">
+                    {uploading ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
                   </div>
-                  <button
-                    type="button"
-                    onClick={removeBrochure}
-                    className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-colors"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <input
-                    type="file"
-                    accept=".pdf,image/*"
-                    className="hidden"
-                    ref={brochureInputRef}
-                    onChange={handleBrochureUpload}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => brochureInputRef.current?.click()}
-                    disabled={uploading}
-                    className="w-full py-6 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-all group disabled:opacity-50"
-                  >
-                    <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-xl group-hover:bg-primary group-hover:text-white transition-all">
-                      {uploading ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
-                    </div>
-                    <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-                      {uploading ? 'Uploading...' : 'Upload Brochure'}
-                    </span>
-                  </button>
-                </>
-              )}
+                  <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Add More</span>
+                </button>
+              </div>
             </div>
           </div>
 
