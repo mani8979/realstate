@@ -308,40 +308,38 @@ const MediaPage = () => {
             >
               <div className="flex flex-col md:flex-row gap-8 min-h-0">
                 {/* Layout Image with Markers */}
-                <div className="flex-grow bg-white/5 rounded-[2.5rem] border border-white/10 overflow-hidden relative shadow-2xl group min-h-[400px]">
-                  <div className="relative w-full h-full">
+                {/* Layout Image with Markers */}
+                <div className="flex-grow bg-white/5 rounded-[2.5rem] border border-white/10 overflow-hidden relative shadow-2xl group flex items-center justify-center min-h-[500px]">
+                  <div className="relative max-w-full max-h-full">
                     <Image 
                       src={property.layoutImage} 
                       alt="Plot Layout" 
-                      fill 
-                      className="object-contain"
+                      width={4000} 
+                      height={3000} 
+                      className="w-auto h-auto max-w-full max-h-[70vh] object-contain rounded-2xl"
                       priority
                     />
                     
                     {/* Interactive Plot Markers */}
-                    {property.plots?.filter((p: any) => p.x !== undefined && p.y !== undefined).map((plot: any, idx: number) => (
+                    {property.plots?.filter((p: any) => p.x !== undefined && p.y !== undefined && (p.x !== 0 || p.y !== 0)).map((plot: any, idx: number) => (
                       <motion.div 
                         key={idx}
                         initial={{ scale: 0, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ delay: idx * 0.05 }}
-                        style={{ left: `${plot.x}%`, top: `${plot.y}%` }}
-                        className={`absolute -translate-x-1/2 -translate-y-1/2 group/plot cursor-pointer z-10`}
+                        style={{ 
+                          left: `${plot.x}%`, 
+                          top: `${plot.y}%`,
+                          width: `${plot.width || 5}%`,
+                          height: `${plot.height || 3}%`
+                        }}
+                        className={`absolute -translate-x-1/2 -translate-y-1/2 group/plot cursor-pointer z-10 rounded-md border border-white shadow-lg flex items-center justify-center transition-all group-hover/plot:scale-125 ${
+                          plot.status === 'sold' ? 'bg-yellow-400 text-black' :
+                          plot.status === 'booked' ? 'bg-green-500 text-white' :
+                          'bg-white text-black'
+                        }`}
                       >
-                        {/* The Marker */}
-                        <div 
-                          style={{ 
-                            width: `${plot.width || 5}%`, 
-                            height: `${plot.height || 3}%` 
-                          }}
-                          className={`rounded-md border border-white shadow-lg flex items-center justify-center transition-all group-hover/plot:scale-125 ${
-                            plot.status === 'sold' ? 'bg-yellow-400 text-black' :
-                            plot.status === 'booked' ? 'bg-green-500 text-white' :
-                            'bg-white text-black'
-                          }`}
-                        >
-                          <span className="text-[6px] md:text-[8px] font-black">{plot.number}</span>
-                        </div>
+                        <span className="text-[6px] md:text-[8px] font-black">{plot.number}</span>
 
                         {/* Tooltip on Hover */}
                         <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover/plot:opacity-100 transition-all pointer-events-none whitespace-nowrap z-20">
@@ -390,20 +388,27 @@ const MediaPage = () => {
 
                     {/* Summary */}
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between p-4 rounded-2xl bg-black/40 border border-white/5">
-                        <span className="text-xs font-bold text-white/60">Total Plots</span>
-                        <span className="text-xl font-black">{property.plots?.length || 0}</span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="p-4 rounded-2xl bg-yellow-400/10 border border-yellow-400/20">
-                          <span className="block text-[8px] font-black uppercase tracking-widest text-yellow-400/60 mb-1">Sold</span>
-                          <span className="text-lg font-black text-yellow-400">{property.plots?.filter((p: any) => p.status === 'sold').length || 0}</span>
-                        </div>
-                        <div className="p-4 rounded-2xl bg-green-500/10 border border-green-500/20">
-                          <span className="block text-[8px] font-black uppercase tracking-widest text-green-500/60 mb-1">Available</span>
-                          <span className="text-lg font-black text-green-500">{property.plots?.filter((p: any) => p.status === 'unsold').length || 0}</span>
-                        </div>
-                      </div>
+                      {(() => {
+                        const mappedPlots = property.plots?.filter((p: any) => p.x !== undefined && p.y !== undefined && (p.x !== 0 || p.y !== 0)) || [];
+                        return (
+                          <>
+                            <div className="flex items-center justify-between p-4 rounded-2xl bg-black/40 border border-white/5">
+                              <span className="text-xs font-bold text-white/60">Total Plots</span>
+                              <span className="text-xl font-black">{mappedPlots.length}</span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                              <div className="p-4 rounded-2xl bg-yellow-400/10 border border-yellow-400/20">
+                                <span className="block text-[8px] font-black uppercase tracking-widest text-yellow-400/60 mb-1">Sold</span>
+                                <span className="text-lg font-black text-yellow-400">{mappedPlots.filter((p: any) => p.status === 'sold').length}</span>
+                              </div>
+                              <div className="p-4 rounded-2xl bg-green-500/10 border border-green-500/20">
+                                <span className="block text-[8px] font-black uppercase tracking-widest text-green-500/60 mb-1">Available</span>
+                                <span className="text-lg font-black text-green-500">{mappedPlots.filter((p: any) => p.status === 'unsold').length}</span>
+                              </div>
+                            </div>
+                          </>
+                        );
+                      })()}
                     </div>
                   </div>
 
@@ -417,7 +422,7 @@ const MediaPage = () => {
                       />
                     </div>
                     <div className="flex-grow overflow-y-auto pr-2 custom-scrollbar grid grid-cols-4 gap-2">
-                      {property.plots?.map((plot: any, idx: number) => (
+                      {property.plots?.filter((p: any) => p.x !== undefined && p.y !== undefined && (p.x !== 0 || p.y !== 0)).map((plot: any, idx: number) => (
                         <div 
                           key={idx}
                           className={`aspect-square rounded-lg flex items-center justify-center text-[10px] font-black border transition-all ${
