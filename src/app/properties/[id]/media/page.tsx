@@ -299,6 +299,102 @@ const MediaPage = () => {
             </motion.div>
           )}
 
+          {activeTab === 'plot_plan' && (
+            <motion.div 
+              key="plot_plan"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="w-full h-full flex flex-col gap-8 p-4 md:p-10 overflow-y-auto"
+            >
+              <div className="flex flex-col md:flex-row gap-8 min-h-0">
+                {/* Layout Image */}
+                <div className="flex-grow bg-white/5 rounded-[2.5rem] border border-white/10 overflow-hidden relative shadow-2xl group min-h-[400px]">
+                  <Image 
+                    src={property.layoutImage} 
+                    alt="Plot Layout" 
+                    fill 
+                    className="object-contain"
+                    priority
+                  />
+                  <div className="absolute top-6 right-6 flex flex-col gap-2">
+                    <button className="bg-black/60 backdrop-blur-md text-white p-3 rounded-full hover:bg-primary hover:text-black transition-all">
+                      <Maximize2 size={20} />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Status Board */}
+                <div className="w-full md:w-[350px] flex flex-col gap-6">
+                  <div className="bg-white/5 backdrop-blur-xl rounded-[2rem] border border-white/10 p-6 space-y-6">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-black uppercase tracking-tighter">Plot Status</h3>
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary bg-primary/10 px-3 py-1 rounded-full">Real-time</span>
+                    </div>
+
+                    {/* Legend */}
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10">
+                        <div className="w-4 h-4 rounded-full bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.5)]"></div>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-white/50">Sold</span>
+                      </div>
+                      <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10">
+                        <div className="w-4 h-4 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-white/50">Booked</span>
+                      </div>
+                      <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10">
+                        <div className="w-4 h-4 rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.3)]"></div>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-white/50">Unsold</span>
+                      </div>
+                    </div>
+
+                    {/* Summary */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-4 rounded-2xl bg-black/40 border border-white/5">
+                        <span className="text-xs font-bold text-white/60">Total Plots</span>
+                        <span className="text-xl font-black">{property.plots?.length || 0}</span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="p-4 rounded-2xl bg-yellow-400/10 border border-yellow-400/20">
+                          <span className="block text-[8px] font-black uppercase tracking-widest text-yellow-400/60 mb-1">Sold</span>
+                          <span className="text-lg font-black text-yellow-400">{property.plots?.filter((p: any) => p.status === 'sold').length || 0}</span>
+                        </div>
+                        <div className="p-4 rounded-2xl bg-green-500/10 border border-green-500/20">
+                          <span className="block text-[8px] font-black uppercase tracking-widest text-green-500/60 mb-1">Available</span>
+                          <span className="text-lg font-black text-green-500">{property.plots?.filter((p: any) => p.status === 'unsold').length || 0}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Plot Grid Searchable */}
+                  <div className="bg-white/5 backdrop-blur-xl rounded-[2rem] border border-white/10 p-6 flex flex-col gap-4 max-h-[400px]">
+                    <div className="relative">
+                      <input 
+                        type="text" 
+                        placeholder="Search Plot #"
+                        className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-xs font-bold placeholder:text-white/20 focus:border-primary transition-all text-white"
+                      />
+                    </div>
+                    <div className="flex-grow overflow-y-auto pr-2 custom-scrollbar grid grid-cols-4 gap-2">
+                      {property.plots?.map((plot: any, idx: number) => (
+                        <div 
+                          key={idx}
+                          className={`aspect-square rounded-lg flex items-center justify-center text-[10px] font-black border transition-all ${
+                            plot.status === 'sold' ? 'bg-yellow-400 border-yellow-500 text-black shadow-[0_4px_12px_rgba(250,204,21,0.2)]' :
+                            plot.status === 'booked' ? 'bg-green-500 border-green-600 text-white shadow-[0_4px_12px_rgba(34,197,94,0.2)]' :
+                            'bg-white/5 border-white/10 text-white hover:border-white/40'
+                          }`}
+                        >
+                          {plot.number}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
           {activeTab === 'map' && (
             <motion.div 
               key="map"
