@@ -23,8 +23,11 @@ export interface IProperty extends Document {
   createdAt: Date;
   fruitImage?: string;
   fruitInfo?: string;
+  landPhotos?: string[];
   details?: IPropertyDetail[];
   threeDElement?: string;
+  videoUrl?: string;
+  mapUrl?: string;
 }
 
 const PropertySchema = new Schema<IProperty>(
@@ -46,6 +49,7 @@ const PropertySchema = new Schema<IProperty>(
     featured: { type: Boolean, default: false },
     fruitImage: { type: String },
     fruitInfo: { type: String },
+    landPhotos: { type: [String] },
     details: [{
       heading: String,
       content: String,
@@ -54,6 +58,8 @@ const PropertySchema = new Schema<IProperty>(
       isPointed: { type: Boolean, default: false },
     }],
     threeDElement: { type: String },
+    videoUrl: { type: String },
+    mapUrl: { type: String },
   },
   { 
     timestamps: true,

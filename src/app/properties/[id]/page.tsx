@@ -10,6 +10,14 @@ import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-mot
 
 // Bypass TypeScript error for custom element
 const ModelViewer = 'model-viewer' as any;
+import { Play, Map as MapIcon, Image as ImageIcon } from 'lucide-react';
+
+const getYouTubeEmbedUrl = (url: string) => {
+  if (!url) return '';
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
+};
 
 const PropertyDetails = () => {
   const { id } = useParams();
@@ -345,6 +353,124 @@ const PropertyDetails = () => {
                 </div>
               </div>
             </motion.div>
+
+            {/* Dynamic Structured Details */}
+            {property.details?.map((detail: any, idx: number) => (
+              <motion.div 
+                key={idx}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className={`flex ${idx % 2 === 0 ? 'justify-start' : 'justify-end'}`}
+              >
+                <div className={`md:w-1/2 w-full glass-card p-8 md:p-16 ${idx % 2 !== 0 ? 'border-r-4 border-primary' : ''}`}>
+                  <div className="flex items-center gap-4 mb-8">
+                    {detail.showArrow && <span className="text-primary font-bold text-2xl">→</span>}
+                    <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white">{detail.heading}</h2>
+                  </div>
+                  {detail.sideHeading && (
+                    <h3 className="text-primary font-black uppercase tracking-widest text-xs mb-6">{detail.sideHeading}</h3>
+                  )}
+                  {detail.isPointed ? (
+                    <ul className="space-y-4">
+                      {detail.content.split('\n').filter((line: string) => line.trim()).map((line: string, i: number) => (
+                        <li key={i} className="flex gap-3 text-gray-300 text-lg">
+                          <span className="text-primary font-bold">•</span>
+                          {line.trim()}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-gray-400 text-lg leading-relaxed">{detail.content}</p>
+                  )}
+                </div>
+              </motion.div>
+            ))}
+
+            {/* Video Tour Section */}
+            {property.videoUrl && (
+              <motion.div 
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="flex justify-center"
+              >
+                <div className="w-full max-w-5xl glass-card p-4 md:p-10 relative overflow-hidden">
+                  <div className="flex items-center gap-4 mb-8 px-4">
+                    <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                      <Play size={24} />
+                    </div>
+                    <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white">Video Tour</h2>
+                  </div>
+                  <div className="relative aspect-video rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+                    <iframe
+                      src={getYouTubeEmbedUrl(property.videoUrl)}
+                      title="Property Video Tour"
+                      className="absolute inset-0 w-full h-full"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Land Gallery Section */}
+            {property.landPhotos && property.landPhotos.length > 0 && (
+              <motion.div 
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="flex justify-center"
+              >
+                <div className="w-full glass-card p-8 md:p-16 bg-gradient-to-br from-primary/5 to-transparent">
+                  <div className="flex items-center gap-4 mb-12">
+                    <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                      <ImageIcon size={24} />
+                    </div>
+                    <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white">Land Gallery</h2>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {property.landPhotos.map((photo: string, i: number) => (
+                      <div key={i} className="relative aspect-[4/3] rounded-3xl overflow-hidden border border-white/10 group cursor-pointer" onClick={() => {
+                        // Optional: Open in lightbox or set as main image
+                        // For now just show it
+                      }}>
+                        <Image src={photo} alt={`Land Photo ${i+1}`} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Location Map Section */}
+            {property.mapUrl && (
+              <motion.div 
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="flex justify-center"
+              >
+                <div className="w-full max-w-5xl glass-card p-4 md:p-10 relative overflow-hidden border-b-4 border-primary">
+                  <div className="flex items-center gap-4 mb-8 px-4">
+                    <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                      <MapIcon size={24} />
+                    </div>
+                    <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white">Location Map</h2>
+                  </div>
+                  <div className="relative h-[400px] md:h-[600px] rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+                    <iframe
+                      src={property.mapUrl}
+                      className="absolute inset-0 w-full h-full grayscale invert opacity-80 contrast-125"
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                    ></iframe>
+                  </div>
+                </div>
+              </motion.div>
+            )}
           </div>
 
             {/* Bottom Enquiry Form - Center Aligned */}
