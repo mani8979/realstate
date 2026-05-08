@@ -3,6 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { Image as ImageIcon, X, Plus, Save, Loader2, ChevronUp, ChevronDown, Play, Target, Hash } from 'lucide-react';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface PropertyFormProps {
   initialData?: any;
