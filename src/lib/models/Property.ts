@@ -70,7 +70,9 @@ const PropertySchema = new Schema<IProperty>(
       number: { type: String },
       status: { type: String, enum: ['unsold', 'booked', 'sold'], default: 'unsold' },
       x: { type: Number },
-      y: { type: Number }
+      y: { type: Number },
+      width: { type: Number, default: 5 },
+      height: { type: Number, default: 3 }
     }],
     status: { type: String, enum: ['active', 'sold', 'draft'], default: 'active' },
   },

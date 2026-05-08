@@ -329,11 +329,17 @@ const MediaPage = () => {
                         className={`absolute -translate-x-1/2 -translate-y-1/2 group/plot cursor-pointer z-10`}
                       >
                         {/* The Marker */}
-                        <div className={`w-8 h-4 md:w-12 md:h-6 rounded-md border border-white shadow-lg flex items-center justify-center transition-all group-hover/plot:scale-125 ${
-                          plot.status === 'sold' ? 'bg-yellow-400 text-black' :
-                          plot.status === 'booked' ? 'bg-green-500 text-white' :
-                          'bg-white text-black'
-                        }`}>
+                        <div 
+                          style={{ 
+                            width: `${plot.width || 5}%`, 
+                            height: `${plot.height || 3}%` 
+                          }}
+                          className={`rounded-md border border-white shadow-lg flex items-center justify-center transition-all group-hover/plot:scale-125 ${
+                            plot.status === 'sold' ? 'bg-yellow-400 text-black' :
+                            plot.status === 'booked' ? 'bg-green-500 text-white' :
+                            'bg-white text-black'
+                          }`}
+                        >
                           <span className="text-[6px] md:text-[8px] font-black">{plot.number}</span>
                         </div>
 

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Image as ImageIcon, X, Plus, Save, Loader2, ChevronUp, ChevronDown, Play, Target, Hash } from 'lucide-react';
+import { Image as ImageIcon, X, Plus, Save, Loader2, ChevronUp, ChevronDown, Play, Target, Hash, Settings, Trash, Sliders } from 'lucide-react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -37,6 +37,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
   const [uploading, setUploading] = useState(false);
   const [uploadingFruit, setUploadingFruit] = useState(false);
   const [mappingPlot, setMappingPlot] = useState<{ x: number, y: number } | null>(null);
+  const [editingPlotIndex, setEditingPlotIndex] = useState<number | null>(null);
   const [newPlotNumber, setNewPlotNumber] = useState('');
   const [newPlotStatus, setNewPlotStatus] = useState<'unsold' | 'booked' | 'sold'>('unsold');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -281,27 +282,35 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
   };
 
   const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Prevent clicking on existing markers from triggering a new plot creation
+    if ((e.target as HTMLElement).closest('.plot-marker')) return;
+
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
-    setMappingPlot({ x, y });
-  };
-
-  const saveMappedPlot = () => {
-    if (!mappingPlot || !newPlotNumber) return;
+    
+    // Auto-create and open editor
+    const newPlot = { 
+      number: `Plot ${formData.plots?.length + 1 || 1}`, 
+      status: 'unsold', 
+      x, 
+      y,
+      width: 5,
+      height: 3
+    };
     
     setFormData((prev: any) => ({
       ...prev,
-      plots: [...(prev.plots || []), { 
-        number: newPlotNumber, 
-        status: newPlotStatus, 
-        x: mappingPlot.x, 
-        y: mappingPlot.y 
-      }]
+      plots: [...(prev.plots || []), newPlot]
     }));
     
-    setMappingPlot(null);
-    setNewPlotNumber('');
+    setEditingPlotIndex(formData.plots?.length || 0);
+  };
+
+  const updatePlotField = (index: number, field: string, value: any) => {
+    const newPlots = [...(formData.plots || [])];
+    newPlots[index] = { ...newPlots[index], [field]: value };
+    setFormData({ ...formData, plots: newPlots });
   };
 
   const removeVideo = () => {
@@ -911,7 +920,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                         className="w-full h-auto select-none" 
                       />
                       
-                      {/* Existing Markers - Draggable */}
+                      {/* Existing Markers - Draggable & Editable */}
                       {formData.plots?.map((plot: any, idx: number) => (
                         <motion.div 
                           key={idx}
@@ -919,34 +928,42 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                           dragMomentum={false}
                           dragElastic={0}
                           onDragEnd={(_, info) => {
-                            const rect = (e: any) => e.currentTarget.parentElement.getBoundingClientRect();
-                            // In framer-motion drag, we need to be careful with coordinate updates
-                            // For simplicity and accuracy, I'll calculate based on the offset
                             const parent = document.getElementById('layout-image-container');
                             if (parent) {
                               const pRect = parent.getBoundingClientRect();
                               const newX = ((info.point.x - pRect.left) / pRect.width) * 100;
                               const newY = ((info.point.y - pRect.top) / pRect.height) * 100;
-                              const updatedPlots = [...formData.plots];
-                              updatedPlots[idx] = { ...updatedPlots[idx], x: newX, y: newY };
-                              setFormData({ ...formData, plots: updatedPlots });
+                              updatePlotField(idx, 'x', newX);
+                              updatePlotField(idx, 'y', newY);
                             }
                           }}
-                          style={{ left: `${plot.x}%`, top: `${plot.y}%` }}
-                          className={`absolute -translate-x-1/2 -translate-y-1/2 w-12 h-6 rounded-md border border-white shadow-xl flex items-center justify-center text-[10px] font-black cursor-move z-10 transition-colors hover:scale-110 active:scale-95 ${
+                          style={{ 
+                            left: `${plot.x}%`, 
+                            top: `${plot.y}%`,
+                            width: `${plot.width || 5}%`,
+                            height: `${plot.height || 3}%`
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setEditingPlotIndex(idx);
+                          }}
+                          className={`absolute plot-marker -translate-x-1/2 -translate-y-1/2 rounded-md border border-white shadow-xl flex items-center justify-center text-[10px] font-black cursor-move z-30 transition-all hover:scale-110 active:scale-95 group/marker ${
                             plot.status === 'sold' ? 'bg-yellow-400 text-black' :
                             plot.status === 'booked' ? 'bg-green-500 text-white' :
                             'bg-white text-black'
                           }`}
                         >
                           {plot.number}
+                          <div className="absolute -top-2 -right-2 opacity-0 group-hover/marker:opacity-100 transition-opacity bg-black rounded-full p-1 text-white scale-75">
+                            <Settings size={12} />
+                          </div>
                         </motion.div>
                       ))}
 
-                      <div id="layout-image-container" className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-all pointer-events-none flex items-center justify-center">
+                      <div id="layout-image-container" className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-all pointer-events-none flex items-center justify-center z-10">
                         <div className="opacity-0 group-hover:opacity-100 flex flex-col items-center gap-2">
                           <Target size={32} className="text-primary animate-pulse" />
-                          <span className="text-[10px] font-black uppercase tracking-widest text-primary">Click to add plot</span>
+                          <span className="text-[10px] font-black uppercase tracking-widest text-primary">Click to create plot</span>
                         </div>
                       </div>
                     </div>
@@ -954,66 +971,122 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                     <button
                       type="button"
                       onClick={() => setFormData({ ...formData, layoutImage: '' })}
-                      className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-xl hover:bg-red-600 transition-all shadow-lg z-10"
+                      className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-xl hover:bg-red-600 transition-all shadow-lg z-40"
                     >
                       <X size={20} />
                     </button>
 
-                    {/* Mapping Modal Overlay */}
+                    {/* Big Advanced Editor Modal */}
                     <AnimatePresence>
-                      {mappingPlot && (
+                      {editingPlotIndex !== null && (
                         <motion.div 
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
-                          className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-20 p-6"
+                          className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-[100] p-6"
                         >
                           <motion.div 
-                            initial={{ scale: 0.9, y: 20 }}
+                            initial={{ scale: 0.9, y: 30 }}
                             animate={{ scale: 1, y: 0 }}
-                            className="bg-white dark:bg-gray-900 rounded-[2.5rem] p-8 w-full max-w-md shadow-2xl space-y-6"
+                            className="bg-white dark:bg-gray-900 rounded-[3rem] p-10 w-full max-w-2xl shadow-2xl space-y-10 border border-white/10"
                           >
                             <div className="flex items-center justify-between">
-                              <h4 className="text-lg font-black uppercase tracking-tighter text-gray-900 dark:text-white">New Plot Marker</h4>
-                              <button onClick={() => setMappingPlot(null)} className="text-gray-400 hover:text-gray-600"><X size={24} /></button>
+                              <div className="space-y-1">
+                                <h4 className="text-2xl font-black uppercase tracking-tighter text-gray-900 dark:text-white">Configure Plot</h4>
+                                <p className="text-xs text-gray-500 uppercase tracking-widest font-bold">Spatial & Availability Settings</p>
+                              </div>
+                              <button 
+                                onClick={() => setEditingPlotIndex(null)}
+                                className="bg-gray-100 dark:bg-gray-800 p-3 rounded-2xl text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all"
+                              >
+                                <X size={24} />
+                              </button>
                             </div>
 
-                            <div className="space-y-4">
-                              <div className="space-y-2">
-                                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Plot Number</label>
-                                <div className="relative">
-                                  <Hash className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-                                  <input 
-                                    autoFocus
-                                    type="text"
-                                    value={newPlotNumber}
-                                    onChange={(e) => setNewPlotNumber(e.target.value)}
-                                    className="w-full pl-12 pr-6 py-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border-none focus:ring-2 focus:ring-primary/50 font-bold"
-                                    placeholder="e.g. 101"
-                                  />
+                            <div className="grid grid-cols-2 gap-10">
+                              {/* Left Column: Basic Info */}
+                              <div className="space-y-6">
+                                <div className="space-y-3">
+                                  <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Plot Identity</label>
+                                  <div className="relative">
+                                    <Hash className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                                    <input 
+                                      type="text"
+                                      value={formData.plots[editingPlotIndex].number}
+                                      onChange={(e) => updatePlotField(editingPlotIndex, 'number', e.target.value)}
+                                      className="w-full pl-14 pr-6 py-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border-none focus:ring-2 focus:ring-primary/50 font-black text-lg"
+                                      placeholder="Plot #"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="space-y-3">
+                                  <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Market Status</label>
+                                  <select
+                                    value={formData.plots[editingPlotIndex].status}
+                                    onChange={(e: any) => updatePlotField(editingPlotIndex, 'status', e.target.value)}
+                                    className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border-none focus:ring-2 focus:ring-primary/50 font-black appearance-none text-gray-900 dark:text-white"
+                                  >
+                                    <option value="unsold">Available (White)</option>
+                                    <option value="booked">Booked (Green)</option>
+                                    <option value="sold">Sold (Yellow)</option>
+                                  </select>
                                 </div>
                               </div>
 
-                              <div className="space-y-2">
-                                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Availability Status</label>
-                                <select
-                                  value={newPlotStatus}
-                                  onChange={(e: any) => setNewPlotStatus(e.target.value)}
-                                  className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border-none focus:ring-2 focus:ring-primary/50 font-bold appearance-none"
-                                >
-                                  <option value="unsold">Available (White)</option>
-                                  <option value="booked">Booked (Green)</option>
-                                  <option value="sold">Sold (Yellow)</option>
-                                </select>
+                              {/* Right Column: Dimensions */}
+                              <div className="space-y-8 bg-gray-50 dark:bg-gray-800/50 p-8 rounded-[2rem] border border-gray-100 dark:border-gray-800">
+                                <div className="flex items-center gap-3 mb-2">
+                                  <Sliders size={20} className="text-primary" />
+                                  <h5 className="text-xs font-black uppercase tracking-widest">Dimension Surgery</h5>
+                                </div>
+
+                                <div className="space-y-4">
+                                  <div className="flex justify-between items-center">
+                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Width (%)</label>
+                                    <span className="text-xs font-black text-primary">{formData.plots[editingPlotIndex].width || 5}%</span>
+                                  </div>
+                                  <input 
+                                    type="range" min="1" max="20" step="0.1"
+                                    value={formData.plots[editingPlotIndex].width || 5}
+                                    onChange={(e) => updatePlotField(editingPlotIndex, 'width', parseFloat(e.target.value))}
+                                    className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary"
+                                  />
+                                </div>
+
+                                <div className="space-y-4">
+                                  <div className="flex justify-between items-center">
+                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Height (%)</label>
+                                    <span className="text-xs font-black text-primary">{formData.plots[editingPlotIndex].height || 3}%</span>
+                                  </div>
+                                  <input 
+                                    type="range" min="1" max="20" step="0.1"
+                                    value={formData.plots[editingPlotIndex].height || 3}
+                                    onChange={(e) => updatePlotField(editingPlotIndex, 'height', parseFloat(e.target.value))}
+                                    className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary"
+                                  />
+                                </div>
                               </div>
                             </div>
 
-                            <button 
-                              onClick={saveMappedPlot}
-                              className="w-full py-4 bg-primary text-white font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all"
-                            >
-                              Place Marker
-                            </button>
+                            <div className="flex items-center gap-4 pt-6">
+                              <button 
+                                onClick={() => {
+                                  removePlot(editingPlotIndex);
+                                  setEditingPlotIndex(null);
+                                }}
+                                className="flex items-center justify-center gap-2 px-8 py-5 bg-red-500/10 text-red-500 font-black uppercase tracking-widest rounded-2xl hover:bg-red-500 hover:text-white transition-all group"
+                              >
+                                <Trash size={18} className="group-hover:scale-110 transition-all" />
+                                <span>Delete Plot</span>
+                              </button>
+                              <button 
+                                onClick={() => setEditingPlotIndex(null)}
+                                className="flex-grow py-5 bg-primary text-white font-black uppercase tracking-widest rounded-2xl shadow-2xl shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                              >
+                                Save Configuration
+                              </button>
+                            </div>
                           </motion.div>
                         </motion.div>
                       )}
