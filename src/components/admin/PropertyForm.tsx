@@ -23,17 +23,32 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     bathrooms: '',
     area: '',
     featured: false,
-    fruitImage: initialData?.fruitImage || '',
-    fruitInfo: initialData?.fruitInfo || '',
-    landPhotos: initialData?.landPhotos || [],
-    threeDElement: initialData?.threeDElement || '',
-    videoUrl: initialData?.videoUrl || '',
-    mapUrl: initialData?.mapUrl || '',
-    landBrochure: initialData?.landBrochure || [],
-    details: initialData?.details || [],
-    layoutImage: initialData?.layoutImage || '',
-    plots: initialData?.plots || []
+    fruitImage: '',
+    fruitInfo: '',
+    landPhotos: [],
+    threeDElement: '',
+    videoUrl: '',
+    mapUrl: '',
+    landBrochure: [],
+    details: [],
+    layoutImage: '',
+    plots: []
   });
+
+  // Sync state with initialData when it updates (e.g. after save)
+  React.useEffect(() => {
+    if (initialData) {
+      setFormData(prev => ({
+        ...prev,
+        ...initialData,
+        // Ensure arrays are handled correctly
+        landPhotos: initialData.landPhotos || [],
+        landBrochure: initialData.landBrochure || [],
+        details: initialData.details || [],
+        plots: initialData.plots || []
+      }));
+    }
+  }, [initialData]);
   const [uploading, setUploading] = useState(false);
   const [uploadingFruit, setUploadingFruit] = useState(false);
   const [showLayoutEditor, setShowLayoutEditor] = useState(false);

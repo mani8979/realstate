@@ -27,7 +27,8 @@ const EditProperty = () => {
     setLoading(true);
     try {
       await axios.put(`/api/properties/${id}`, data);
-      router.push('/admin/properties');
+      alert('Property updated successfully!');
+      // router.push('/admin/properties'); // Stay on the page
     } catch (error) {
       console.error('Error updating property:', error);
       alert('Failed to update property. Please try again.');
