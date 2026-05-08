@@ -1033,17 +1033,18 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                 <div className="flex-grow flex gap-10 p-10 overflow-hidden">
                   <div className="flex-grow flex flex-col gap-10 overflow-hidden">
                     {/* Map Canvas */}
-                    <div className="flex-grow bg-white/5 rounded-[3rem] border border-white/10 overflow-auto relative shadow-2xl custom-scrollbar flex items-start justify-center group">
+                    <div className="flex-grow bg-white/5 rounded-[3rem] border border-white/10 overflow-hidden relative shadow-2xl flex items-center justify-center group">
                       <div 
-                        className="relative cursor-crosshair min-w-max min-h-max p-20"
+                        className="relative cursor-crosshair max-w-full max-h-full"
                         onClick={handleImageClick}
+                        id="layout-image-container-full"
                       >
                         <Image 
                           src={formData.layoutImage} 
                           alt="Layout Map" 
                           width={4000} 
                           height={3000} 
-                          className="w-auto h-auto select-none object-contain rounded-2xl shadow-2xl" 
+                          className="w-auto h-auto max-w-full max-h-[75vh] select-none object-contain rounded-2xl" 
                         />
                         
                         {/* Plot Markers */}
