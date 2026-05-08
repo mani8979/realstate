@@ -232,7 +232,7 @@ const MediaPage = () => {
                 </div>
 
                 {/* Book View */}
-                <div className="flex-grow relative flex items-center justify-center">
+                <div className="flex-grow relative flex items-center justify-center min-h-[500px]">
                    <AnimatePresence mode="wait">
                      <motion.div 
                         key={brochurePageIndex}
@@ -242,13 +242,13 @@ const MediaPage = () => {
                         transition={{ duration: 0.4 }}
                         className="w-full h-full flex items-center justify-center perspective-1000"
                      >
-                        <div className="w-full h-full flex items-center justify-center gap-4">
+                        <div className="w-full h-[60vh] md:h-[70vh] flex items-center justify-center gap-4">
                            {getBrochurePages(property.landBrochure)[brochurePageIndex]?.map((img: string, i: number) => (
                               <div 
                                 key={i} 
                                 className={`relative h-full bg-white rounded-xl overflow-hidden shadow-2xl transition-all duration-700 ${
                                   getBrochurePages(property.landBrochure)[brochurePageIndex].length === 1 
-                                    ? 'aspect-[1/1.414] max-w-[80%]' 
+                                    ? 'aspect-[1/1.414] max-w-[90%]' 
                                     : 'flex-1 aspect-[1/1.414]'
                                 }`}
                               >
@@ -270,14 +270,14 @@ const MediaPage = () => {
                    <button 
                       disabled={brochurePageIndex === 0}
                       onClick={() => setBrochurePageIndex(prev => prev - 1)}
-                      className="absolute left-0 top-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-white/5 hover:bg-primary hover:text-black border border-white/10 flex items-center justify-center transition-all disabled:opacity-0 z-20"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 md:w-16 md:h-16 rounded-full bg-primary text-black border border-white/10 flex items-center justify-center transition-all disabled:opacity-0 z-20 shadow-[0_0_30px_rgba(16,185,129,0.3)]"
                    >
                       <ChevronLeft size={32} />
                    </button>
                    <button 
                       disabled={brochurePageIndex === getBrochurePages(property.landBrochure).length - 1}
                       onClick={() => setBrochurePageIndex(prev => prev + 1)}
-                      className="absolute right-0 top-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-white/5 hover:bg-primary hover:text-black border border-white/10 flex items-center justify-center transition-all disabled:opacity-0 z-20"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 md:w-16 md:h-16 rounded-full bg-primary text-black border border-white/10 flex items-center justify-center transition-all disabled:opacity-0 z-20 shadow-[0_0_30px_rgba(16,185,129,0.3)]"
                    >
                       <ChevronRight size={32} />
                    </button>
