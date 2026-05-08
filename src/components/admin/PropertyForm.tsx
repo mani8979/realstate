@@ -911,22 +911,39 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                         className="w-full h-auto select-none" 
                       />
                       
-                      {/* Existing Markers */}
+                      {/* Existing Markers - Draggable */}
                       {formData.plots?.map((plot: any, idx: number) => (
-                        <div 
+                        <motion.div 
                           key={idx}
+                          drag
+                          dragMomentum={false}
+                          dragElastic={0}
+                          onDragEnd={(_, info) => {
+                            const rect = (e: any) => e.currentTarget.parentElement.getBoundingClientRect();
+                            // In framer-motion drag, we need to be careful with coordinate updates
+                            // For simplicity and accuracy, I'll calculate based on the offset
+                            const parent = document.getElementById('layout-image-container');
+                            if (parent) {
+                              const pRect = parent.getBoundingClientRect();
+                              const newX = ((info.point.x - pRect.left) / pRect.width) * 100;
+                              const newY = ((info.point.y - pRect.top) / pRect.height) * 100;
+                              const updatedPlots = [...formData.plots];
+                              updatedPlots[idx] = { ...updatedPlots[idx], x: newX, y: newY };
+                              setFormData({ ...formData, plots: updatedPlots });
+                            }
+                          }}
                           style={{ left: `${plot.x}%`, top: `${plot.y}%` }}
-                          className={`absolute -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-[8px] font-black pointer-events-none transition-all ${
+                          className={`absolute -translate-x-1/2 -translate-y-1/2 w-12 h-6 rounded-md border border-white shadow-xl flex items-center justify-center text-[10px] font-black cursor-move z-10 transition-colors hover:scale-110 active:scale-95 ${
                             plot.status === 'sold' ? 'bg-yellow-400 text-black' :
                             plot.status === 'booked' ? 'bg-green-500 text-white' :
                             'bg-white text-black'
                           }`}
                         >
                           {plot.number}
-                        </div>
+                        </motion.div>
                       ))}
 
-                      <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-all pointer-events-none flex items-center justify-center">
+                      <div id="layout-image-container" className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-all pointer-events-none flex items-center justify-center">
                         <div className="opacity-0 group-hover:opacity-100 flex flex-col items-center gap-2">
                           <Target size={32} className="text-primary animate-pulse" />
                           <span className="text-[10px] font-black uppercase tracking-widest text-primary">Click to add plot</span>
