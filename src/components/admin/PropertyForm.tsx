@@ -1253,8 +1253,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
-      </div>
           
           {/* Land Brochure Section */}
           <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
