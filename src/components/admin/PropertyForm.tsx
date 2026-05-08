@@ -192,21 +192,36 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     setUploading(true);
     try {
       const file = files[0];
-      const uploadFormData = new FormData();
-      uploadFormData.append('file', file);
+      
+      // 1. Get signature from our API
+      const sigResponse = await fetch('/api/upload/signature');
+      const sigData = await sigResponse.json();
+      
+      if (!sigResponse.ok) throw new Error(sigData.error || 'Failed to get upload signature');
 
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: uploadFormData,
-      });
+      // 2. Upload directly to Cloudinary
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('api_key', sigData.apiKey);
+      formData.append('timestamp', sigData.timestamp.toString());
+      formData.append('signature', sigData.signature);
+      formData.append('folder', 'realstate_uploads');
 
-      if (response.ok) {
-        const data = await response.json();
-        setFormData((prev: any) => ({ ...prev, videoUrl: data.url }));
+      const clResponse = await fetch(
+        `https://api.cloudinary.com/v1_1/${sigData.cloudName}/video/upload`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
+
+      const clData = await clResponse.json();
+
+      if (clResponse.ok) {
+        setFormData((prev: any) => ({ ...prev, videoUrl: clData.secure_url }));
         alert('Video uploaded successfully!');
       } else {
-        const errorData = await response.json();
-        alert(`Upload failed: ${errorData.error || response.statusText}. ${errorData.details || ''}`);
+        alert(`Cloudinary Upload failed: ${clData.error?.message || 'Unknown error'}`);
       }
     } catch (error: any) {
       console.error('Upload failed:', error);
