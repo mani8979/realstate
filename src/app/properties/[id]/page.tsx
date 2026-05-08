@@ -416,14 +416,22 @@ const PropertyDetails = () => {
                     </div>
                     <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white">Video Tour</h2>
                   </div>
-                  <div className="relative aspect-video rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
-                    <iframe
-                      src={getYouTubeEmbedUrl(property.videoUrl)}
-                      title="Property Video Tour"
-                      className="absolute inset-0 w-full h-full"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
+                  <div className="relative aspect-video rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-black">
+                    {property.videoUrl.includes('youtube') || property.videoUrl.includes('youtu.be') ? (
+                      <iframe
+                        src={getYouTubeEmbedUrl(property.videoUrl)}
+                        title="Property Video Tour"
+                        className="absolute inset-0 w-full h-full"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      ></iframe>
+                    ) : (
+                      <video
+                        src={property.videoUrl}
+                        controls
+                        className="absolute inset-0 w-full h-full object-contain"
+                      ></video>
+                    )}
                   </div>
                 </div>
               </motion.div>

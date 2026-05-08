@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Image as ImageIcon, X, Plus, Save, Loader2, ChevronUp, ChevronDown } from 'lucide-react';
+import { Image as ImageIcon, X, Plus, Save, Loader2, ChevronUp, ChevronDown, Play } from 'lucide-react';
 import Image from 'next/image';
 
 interface PropertyFormProps {
@@ -38,6 +38,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
   const fruitInputRef = useRef<HTMLInputElement>(null);
   const threeDInputRef = useRef<HTMLInputElement>(null);
   const brochureInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
 
   const handleFruitUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -184,7 +185,36 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     }));
   };
 
-    }));
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploading(true);
+    try {
+      const file = files[0];
+      const uploadFormData = new FormData();
+      uploadFormData.append('file', file);
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: uploadFormData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setFormData((prev: any) => ({ ...prev, videoUrl: data.url }));
+      }
+    } catch (error) {
+      console.error('Upload failed:', error);
+      alert('Upload failed. Please try again.');
+    } finally {
+      setUploading(false);
+      if (videoInputRef.current) videoInputRef.current.value = '';
+    }
+  };
+
+  const removeVideo = () => {
+    setFormData((prev: any) => ({ ...prev, videoUrl: '' }));
   };
 
   const handleBrochureUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -643,10 +673,51 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
               </div>
             </div>
           </div>
-          {/* Land Media (Video & Map) */}
+          {/* Land Photos Section */}
           <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Land Media (Optional)</h3>
-            <p className="text-sm text-gray-500 mb-6">Add a video walkthrough and a map view for the property.</p>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Land Photos (Optional)</h3>
+            <p className="text-sm text-gray-500 mb-6">Specific gallery for land or plot images.</p>
+            
+            <div className="grid grid-cols-3 gap-4 mb-4">
+              {formData.landPhotos?.map((img: string, i: number) => (
+                <div key={i} className="relative aspect-square rounded-2xl overflow-hidden border-2 border-gray-100 dark:border-gray-800 group">
+                  <Image src={img} alt="Land Photo" fill className="object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => removeLandPhoto(img)}
+                    className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              ))}
+              
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                className="hidden"
+                ref={landPhotosInputRef}
+                onChange={handleLandPhotosUpload}
+              />
+              
+              <button
+                type="button"
+                onClick={() => landPhotosInputRef.current?.click()}
+                disabled={uploading}
+                className="aspect-square rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-all group disabled:opacity-50"
+              >
+                <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-xl group-hover:bg-primary group-hover:text-white transition-all">
+                  {uploading ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
+                </div>
+              </button>
+            </div>
+          </div>
+
+          {/* Land Video Section */}
+          <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Land Video (Optional)</h3>
+            <p className="text-sm text-gray-500 mb-6">Upload a video directly or provide a YouTube link.</p>
             
             <div className="space-y-6">
               <div className="space-y-2">
@@ -655,75 +726,31 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                   type="text"
                   className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
                   placeholder="e.g. https://www.youtube.com/watch?v=..."
-                  value={formData.videoUrl}
+                  value={formData.videoUrl?.includes('youtube') ? formData.videoUrl : ''}
                   onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value })}
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1">Google Maps Embed URL</label>
-                <input
-                  type="text"
-                  className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
-                  placeholder="e.g. https://www.google.com/maps/embed?pb=..."
-                  value={formData.mapUrl}
-                  onChange={(e) => setFormData({ ...formData, mapUrl: e.target.value })}
-                />
-                <p className="text-[10px] text-gray-400 px-1 mt-1">Go to Google Maps → Share → Embed a map → Copy the 'src' URL from the iframe tag.</p>
+              <div className="flex items-center gap-4">
+                <div className="h-px flex-grow bg-gray-100 dark:bg-gray-800"></div>
+                <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">OR</span>
+                <div className="h-px flex-grow bg-gray-100 dark:bg-gray-800"></div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1">Land Photos (Optional)</label>
-                <div className="grid grid-cols-3 gap-4 mb-4">
-                  {formData.landPhotos?.map((img: string, i: number) => (
-                    <div key={i} className="relative aspect-square rounded-2xl overflow-hidden border-2 border-gray-100 dark:border-gray-800 group">
-                      <Image src={img} alt="Land Photo" fill className="object-cover" />
-                      <button
-                        type="button"
-                        onClick={() => removeLandPhoto(img)}
-                        className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <X size={14} />
-                      </button>
-                    </div>
-                  ))}
-                  
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    className="hidden"
-                    ref={landPhotosInputRef}
-                    onChange={handleLandPhotosUpload}
-                  />
-                  
-                  <button
-                    type="button"
-                    onClick={() => landPhotosInputRef.current?.click()}
-                    disabled={uploading}
-                    className="aspect-square rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-all group disabled:opacity-50"
-                  >
-                    <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-xl group-hover:bg-primary group-hover:text-white transition-all">
-                      {uploading ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
-                    </div>
-                  </button>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1">Land Brochure (PDF/Image)</label>
-                {formData.landBrochure ? (
+                <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1">Direct Video Upload</label>
+                {formData.videoUrl && !formData.videoUrl.includes('youtube') ? (
                   <div className="flex items-center gap-4 p-4 bg-primary/10 rounded-2xl border border-primary/20">
                     <div className="bg-primary text-black p-3 rounded-xl">
-                      <ImageIcon size={20} />
+                      <Play size={20} />
                     </div>
                     <div className="flex-grow min-w-0">
-                      <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{formData.landBrochure.split('/').pop()}</p>
-                      <p className="text-xs text-gray-500">Brochure Loaded</p>
+                      <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{formData.videoUrl.split('/').pop()}</p>
+                      <p className="text-xs text-gray-500">Video Uploaded</p>
                     </div>
                     <button
                       type="button"
-                      onClick={removeBrochure}
+                      onClick={removeVideo}
                       className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-colors"
                     >
                       <X size={16} />
@@ -733,14 +760,14 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                   <>
                     <input
                       type="file"
-                      accept=".pdf,image/*"
+                      accept="video/*"
                       className="hidden"
-                      ref={brochureInputRef}
-                      onChange={handleBrochureUpload}
+                      ref={videoInputRef}
+                      onChange={handleVideoUpload}
                     />
                     <button
                       type="button"
-                      onClick={() => brochureInputRef.current?.click()}
+                      onClick={() => videoInputRef.current?.click()}
                       disabled={uploading}
                       className="w-full py-6 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-all group disabled:opacity-50"
                     >
@@ -748,12 +775,80 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                         {uploading ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
                       </div>
                       <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-                        {uploading ? 'Uploading...' : 'Upload Brochure (PDF/Image)'}
+                        {uploading ? 'Uploading...' : 'Upload Video File'}
                       </span>
                     </button>
                   </>
                 )}
               </div>
+            </div>
+          </div>
+
+          {/* Land Brochure Section */}
+          <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Land Brochure (Optional)</h3>
+            <p className="text-sm text-gray-500 mb-6">Upload a PDF or image brochure for the land.</p>
+            
+            <div className="space-y-6">
+              {formData.landBrochure ? (
+                <div className="flex items-center gap-4 p-4 bg-primary/10 rounded-2xl border border-primary/20">
+                  <div className="bg-primary text-black p-3 rounded-xl">
+                    <ImageIcon size={20} />
+                  </div>
+                  <div className="flex-grow min-w-0">
+                    <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{formData.landBrochure.split('/').pop()}</p>
+                    <p className="text-xs text-gray-500">Brochure Loaded</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={removeBrochure}
+                    className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-colors"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <input
+                    type="file"
+                    accept=".pdf,image/*"
+                    className="hidden"
+                    ref={brochureInputRef}
+                    onChange={handleBrochureUpload}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => brochureInputRef.current?.click()}
+                    disabled={uploading}
+                    className="w-full py-6 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-all group disabled:opacity-50"
+                  >
+                    <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-xl group-hover:bg-primary group-hover:text-white transition-all">
+                      {uploading ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
+                    </div>
+                    <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                      {uploading ? 'Uploading...' : 'Upload Brochure'}
+                    </span>
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Map View Section */}
+          <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Location Map (Optional)</h3>
+            <p className="text-sm text-gray-500 mb-6">Add a Google Maps embed URL.</p>
+            
+            <div className="space-y-4">
+              <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1">Google Maps Embed URL</label>
+              <input
+                type="text"
+                className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
+                placeholder="e.g. https://www.google.com/maps/embed?pb=..."
+                value={formData.mapUrl}
+                onChange={(e) => setFormData({ ...formData, mapUrl: e.target.value })}
+              />
+              <p className="text-[10px] text-gray-400 px-1 mt-1">Go to Google Maps → Share → Embed a map → Copy the 'src' URL from the iframe tag.</p>
             </div>
           </div>
         </div>
