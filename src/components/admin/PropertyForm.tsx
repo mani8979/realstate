@@ -1080,6 +1080,30 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                             }`}
                           >
                             {plot.number}
+                            
+                            {/* Hover Status Bar */}
+                            <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-black/90 backdrop-blur-xl border border-white/20 rounded-full p-1.5 flex items-center gap-2 opacity-0 group-hover/marker:opacity-100 transition-all scale-75 group-hover/marker:scale-100 pointer-events-auto z-[60] shadow-2xl">
+                              <button 
+                                onClick={(e) => { e.stopPropagation(); updatePlotField(idx, 'status', 'unsold'); }}
+                                className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'unsold' ? 'bg-white scale-110 shadow-[0_0_10px_rgba(255,255,255,0.5)]' : 'bg-white/20'}`}
+                              />
+                              <button 
+                                onClick={(e) => { e.stopPropagation(); updatePlotField(idx, 'status', 'booked'); }}
+                                className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'booked' ? 'bg-green-500 scale-110 shadow-[0_0_10px_rgba(34,197,94,0.5)]' : 'bg-green-500/20'}`}
+                              />
+                              <button 
+                                onClick={(e) => { e.stopPropagation(); updatePlotField(idx, 'status', 'sold'); }}
+                                className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'sold' ? 'bg-yellow-400 scale-110 shadow-[0_0_10px_rgba(250,204,21,0.5)]' : 'bg-yellow-400/20'}`}
+                              />
+                              <div className="w-px h-3 bg-white/20 mx-1"></div>
+                              <button 
+                                onClick={(e) => { e.stopPropagation(); setEditingPlotIndex(idx); }}
+                                className="text-gray-400 hover:text-white transition-colors"
+                              >
+                                <Settings size={12} />
+                              </button>
+                            </div>
+
                             <div className="absolute -top-2 -right-2 opacity-0 group-hover/marker:opacity-100 transition-opacity bg-black rounded-full p-1 text-white scale-75 border border-white/20">
                               <Settings size={12} />
                             </div>
@@ -1282,15 +1306,41 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
 
                             <div className="space-y-3">
                               <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Market Status</label>
-                              <select
-                                value={formData.plots[editingPlotIndex].status}
-                                onChange={(e: any) => updatePlotField(editingPlotIndex, 'status', e.target.value)}
-                                className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border-none focus:ring-2 focus:ring-primary/50 font-black appearance-none text-gray-900 dark:text-white"
-                              >
-                                <option value="unsold">Available (White)</option>
-                                <option value="booked">Booked (Green)</option>
-                                <option value="sold">Sold (Yellow)</option>
-                              </select>
+                              <div className="flex gap-3">
+                                <button
+                                  type="button"
+                                  onClick={() => updatePlotField(editingPlotIndex, 'status', 'unsold')}
+                                  className={`flex-1 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all border ${
+                                    formData.plots[editingPlotIndex].status === 'unsold' 
+                                    ? 'bg-white text-black border-white shadow-xl shadow-white/20' 
+                                    : 'bg-white/5 text-gray-500 border-white/10 hover:bg-white/10'
+                                  }`}
+                                >
+                                  Available
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => updatePlotField(editingPlotIndex, 'status', 'booked')}
+                                  className={`flex-1 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all border ${
+                                    formData.plots[editingPlotIndex].status === 'booked' 
+                                    ? 'bg-green-500 text-white border-green-500 shadow-xl shadow-green-500/20' 
+                                    : 'bg-green-500/5 text-gray-500 border-green-500/10 hover:bg-green-500/10'
+                                  }`}
+                                >
+                                  Booked
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => updatePlotField(editingPlotIndex, 'status', 'sold')}
+                                  className={`flex-1 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all border ${
+                                    formData.plots[editingPlotIndex].status === 'sold' 
+                                    ? 'bg-yellow-400 text-black border-yellow-400 shadow-xl shadow-yellow-400/20' 
+                                    : 'bg-yellow-400/5 text-gray-500 border-yellow-400/10 hover:bg-yellow-400/10'
+                                  }`}
+                                >
+                                  Sold
+                                </button>
+                              </div>
                             </div>
                           </div>
 
