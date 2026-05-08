@@ -22,6 +22,7 @@ const MediaPage = () => {
   const [activeTab, setActiveTab] = useState(initialType);
   const [photoIndex, setPhotoIndex] = useState(0);
   const [isAutoScroll, setIsAutoScroll] = useState(true);
+  const [brochurePageIndex, setBrochurePageIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -54,6 +55,26 @@ const MediaPage = () => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
     return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}?autoplay=1` : url;
+  };
+
+  const getBrochurePages = (images: string[]) => {
+    const brochureImages = images.filter(img => !img.endsWith('.pdf'));
+    if (brochureImages.length === 0) return [];
+    if (brochureImages.length === 1) return [[brochureImages[0]]];
+    
+    const pages = [];
+    pages.push([brochureImages[0]]); // Cover
+    
+    for (let i = 1; i < brochureImages.length - 1; i += 2) {
+      if (i + 1 < brochureImages.length - 1) {
+        pages.push([brochureImages[i], brochureImages[i + 1]]);
+      } else {
+        pages.push([brochureImages[i]]);
+      }
+    }
+    
+    pages.push([brochureImages[brochureImages.length - 1]]); // Back Cover
+    return pages;
   };
 
   if (loading) return (
@@ -183,43 +204,93 @@ const MediaPage = () => {
               key="brochure"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="w-full h-full overflow-y-auto p-4 md:p-20 custom-scrollbar"
+              className="w-full h-full flex flex-col items-center justify-center p-4 md:p-10"
             >
-              <div className="max-w-6xl mx-auto space-y-12">
-                <div className="flex items-center gap-4 border-b border-white/10 pb-8">
-                  <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter">Brochure Gallery</h2>
-                  <p className="text-primary text-xs font-bold uppercase tracking-widest ml-auto">Scroll to explore</p>
+              <div className="w-full max-w-6xl h-full flex flex-col">
+                <div className="flex items-center justify-between mb-8">
+                  <div className="space-y-1">
+                    <h2 className="text-2xl md:text-4xl font-black uppercase tracking-tighter">Brochure Book</h2>
+                    <p className="text-primary text-[10px] font-bold uppercase tracking-widest">Interactive Flip-Book Experience</p>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    {property.landBrochure.some((item: string) => item.endsWith('.pdf')) && (
+                      <div className="flex gap-2">
+                        {property.landBrochure.filter((item: string) => item.endsWith('.pdf')).map((pdf: string, i: number) => (
+                          <a key={i} href={pdf} target="_blank" className="bg-white/5 hover:bg-primary hover:text-black p-3 rounded-xl transition-all border border-white/10" title="Download PDF">
+                             <Download size={18} />
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                    <div className="h-10 w-px bg-white/10 mx-2"></div>
+                    <div className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-xl border border-white/10">
+                      <span className="text-primary font-black text-xs">{brochurePageIndex + 1}</span>
+                      <span className="text-white/30 text-xs">/</span>
+                      <span className="text-white/30 text-xs font-bold">{getBrochurePages(property.landBrochure).length}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Book View */}
+                <div className="flex-grow relative flex items-center justify-center">
+                   <AnimatePresence mode="wait">
+                     <motion.div 
+                        key={brochurePageIndex}
+                        initial={{ opacity: 0, x: 20, rotateY: -10 }}
+                        animate={{ opacity: 1, x: 0, rotateY: 0 }}
+                        exit={{ opacity: 0, x: -20, rotateY: 10 }}
+                        transition={{ duration: 0.4 }}
+                        className="w-full h-full flex items-center justify-center perspective-1000"
+                     >
+                        <div className="w-full h-full flex items-center justify-center gap-4">
+                           {getBrochurePages(property.landBrochure)[brochurePageIndex]?.map((img: string, i: number) => (
+                              <div 
+                                key={i} 
+                                className={`relative h-full bg-white rounded-xl overflow-hidden shadow-2xl transition-all duration-700 ${
+                                  getBrochurePages(property.landBrochure)[brochurePageIndex].length === 1 
+                                    ? 'aspect-[1/1.414] max-w-[80%]' 
+                                    : 'flex-1 aspect-[1/1.414]'
+                                }`}
+                              >
+                                 <Image 
+                                   src={img} 
+                                   alt="Brochure Page" 
+                                   fill 
+                                   className="object-contain p-2 md:p-6"
+                                   priority
+                                 />
+                                 <div className="absolute inset-0 shadow-[inset_0_0_100px_rgba(0,0,0,0.05)] pointer-events-none"></div>
+                              </div>
+                           ))}
+                        </div>
+                     </motion.div>
+                   </AnimatePresence>
+
+                   {/* Book Navigation */}
+                   <button 
+                      disabled={brochurePageIndex === 0}
+                      onClick={() => setBrochurePageIndex(prev => prev - 1)}
+                      className="absolute left-0 top-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-white/5 hover:bg-primary hover:text-black border border-white/10 flex items-center justify-center transition-all disabled:opacity-0 z-20"
+                   >
+                      <ChevronLeft size={32} />
+                   </button>
+                   <button 
+                      disabled={brochurePageIndex === getBrochurePages(property.landBrochure).length - 1}
+                      onClick={() => setBrochurePageIndex(prev => prev + 1)}
+                      className="absolute right-0 top-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-white/5 hover:bg-primary hover:text-black border border-white/10 flex items-center justify-center transition-all disabled:opacity-0 z-20"
+                   >
+                      <ChevronRight size={32} />
+                   </button>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                   {property.landBrochure.map((item: string, i: number) => (
-                     !item.endsWith('.pdf') ? (
-                       <div key={i} className="relative aspect-[1/1.414] rounded-3xl overflow-hidden bg-white/5 border border-white/10 group">
-                         <Image src={item} alt={`Brochure ${i+1}`} fill className="object-contain p-6 group-hover:scale-105 transition-transform duration-700" />
-                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
-                            <a href={item} download className="bg-primary text-black px-6 py-3 rounded-full font-black uppercase tracking-widest text-[10px]">Download Page</a>
-                         </div>
-                       </div>
-                     ) : (
-                        <a 
-                          key={i}
-                          href={item}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center justify-between p-8 bg-white/5 rounded-3xl border border-white/10 hover:border-primary transition-all group"
-                        >
-                           <div className="flex items-center gap-6">
-                              <div className="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-500">
-                                <ImageIcon size={32} />
-                              </div>
-                              <div>
-                                <p className="text-xl font-bold">{item.split('/').pop()}</p>
-                                <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">PDF Document</p>
-                              </div>
-                           </div>
-                           <Download size={24} className="text-primary group-hover:translate-y-1 transition-transform" />
-                        </a>
-                     )
+                {/* Page Thumbnails */}
+                <div className="flex items-center justify-center gap-2 mt-8 py-4 overflow-x-auto max-w-full">
+                   {getBrochurePages(property.landBrochure).map((_, i) => (
+                      <button 
+                        key={i}
+                        onClick={() => setBrochurePageIndex(i)}
+                        className={`h-1.5 transition-all rounded-full ${i === brochurePageIndex ? 'w-10 bg-primary' : 'w-2 bg-white/20'}`}
+                      ></button>
                    ))}
                 </div>
               </div>
