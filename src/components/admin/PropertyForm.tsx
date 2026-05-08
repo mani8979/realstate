@@ -32,7 +32,13 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     landBrochure: [],
     details: [],
     layoutImage: '',
-    plots: initialData?.plots?.filter((p: any) => p.x !== undefined && p.y !== undefined) || []
+    plots: initialData?.plots?.map((p: any) => ({
+      ...p,
+      x: p.x ?? 50,
+      y: p.y ?? 50,
+      width: p.width ?? 5,
+      height: p.height ?? 3
+    })) || []
   });
 
   // Sync state with initialData when it updates (e.g. after save)
@@ -45,7 +51,13 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
         landPhotos: initialData.landPhotos || [],
         landBrochure: initialData.landBrochure || [],
         details: initialData.details || [],
-        plots: initialData.plots?.filter((p: any) => p.x !== undefined && p.y !== undefined) || []
+        plots: initialData.plots?.map((p: any) => ({
+          ...p,
+          x: p.x ?? 50,
+          y: p.y ?? 50,
+          width: p.width ?? 5,
+          height: p.height ?? 3
+        })) || []
       }));
     }
   }, [initialData]);
