@@ -121,15 +121,52 @@ const PropertyDetails = () => {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/20"></div>
         
-        {/* Navigation - Top Left */}
-        <div className="absolute top-24 left-6 md:left-16 z-10">
-          <button 
-            onClick={() => router.back()}
-            className="flex items-center gap-2 text-white/70 hover:text-primary transition-colors font-bold uppercase tracking-widest text-xs bg-black/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/10"
-          >
-            <ArrowLeft size={16} />
-            <span>Go Back</span>
-          </button>
+        {/* Quick Media Icons - Floating Over Hero */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-3 md:gap-6 z-30 bg-black/40 backdrop-blur-2xl px-6 md:px-10 py-4 rounded-full border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+          {property.landPhotos?.length > 0 && (
+            <button 
+              onClick={() => document.getElementById('land-photos')?.scrollIntoView({ behavior: 'smooth' })}
+              className="flex flex-col items-center gap-1 group transition-all"
+            >
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:bg-primary group-hover:text-black transition-all">
+                <ImageIcon size={18} />
+              </div>
+              <span className="text-[8px] uppercase font-black tracking-widest opacity-0 group-hover:opacity-100 transition-all">Photos</span>
+            </button>
+          )}
+          {property.videoUrl && (
+            <button 
+              onClick={() => document.getElementById('land-video')?.scrollIntoView({ behavior: 'smooth' })}
+              className="flex flex-col items-center gap-1 group transition-all"
+            >
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:bg-primary group-hover:text-black transition-all">
+                <Play size={18} />
+              </div>
+              <span className="text-[8px] uppercase font-black tracking-widest opacity-0 group-hover:opacity-100 transition-all">Video</span>
+            </button>
+          )}
+          {property.landBrochure && (
+            <button 
+              onClick={() => document.getElementById('land-brochure')?.scrollIntoView({ behavior: 'smooth' })}
+              className="flex flex-col items-center gap-1 group transition-all"
+            >
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:bg-primary group-hover:text-black transition-all">
+                <Download size={18} />
+              </div>
+              <span className="text-[8px] uppercase font-black tracking-widest opacity-0 group-hover:opacity-100 transition-all">Brochure</span>
+            </button>
+          )}
+          {property.mapUrl && (
+            <button 
+              onClick={() => document.getElementById('land-map')?.scrollIntoView({ behavior: 'smooth' })}
+              className="flex flex-col items-center gap-1 group transition-all"
+            >
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:bg-primary group-hover:text-black transition-all">
+                <MapIcon size={18} />
+              </div>
+              <span className="text-[8px] uppercase font-black tracking-widest opacity-0 group-hover:opacity-100 transition-all">Map</span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -173,7 +210,8 @@ const PropertyDetails = () => {
                   href={property.landBrochure}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 bg-primary/20 hover:bg-primary text-primary hover:text-black font-black uppercase tracking-widest text-[10px] px-8 py-4 rounded-full border border-primary/30 transition-all group"
+                  id="land-brochure"
+                  className="flex items-center gap-2 bg-primary/20 hover:bg-primary text-primary hover:text-black font-black uppercase tracking-widest text-[10px] px-8 py-4 rounded-full border border-primary/30 transition-all group scroll-mt-32"
                 >
                   <Download size={16} className="group-hover:translate-y-0.5 transition-transform" />
                   <span>Download Brochure</span>
@@ -407,7 +445,8 @@ const PropertyDetails = () => {
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="flex justify-center"
+                className="flex justify-center scroll-mt-32"
+                id="land-video"
               >
                 <div className="w-full max-w-5xl glass-card p-4 md:p-10 relative overflow-hidden">
                   <div className="flex items-center gap-4 mb-8 px-4">
@@ -443,23 +482,27 @@ const PropertyDetails = () => {
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="flex justify-center"
+                className="flex justify-center scroll-mt-32"
+                id="land-photos"
               >
-                <div className="w-full glass-card p-8 md:p-16 bg-gradient-to-br from-primary/5 to-transparent">
+                <div className="w-full glass-card p-8 md:p-16 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
                   <div className="flex items-center gap-4 mb-12">
                     <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary">
                       <ImageIcon size={24} />
                     </div>
                     <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white">Land Gallery</h2>
+                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em] ml-auto animate-pulse">Scroll Left-Right →</p>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="flex gap-6 overflow-x-auto pb-8 custom-scrollbar scroll-smooth snap-x">
                     {property.landPhotos.map((photo: string, i: number) => (
-                      <div key={i} className="relative aspect-[4/3] rounded-3xl overflow-hidden border border-white/10 group cursor-pointer" onClick={() => {
+                      <div key={i} className="relative min-w-[300px] md:min-w-[500px] aspect-[4/3] rounded-3xl overflow-hidden border border-white/10 group cursor-pointer snap-center" onClick={() => {
                         // Optional: Open in lightbox or set as main image
-                        // For now just show it
+                        setActiveImage(-1); // Use this to toggle if needed, or just let it be
                       }}>
                         <Image src={photo} alt={`Land Photo ${i+1}`} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
+                           <span className="text-white font-black uppercase tracking-widest text-[10px]">View Image</span>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -473,7 +516,8 @@ const PropertyDetails = () => {
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="flex justify-center"
+                className="flex justify-center scroll-mt-32"
+                id="land-map"
               >
                 <div className="w-full max-w-5xl glass-card p-4 md:p-10 relative overflow-hidden border-b-4 border-primary">
                   <div className="flex items-center gap-4 mb-8 px-4">
