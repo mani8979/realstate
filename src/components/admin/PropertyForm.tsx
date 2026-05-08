@@ -1033,7 +1033,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                 <div className="flex-grow flex gap-10 p-10 overflow-hidden">
                   <div className="flex-grow flex flex-col gap-10 overflow-hidden">
                     {/* Map Canvas */}
-                    <div className="flex-[3] bg-white/5 rounded-[3rem] border border-white/10 overflow-hidden relative shadow-2xl flex items-center justify-center group">
+                    <div className="flex-grow bg-white/5 rounded-[3rem] border border-white/10 overflow-hidden relative shadow-2xl flex items-center justify-center group">
                       <div 
                         className="relative cursor-crosshair max-w-full max-h-full"
                         onClick={handleImageClick}
@@ -1069,19 +1069,22 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                               width: `${plot.width || 5}%`,
                               height: `${plot.height || 3}%`
                             }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setEditingPlotIndex(idx);
-                            }}
+                            onClick={(e) => e.stopPropagation()}
                             className={`absolute plot-marker -translate-x-1/2 -translate-y-1/2 rounded-md border border-white shadow-2xl flex items-center justify-center text-[10px] font-black cursor-move z-30 transition-all hover:scale-110 active:scale-95 group/marker ${
                               plot.status === 'sold' ? 'bg-yellow-400 text-black' :
                               plot.status === 'booked' ? 'bg-green-500 text-white' :
                               'bg-white text-black'
                             }`}
                           >
-                            {plot.number}
+                            <input 
+                              type="text"
+                              value={plot.number}
+                              onChange={(e) => updatePlotField(idx, 'number', e.target.value)}
+                              className="w-full bg-transparent border-none text-center focus:ring-0 p-0 font-black cursor-text"
+                              onClick={(e) => e.stopPropagation()}
+                            />
                             
-                            {/* Hover Status Bar */}
+                            {/* Hover Status & Delete Bar */}
                             <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-black/90 backdrop-blur-xl border border-white/20 rounded-full p-1.5 flex items-center gap-2 opacity-0 group-hover/marker:opacity-100 transition-all scale-75 group-hover/marker:scale-100 pointer-events-auto z-[60] shadow-2xl">
                               <button 
                                 onClick={(e) => { e.stopPropagation(); updatePlotField(idx, 'status', 'unsold'); }}
@@ -1102,10 +1105,12 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                               >
                                 <Settings size={12} />
                               </button>
-                            </div>
-
-                            <div className="absolute -top-2 -right-2 opacity-0 group-hover/marker:opacity-100 transition-opacity bg-black rounded-full p-1 text-white scale-75 border border-white/20">
-                              <Settings size={12} />
+                              <button 
+                                onClick={(e) => { e.stopPropagation(); removePlot(idx); }}
+                                className="text-red-500 hover:text-red-400 transition-colors ml-1"
+                              >
+                                <Trash size={12} />
+                              </button>
                             </div>
                           </motion.div>
                         ))}
@@ -1118,78 +1123,17 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                         </div>
                       </div>
                     </div>
-
-                    {/* Horizontal Inventory Strip */}
-                    <div className="flex-1 bg-white/5 rounded-[2.5rem] border border-white/10 p-8 overflow-hidden flex flex-col">
-                      <div className="flex items-center justify-between mb-6">
-                        <h3 className="text-xs font-black uppercase tracking-widest text-white/50 flex items-center gap-3">
-                          <Hash size={14} className="text-primary" /> Map Inventory <span className="text-primary/30">/</span> <span className="text-white">{formData.plots?.length || 0} Plots</span>
-                        </h3>
-                        <div className="flex gap-2">
-                          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/5">
-                            <div className="w-2 h-2 rounded-full bg-white"></div>
-                            <span className="text-[8px] font-black uppercase tracking-widest text-white/50">Available</span>
-                          </div>
-                          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/5">
-                            <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                            <span className="text-[8px] font-black uppercase tracking-widest text-white/50">Booked</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="flex-grow overflow-x-auto flex gap-4 pb-4 custom-scrollbar-horizontal">
-                        {formData.plots?.map((plot: any, idx: number) => (
-                          <div 
-                            key={idx}
-                            className="flex-shrink-0 w-[180px] group relative"
-                          >
-                            <div 
-                              onClick={() => setEditingPlotIndex(idx)}
-                              className="w-full bg-black/40 border border-white/5 rounded-2xl p-4 hover:border-primary/50 transition-all cursor-pointer space-y-3"
-                            >
-                              <div className="flex items-center justify-between">
-                                <span className="text-xs font-black text-white">Plot {plot.number || 'N/A'}</span>
-                                <div className={`w-3 h-3 rounded-full ${
-                                  plot.status === 'sold' ? 'bg-yellow-400' :
-                                  plot.status === 'booked' ? 'bg-green-500' :
-                                  'bg-white'
-                                } shadow-lg shadow-black/50`}></div>
-                              </div>
-                              <div className="flex items-center justify-between text-[8px] font-black uppercase tracking-widest text-gray-500">
-                                <span>{plot.status}</span>
-                                <span>{Math.round(plot.x)}%, {Math.round(plot.y)}%</span>
-                              </div>
-                            </div>
-                            <button 
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                removePlot(idx);
-                              }}
-                              className="absolute -top-2 -right-2 bg-red-500 text-white p-2 rounded-xl opacity-0 group-hover:opacity-100 hover:scale-110 transition-all z-50 shadow-xl"
-                            >
-                              <Trash size={12} />
-                            </button>
-                          </div>
-                        ))}
-                        {(!formData.plots || formData.plots.length === 0) && (
-                          <div className="w-full flex flex-col items-center justify-center gap-2 border-2 border-dashed border-white/5 rounded-2xl py-8">
-                             <Target size={24} className="text-white/10" />
-                             <span className="text-[10px] font-black uppercase tracking-widest text-white/20">Canvas is empty</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
                   </div>
 
-                  {/* Sidebar Stats & Legend */}
+                  {/* Sidebar Stats & Legend (Minimal) */}
                   <div className="w-[350px] flex flex-col gap-6">
                     <div className="bg-white/5 backdrop-blur-3xl rounded-[2.5rem] border border-white/10 p-8 space-y-8">
                       <div className="space-y-1">
-                        <h3 className="text-lg font-black uppercase tracking-tighter text-white">Editor Guide</h3>
+                        <h3 className="text-lg font-black uppercase tracking-tighter text-white">Spatial Dashboard</h3>
                         <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 leading-relaxed">
-                          • Click map to add plot<br/>
-                          • Drag to reposition<br/>
-                          • Click plot to scale
+                          • Click map to add<br/>
+                          • Drag to move<br/>
+                          • Type # on marker
                         </p>
                       </div>
 
@@ -1221,41 +1165,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                           </div>
                           <span className="text-xs font-black text-green-500">{formData.plots?.filter((p: any) => p.status === 'booked').length || 0}</span>
                         </div>
-                      </div>
-                    </div>
-
-                    <div className="flex-grow bg-white/5 backdrop-blur-3xl rounded-[2.5rem] border border-white/10 p-8 overflow-hidden flex flex-col">
-                      <h3 className="text-xs font-black uppercase tracking-widest text-white/50 mb-6 flex items-center gap-2">
-                        <Sliders size={14} className="text-primary" /> Active Inventory
-                      </h3>
-                      <div className="flex-grow overflow-y-auto pr-2 custom-scrollbar space-y-3">
-                        {formData.plots?.map((plot: any, idx: number) => (
-                          <div key={idx} className="group relative">
-                            <button 
-                              onClick={() => setEditingPlotIndex(idx)}
-                              className="w-full flex items-center justify-between p-4 rounded-2xl bg-black/40 border border-white/5 hover:border-primary/50 transition-all"
-                            >
-                              <div className="flex items-center gap-4">
-                                <div className={`w-8 h-4 rounded border border-white/10 ${
-                                  plot.status === 'sold' ? 'bg-yellow-400' :
-                                  plot.status === 'booked' ? 'bg-green-500' :
-                                  'bg-white'
-                                }`}></div>
-                                <span className="text-xs font-black text-white">{plot.number}</span>
-                              </div>
-                              <Settings size={14} className="text-gray-600 group-hover:text-primary transition-colors" />
-                            </button>
-                            <button 
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                removePlot(idx);
-                              }}
-                              className="absolute -top-1 -right-1 bg-red-500 text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 hover:scale-110 transition-all z-10"
-                            >
-                              <Trash size={12} />
-                            </button>
-                          </div>
-                        ))}
                       </div>
                     </div>
                   </div>
