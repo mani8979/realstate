@@ -1031,65 +1031,128 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
 
                 {/* Editor Body */}
                 <div className="flex-grow flex gap-10 p-10 overflow-hidden">
-                  {/* Map Canvas */}
-                  <div className="flex-grow bg-white/5 rounded-[3rem] border border-white/10 overflow-hidden relative shadow-2xl flex items-center justify-center group">
-                    <div 
-                      className="relative cursor-crosshair max-w-full max-h-full"
-                      onClick={handleImageClick}
-                    >
-                      <Image 
-                        src={formData.layoutImage} 
-                        alt="Layout Map" 
-                        width={2000} 
-                        height={1500} 
-                        className="w-auto h-auto max-w-full max-h-[75vh] select-none object-contain rounded-2xl" 
-                      />
-                      
-                      {/* Plot Markers */}
-                      {formData.plots?.map((plot: any, idx: number) => (
-                        <motion.div 
-                          key={idx}
-                          drag
-                          dragMomentum={false}
-                          dragElastic={0}
-                          onDragEnd={(_, info) => {
-                            const parent = document.getElementById('layout-image-container-full');
-                            if (parent) {
-                              const pRect = parent.getBoundingClientRect();
-                              const newX = ((info.point.x - pRect.left) / pRect.width) * 100;
-                              const newY = ((info.point.y - pRect.top) / pRect.height) * 100;
-                              updatePlotField(idx, 'x', newX);
-                              updatePlotField(idx, 'y', newY);
-                            }
-                          }}
-                          style={{ 
-                            left: `${plot.x}%`, 
-                            top: `${plot.y}%`,
-                            width: `${plot.width || 5}%`,
-                            height: `${plot.height || 3}%`
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setEditingPlotIndex(idx);
-                          }}
-                          className={`absolute plot-marker -translate-x-1/2 -translate-y-1/2 rounded-md border border-white shadow-2xl flex items-center justify-center text-[10px] font-black cursor-move z-30 transition-all hover:scale-110 active:scale-95 group/marker ${
-                            plot.status === 'sold' ? 'bg-yellow-400 text-black' :
-                            plot.status === 'booked' ? 'bg-green-500 text-white' :
-                            'bg-white text-black'
-                          }`}
-                        >
-                          {plot.number}
-                          <div className="absolute -top-2 -right-2 opacity-0 group-hover/marker:opacity-100 transition-opacity bg-black rounded-full p-1 text-white scale-75 border border-white/20">
-                            <Settings size={12} />
-                          </div>
-                        </motion.div>
-                      ))}
+                  <div className="flex-grow flex flex-col gap-10 overflow-hidden">
+                    {/* Map Canvas */}
+                    <div className="flex-[3] bg-white/5 rounded-[3rem] border border-white/10 overflow-hidden relative shadow-2xl flex items-center justify-center group">
+                      <div 
+                        className="relative cursor-crosshair max-w-full max-h-full"
+                        onClick={handleImageClick}
+                      >
+                        <Image 
+                          src={formData.layoutImage} 
+                          alt="Layout Map" 
+                          width={2000} 
+                          height={1500} 
+                          className="w-auto h-auto max-w-full max-h-full select-none object-contain rounded-2xl" 
+                        />
+                        
+                        {/* Plot Markers */}
+                        {formData.plots?.map((plot: any, idx: number) => (
+                          <motion.div 
+                            key={idx}
+                            drag
+                            dragMomentum={false}
+                            dragElastic={0}
+                            onDragEnd={(_, info) => {
+                              const parent = document.getElementById('layout-image-container-full');
+                              if (parent) {
+                                const pRect = parent.getBoundingClientRect();
+                                const newX = ((info.point.x - pRect.left) / pRect.width) * 100;
+                                const newY = ((info.point.y - pRect.top) / pRect.height) * 100;
+                                updatePlotField(idx, 'x', newX);
+                                updatePlotField(idx, 'y', newY);
+                              }
+                            }}
+                            style={{ 
+                              left: `${plot.x}%`, 
+                              top: `${plot.y}%`,
+                              width: `${plot.width || 5}%`,
+                              height: `${plot.height || 3}%`
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setEditingPlotIndex(idx);
+                            }}
+                            className={`absolute plot-marker -translate-x-1/2 -translate-y-1/2 rounded-md border border-white shadow-2xl flex items-center justify-center text-[10px] font-black cursor-move z-30 transition-all hover:scale-110 active:scale-95 group/marker ${
+                              plot.status === 'sold' ? 'bg-yellow-400 text-black' :
+                              plot.status === 'booked' ? 'bg-green-500 text-white' :
+                              'bg-white text-black'
+                            }`}
+                          >
+                            {plot.number}
+                            <div className="absolute -top-2 -right-2 opacity-0 group-hover/marker:opacity-100 transition-opacity bg-black rounded-full p-1 text-white scale-75 border border-white/20">
+                              <Settings size={12} />
+                            </div>
+                          </motion.div>
+                        ))}
 
-                      <div id="layout-image-container-full" className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-all pointer-events-none flex items-center justify-center z-10">
-                        <div className="opacity-0 group-hover:opacity-100 flex flex-col items-center gap-2">
-                          <Target size={48} className="text-primary animate-pulse" />
-                          <span className="text-[12px] font-black uppercase tracking-[0.3em] text-primary">Click to create plot</span>
+                        <div id="layout-image-container-full" className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-all pointer-events-none flex items-center justify-center z-10">
+                          <div className="opacity-0 group-hover:opacity-100 flex flex-col items-center gap-2">
+                            <Target size={48} className="text-primary animate-pulse" />
+                            <span className="text-[12px] font-black uppercase tracking-[0.3em] text-primary">Click to create plot</span>
+                          </div>
                         </div>
+                      </div>
+                    </div>
+
+                    {/* Horizontal Inventory Strip */}
+                    <div className="flex-1 bg-white/5 rounded-[2.5rem] border border-white/10 p-8 overflow-hidden flex flex-col">
+                      <div className="flex items-center justify-between mb-6">
+                        <h3 className="text-xs font-black uppercase tracking-widest text-white/50 flex items-center gap-3">
+                          <Hash size={14} className="text-primary" /> Map Inventory <span className="text-primary/30">/</span> <span className="text-white">{formData.plots?.length || 0} Plots</span>
+                        </h3>
+                        <div className="flex gap-2">
+                          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/5">
+                            <div className="w-2 h-2 rounded-full bg-white"></div>
+                            <span className="text-[8px] font-black uppercase tracking-widest text-white/50">Available</span>
+                          </div>
+                          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/5">
+                            <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                            <span className="text-[8px] font-black uppercase tracking-widest text-white/50">Booked</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex-grow overflow-x-auto flex gap-4 pb-4 custom-scrollbar-horizontal">
+                        {formData.plots?.map((plot: any, idx: number) => (
+                          <div 
+                            key={idx}
+                            className="flex-shrink-0 w-[180px] group relative"
+                          >
+                            <div 
+                              onClick={() => setEditingPlotIndex(idx)}
+                              className="w-full bg-black/40 border border-white/5 rounded-2xl p-4 hover:border-primary/50 transition-all cursor-pointer space-y-3"
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs font-black text-white">Plot {plot.number || 'N/A'}</span>
+                                <div className={`w-3 h-3 rounded-full ${
+                                  plot.status === 'sold' ? 'bg-yellow-400' :
+                                  plot.status === 'booked' ? 'bg-green-500' :
+                                  'bg-white'
+                                } shadow-lg shadow-black/50`}></div>
+                              </div>
+                              <div className="flex items-center justify-between text-[8px] font-black uppercase tracking-widest text-gray-500">
+                                <span>{plot.status}</span>
+                                <span>{Math.round(plot.x)}%, {Math.round(plot.y)}%</span>
+                              </div>
+                            </div>
+                            <button 
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                removePlot(idx);
+                              }}
+                              className="absolute -top-2 -right-2 bg-red-500 text-white p-2 rounded-xl opacity-0 group-hover:opacity-100 hover:scale-110 transition-all z-50 shadow-xl"
+                            >
+                              <Trash size={12} />
+                            </button>
+                          </div>
+                        ))}
+                        {(!formData.plots || formData.plots.length === 0) && (
+                          <div className="w-full flex flex-col items-center justify-center gap-2 border-2 border-dashed border-white/5 rounded-2xl py-8">
+                             <Target size={24} className="text-white/10" />
+                             <span className="text-[10px] font-black uppercase tracking-widest text-white/20">Canvas is empty</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -1143,21 +1206,31 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                       </h3>
                       <div className="flex-grow overflow-y-auto pr-2 custom-scrollbar space-y-3">
                         {formData.plots?.map((plot: any, idx: number) => (
-                          <button 
-                            key={idx}
-                            onClick={() => setEditingPlotIndex(idx)}
-                            className="w-full flex items-center justify-between p-4 rounded-2xl bg-black/40 border border-white/5 hover:border-primary/50 transition-all group"
-                          >
-                            <div className="flex items-center gap-4">
-                              <div className={`w-8 h-4 rounded border border-white/10 ${
-                                plot.status === 'sold' ? 'bg-yellow-400' :
-                                plot.status === 'booked' ? 'bg-green-500' :
-                                'bg-white'
-                              }`}></div>
-                              <span className="text-xs font-black text-white">{plot.number}</span>
-                            </div>
-                            <Settings size={14} className="text-gray-600 group-hover:text-primary transition-colors" />
-                          </button>
+                          <div key={idx} className="group relative">
+                            <button 
+                              onClick={() => setEditingPlotIndex(idx)}
+                              className="w-full flex items-center justify-between p-4 rounded-2xl bg-black/40 border border-white/5 hover:border-primary/50 transition-all"
+                            >
+                              <div className="flex items-center gap-4">
+                                <div className={`w-8 h-4 rounded border border-white/10 ${
+                                  plot.status === 'sold' ? 'bg-yellow-400' :
+                                  plot.status === 'booked' ? 'bg-green-500' :
+                                  'bg-white'
+                                }`}></div>
+                                <span className="text-xs font-black text-white">{plot.number}</span>
+                              </div>
+                              <Settings size={14} className="text-gray-600 group-hover:text-primary transition-colors" />
+                            </button>
+                            <button 
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                removePlot(idx);
+                              }}
+                              className="absolute -top-1 -right-1 bg-red-500 text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 hover:scale-110 transition-all z-10"
+                            >
+                              <Trash size={12} />
+                            </button>
+                          </div>
                         ))}
                       </div>
                     </div>
