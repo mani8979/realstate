@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Image as ImageIcon, X, Plus, Save, Loader2, ChevronUp, ChevronDown, Play, Target, Hash, Settings, Trash, Sliders, Maximize2, ChevronLeft } from 'lucide-react';
+import { Image as ImageIcon, X, Plus, Save, Loader2, ChevronUp, ChevronDown, Play, Target, Hash, Settings, Trash, Sliders, Maximize2, ChevronLeft, Brain } from 'lucide-react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import PlotAIAnalyzer from './PlotAIAnalyzer';
 
 interface PropertyFormProps {
   initialData?: any;
@@ -64,6 +65,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
   const [uploading, setUploading] = useState(false);
   const [uploadingFruit, setUploadingFruit] = useState(false);
   const [showLayoutEditor, setShowLayoutEditor] = useState(false);
+  const [showAIAnalyzer, setShowAIAnalyzer] = useState(false);
   const [mappingPlot, setMappingPlot] = useState<{ x: number, y: number } | null>(null);
   const [editingPlotIndex, setEditingPlotIndex] = useState<number | null>(null);
   const [selectedPlotIndex, setSelectedPlotIndex] = useState<number | null>(null);
@@ -984,15 +986,26 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">Interactive Plot Layout</h3>
                 <p className="text-sm text-gray-500">Manage plot dimensions, availability, and positions.</p>
               </div>
-              {formData.layoutImage && (
-                <button
-                  type="button"
-                  onClick={() => setShowLayoutEditor(true)}
-                  className="flex items-center gap-2 px-6 py-3 bg-primary text-white font-black uppercase tracking-widest text-[10px] rounded-xl hover:scale-105 transition-all shadow-xl shadow-primary/20"
-                >
-                  <Maximize2 size={16} /> Launch Editor
-                </button>
-              )}
+              <div className="flex items-center gap-3">
+                {formData.layoutImage && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setShowAIAnalyzer(true)}
+                      className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-black uppercase tracking-widest text-[10px] rounded-xl hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-xl shadow-violet-500/30"
+                    >
+                      <Brain size={14} /> AI Detect
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowLayoutEditor(true)}
+                      className="flex items-center gap-2 px-6 py-3 bg-primary text-white font-black uppercase tracking-widest text-[10px] rounded-xl hover:scale-105 transition-all shadow-xl shadow-primary/20"
+                    >
+                      <Maximize2 size={16} /> Launch Editor
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
             
             <div className="space-y-4">
@@ -1355,7 +1368,29 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
               </motion.div>
             )}
           </AnimatePresence>
-          
+          {/* AI Plot Analyzer Modal */}
+          <AnimatePresence>
+            {showAIAnalyzer && (
+              <PlotAIAnalyzer
+                layoutImageUrl={formData.layoutImage || ''}
+                onPlotsDetected={(detectedPlots: any[]) => {
+                  setFormData((prev: any) => ({
+                    ...prev,
+                    plots: detectedPlots.map((p: any, i: number) => ({
+                      number: p.number || p.plotNumber || `Plot ${i + 1}`,
+                      status: p.status || 'available',
+                      x: p.x ?? p.xPercent ?? (50 + i),
+                      y: p.y ?? p.yPercent ?? (50 + i),
+                      width: p.width ?? p.widthPercent ?? 5,
+                      height: p.height ?? p.heightPercent ?? 3,
+                    }))
+                  }));
+                }}
+                onClose={() => setShowAIAnalyzer(false)}
+              />
+            )}
+          </AnimatePresence>
+
           {/* Land Brochure Section */}
           <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Land Brochure (Optional)</h3>
