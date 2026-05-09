@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Quote, Trophy, Users, Shield, Target, Briefcase } from 'lucide-react';
+import { Quote, Trophy, Shield, Target } from 'lucide-react';
 import Image from 'next/image';
 
 interface FounderProps {
@@ -30,19 +30,18 @@ const Founder: React.FC<FounderProps> = ({ content }) => {
             viewport={{ once: true }}
             className="lg:col-span-5 relative"
           >
-            <div className="relative aspect-[4/5] rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl">
+            <div className="relative aspect-[4/5] rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl group">
               <Image 
                 src={content.founderImage || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1000"} 
                 alt={content.founderName}
                 fill
-                className="object-cover"
+                className="object-cover transition-transform duration-700 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
               
-              {/* Floating Badge */}
-              <div className="absolute bottom-8 left-8 right-8 bg-black/60 backdrop-blur-xl border border-white/10 p-6 rounded-3xl">
-                <p className="text-2xl font-black text-white uppercase tracking-tighter">{content.founderName}</p>
-                <p className="text-primary text-[10px] font-black uppercase tracking-widest">{content.founderRole}</p>
+              {/* Name at very bottom */}
+              <div className="absolute bottom-0 left-0 right-0 bg-black/40 backdrop-blur-md border-t border-white/10 py-6 text-center">
+                <p className="text-2xl font-black text-white uppercase tracking-[0.2em]">{content.founderName}</p>
               </div>
             </div>
             
@@ -72,7 +71,10 @@ const Founder: React.FC<FounderProps> = ({ content }) => {
             className="lg:col-span-7 space-y-10"
           >
             <div className="space-y-4">
-              <h2 className="text-primary font-black uppercase tracking-[0.4em] text-[10px]">Leadership & Vision</h2>
+              <div className="flex flex-col gap-2">
+                <h2 className="text-primary font-black uppercase tracking-[0.4em] text-[10px]">Leadership & Vision</h2>
+                <h4 className="text-white/60 font-bold uppercase tracking-[0.2em] text-sm">{content.founderRole}</h4>
+              </div>
               <h3 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter leading-tight">
                 Meet Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-400 to-white">Visionary</span>
               </h3>
@@ -131,3 +133,4 @@ const Founder: React.FC<FounderProps> = ({ content }) => {
 };
 
 export default Founder;
+
