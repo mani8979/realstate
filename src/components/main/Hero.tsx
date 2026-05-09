@@ -5,6 +5,7 @@ import { Search, MapPin, Home, DollarSign, ArrowRight, Sparkles, Star, Phone, Me
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { openContactDialog } from '../layout/ContactDialog';
 
 
 
@@ -92,10 +93,10 @@ const Hero = () => {
             className="flex flex-wrap gap-4 mb-16"
           >
             <button
-              onClick={() => router.push(content.heroCta1Link)}
+              onClick={() => openContactDialog('book')}
               className="bg-primary hover:bg-primary/90 text-white font-bold px-8 py-4 rounded-full transition-all flex items-center gap-2 group shadow-2xl shadow-primary/40"
             >
-              <span>{content.heroCtaText}</span>
+              <span>{content.heroCtaText || 'Book Site Visit'}</span>
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </button>
             <button

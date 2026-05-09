@@ -6,6 +6,7 @@ import { ArrowRight, ChevronLeft, ChevronRight, MapPin, Leaf } from 'lucide-reac
 import Link from 'next/link';
 import StarBorder from './StarBorder';
 import './ScrollStack.css';
+import { openContactDialog } from '../layout/ContactDialog';
 
 // --- Types ---
 interface Property {
@@ -309,20 +310,18 @@ const PremiumHome = ({ properties, content }: PremiumHomeProps) => {
                {content?.ctaSectionDesc || "Join 1,000+ happy homeowners in Vizag's most prestigious communities. Limited units available for immediate registration."}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-               <a 
-                  href={`https://wa.me/${(content?.ctaSectionBtn2 || '919123456789').replace(/\s+/g, '')}?text=I'm interested in booking a site visit.`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+               <button 
+                  onClick={() => openContactDialog('book')}
                   className="bg-black text-white px-10 py-5 rounded-full font-black uppercase tracking-widest text-sm hover:bg-white hover:text-black hover:scale-105 transition-all"
                >
                   {content?.ctaSectionBtn1 || 'Schedule a Site Visit'}
-               </a>
-               <a 
-                  href={`tel:${(content?.ctaSectionBtn2 || '919123456789').replace(/\s+/g, '')}`}
-                  className="px-10 py-5 rounded-full font-black text-xl hover:opacity-70 transition-all"
+               </button>
+               <button 
+                  onClick={() => openContactDialog('call')}
+                  className="px-10 py-5 rounded-full font-black text-xl hover:opacity-70 transition-all text-black"
                >
-                  {content?.ctaSectionBtn2 || '+91 91234 56789'}
-               </a>
+                  {content?.ctaSectionBtn2 || '+91 96660 80645'}
+               </button>
             </div>
          </div>
       </div>
