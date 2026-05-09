@@ -298,6 +298,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
   };
 
   const removePlot = (index: number) => {
+    if (index === null || index === undefined) return;
+    
     setFormData((prev: any) => {
       const currentPlots = prev.plots || [];
       return {
@@ -305,6 +307,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
         plots: currentPlots.filter((_: any, i: number) => i !== index)
       };
     });
+    
     setEditingPlotIndex(null);
     setSelectedPlotIndex(null);
   };
@@ -329,17 +332,16 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
       height: 3
     };
     
-    setFormData((prev: any) => {
-      const currentPlots = prev.plots || [];
-      const updatedPlots = [...currentPlots, newPlot];
-      // Set the index for the newly added plot
-      setEditingPlotIndex(currentPlots.length);
-      setSelectedPlotIndex(currentPlots.length);
-      return {
-        ...prev,
-        plots: updatedPlots
-      };
-    });
+    const newPlots = [...(formData.plots || []), newPlot];
+    setFormData((prev: any) => ({
+      ...prev,
+      plots: newPlots
+    }));
+    
+    // Set indices AFTER triggering the formData update
+    const newIndex = newPlots.length - 1;
+    setEditingPlotIndex(newIndex);
+    setSelectedPlotIndex(newIndex);
   };
 
   const updatePlotField = (index: number, field: string, value: any) => {
