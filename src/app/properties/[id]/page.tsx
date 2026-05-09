@@ -282,7 +282,7 @@ const PropertyDetails = () => {
                   <div className="grid grid-cols-1 gap-4">
                     <div className="bg-white/5 p-6 rounded-2xl flex items-center justify-between group hover:bg-primary/10 transition-colors">
                       <span className="text-gray-400 font-bold uppercase tracking-widest text-sm">Phase 1 (6.5 Acres)</span>
-                      <span className="px-4 py-1 bg-red-500/20 text-red-400 rounded-full text-xs font-black uppercase">Sold</span>
+                      <span className="px-4 py-1 bg-yellow-400/20 text-yellow-400 rounded-full text-xs font-black uppercase">Sold</span>
                     </div>
                     <div className="bg-white/5 p-6 rounded-2xl flex items-center justify-between group hover:bg-primary/20 transition-colors border border-primary/30">
                       <span className="text-white font-bold uppercase tracking-widest text-sm">Phase 2 (3.5 Acres)</span>
