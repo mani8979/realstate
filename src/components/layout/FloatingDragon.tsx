@@ -16,19 +16,26 @@ const FloatingDragon = () => {
   const modelViewerRef = useRef<any>(null);
   const { scrollYProgress } = useScroll();
 
-  // Swaying logic - Must be above early returns
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   // Path-aware movement to stay in "Empty Spaces"
-  // 0.0 - 0.2: Hero (Dragon at Far Right, avoiding Price Box)
-  // 0.2 - 0.4: Section 1 Left (Dragon stays Right)
-  // 0.4 - 0.6: Section 2 Right (Dragon moves Left)
-  // 0.6 - 0.8: Section 3 Center (Dragon stays far Left or Right)
+  // On mobile, we start much lower (after title/buttons) to avoid overlap
   const modelX = useTransform(scrollYProgress, 
     [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1],
-    ["32vw", "32vw", "35vw", "-35vw", "35vw", "-35vw", "35vw", "0vw"]
+    isMobile 
+      ? ["35vw", "35vw", "38vw", "-38vw", "38vw", "-38vw", "38vw", "0vw"]
+      : ["32vw", "32vw", "35vw", "-35vw", "35vw", "-35vw", "35vw", "0vw"]
   );
 
-  const modelY = useTransform(scrollYProgress, [0, 1], ["-12vh", "88vh"]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1.1, 0.8]);
+  const modelY = useTransform(scrollYProgress, [0, 1], [isMobile ? "25vh" : "-12vh", "88vh"]);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [isMobile ? 0.6 : 0.8, 1.1, 0.8]);
   const rotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
 
   useEffect(() => {
