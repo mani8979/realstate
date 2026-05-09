@@ -80,6 +80,7 @@ export interface ISiteContent extends Document {
   globalPopupContent: string;
   faviconImage: string;
   motivationLine: string;
+  motivationBgImage: string;
   founderName: string;
   founderRole: string;
   founderBio: string;
@@ -169,6 +170,7 @@ const SiteContentSchema = new Schema<ISiteContent>(
     globalPopupContent: { type: String, default: "Dragon fruit cultivation is a high-demand and profitable farming option with long-term benefits.\n\n*Plantation Details (Per 100 Sq. Yards):*\n\n* 40 dragon fruit plants\n* 4 plants per pole\n* 10 poles in each 100 sq. yards\n\n*Plantation Period:*\n\n* Ideal season: May to November (approx.)\n\n*Yield Duration:*\n\n* Dragon fruit plants can yield fruits for up to 30 years\n\n*Profit Sharing (from the yield of dragon fruits crop):*\n\n* 50% to the company\n* 50% to the client\n\nThis model ensures:\n\n* Land ownership\n* Continuous agricultural income\n* Long-term asset appreciation\n\nAdditionally, the plantation can be removed anytime if the client wishes to convert the land for residential or other purposes." },
     faviconImage: { type: String, default: "/favicon.ico" },
     motivationLine: { type: String, default: "Success in real estate begins with trust and ends with customer satisfaction." },
+    motivationBgImage: { type: String, default: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2000" },
     founderName: { type: String, default: "Muhammad Yaseen" },
     founderRole: { type: String, default: "Co-Founder & Director" },
     founderBio: { type: String, default: "Muhammad Yaseen is a dynamic real estate professional with 1.5 years of industry experience and a proven track record of achieving exceptional sales in a short span of time. Known for his strong communication skills and customer-first approach, he quickly builds trust and long-term relationships with clients. His expertise spans VMRDA-approved layouts, farm lands, and residential properties, helping customers make confident and profitable investment decisions." },

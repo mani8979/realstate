@@ -53,19 +53,6 @@ const Hero = () => {
 
       <div className="container mx-auto px-4 relative z-20 pt-20">
         <div className="max-w-4xl">
-          {content.motivationLine && (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="mb-8"
-            >
-              <p className="text-primary/80 font-black uppercase tracking-[0.3em] text-[10px] md:text-xs">
-                {content.motivationLine}
-              </p>
-            </motion.div>
-          )}
-
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}

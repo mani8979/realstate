@@ -35,6 +35,7 @@ export default function BrandAdmin() {
   const [uploadingFooter, setUploadingFooter] = useState(false);
   const [uploadingFavicon, setUploadingFavicon] = useState(false);
   const [uploadingFounder, setUploadingFounder] = useState(false);
+  const [uploadingMotivation, setUploadingMotivation] = useState(false);
 
   useEffect(() => {
     fetch('/api/content')
@@ -252,16 +253,58 @@ export default function BrandAdmin() {
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Home Branding & Motivation</h2>
           
           <div className="grid grid-cols-1 gap-6">
-            <div>
-              <label className="block text-sm font-bold text-gray-500 mb-2">Home Motivation Line</label>
-              <input 
-                name="motivationLine"
-                value={content.motivationLine || ''}
-                onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                placeholder="e.g. Success in real estate begins with trust..."
-              />
-              <p className="text-[10px] text-gray-500 mt-2 italic">* Appears at the very top of the Home Hero section.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Home Motivation Line</label>
+                <input 
+                  name="motivationLine"
+                  value={content.motivationLine || ''}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  placeholder="e.g. Success in real estate begins with trust..."
+                />
+                <p className="text-[10px] text-gray-500 mt-2 italic">* Appears in the high-impact banner section below the Hero.</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Motivation Banner Background Photo</label>
+                {content.motivationBgImage ? (
+                  <div className="relative w-full h-12 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 group">
+                    <img src={content.motivationBgImage} alt="Motivation Bg" className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => setContent({ ...content, motivationBgImage: '' })}
+                      className="absolute inset-0 bg-red-500/80 text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-[10px]"
+                    >
+                      Change Photo
+                    </button>
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      disabled={uploadingMotivation}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setUploadingMotivation(true);
+                        try {
+                          const formData = new FormData();
+                          formData.append('file', file);
+                          const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                          if (res.ok) {
+                            const data = await res.json();
+                            setContent({ ...content, motivationBgImage: data.url });
+                          }
+                        } catch (err) {} finally { setUploadingMotivation(false); }
+                      }}
+                      className="w-full p-2 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-[10px]"
+                    />
+                    {uploadingMotivation && <div className="absolute inset-0 bg-black/20 flex items-center justify-center rounded-xl text-[10px]">Uploading...</div>}
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

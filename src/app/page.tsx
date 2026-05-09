@@ -8,6 +8,7 @@ import FeaturedProperties from '@/components/main/FeaturedProperties';
 import CTA from '@/components/main/CTA';
 import BrandValues from '@/components/main/BrandValues';
 import Founder from '@/components/main/Founder';
+import MotivationBanner from '@/components/main/MotivationBanner';
 
 export const revalidate = 0; // Disable static caching for the home page
 
@@ -46,6 +47,8 @@ export default async function Home() {
     <div className="flex flex-col bg-black">
       <Hero />
       
+      <MotivationBanner content={serializedContent} />
+
       <div className="relative z-10">
         <FeaturedProperties properties={serializedLands.slice(0, 3)} />
       </div>
