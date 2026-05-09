@@ -91,7 +91,7 @@ export interface ISiteContent extends Document {
 
 const SiteContentSchema = new Schema<ISiteContent>(
   {
-    heroBadgeText: { type: String, default: "World-Class Real Estate" },
+    heroBadgeText: { type: String, default: "Luxury Real Estate" },
     heroTitle: { type: String, default: "Find Your Perfect Property" },
     heroSubtitle: { type: String, default: "Invest in a lifestyle defined by luxury, comfort, and exceptional value." },
     heroCtaText: { type: String, default: "Explore Properties" },

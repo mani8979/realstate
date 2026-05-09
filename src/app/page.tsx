@@ -50,6 +50,10 @@ export default async function Home() {
       <MotivationBanner content={serializedContent} />
 
       <div className="relative z-10">
+        <Founder content={serializedContent} />
+      </div>
+
+      <div className="relative z-10">
         <FeaturedProperties properties={serializedLands.slice(0, 3)} />
       </div>
 
@@ -63,10 +67,6 @@ export default async function Home() {
             <h3 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter">{serializedContent.galleryTitle || 'Premium Land Gallery'}</h3>
          </div>
          <SmoothSlider lands={serializedLands} />
-      </div>
-
-      <div className="relative z-10">
-        <Founder content={serializedContent} />
       </div>
 
       <div className="relative z-20">
