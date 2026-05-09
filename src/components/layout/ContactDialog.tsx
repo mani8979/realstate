@@ -51,8 +51,15 @@ export const ContactDialog = () => {
 
     setStatus('loading');
     
-    const botToken = '8787407024:AAH6ssk4sFf9mbaa7hF9AgNBJbgiZK00U9k';
-    const chatId = '5205449306';
+    const botToken = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID;
+    
+    if (!botToken || !chatId) {
+      console.error('Telegram credentials not configured');
+      setStatus('error');
+      return;
+    }
+
     const message = `🚀 *New Site Visit Booking* 🚀\n\n👤 *Name:* ${formData.name}\n📞 *Phone:* ${formData.phone}\n🔗 *Page:* ${window.location.href}`;
 
     try {
