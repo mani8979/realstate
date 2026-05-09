@@ -1,162 +1,79 @@
 content = open('src/components/admin/PropertyForm.tsx', 'r', encoding='utf-8').read().replace('\r\n', '\n')
 
-# ===== 1. Fix imports: remove Brain, remove PlotAIAnalyzer import =====
-content = content.replace(
-    "import { Image as ImageIcon, X, Plus, Save, Loader2, ChevronUp, ChevronDown, Play, Target, Hash, Settings, Trash, Sliders, Maximize2, ChevronLeft, Brain } from 'lucide-react';",
-    "import { Image as ImageIcon, X, Plus, Save, Loader2, ChevronUp, ChevronDown, Play, Target, Hash, Settings, Trash, Sliders, Maximize2, ChevronLeft, Zap, List } from 'lucide-react';"
-)
-content = content.replace("import PlotAIAnalyzer from './PlotAIAnalyzer';\n", "")
+# ===== 1. Update handleImageClick to use Quick Add fields when set =====
+OLD_CLICK = '''  const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Prevent clicking on existing markers from triggering a new plot creation
+    if ((e.target as HTMLElement).closest('.plot-marker')) return;
 
-# ===== 2. Remove showAIAnalyzer state =====
-content = content.replace(
-    "  const [showAIAnalyzer, setShowAIAnalyzer] = useState(false);\n",
-    ""
-)
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    
+    // Auto-create and open editor
+    const newPlot = { 
+      number: `Plot ${formData.plots?.length + 1 || 1}`, 
+      status: 'available', 
+      x, 
+      y,
+      width: 5,
+      height: 3
+    };
+    
+    const newPlots = [...(formData.plots || []), newPlot];
+    setFormData((prev: any) => ({
+      ...prev,
+      plots: newPlots
+    }));
+    
+    // Set indices AFTER triggering the formData update
+    const newIndex = newPlots.length - 1;
+    setEditingPlotIndex(newIndex);
+    setSelectedPlotIndex(newIndex);
+  };'''
 
-# ===== 3. Remove AI button from the Plot Layout header =====
-OLD_AI_BUTTON = '''              <div className="flex items-center gap-3">
-                {formData.layoutImage && (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => setShowAIAnalyzer(true)}
-                      className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-black uppercase tracking-widest text-[10px] rounded-xl hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-xl shadow-violet-500/30"
-                    >
-                      <Brain size={14} /> AI Detect
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setShowLayoutEditor(true)}
-                      className="flex items-center gap-2 px-6 py-3 bg-primary text-white font-black uppercase tracking-widest text-[10px] rounded-xl hover:scale-105 transition-all shadow-xl shadow-primary/20"
-                    >
-                      <Maximize2 size={16} /> Launch Editor
-                    </button>
-                  </>
-                )}
-              </div>'''
+NEW_CLICK = '''  const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Prevent clicking on existing markers from triggering a new plot creation
+    if ((e.target as HTMLElement).closest('.plot-marker')) return;
 
-NEW_LAUNCH_BUTTON = '''              {formData.layoutImage && (
-                <button
-                  type="button"
-                  onClick={() => setShowLayoutEditor(true)}
-                  className="flex items-center gap-2 px-6 py-3 bg-primary text-white font-black uppercase tracking-widest text-[10px] rounded-xl hover:scale-105 transition-all shadow-xl shadow-primary/20"
-                >
-                  <Maximize2 size={16} /> Launch Editor
-                </button>
-              )}'''
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
 
-content = content.replace(OLD_AI_BUTTON, NEW_LAUNCH_BUTTON)
+    // Use Quick Add values if admin has typed a plot number, otherwise auto-name
+    const hasQuickAdd = newPlotNumber.trim().length > 0;
+    const newPlot = {
+      number: hasQuickAdd ? newPlotNumber.trim() : `Plot ${(formData.plots?.length || 0) + 1}`,
+      status: hasQuickAdd ? newPlotStatus : 'available',
+      x,
+      y,
+      width: 5,
+      height: 3
+    };
 
-# ===== 4. Remove the AI Analyzer modal block =====
-OLD_AI_MODAL = '''          {/* AI Plot Analyzer Modal */}
-          <AnimatePresence>
-            {showAIAnalyzer && (
-              <PlotAIAnalyzer
-                layoutImageUrl={formData.layoutImage || ''}
-                onPlotsDetected={(detectedPlots: any[]) => {
-                  setFormData((prev: any) => ({
-                    ...prev,
-                    plots: detectedPlots.map((p: any, i: number) => ({
-                      number: p.number || p.plotNumber || `Plot ${i + 1}`,
-                      status: p.status || 'available',
-                      x: p.x ?? p.xPercent ?? (50 + i),
-                      y: p.y ?? p.yPercent ?? (50 + i),
-                      width: p.width ?? p.widthPercent ?? 5,
-                      height: p.height ?? p.heightPercent ?? 3,
-                    }))
-                  }));
-                }}
-                onClose={() => setShowAIAnalyzer(false)}
-              />
-            )}
-          </AnimatePresence>
+    const newPlots = [...(formData.plots || []), newPlot];
+    setFormData((prev: any) => ({
+      ...prev,
+      plots: newPlots
+    }));
 
-          {/* Land Brochure Section */}'''
+    // Clear quick-add input after placing so next click auto-names
+    if (hasQuickAdd) setNewPlotNumber('');
 
-NEW_AFTER_EDITOR = '''          {/* Land Brochure Section */}'''
+    const newIndex = newPlots.length - 1;
+    setSelectedPlotIndex(newIndex);
+    // Only open configure modal if NOT using quick-add (quick-add already knows number & status)
+    if (!hasQuickAdd) setEditingPlotIndex(newIndex);
+  };'''
 
-content = content.replace(OLD_AI_MODAL, NEW_AFTER_EDITOR)
+if OLD_CLICK in content:
+    content = content.replace(OLD_CLICK, NEW_CLICK)
+    print('Step 1 DONE: handleImageClick updated')
+else:
+    print('Step 1 FAILED')
+    exit(1)
 
-# ===== 5. Replace sidebar with Quick Add + Live Plot List =====
-OLD_SIDEBAR = '''                  {/* Sidebar Stats & Legend (Minimal) */}
-                  <div className="w-[350px] flex flex-col gap-6">
-                    <div className="bg-white/5 backdrop-blur-3xl rounded-[2.5rem] border border-white/10 p-8 space-y-8">
-                      <div className="space-y-1">
-                        <h3 className="text-lg font-black uppercase tracking-tighter text-white">Spatial Dashboard</h3>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 leading-relaxed">
-                          • Click map to add<br/>
-                          • Drag to move<br/>
-                          • Type # on marker
-                        </p>
-                      </div>
-
-                      <div className="h-px bg-white/10"></div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="p-4 rounded-2xl bg-white/5 border border-white/5 text-center">
-                          <span className="block text-[8px] font-black uppercase tracking-widest text-gray-500 mb-1">Total Plots</span>
-                          <span className="text-2xl font-black text-white">{formData.plots?.length || 0}</span>
-                        </div>
-                        <div className="p-4 rounded-2xl bg-green-500/10 border border-green-500/10 text-center">
-                          <span className="block text-[8px] font-black uppercase tracking-widest text-green-500 mb-1">Available</span>
-                          <span className="text-2xl font-black text-green-500">{formData.plots?.filter((p: any) => p.status === 'available' || p.status === 'unsold').length || 0}</span>
-                        </div>
-                      </div>
-
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
-                          <div className="flex items-center gap-3">
-                            <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                            <span className="text-[10px] font-black uppercase tracking-widest text-white">Sold Plots</span>
-                          </div>
-                          <span className="text-xs font-black text-red-500">{formData.plots?.filter((p: any) => p.status === 'sold').length || 0}</span>
-                        </div>
-                        <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
-                          <div className="flex items-center gap-3">
-                            <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-                            <span className="text-[10px] font-black uppercase tracking-widest text-white">Booked Plots</span>
-                          </div>
-                          <span className="text-xs font-black text-yellow-400">{formData.plots?.filter((p: any) => p.status === 'booked').length || 0}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>'''
-
-NEW_SIDEBAR = '''                  {/* Sidebar: Quick Add + Live Plot List */}
-                  <div className="w-[320px] flex flex-col gap-4 overflow-hidden">
-
-                    {/* Stats Strip */}
-                    <div className="grid grid-cols-3 gap-2">
-                      <div className="p-3 rounded-2xl bg-white/5 border border-white/5 text-center">
-                        <span className="block text-[8px] font-black uppercase tracking-widest text-gray-500">Total</span>
-                        <span className="text-xl font-black text-white">{formData.plots?.length || 0}</span>
-                      </div>
-                      <div className="p-3 rounded-2xl bg-green-500/10 border border-green-500/10 text-center">
-                        <span className="block text-[8px] font-black uppercase tracking-widest text-green-500">Avail</span>
-                        <span className="text-xl font-black text-green-500">{formData.plots?.filter((p: any) => p.status === 'available' || p.status === 'unsold').length || 0}</span>
-                      </div>
-                      <div className="p-3 rounded-2xl bg-red-500/10 border border-red-500/10 text-center">
-                        <span className="block text-[8px] font-black uppercase tracking-widest text-red-400">Sold</span>
-                        <span className="text-xl font-black text-red-400">{formData.plots?.filter((p: any) => p.status === 'sold').length || 0}</span>
-                      </div>
-                    </div>
-
-                    {/* Quick Add Panel */}
-                    <div className="bg-white/5 backdrop-blur-3xl rounded-3xl border border-white/10 p-5 space-y-4">
-                      <div className="flex items-center gap-2">
-                        <Zap size={14} className="text-primary" />
-                        <h3 className="text-[11px] font-black uppercase tracking-widest text-white">Quick Add Plot</h3>
-                      </div>
-
-                      {/* Plot Number Input — color preview updates as you type */}
-                      <div className="relative">
-                        <input
-                          type="text"
-                          placeholder="Plot Number e.g. A-101"
-                          value={newPlotNumber}
-                          onChange={(e) => setNewPlotNumber(e.target.value)}
-                          className="w-full bg-black/30 text-white placeholder-gray-600 rounded-xl px-4 py-3 text-sm font-bold border border-white/10 focus:border-primary/60 focus:ring-0 focus:outline-none transition-all"
-                          onKeyDown={(e) => {
+# ===== 2. Fix the Quick Add panel: remove grid placement, replace button with "then click on map" UX =====
+OLD_QUICK_ADD_ENTER = '''                          onKeyDown={(e) => {
                             if (e.key === 'Enter' && newPlotNumber.trim()) {
                               const plots = formData.plots || [];
                               const newPlot = {
@@ -170,37 +87,21 @@ NEW_SIDEBAR = '''                  {/* Sidebar: Quick Add + Live Plot List */}
                               setFormData((prev: any) => ({ ...prev, plots: [...(prev.plots || []), newPlot] }));
                               setNewPlotNumber('');
                             }
-                          }}
-                        />
-                        {/* Live color preview */}
-                        {newPlotNumber.trim() && (
-                          <div className={`absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-md border border-white/20 ${
-                            newPlotStatus === 'sold' ? 'bg-red-500' : newPlotStatus === 'booked' ? 'bg-yellow-400' : 'bg-green-500'
-                          }`} />
-                        )}
-                      </div>
+                          }}'''
 
-                      {/* Status Picker — instantly changes what color will be used */}
-                      <div className="flex gap-2">
-                        {(['available', 'booked', 'sold'] as const).map(s => (
-                          <button
-                            key={s}
-                            type="button"
-                            onClick={() => setNewPlotStatus(s)}
-                            className={`flex-1 py-2 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all border ${
-                              newPlotStatus === s
-                                ? s === 'sold'   ? 'bg-red-500 text-white border-red-500 shadow-lg shadow-red-500/20'
-                                : s === 'booked' ? 'bg-yellow-400 text-black border-yellow-400 shadow-lg shadow-yellow-400/20'
-                                :                  'bg-green-500 text-white border-green-500 shadow-lg shadow-green-500/20'
-                                : 'bg-white/5 text-gray-500 border-white/5 hover:bg-white/10'
-                            }`}
-                          >
-                            {s}
-                          </button>
-                        ))}
-                      </div>
+NEW_QUICK_ADD_ENTER = '''                          onKeyDown={(e) => {
+                            if (e.key === 'Escape') setNewPlotNumber('');
+                          }}'''
 
-                      <button
+if OLD_QUICK_ADD_ENTER in content:
+    content = content.replace(OLD_QUICK_ADD_ENTER, NEW_QUICK_ADD_ENTER)
+    print('Step 2 DONE: Enter key fixed')
+else:
+    print('Step 2 FAILED')
+    exit(1)
+
+# ===== 3. Replace the Add button with a "Now click on the map" instruction =====
+OLD_ADD_BUTTON = '''                      <button
                         type="button"
                         disabled={!newPlotNumber.trim()}
                         onClick={() => {
@@ -227,83 +128,83 @@ NEW_SIDEBAR = '''                  {/* Sidebar: Quick Add + Live Plot List */}
                         Add {newPlotStatus} Plot
                       </button>
 
-                      <p className="text-[9px] text-gray-600 text-center">Press Enter or click Add • Drag markers on map to reposition</p>
-                    </div>
+                      <p className="text-[9px] text-gray-600 text-center">Press Enter or click Add • Drag markers on map to reposition</p>'''
 
-                    {/* Live Plot List — change status → color changes instantly on map */}
-                    <div className="bg-white/5 backdrop-blur-3xl rounded-3xl border border-white/10 p-5 space-y-3 flex-grow overflow-hidden flex flex-col">
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        <List size={14} className="text-gray-400" />
-                        <h3 className="text-[11px] font-black uppercase tracking-widest text-white">Plot List</h3>
-                        <span className="ml-auto text-[9px] text-gray-500">{formData.plots?.length || 0} plots</span>
-                      </div>
-                      <div className="overflow-y-auto space-y-2 flex-grow pr-1" style={{ maxHeight: '280px' }}>
-                        {(!formData.plots || formData.plots.length === 0) && (
-                          <p className="text-[10px] text-gray-600 text-center py-4">No plots yet. Click map or use Quick Add.</p>
-                        )}
-                        {formData.plots?.map((plot: any, idx: number) => (
-                          <div
-                            key={idx}
-                            onClick={() => setSelectedPlotIndex(idx)}
-                            className={`flex items-center gap-2 p-2 rounded-xl cursor-pointer transition-all border ${
-                              selectedPlotIndex === idx ? 'border-white/20 bg-white/10' : 'border-white/5 bg-white/3 hover:bg-white/8'
-                            }`}
-                          >
-                            {/* Color dot — instantly reflects status */}
-                            <div className={`w-3 h-3 rounded-sm flex-shrink-0 ${
-                              plot.status === 'sold' ? 'bg-red-500' : plot.status === 'booked' ? 'bg-yellow-400' : 'bg-green-500'
-                            }`} />
+NEW_ADD_BUTTON = '''                      {/* "Now click on map" instruction — appears when plot number is typed */}
+                      {newPlotNumber.trim() ? (
+                        <div className={`w-full py-3 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest text-center animate-pulse border-2 border-dashed ${
+                          newPlotStatus === 'sold'   ? 'border-red-500 text-red-400 bg-red-500/10'
+                          : newPlotStatus === 'booked' ? 'border-yellow-400 text-yellow-400 bg-yellow-400/10'
+                          :                              'border-green-500 text-green-400 bg-green-500/10'
+                        }`}>
+                          ↓ Now click the plot on the map
+                        </div>
+                      ) : (
+                        <div className="w-full py-3 rounded-xl text-[10px] font-black uppercase tracking-widest text-center text-gray-600 bg-white/3 border border-white/5">
+                          Type a number → click on map
+                        </div>
+                      )}
 
-                            {/* Editable plot number — as you type, marker on map updates live */}
-                            <input
-                              type="text"
-                              value={plot.number}
-                              onChange={(e) => updatePlotField(idx, 'number', e.target.value)}
-                              onClick={(e) => e.stopPropagation()}
-                              className="bg-transparent text-white text-[10px] font-bold flex-grow border-none focus:ring-0 p-0 min-w-0"
-                              placeholder="Plot #"
-                            />
+                      <p className="text-[9px] text-gray-600 text-center">Drag markers on map to reposition • ESC to cancel</p>'''
 
-                            {/* Status cycle button — click to cycle Available → Booked → Sold → Available */}
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                const next = plot.status === 'available' ? 'booked' : plot.status === 'booked' ? 'sold' : 'available';
-                                updatePlotField(idx, 'status', next);
-                              }}
-                              className={`px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wider transition-all flex-shrink-0 ${
-                                plot.status === 'sold'   ? 'bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white'
-                                : plot.status === 'booked' ? 'bg-yellow-400/20 text-yellow-400 hover:bg-yellow-400 hover:text-black'
-                                :                            'bg-green-500/20 text-green-400 hover:bg-green-500 hover:text-white'
-                              }`}
-                              title="Click to cycle status"
-                            >
-                              {plot.status === 'available' ? 'Avail' : plot.status === 'booked' ? 'Booked' : 'Sold'}
-                            </button>
-
-                            {/* Delete */}
-                            <button
-                              type="button"
-                              onClick={(e) => { e.stopPropagation(); removePlot(idx); }}
-                              className="text-gray-700 hover:text-red-400 transition-colors flex-shrink-0 p-0.5"
-                            >
-                              <X size={12} />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>'''
-
-if OLD_SIDEBAR in content:
-    content = content.replace(OLD_SIDEBAR, NEW_SIDEBAR)
-    print("Step 5 DONE: sidebar replaced")
+if OLD_ADD_BUTTON in content:
+    content = content.replace(OLD_ADD_BUTTON, NEW_ADD_BUTTON)
+    print('Step 3 DONE: Add button replaced with instruction')
 else:
-    print("Step 5 FAILED: old sidebar not found")
+    print('Step 3 FAILED')
     exit(1)
+
+# ===== 4. Update the canvas hint text + cursor to reflect Quick Add state =====
+OLD_CANVAS_HINT = '''                        {(!formData.plots || formData.plots.length === 0) && (
+                          <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-10">
+                            <div className="flex flex-col items-center gap-2">
+                              <Target size={48} className="text-primary animate-pulse" />
+                              <span className="text-[12px] font-black uppercase tracking-[0.3em] text-primary">Click to create plot</span>
+                            </div>
+                          </div>
+                        )}'''
+
+NEW_CANVAS_HINT = '''                        {/* Canvas hint — changes based on Quick Add state */}
+                        <div className="absolute inset-0 pointer-events-none flex items-end justify-center z-10 pb-4">
+                          {newPlotNumber.trim() ? (
+                            <div className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 shadow-2xl animate-pulse ${
+                              newPlotStatus === 'sold'   ? 'bg-red-500 text-white'
+                              : newPlotStatus === 'booked' ? 'bg-yellow-400 text-black'
+                              :                              'bg-green-500 text-white'
+                            }`}>
+                              <span>Click to place "{newPlotNumber}"</span>
+                            </div>
+                          ) : (!formData.plots || formData.plots.length === 0) ? (
+                            <div className="flex flex-col items-center gap-2">
+                              <Target size={36} className="text-primary animate-pulse" />
+                              <span className="text-[11px] font-black uppercase tracking-[0.3em] text-primary">Click to add plot</span>
+                            </div>
+                          ) : null}
+                        </div>'''
+
+if OLD_CANVAS_HINT in content:
+    content = content.replace(OLD_CANVAS_HINT, NEW_CANVAS_HINT)
+    print('Step 4 DONE: canvas hint updated')
+else:
+    print('Step 4 FAILED')
+    exit(1)
+
+# ===== 5. Update cursor class: crosshair always, but add a ring when quick-add is active =====
+OLD_CURSOR = '''                        ref={imageContainerRef}
+                        className="relative cursor-crosshair max-w-full max-h-full"
+                        onClick={handleImageClick}'''
+
+NEW_CURSOR = '''                        ref={imageContainerRef}
+                        className={`relative max-w-full max-h-full ${newPlotNumber.trim() ? 'cursor-cell' : 'cursor-crosshair'}`}
+                        onClick={handleImageClick}'''
+
+if OLD_CURSOR in content:
+    content = content.replace(OLD_CURSOR, NEW_CURSOR)
+    print('Step 5 DONE: cursor updated')
+else:
+    print('Step 5 FAILED')
 
 with open('src/components/admin/PropertyForm.tsx', 'w', encoding='utf-8', newline='\n') as f:
     f.write(content)
 
-print("All changes applied successfully")
+print('All changes applied!')
