@@ -1023,7 +1023,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                   </div>
                   <button
                     type="button"
-                    onClick={() => setFormData({ ...formData, layoutImage: '' })}
+                    onClick={() => setFormData({ ...formData, layoutImage: '', plots: [] })}
                     className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-xl hover:bg-red-600 transition-all shadow-lg"
                   >
                     <X size={20} />
