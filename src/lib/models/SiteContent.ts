@@ -79,6 +79,13 @@ export interface ISiteContent extends Document {
   globalPopupTitle: string;
   globalPopupContent: string;
   faviconImage: string;
+  motivationLine: string;
+  founderName: string;
+  founderRole: string;
+  founderBio: string;
+  founderVision: string;
+  founderExp: string;
+  founderImage: string;
 }
 
 const SiteContentSchema = new Schema<ISiteContent>(
@@ -160,7 +167,14 @@ const SiteContentSchema = new Schema<ISiteContent>(
     globalThreeDModel: { type: String, default: "/models/untitled.glb" },
     globalPopupTitle: { type: String, default: "Cultivation Model" },
     globalPopupContent: { type: String, default: "Dragon fruit cultivation is a high-demand and profitable farming option with long-term benefits.\n\n*Plantation Details (Per 100 Sq. Yards):*\n\n* 40 dragon fruit plants\n* 4 plants per pole\n* 10 poles in each 100 sq. yards\n\n*Plantation Period:*\n\n* Ideal season: May to November (approx.)\n\n*Yield Duration:*\n\n* Dragon fruit plants can yield fruits for up to 30 years\n\n*Profit Sharing (from the yield of dragon fruits crop):*\n\n* 50% to the company\n* 50% to the client\n\nThis model ensures:\n\n* Land ownership\n* Continuous agricultural income\n* Long-term asset appreciation\n\nAdditionally, the plantation can be removed anytime if the client wishes to convert the land for residential or other purposes." },
-    faviconImage: { type: String, default: "/favicon.ico" }
+    faviconImage: { type: String, default: "/favicon.ico" },
+    motivationLine: { type: String, default: "Success in real estate begins with trust and ends with customer satisfaction." },
+    founderName: { type: String, default: "Muhammad Yaseen" },
+    founderRole: { type: String, default: "Co-Founder & Director" },
+    founderBio: { type: String, default: "Muhammad Yaseen is a dynamic real estate professional with 1.5 years of industry experience and a proven track record of achieving exceptional sales in a short span of time. Known for his strong communication skills and customer-first approach, he quickly builds trust and long-term relationships with clients. His expertise spans VMRDA-approved layouts, farm lands, and residential properties, helping customers make confident and profitable investment decisions." },
+    founderVision: { type: String, default: "Our vision is to provide trustworthy, legally verified, and high-growth real estate opportunities while building lasting relationships through transparency and commitment." },
+    founderExp: { type: String, default: "1.5 Years of Experience in Real Estate\nWorked as Director in Various Real Estate Ventures\nExpertise in VMRDA, Farm Lands & Residential Properties\nAchieved High Property Sales in a Short Time\nStrong Customer Relationship & Communication Skills\nSkilled in Client Handling and Property Consultation" },
+    founderImage: { type: String, default: "/founder.png" }
   },
   { timestamps: true }
 );

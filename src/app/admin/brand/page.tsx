@@ -34,6 +34,7 @@ export default function BrandAdmin() {
   const [uploadingHeader, setUploadingHeader] = useState(false);
   const [uploadingFooter, setUploadingFooter] = useState(false);
   const [uploadingFavicon, setUploadingFavicon] = useState(false);
+  const [uploadingFounder, setUploadingFounder] = useState(false);
 
   useEffect(() => {
     fetch('/api/content')
@@ -243,6 +244,27 @@ export default function BrandAdmin() {
                 )}
                 <p className="text-[10px] text-gray-500 mt-2 italic">* This is the icon that appears in the browser tab.</p>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Home Branding & Motivation</h2>
+          
+          <div className="grid grid-cols-1 gap-6">
+            <div>
+              <label className="block text-sm font-bold text-gray-500 mb-2">Home Motivation Line</label>
+              <input 
+                name="motivationLine"
+                value={content.motivationLine || ''}
+                onChange={handleChange}
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                placeholder="e.g. Success in real estate begins with trust..."
+              />
+              <p className="text-[10px] text-gray-500 mt-2 italic">* Appears at the very top of the Home Hero section.</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-bold text-gray-500 mb-2">Top Badge Text</label>
                 <input 
@@ -252,26 +274,95 @@ export default function BrandAdmin() {
                   className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
                 />
               </div>
+              <div className="flex gap-6">
+                <div className="flex-1">
+                  <label className="block text-sm font-bold text-gray-500 mb-2">Main Title (Line 1)</label>
+                  <input 
+                    name="brandTitle1"
+                    value={content.brandTitle1 || ''}
+                    onChange={handleChange}
+                    className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  />
+                </div>
+                <div className="flex-1">
+                  <label className="block text-sm font-bold text-gray-500 mb-2">Main Title (Line 2)</label>
+                  <input 
+                    name="brandTitle2"
+                    value={content.brandTitle2 || ''}
+                    onChange={handleChange}
+                    className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  />
+                </div>
+              </div>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Founder Profile (Muhammad Yaseen)</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="space-y-6">
               <div>
-                <label className="block text-sm font-bold text-gray-500 mb-2">Main Title (Line 1)</label>
-                <input 
-                  name="brandTitle1"
-                  value={content.brandTitle1 || ''}
-                  onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                />
+                <label className="block text-sm font-bold text-gray-500 mb-2">Founder Photo</label>
+                {content.founderImage ? (
+                  <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 group">
+                    <img src={content.founderImage} alt="Founder" className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => setContent({ ...content, founderImage: '' })}
+                      className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <span className="text-xs font-bold">Remove Image</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      disabled={uploadingFounder}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setUploadingFounder(true);
+                        try {
+                          const formData = new FormData();
+                          formData.append('file', file);
+                          const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                          if (res.ok) {
+                            const data = await res.json();
+                            setContent({ ...content, founderImage: data.url });
+                          }
+                        } catch (err) {} finally { setUploadingFounder(false); }
+                      }}
+                      className="w-full p-10 rounded-2xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
+                    />
+                    {uploadingFounder && <div className="absolute inset-0 bg-black/20 flex items-center justify-center rounded-2xl">Loading...</div>}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Full Name</label>
+                <input name="founderName" value={content.founderName || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
               </div>
               <div>
-                <label className="block text-sm font-bold text-gray-500 mb-2">Main Title (Line 2)</label>
-                <input 
-                  name="brandTitle2"
-                  value={content.brandTitle2 || ''}
-                  onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                />
+                <label className="block text-sm font-bold text-gray-500 mb-2">Designation / Role</label>
+                <input name="founderRole" value={content.founderRole || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Biography (Bio)</label>
+                <textarea name="founderBio" rows={4} value={content.founderBio || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Mission & Vision Statement</label>
+                <textarea name="founderVision" rows={3} value={content.founderVision || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Experience & Expertise Points (One per line)</label>
+                <textarea name="founderExp" rows={5} value={content.founderExp || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-[10px] font-mono" />
               </div>
             </div>
           </div>
