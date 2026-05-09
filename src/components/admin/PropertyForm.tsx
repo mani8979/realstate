@@ -66,6 +66,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
   const [showLayoutEditor, setShowLayoutEditor] = useState(false);
   const [mappingPlot, setMappingPlot] = useState<{ x: number, y: number } | null>(null);
   const [editingPlotIndex, setEditingPlotIndex] = useState<number | null>(null);
+  const [selectedPlotIndex, setSelectedPlotIndex] = useState<number | null>(null);
   const [newPlotNumber, setNewPlotNumber] = useState('');
   const [newPlotStatus, setNewPlotStatus] = useState<'available' | 'booked' | 'sold'>('available');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -305,6 +306,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
       };
     });
     setEditingPlotIndex(null);
+    setSelectedPlotIndex(null);
   };
 
 
@@ -332,6 +334,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
       const updatedPlots = [...currentPlots, newPlot];
       // Set the index for the newly added plot
       setEditingPlotIndex(currentPlots.length);
+      setSelectedPlotIndex(currentPlots.length);
       return {
         ...prev,
         plots: updatedPlots
@@ -1073,17 +1076,31 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                                 updatePlotField(idx, 'y', newY);
                               }
                             }}
+                            onClick={(e) => { 
+                              e.stopPropagation(); 
+                              setSelectedPlotIndex(idx); 
+                            }}
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                              // Only delete if the marker itself is focused, not the input inside it
+                              if (e.key === 'Backspace' && document.activeElement === e.currentTarget) {
+                                e.preventDefault();
+                                removePlot(idx);
+                                setSelectedPlotIndex(null);
+                              }
+                            }}
                             style={{ 
                               left: `${plot.x}%`, 
                               top: `${plot.y}%`,
                               width: `${plot.width || 5}%`,
                               height: `${plot.height || 3}%`
                             }}
-                            onClick={(e) => e.stopPropagation()}
-                            className={`absolute plot-marker -translate-x-1/2 -translate-y-1/2 rounded-md border border-white shadow-2xl flex items-center justify-center text-[10px] font-black cursor-move z-30 transition-all hover:scale-110 active:scale-95 group/marker ${
-                              plot.status === 'sold' ? 'bg-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.4)]' :
-                              plot.status === 'booked' ? 'bg-yellow-400 text-black shadow-[0_0_15px_rgba(250,204,21,0.4)]' :
-                              'bg-green-500 text-white shadow-[0_0_15px_rgba(34,197,94,0.4)]'
+                            className={`absolute plot-marker -translate-x-1/2 -translate-y-1/2 rounded-md border shadow-2xl flex items-center justify-center text-[10px] font-black cursor-move z-30 transition-all hover:scale-110 active:scale-95 group/marker focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+                              selectedPlotIndex === idx ? 'ring-2 ring-primary ring-offset-2 scale-110' : ''
+                            } ${
+                              plot.status === 'sold' ? 'bg-red-500 text-white border-red-400 shadow-[0_0_15px_rgba(239,68,68,0.4)]' :
+                              plot.status === 'booked' ? 'bg-yellow-400 text-black border-yellow-300 shadow-[0_0_15px_rgba(250,204,21,0.4)]' :
+                              'bg-green-500 text-white border-green-400 shadow-[0_0_15px_rgba(34,197,94,0.4)]'
                             }`}
                           >
                             <input 
