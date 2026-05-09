@@ -76,6 +76,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
   const brochureInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
   const layoutImageInputRef = useRef<HTMLInputElement>(null);
+  const imageContainerRef = useRef<HTMLDivElement>(null);
+  const draggingPlotRef = useRef<{ idx: number; startX: number; startY: number; origX: number; origY: number } | null>(null);
 
   const handleFruitUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -298,18 +300,56 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
   };
 
   const removePlot = (index: number) => {
-    if (index === null || index === undefined) return;
-    
     setFormData((prev: any) => {
-      const currentPlots = prev.plots || [];
-      return {
-        ...prev,
-        plots: currentPlots.filter((_: any, i: number) => i !== index)
-      };
+      const updated = (prev.plots || []).filter((_: any, i: number) => i !== index);
+      return { ...prev, plots: updated };
     });
-    
     setEditingPlotIndex(null);
     setSelectedPlotIndex(null);
+  };
+
+  const handlePlotPointerDown = (e: React.PointerEvent<HTMLDivElement>, idx: number) => {
+    // Don't drag if clicking input or buttons
+    if ((e.target as HTMLElement).tagName === 'INPUT' || (e.target as HTMLElement).tagName === 'BUTTON') return;
+    e.preventDefault();
+    e.stopPropagation();
+    const container = imageContainerRef.current;
+    if (!container) return;
+    const rect = container.getBoundingClientRect();
+    const plot = formData.plots[idx];
+    draggingPlotRef.current = {
+      idx,
+      startX: e.clientX,
+      startY: e.clientY,
+      origX: plot.x,
+      origY: plot.y,
+    };
+    setSelectedPlotIndex(idx);
+    (e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId);
+  };
+
+  const handlePlotPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!draggingPlotRef.current) return;
+    e.preventDefault();
+    const container = imageContainerRef.current;
+    if (!container) return;
+    const rect = container.getBoundingClientRect();
+    const { idx, startX, startY, origX, origY } = draggingPlotRef.current;
+    const dx = ((e.clientX - startX) / rect.width) * 100;
+    const dy = ((e.clientY - startY) / rect.height) * 100;
+    const newX = Math.max(0, Math.min(100, origX + dx));
+    const newY = Math.max(0, Math.min(100, origY + dy));
+    setFormData((prev: any) => {
+      const newPlots = [...(prev.plots || [])];
+      if (newPlots[idx]) {
+        newPlots[idx] = { ...newPlots[idx], x: newX, y: newY };
+      }
+      return { ...prev, plots: newPlots };
+    });
+  };
+
+  const handlePlotPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    draggingPlotRef.current = null;
   };
 
 
@@ -1049,9 +1089,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                     {/* Map Canvas */}
                     <div className="flex-grow bg-white/5 rounded-[3rem] border border-white/10 overflow-hidden relative shadow-2xl flex items-center justify-center group">
                       <div 
+                        ref={imageContainerRef}
                         className="relative cursor-crosshair max-w-full max-h-full"
                         onClick={handleImageClick}
-                        id="layout-image-container-full"
                       >
                         <Image 
                           src={formData.layoutImage} 
@@ -1061,100 +1101,67 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                           className="w-auto h-auto max-w-full max-h-[75vh] select-none object-contain rounded-2xl" 
                         />
                         
-                        {/* Plot Markers */}
+                        {/* Plot Markers — pointer-event drag */}
                         {formData.plots?.map((plot: any, idx: number) => (
-                          <motion.div 
+                          <div
                             key={idx}
-                            drag
-                            dragMomentum={false}
-                            dragElastic={0}
-                            onDragEnd={(_, info) => {
-                              const parent = document.getElementById('layout-image-container-full');
-                              if (parent) {
-                                const pRect = parent.getBoundingClientRect();
-                                const newX = ((info.point.x - pRect.left) / pRect.width) * 100;
-                                const newY = ((info.point.y - pRect.top) / pRect.height) * 100;
-                                updatePlotField(idx, 'x', newX);
-                                updatePlotField(idx, 'y', newY);
-                              }
-                            }}
-                            onClick={(e) => { 
-                              e.stopPropagation(); 
-                              setSelectedPlotIndex(idx); 
-                            }}
+                            onPointerDown={(e) => handlePlotPointerDown(e, idx)}
+                            onPointerMove={handlePlotPointerMove}
+                            onPointerUp={handlePlotPointerUp}
+                            onPointerCancel={handlePlotPointerUp}
+                            onClick={(e) => { e.stopPropagation(); setSelectedPlotIndex(idx); }}
                             tabIndex={0}
                             onKeyDown={(e) => {
-                              // Only delete if the marker itself is focused, not the input inside it
                               if (e.key === 'Backspace' && document.activeElement === e.currentTarget) {
                                 e.preventDefault();
                                 removePlot(idx);
-                                setSelectedPlotIndex(null);
                               }
                             }}
-                            style={{ 
-                              left: `${plot.x}%`, 
-                              top: `${plot.y}%`,
+                            style={{
+                              position: 'absolute',
+                              left: `${plot.x ?? 50}%`,
+                              top: `${plot.y ?? 50}%`,
                               width: `${plot.width || 5}%`,
-                              height: `${plot.height || 3}%`
+                              height: `${plot.height || 3}%`,
+                              transform: 'translate(-50%, -50%)',
+                              touchAction: 'none',
+                              userSelect: 'none',
                             }}
-                            className={`absolute plot-marker -translate-x-1/2 -translate-y-1/2 rounded-md border shadow-2xl flex items-center justify-center text-[10px] font-black cursor-move z-30 transition-all hover:scale-110 active:scale-95 group/marker focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
-                              selectedPlotIndex === idx ? 'ring-2 ring-primary ring-offset-2 scale-110' : ''
+                            className={`plot-marker rounded-md border shadow-2xl flex items-center justify-center text-[10px] font-black cursor-move z-30 group/marker focus:outline-none ${
+                              selectedPlotIndex === idx ? 'ring-2 ring-white ring-offset-1 ring-offset-transparent' : ''
                             } ${
-                              plot.status === 'sold' ? 'bg-red-500 text-white border-red-400 shadow-[0_0_15px_rgba(239,68,68,0.4)]' :
+                              plot.status === 'sold'   ? 'bg-red-500 text-white border-red-400 shadow-[0_0_15px_rgba(239,68,68,0.4)]' :
                               plot.status === 'booked' ? 'bg-yellow-400 text-black border-yellow-300 shadow-[0_0_15px_rgba(250,204,21,0.4)]' :
-                              'bg-green-500 text-white border-green-400 shadow-[0_0_15px_rgba(34,197,94,0.4)]'
+                                                         'bg-green-500 text-white border-green-400 shadow-[0_0_15px_rgba(34,197,94,0.4)]'
                             }`}
                           >
-                            <input 
+                            <input
                               type="text"
                               value={plot.number}
                               onChange={(e) => updatePlotField(idx, 'number', e.target.value)}
                               className="w-full bg-transparent border-none text-center focus:ring-0 p-0 font-black cursor-text"
                               onClick={(e) => e.stopPropagation()}
                             />
-                            
-                            {/* Hover Status & Delete Bar */}
-                            <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-black/90 backdrop-blur-xl border border-white/20 rounded-full p-1.5 flex items-center gap-2 opacity-0 group-hover/marker:opacity-100 transition-all scale-75 group-hover/marker:scale-100 pointer-events-auto z-[60] shadow-2xl">
-                              <button 
-                                type="button"
-                                onClick={(e) => { e.stopPropagation(); updatePlotField(idx, 'status', 'available'); }}
-                                className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'available' ? 'bg-green-500 scale-110 shadow-[0_0_10px_rgba(34,197,94,0.5)]' : 'bg-green-500/20'}`}
-                              />
-                              <button 
-                                type="button"
-                                onClick={(e) => { e.stopPropagation(); updatePlotField(idx, 'status', 'booked'); }}
-                                className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'booked' ? 'bg-yellow-400 scale-110 shadow-[0_0_10px_rgba(250,204,21,0.5)]' : 'bg-yellow-400/20'}`}
-                              />
-                              <button 
-                                type="button"
-                                onClick={(e) => { e.stopPropagation(); updatePlotField(idx, 'status', 'sold'); }}
-                                className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'sold' ? 'bg-red-500 scale-110 shadow-[0_0_10px_rgba(239,68,68,0.5)]' : 'bg-red-500/20'}`}
-                              />
-                              <div className="w-px h-3 bg-white/20 mx-1"></div>
-                              <button 
-                                type="button"
-                                onClick={(e) => { e.stopPropagation(); setEditingPlotIndex(idx); }}
-                                className="text-gray-400 hover:text-white transition-colors"
-                              >
-                                <Settings size={12} />
-                              </button>
-                              <button 
-                                type="button"
-                                onClick={(e) => { e.stopPropagation(); removePlot(idx); }}
-                                className="text-red-500 hover:text-red-400 transition-colors ml-2 p-1 hover:bg-red-500/10 rounded-lg"
-                              >
-                                <Trash size={16} />
-                              </button>
+                            {/* Hover toolbar */}
+                            <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-black/90 backdrop-blur-xl border border-white/20 rounded-full p-1.5 flex items-center gap-2 opacity-0 group-hover/marker:opacity-100 transition-all pointer-events-auto z-[60] shadow-2xl">
+                              <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); updatePlotField(idx, 'status', 'available'); }} className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'available' ? 'bg-green-500 scale-110' : 'bg-green-500/20'}`} />
+                              <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); updatePlotField(idx, 'status', 'booked');    }} className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'booked'    ? 'bg-yellow-400 scale-110' : 'bg-yellow-400/20'}`} />
+                              <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); updatePlotField(idx, 'status', 'sold');      }} className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'sold'      ? 'bg-red-500 scale-110'    : 'bg-red-500/20'}`} />
+                              <div className="w-px h-3 bg-white/20 mx-1" />
+                              <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setEditingPlotIndex(idx); }} className="text-gray-400 hover:text-white transition-colors"><Settings size={12} /></button>
+                              <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); removePlot(idx); }} className="text-red-500 hover:text-red-400 transition-colors ml-2 p-1 hover:bg-red-500/10 rounded-lg"><Trash size={16} /></button>
                             </div>
-                          </motion.div>
+                          </div>
                         ))}
 
-                        <div id="layout-image-container-full" className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-all pointer-events-none flex items-center justify-center z-10">
-                          <div className="opacity-0 group-hover:opacity-100 flex flex-col items-center gap-2">
-                            <Target size={48} className="text-primary animate-pulse" />
-                            <span className="text-[12px] font-black uppercase tracking-[0.3em] text-primary">Click to create plot</span>
+                        {(!formData.plots || formData.plots.length === 0) && (
+                          <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-10">
+                            <div className="flex flex-col items-center gap-2">
+                              <Target size={48} className="text-primary animate-pulse" />
+                              <span className="text-[12px] font-black uppercase tracking-[0.3em] text-primary">Click to create plot</span>
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </div>
                     </div>
                   </div>
