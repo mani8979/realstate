@@ -67,7 +67,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
   const [mappingPlot, setMappingPlot] = useState<{ x: number, y: number } | null>(null);
   const [editingPlotIndex, setEditingPlotIndex] = useState<number | null>(null);
   const [newPlotNumber, setNewPlotNumber] = useState('');
-  const [newPlotStatus, setNewPlotStatus] = useState<'unsold' | 'booked' | 'sold'>('unsold');
+  const [newPlotStatus, setNewPlotStatus] = useState<'available' | 'booked' | 'sold'>('available');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const landPhotosInputRef = useRef<HTMLInputElement>(null);
   const fruitInputRef = useRef<HTMLInputElement>(null);
@@ -292,23 +292,22 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
   const addPlot = () => {
     setFormData((prev: any) => ({
       ...prev,
-      plots: [...(prev.plots || []), { number: '', status: 'unsold' }]
+      plots: [...(prev.plots || []), { number: '', status: 'available' }]
     }));
-  };
-
-  const updatePlot = (index: number, field: string, value: string) => {
-    const newPlots = [...(formData.plots || [])];
-    newPlots[index] = { ...newPlots[index], [field]: value };
-    setFormData({ ...formData, plots: newPlots });
   };
 
   const removePlot = (index: number) => {
-    setFormData((prev: any) => ({
-      ...prev,
-      plots: (prev.plots || []).filter((_: any, i: number) => i !== index)
-    }));
+    setFormData((prev: any) => {
+      const currentPlots = prev.plots || [];
+      return {
+        ...prev,
+        plots: currentPlots.filter((_: any, i: number) => i !== index)
+      };
+    });
     setEditingPlotIndex(null);
   };
+
+
 
   const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
     // Prevent clicking on existing markers from triggering a new plot creation
@@ -321,19 +320,23 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     // Auto-create and open editor
     const newPlot = { 
       number: `Plot ${formData.plots?.length + 1 || 1}`, 
-      status: 'unsold', 
+      status: 'available', 
       x, 
       y,
       width: 5,
       height: 3
     };
     
-    setFormData((prev: any) => ({
-      ...prev,
-      plots: [...(prev.plots || []), newPlot]
-    }));
-    
-    setEditingPlotIndex(formData.plots?.length || 0);
+    setFormData((prev: any) => {
+      const currentPlots = prev.plots || [];
+      const updatedPlots = [...currentPlots, newPlot];
+      // Set the index for the newly added plot
+      setEditingPlotIndex(currentPlots.length);
+      return {
+        ...prev,
+        plots: updatedPlots
+      };
+    });
   };
 
   const updatePlotField = (index: number, field: string, value: any) => {
@@ -1078,9 +1081,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                             }}
                             onClick={(e) => e.stopPropagation()}
                             className={`absolute plot-marker -translate-x-1/2 -translate-y-1/2 rounded-md border border-white shadow-2xl flex items-center justify-center text-[10px] font-black cursor-move z-30 transition-all hover:scale-110 active:scale-95 group/marker ${
-                              plot.status === 'sold' ? 'bg-yellow-400 text-black' :
-                              plot.status === 'booked' ? 'bg-green-500 text-white' :
-                              'bg-white text-black'
+                              plot.status === 'sold' ? 'bg-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.4)]' :
+                              plot.status === 'booked' ? 'bg-yellow-400 text-black shadow-[0_0_15px_rgba(250,204,21,0.4)]' :
+                              'bg-green-500 text-white shadow-[0_0_15px_rgba(34,197,94,0.4)]'
                             }`}
                           >
                             <input 
@@ -1095,18 +1098,18 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                             <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-black/90 backdrop-blur-xl border border-white/20 rounded-full p-1.5 flex items-center gap-2 opacity-0 group-hover/marker:opacity-100 transition-all scale-75 group-hover/marker:scale-100 pointer-events-auto z-[60] shadow-2xl">
                               <button 
                                 type="button"
-                                onClick={(e) => { e.stopPropagation(); updatePlotField(idx, 'status', 'unsold'); }}
-                                className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'unsold' ? 'bg-white scale-110 shadow-[0_0_10px_rgba(255,255,255,0.5)]' : 'bg-white/20'}`}
+                                onClick={(e) => { e.stopPropagation(); updatePlotField(idx, 'status', 'available'); }}
+                                className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'available' ? 'bg-green-500 scale-110 shadow-[0_0_10px_rgba(34,197,94,0.5)]' : 'bg-green-500/20'}`}
                               />
                               <button 
                                 type="button"
                                 onClick={(e) => { e.stopPropagation(); updatePlotField(idx, 'status', 'booked'); }}
-                                className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'booked' ? 'bg-green-500 scale-110 shadow-[0_0_10px_rgba(34,197,94,0.5)]' : 'bg-green-500/20'}`}
+                                className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'booked' ? 'bg-yellow-400 scale-110 shadow-[0_0_10px_rgba(250,204,21,0.5)]' : 'bg-yellow-400/20'}`}
                               />
                               <button 
                                 type="button"
                                 onClick={(e) => { e.stopPropagation(); updatePlotField(idx, 'status', 'sold'); }}
-                                className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'sold' ? 'bg-yellow-400 scale-110 shadow-[0_0_10px_rgba(250,204,21,0.5)]' : 'bg-yellow-400/20'}`}
+                                className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'sold' ? 'bg-red-500 scale-110 shadow-[0_0_10px_rgba(239,68,68,0.5)]' : 'bg-red-500/20'}`}
                               />
                               <div className="w-px h-3 bg-white/20 mx-1"></div>
                               <button 
@@ -1156,26 +1159,26 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                           <span className="block text-[8px] font-black uppercase tracking-widest text-gray-500 mb-1">Total Plots</span>
                           <span className="text-2xl font-black text-white">{formData.plots?.length || 0}</span>
                         </div>
-                        <div className="p-4 rounded-2xl bg-primary/10 border border-primary/10 text-center">
-                          <span className="block text-[8px] font-black uppercase tracking-widest text-primary mb-1">Available</span>
-                          <span className="text-2xl font-black text-primary">{formData.plots?.filter((p: any) => p.status === 'unsold').length || 0}</span>
+                        <div className="p-4 rounded-2xl bg-green-500/10 border border-green-500/10 text-center">
+                          <span className="block text-[8px] font-black uppercase tracking-widest text-green-500 mb-1">Available</span>
+                          <span className="text-2xl font-black text-green-500">{formData.plots?.filter((p: any) => p.status === 'available' || p.status === 'unsold').length || 0}</span>
                         </div>
                       </div>
 
                       <div className="space-y-4">
                         <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
                           <div className="flex items-center gap-3">
-                            <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
+                            <div className="w-3 h-3 rounded-full bg-red-500"></div>
                             <span className="text-[10px] font-black uppercase tracking-widest text-white">Sold Plots</span>
                           </div>
-                          <span className="text-xs font-black text-yellow-400">{formData.plots?.filter((p: any) => p.status === 'sold').length || 0}</span>
+                          <span className="text-xs font-black text-red-500">{formData.plots?.filter((p: any) => p.status === 'sold').length || 0}</span>
                         </div>
                         <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
                           <div className="flex items-center gap-3">
-                            <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                            <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
                             <span className="text-[10px] font-black uppercase tracking-widest text-white">Booked Plots</span>
                           </div>
-                          <span className="text-xs font-black text-green-500">{formData.plots?.filter((p: any) => p.status === 'booked').length || 0}</span>
+                          <span className="text-xs font-black text-yellow-400">{formData.plots?.filter((p: any) => p.status === 'booked').length || 0}</span>
                         </div>
                       </div>
                     </div>
@@ -1230,11 +1233,11 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                               <div className="flex gap-3">
                                 <button
                                   type="button"
-                                  onClick={() => updatePlotField(editingPlotIndex, 'status', 'unsold')}
+                                  onClick={() => updatePlotField(editingPlotIndex, 'status', 'available')}
                                   className={`flex-1 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all border ${
-                                    formData.plots[editingPlotIndex].status === 'unsold' 
-                                    ? 'bg-white text-black border-white shadow-xl shadow-white/20' 
-                                    : 'bg-white/5 text-gray-500 border-white/10 hover:bg-white/10'
+                                    formData.plots[editingPlotIndex].status === 'available' || formData.plots[editingPlotIndex].status === 'unsold'
+                                    ? 'bg-green-500 text-white border-green-500 shadow-xl shadow-green-500/20' 
+                                    : 'bg-green-500/5 text-gray-500 border-green-500/10 hover:bg-green-500/10'
                                   }`}
                                 >
                                   Available
@@ -1244,8 +1247,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                                   onClick={() => updatePlotField(editingPlotIndex, 'status', 'booked')}
                                   className={`flex-1 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all border ${
                                     formData.plots[editingPlotIndex].status === 'booked' 
-                                    ? 'bg-green-500 text-white border-green-500 shadow-xl shadow-green-500/20' 
-                                    : 'bg-green-500/5 text-gray-500 border-green-500/10 hover:bg-green-500/10'
+                                    ? 'bg-yellow-400 text-black border-yellow-400 shadow-xl shadow-yellow-400/20' 
+                                    : 'bg-yellow-400/5 text-gray-500 border-yellow-400/10 hover:bg-yellow-400/10'
                                   }`}
                                 >
                                   Booked
@@ -1255,8 +1258,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                                   onClick={() => updatePlotField(editingPlotIndex, 'status', 'sold')}
                                   className={`flex-1 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all border ${
                                     formData.plots[editingPlotIndex].status === 'sold' 
-                                    ? 'bg-yellow-400 text-black border-yellow-400 shadow-xl shadow-yellow-400/20' 
-                                    : 'bg-yellow-400/5 text-gray-500 border-yellow-400/10 hover:bg-yellow-400/10'
+                                    ? 'bg-red-500 text-white border-red-500 shadow-xl shadow-red-500/20' 
+                                    : 'bg-red-500/5 text-gray-500 border-red-500/10 hover:bg-red-500/10'
                                   }`}
                                 >
                                   Sold

@@ -30,7 +30,7 @@ export interface IProperty extends Document {
   mapUrl?: string;
   landBrochure?: string[];
   layoutImage?: string;
-  plots?: { number: string; status: 'unsold' | 'booked' | 'sold' }[];
+  plots?: { number: string; status: 'available' | 'booked' | 'sold'; x: number; y: number; width: number; height: number }[];
   status: 'active' | 'sold' | 'draft';
 }
 
@@ -68,7 +68,7 @@ const PropertySchema = new Schema<IProperty>(
     layoutImage: { type: String },
     plots: [{
       number: { type: String },
-      status: { type: String, enum: ['unsold', 'booked', 'sold'], default: 'unsold' },
+      status: { type: String, enum: ['available', 'booked', 'sold'], default: 'available' },
       x: { type: Number },
       y: { type: Number },
       width: { type: Number, default: 5 },

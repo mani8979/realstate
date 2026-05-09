@@ -334,9 +334,9 @@ const MediaPage = () => {
                           height: `${plot.height || 3}%`
                         }}
                         className={`absolute -translate-x-1/2 -translate-y-1/2 group/plot cursor-pointer z-10 rounded-md border border-white shadow-lg flex items-center justify-center transition-all group-hover/plot:scale-125 ${
-                          plot.status === 'sold' ? 'bg-yellow-400 text-black' :
-                          plot.status === 'booked' ? 'bg-green-500 text-white' :
-                          'bg-white text-black'
+                          plot.status === 'sold' ? 'bg-red-500 text-white' :
+                          plot.status === 'booked' ? 'bg-yellow-400 text-black' :
+                          'bg-green-500 text-white'
                         }`}
                       >
                         <span className="text-[6px] md:text-[8px] font-black">{plot.number}</span>
@@ -345,9 +345,9 @@ const MediaPage = () => {
                         <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover/plot:opacity-100 transition-all pointer-events-none whitespace-nowrap z-20">
                           <div className="bg-black/90 backdrop-blur-md text-white px-3 py-1.5 rounded-lg border border-white/10 text-[10px] font-bold shadow-2xl">
                             Plot {plot.number} • <span className={
-                              plot.status === 'sold' ? 'text-yellow-400' :
-                              plot.status === 'booked' ? 'text-green-500' :
-                              'text-white'
+                              plot.status === 'sold' ? 'text-red-500' :
+                              plot.status === 'booked' ? 'text-yellow-400' :
+                              'text-green-500'
                             }>{plot.status.toUpperCase()}</span>
                           </div>
                         </div>
@@ -373,16 +373,16 @@ const MediaPage = () => {
                     {/* Legend */}
                     <div className="grid grid-cols-3 gap-3">
                       <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10">
-                        <div className="w-4 h-4 rounded-full bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.5)]"></div>
+                        <div className="w-4 h-4 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
                         <span className="text-[8px] font-black uppercase tracking-widest text-white/50">Sold</span>
                       </div>
                       <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10">
-                        <div className="w-4 h-4 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
+                        <div className="w-4 h-4 rounded-full bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.5)]"></div>
                         <span className="text-[8px] font-black uppercase tracking-widest text-white/50">Booked</span>
                       </div>
                       <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10">
-                        <div className="w-4 h-4 rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.3)]"></div>
-                        <span className="text-[8px] font-black uppercase tracking-widest text-white/50">Unsold</span>
+                        <div className="w-4 h-4 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.3)]"></div>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-white/50">Available</span>
                       </div>
                     </div>
 
@@ -397,13 +397,13 @@ const MediaPage = () => {
                               <span className="text-xl font-black">{mappedPlots.length}</span>
                             </div>
                             <div className="grid grid-cols-2 gap-3">
-                              <div className="p-4 rounded-2xl bg-yellow-400/10 border border-yellow-400/20">
-                                <span className="block text-[8px] font-black uppercase tracking-widest text-yellow-400/60 mb-1">Sold</span>
-                                <span className="text-lg font-black text-yellow-400">{mappedPlots.filter((p: any) => p.status === 'sold').length}</span>
+                              <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/20">
+                                <span className="block text-[8px] font-black uppercase tracking-widest text-red-500/60 mb-1">Sold</span>
+                                <span className="text-lg font-black text-red-500">{mappedPlots.filter((p: any) => p.status === 'sold').length}</span>
                               </div>
                               <div className="p-4 rounded-2xl bg-green-500/10 border border-green-500/20">
                                 <span className="block text-[8px] font-black uppercase tracking-widest text-green-500/60 mb-1">Available</span>
-                                <span className="text-lg font-black text-green-500">{mappedPlots.filter((p: any) => p.status === 'unsold').length}</span>
+                                <span className="text-lg font-black text-green-500">{mappedPlots.filter((p: any) => p.status === 'available' || p.status === 'unsold').length}</span>
                               </div>
                             </div>
                           </>
@@ -426,9 +426,9 @@ const MediaPage = () => {
                         <div 
                           key={idx}
                           className={`aspect-square rounded-lg flex items-center justify-center text-[10px] font-black border transition-all ${
-                            plot.status === 'sold' ? 'bg-yellow-400 border-yellow-500 text-black shadow-[0_4px_12px_rgba(250,204,21,0.2)]' :
-                            plot.status === 'booked' ? 'bg-green-500 border-green-600 text-white shadow-[0_4px_12px_rgba(34,197,94,0.2)]' :
-                            'bg-white/5 border-white/10 text-white hover:border-white/40'
+                            plot.status === 'sold' ? 'bg-red-500 border-red-600 text-white shadow-[0_4px_12px_rgba(239,68,68,0.2)]' :
+                            plot.status === 'booked' ? 'bg-yellow-400 border-yellow-500 text-black shadow-[0_4px_12px_rgba(250,204,21,0.2)]' :
+                            'bg-green-500 border-green-600 text-white hover:border-white/40'
                           }`}
                         >
                           {plot.number}
