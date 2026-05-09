@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { 
   X, ArrowLeft, Play, Image as ImageIcon, 
   Map as MapIcon, Download, ChevronLeft, ChevronRight,
-  Maximize2, MousePointer2
+  Maximize2, MousePointer2, LayoutGrid
 } from 'lucide-react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
@@ -90,7 +90,7 @@ const MediaPage = () => {
   const tabs = [
     { id: 'photos', label: 'Land Gallery', icon: <ImageIcon size={20} />, show: property.landPhotos?.length > 0 },
     { id: 'video', label: 'Video Tour', icon: <Play size={20} />, show: !!property.videoUrl },
-    { id: 'plot_plan', label: 'Plot Plan', icon: <MapIcon size={20} />, show: !!property.layoutImage },
+    { id: 'plot_plan', label: 'Plot Plan', icon: <LayoutGrid size={20} />, show: !!property.layoutImage },
     { id: 'brochure', label: 'Brochure', icon: <Download size={20} />, show: property.landBrochure?.length > 0 },
     { id: 'map', label: 'Location Map', icon: <MapIcon size={20} />, show: !!property.mapUrl },
   ];
@@ -412,28 +412,62 @@ const MediaPage = () => {
                     </div>
                   </div>
 
-                  {/* Plot Grid Searchable */}
-                  <div className="bg-white/5 backdrop-blur-xl rounded-[2rem] border border-white/10 p-6 flex flex-col gap-4 max-h-[400px]">
-                    <div className="relative">
-                      <input 
-                        type="text" 
-                        placeholder="Search Plot #"
-                        className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-xs font-bold placeholder:text-white/20 focus:border-primary transition-all text-white"
-                      />
+                  {/* Plot Status Table */}
+                  <div className="bg-white/5 backdrop-blur-xl rounded-[3rem] border border-white/10 p-8 flex flex-col gap-6 overflow-hidden flex-grow">
+                    <div className="flex items-center justify-between px-2">
+                      <div className="space-y-1">
+                        <h3 className="text-xl font-black uppercase tracking-tighter text-white">Inventory Table</h3>
+                        <p className="text-[10px] font-bold text-primary uppercase tracking-widest">Real-time Plot Availability</p>
+                      </div>
+                      <div className="bg-primary/10 px-4 py-2 rounded-xl border border-primary/20">
+                         <span className="text-[10px] font-black text-primary uppercase tracking-widest">{property.plots?.length || 0} Total Units</span>
+                      </div>
                     </div>
-                    <div className="flex-grow overflow-y-auto pr-2 custom-scrollbar grid grid-cols-4 gap-2">
-                      {property.plots?.filter((p: any) => p.x !== undefined && p.y !== undefined && (p.x !== 0 || p.y !== 0)).map((plot: any, idx: number) => (
-                        <div 
-                          key={idx}
-                          className={`aspect-square rounded-lg flex items-center justify-center text-[10px] font-black border transition-all ${
-                            plot.status === 'sold' ? 'bg-yellow-400 border-yellow-500 text-black shadow-[0_4px_12px_rgba(250,204,21,0.2)]' :
-                            plot.status === 'booked' ? 'bg-green-500 border-green-600 text-white shadow-[0_4px_12px_rgba(34,197,94,0.2)]' :
-                            'bg-white border-gray-200 text-black hover:border-white/40'
-                          }`}
-                        >
-                          {plot.number}
-                        </div>
-                      ))}
+                    
+                    <div className="flex-grow overflow-y-auto pr-4 custom-scrollbar">
+                      <table className="w-full text-left border-separate border-spacing-y-3">
+                        <thead>
+                          <tr className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">
+                            <th className="px-6 py-4">Plot #</th>
+                            <th className="px-6 py-4">Status</th>
+                            <th className="px-6 py-4 text-right">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {property.plots?.map((plot: any, idx: number) => (
+                            <tr key={idx} className="bg-white/5 border border-white/10 rounded-[1.5rem] overflow-hidden group hover:bg-white/10 transition-all">
+                              <td className="px-6 py-5">
+                                <div className="flex items-center gap-3">
+                                  <div className={`w-2 h-8 rounded-full ${
+                                    plot.status === 'sold' ? 'bg-yellow-400' :
+                                    plot.status === 'booked' ? 'bg-green-500' :
+                                    'bg-white'
+                                  }`}></div>
+                                  <span className="text-sm font-black text-white">{plot.number}</span>
+                                </div>
+                              </td>
+                              <td className="px-6 py-5">
+                                <span className={`text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full border ${
+                                  plot.status === 'sold' ? 'bg-yellow-400/10 text-yellow-400 border-yellow-400/20' :
+                                  plot.status === 'booked' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
+                                  'bg-white/5 text-white border-white/10'
+                                }`}>
+                                  {plot.status}
+                                </span>
+                              </td>
+                              <td className="px-6 py-5 text-right">
+                                <a 
+                                  href={`https://wa.me/${property.contactPhone || '9123456789'}?text=I'm interested in Plot ${plot.number} of ${property.title}`}
+                                  target="_blank"
+                                  className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-white transition-colors"
+                                >
+                                  Enquire Now
+                                </a>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>

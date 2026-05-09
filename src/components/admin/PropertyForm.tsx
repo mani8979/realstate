@@ -34,8 +34,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     layoutImage: '',
     plots: initialData?.plots?.map((p: any, i: number) => ({
       ...p,
-      x: p.x ?? (50 + i),
-      y: p.y ?? (50 + i),
+      x: p.x ?? 0,
+      y: p.y ?? 0,
       width: p.width ?? 5,
       height: p.height ?? 3
     })) || []
@@ -53,8 +53,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
         details: initialData.details || [],
         plots: initialData.plots?.map((p: any, i: number) => ({
           ...p,
-          x: p.x ?? (50 + i),
-          y: p.y ?? (50 + i),
+          x: p.x ?? 0,
+          y: p.y ?? 0,
           width: p.width ?? 5,
           height: p.height ?? 3
         })) || []
@@ -1106,57 +1106,60 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                         />
                         
                         {/* Plot Markers — pointer-event drag */}
-                        {formData.plots?.map((plot: any, idx: number) => (
-                          <div
-                            key={idx}
-                            onPointerDown={(e) => handlePlotPointerDown(e, idx)}
-                            onPointerMove={handlePlotPointerMove}
-                            onPointerUp={handlePlotPointerUp}
-                            onPointerCancel={handlePlotPointerUp}
-                            onClick={(e) => { e.stopPropagation(); setSelectedPlotIndex(idx); }}
-                            tabIndex={0}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Backspace' && document.activeElement === e.currentTarget) {
-                                e.preventDefault();
-                                removePlot(idx);
-                              }
-                            }}
-                            style={{
-                              position: 'absolute',
-                              left: `${plot.x ?? 50}%`,
-                              top: `${plot.y ?? 50}%`,
-                              width: `${plot.width || 5}%`,
-                              height: `${plot.height || 3}%`,
-                              transform: 'translate(-50%, -50%)',
-                              touchAction: 'none',
-                              userSelect: 'none',
-                            }}
-                            className={`plot-marker rounded-md border shadow-2xl flex items-center justify-center text-[10px] font-black cursor-move z-30 group/marker focus:outline-none ${
-                              selectedPlotIndex === idx ? 'ring-2 ring-white ring-offset-1 ring-offset-transparent' : ''
-                            } ${
-                              plot.status === 'sold'   ? 'bg-yellow-400 text-black border-yellow-300 shadow-[0_0_15px_rgba(250,204,21,0.4)]' :
-                              plot.status === 'booked' ? 'bg-green-500 text-white border-green-400 shadow-[0_0_15px_rgba(34,197,94,0.4)]' :
-                                                         'bg-white text-black border-gray-200 shadow-[0_0_15px_rgba(255,255,255,0.4)]'
-                            }`}
-                          >
-                            <input
-                              type="text"
-                              value={plot.number}
-                              onChange={(e) => updatePlotField(idx, 'number', e.target.value)}
-                              className="w-full bg-transparent border-none text-center focus:ring-0 p-0 font-black cursor-text"
-                              onClick={(e) => e.stopPropagation()}
-                            />
-                            {/* Hover toolbar */}
-                            <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-black/90 backdrop-blur-xl border border-white/20 rounded-full p-1.5 flex items-center gap-2 opacity-0 group-hover/marker:opacity-100 transition-all pointer-events-auto z-[60] shadow-2xl">
-                              <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); updatePlotField(idx, 'status', 'available'); }} className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'available' ? 'bg-white scale-110' : 'bg-white/20'}`} />
-                              <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); updatePlotField(idx, 'status', 'booked');    }} className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'booked'    ? 'bg-green-500 scale-110' : 'bg-green-500/20'}`} />
-                              <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); updatePlotField(idx, 'status', 'sold');      }} className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'sold'      ? 'bg-yellow-400 scale-110'    : 'bg-yellow-400/20'}`} />
-                              <div className="w-px h-3 bg-white/20 mx-1" />
-                              <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setEditingPlotIndex(idx); }} className="text-gray-400 hover:text-white transition-colors"><Settings size={12} /></button>
-                              <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); removePlot(idx); }} className="text-red-500 hover:text-red-400 transition-colors ml-2 p-1 hover:bg-red-500/10 rounded-lg"><Trash size={16} /></button>
+                        {formData.plots?.filter((p: any) => p.x > 0 && p.y > 0).map((plot: any, idx: number) => {
+                          const originalIdx = formData.plots.indexOf(plot);
+                          return (
+                            <div
+                              key={originalIdx}
+                              onPointerDown={(e) => handlePlotPointerDown(e, originalIdx)}
+                              onPointerMove={handlePlotPointerMove}
+                              onPointerUp={handlePlotPointerUp}
+                              onPointerCancel={handlePlotPointerUp}
+                              onClick={(e) => { e.stopPropagation(); setSelectedPlotIndex(originalIdx); }}
+                              tabIndex={0}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Backspace' && document.activeElement === e.currentTarget) {
+                                  e.preventDefault();
+                                  removePlot(originalIdx);
+                                }
+                              }}
+                              style={{
+                                position: 'absolute',
+                                left: `${plot.x}%`,
+                                top: `${plot.y}%`,
+                                width: `${plot.width || 5}%`,
+                                height: `${plot.height || 3}%`,
+                                transform: 'translate(-50%, -50%)',
+                                touchAction: 'none',
+                                userSelect: 'none',
+                              }}
+                              className={`plot-marker rounded-md border shadow-2xl flex items-center justify-center text-[10px] font-black cursor-move z-30 group/marker focus:outline-none ${
+                                selectedPlotIndex === originalIdx ? 'ring-2 ring-white ring-offset-1 ring-offset-transparent' : ''
+                              } ${
+                                plot.status === 'sold'   ? 'bg-yellow-400 text-black border-yellow-300 shadow-[0_0_15px_rgba(250,204,21,0.4)]' :
+                                plot.status === 'booked' ? 'bg-green-500 text-white border-green-400 shadow-[0_0_15px_rgba(34,197,94,0.4)]' :
+                                                           'bg-white text-black border-gray-200 shadow-[0_0_15px_rgba(255,255,255,0.4)]'
+                              }`}
+                            >
+                              <input
+                                type="text"
+                                value={plot.number}
+                                onChange={(e) => updatePlotField(originalIdx, 'number', e.target.value)}
+                                className="w-full bg-transparent border-none text-center focus:ring-0 p-0 font-black cursor-text"
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                              {/* Hover toolbar */}
+                              <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-black/90 backdrop-blur-xl border border-white/20 rounded-full p-1.5 flex items-center gap-2 opacity-0 group-hover/marker:opacity-100 transition-all pointer-events-auto z-[60] shadow-2xl">
+                                <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); updatePlotField(originalIdx, 'status', 'available'); }} className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'available' ? 'bg-white scale-110' : 'bg-white/20'}`} />
+                                <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); updatePlotField(originalIdx, 'status', 'booked');    }} className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'booked'    ? 'bg-green-500 scale-110' : 'bg-green-500/20'}`} />
+                                <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); updatePlotField(originalIdx, 'status', 'sold');      }} className={`w-4 h-4 rounded-full border border-white/20 hover:scale-125 transition-all ${plot.status === 'sold'      ? 'bg-yellow-400 scale-110'    : 'bg-yellow-400/20'}`} />
+                                <div className="w-px h-3 bg-white/20 mx-1" />
+                                <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setEditingPlotIndex(originalIdx); }} className="text-gray-400 hover:text-white transition-colors"><Settings size={12} /></button>
+                                <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); removePlot(originalIdx); }} className="text-red-500 hover:text-red-400 transition-colors ml-2 p-1 hover:bg-red-500/10 rounded-lg"><Trash size={16} /></button>
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
 
                         {/* Canvas hint — changes based on Quick Add state */}
                         <div className="absolute inset-0 pointer-events-none flex items-end justify-center z-10 pb-4">
@@ -1175,6 +1178,52 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                             </div>
                           ) : null}
                         </div>
+                      </div>
+                    </div>
+
+                    {/* Unpositioned Plots Tray */}
+                    <div className="bg-white/5 rounded-[2.5rem] border border-white/10 p-8 shadow-2xl mt-4">
+                      <div className="flex items-center gap-3 mb-6">
+                        <div className="bg-primary/10 p-2 rounded-lg">
+                          <Target size={16} className="text-primary" />
+                        </div>
+                        <div>
+                          <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white">Unpositioned Inventory</h3>
+                          <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-0.5">Drag these markers onto the layout map above</p>
+                        </div>
+                        <div className="ml-auto bg-white/5 px-4 py-2 rounded-xl border border-white/5">
+                           <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">{formData.plots?.filter((p: any) => !p.x || !p.y || (p.x === 0 && p.y === 0)).length} Pending</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex flex-wrap gap-3">
+                        {formData.plots?.filter((p: any) => !p.x || !p.y || (p.x === 0 && p.y === 0)).map((plot: any, idx: number) => {
+                          const originalIdx = formData.plots.indexOf(plot);
+                          return (
+                            <div 
+                              key={originalIdx}
+                              onPointerDown={(e) => handlePlotPointerDown(e, originalIdx)}
+                              className={`px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest cursor-move transition-all border group flex items-center gap-3 ${
+                                plot.status === 'sold' ? 'bg-yellow-400/10 border-yellow-400/20 text-yellow-400 hover:bg-yellow-400 hover:text-black' :
+                                plot.status === 'booked' ? 'bg-green-500/10 border-green-500/20 text-green-400 hover:bg-green-500 hover:text-white' :
+                                'bg-white/5 border-white/10 text-white hover:bg-white hover:text-black'
+                              }`}
+                            >
+                              <div className={`w-1.5 h-1.5 rounded-full ${
+                                plot.status === 'sold' ? 'bg-yellow-400' :
+                                plot.status === 'booked' ? 'bg-green-500' :
+                                'bg-white'
+                              } group-hover:scale-150 transition-transform`}></div>
+                              {plot.number || `Plot ${originalIdx + 1}`}
+                            </div>
+                          );
+                        })}
+                        {formData.plots?.filter((p: any) => !p.x || !p.y || (p.x === 0 && p.y === 0)).length === 0 && (
+                          <div className="w-full py-10 rounded-2xl border-2 border-dashed border-white/5 flex flex-col items-center justify-center gap-2 opacity-30">
+                            <Zap size={24} />
+                            <p className="text-[10px] font-black uppercase tracking-widest">All plots are surgically positioned</p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
