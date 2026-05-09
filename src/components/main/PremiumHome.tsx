@@ -300,31 +300,6 @@ const PremiumHome = ({ properties, content }: PremiumHomeProps) => {
         </div>
       </div>
 
-      {/* Final CTA */}
-      <div className="relative z-10 py-16 md:py-32 bg-primary">
-         <div className="container mx-auto px-6 text-center text-black">
-            <h2 className="text-5xl md:text-8xl font-black uppercase tracking-tighter leading-[0.9] mb-8 whitespace-pre-line">
-               {content?.ctaSectionTitle || 'Ready to claim\nyour Signature land?'}
-            </h2>
-            <p className="max-w-2xl mx-auto text-lg md:text-2xl font-bold opacity-80 mb-12">
-               {content?.ctaSectionDesc || "Join 1,000+ happy homeowners in Vizag's most prestigious communities. Limited units available for immediate registration."}
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-               <button 
-                  onClick={() => openContactDialog('book')}
-                  className="bg-black text-white px-10 py-5 rounded-full font-black uppercase tracking-widest text-sm hover:bg-white hover:text-black hover:scale-105 transition-all"
-               >
-                  {content?.ctaSectionBtn1 || 'Schedule a Site Visit'}
-               </button>
-               <button 
-                  onClick={() => openContactDialog('call')}
-                  className="px-10 py-5 rounded-full font-black text-xl hover:opacity-70 transition-all text-black"
-               >
-                  {content?.ctaSectionBtn2 || '+91 96660 80645'}
-               </button>
-            </div>
-         </div>
-      </div>
 
       {/* Footer Reveal Section */}
       <div ref={footerContainerRef} className="relative z-0 min-h-screen py-24 md:py-0 md:h-screen w-full overflow-hidden bg-[#050505] text-white flex flex-col items-center justify-center">
