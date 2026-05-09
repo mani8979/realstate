@@ -72,8 +72,11 @@ const Founder: React.FC<FounderProps> = ({ content }) => {
           >
             <div className="space-y-4">
               <div className="flex flex-col gap-2">
-                <h2 className="text-primary font-black uppercase tracking-[0.4em] text-[10px]">Leadership & Vision</h2>
+                <h2 className="text-primary font-black uppercase tracking-[0.4em] text-[10px]">Founder / Co-Founder</h2>
                 <h4 className="text-white/60 font-bold uppercase tracking-[0.2em] text-sm">{content.founderRole}</h4>
+                <p className="text-primary/80 font-bold italic text-sm mt-2">
+                  "Success in real estate begins with trust and ends with customer satisfaction."
+                </p>
               </div>
               <h3 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter leading-tight">
                 Meet Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-400 to-white">Visionary</span>
