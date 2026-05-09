@@ -347,7 +347,7 @@ const PremiumHome = ({ properties, content }: PremiumHomeProps) => {
            </div>
            
            <div className="mt-32 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-12">
-              <p className="text-[10px] text-gray-700 font-black uppercase tracking-[0.5em] text-center md:text-left">{content?.footerCopyright || '© 2026 REALS ESTATE GROUP'}</p>
+              <p className="text-[10px] text-gray-700 font-black uppercase tracking-[0.5em] text-center md:text-left">{content?.footerCopyright || '© 2026 STAR LANDS DEVELOPERS GROUP'}</p>
               <div className="flex flex-wrap justify-center gap-6 md:gap-12">
                  <a href="/interior" target="_blank" className="text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-white transition-colors">{content?.footerService1 || 'Luxury Interior'}</a>
                  <a href="/consultation" target="_blank" className="text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-white transition-colors">{content?.footerService2 || 'Exclusive Consultation'}</a>

@@ -14,8 +14,8 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const [content, setContent] = useState<any>({
-    logoTitle: "REALSTATE",
-    logoSubtitle: "Vizag Premium",
+    logoTitle: "STAR LANDS",
+    logoSubtitle: "DEVELOPERS",
     navHome: "Home",
     navProperties: "Properties",
     navAbout: "About",

@@ -8,7 +8,7 @@ const Loading = () => {
         <div className="absolute top-0 left-0 w-20 h-20 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
       </div>
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">REALS<span className="text-primary">TATE</span></h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">STAR <span className="text-primary">LANDS</span></h2>
         <p className="text-gray-500 font-medium animate-pulse">Loading your dream home...</p>
       </div>
     </div>

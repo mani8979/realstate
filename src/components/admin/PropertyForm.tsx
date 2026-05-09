@@ -244,7 +244,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
       formData.append('api_key', sigData.apiKey);
       formData.append('timestamp', sigData.timestamp.toString());
       formData.append('signature', sigData.signature);
-      formData.append('folder', 'realstate_uploads');
+      formData.append('folder', 'starlands_uploads');
 
       const clResponse = await fetch(
         `https://api.cloudinary.com/v1_1/${sigData.cloudName}/video/upload`,

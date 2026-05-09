@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     const result = await new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
-          folder: 'realstate_uploads',
+          folder: 'starlands_uploads',
           resource_type: resourceType,
           chunk_size: 6000000, // 6MB chunks for videos
         },

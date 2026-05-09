@@ -5,8 +5,8 @@ import { Save } from 'lucide-react';
 
 export default function NavigationAdmin() {
   const [content, setContent] = useState<any>({
-    logoTitle: 'REALSTATE',
-    logoSubtitle: 'Vizag Premium',
+    logoTitle: 'STAR LANDS',
+    logoSubtitle: 'DEVELOPERS',
     navHome: 'Home',
     navProperties: 'Properties',
     navAbout: 'About',

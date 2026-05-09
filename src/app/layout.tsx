@@ -26,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const content = await SiteContent.findOne().lean();
   
   return {
-    title: content?.heroTitle || "REALS | Find Your Dream Property",
+    title: content?.heroTitle || "STAR LANDS | Find Your Dream Property",
     description: content?.heroSubtitle || "Browse the best properties for sale, rent, or lease.",
     icons: {
       icon: content?.faviconImage || "/favicon.ico",

@@ -12,7 +12,7 @@ export default function FooterAdmin() {
     footerOfficeLabel: 'Main Office',
     footerAddress: 'Beach Road, MVP Colony,\nVisakhapatnam, AP',
     footerAddressSub: 'Visit us for a coffee and a chat.',
-    footerCopyright: '© 2026 REALS ESTATE GROUP',
+    footerCopyright: '© 2026 STAR LANDS DEVELOPERS GROUP',
     privacyPolicyContent: 'Privacy Policy Content goes here...',
     termsOfServiceContent: 'Terms of Service Content goes here...'
   });

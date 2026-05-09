@@ -16,7 +16,7 @@ const AboutClient = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-5xl md:text-7xl font-black text-white mb-6 uppercase tracking-tighter"
           >
-            About Our <span className="text-primary">Company</span>
+            About <span className="text-primary">Star Lands</span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}

@@ -13,7 +13,7 @@ export async function GET() {
     const signature = cloudinary.utils.api_sign_request(
       {
         timestamp: timestamp,
-        folder: 'realstate_uploads',
+        folder: 'starlands_uploads',
       },
       process.env.CLOUDINARY_API_SECRET!
     );

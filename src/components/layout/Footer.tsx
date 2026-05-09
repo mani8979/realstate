@@ -31,7 +31,7 @@ const Footer = async () => {
                     <Home size={24} />
                   </div>
                   <span className="text-2xl font-bold tracking-tight text-white">
-                    {content.logoTitle || 'REALS'}<span className="text-primary">{content.logoSubtitle || 'ESTATES'}</span>
+                    {content.logoTitle || 'STAR LANDS'}<span className="text-primary">{content.logoSubtitle || 'DEVELOPERS'}</span>
                   </span>
                 </>
               )}
@@ -97,7 +97,7 @@ const Footer = async () => {
         </div>
 
         <div className="border-t border-gray-800 pt-8 text-center text-sm text-gray-500">
-          <p>{content.globalFooterCopyright || `© ${new Date().getFullYear()} REAL ESTATE. All rights reserved.`}</p>
+          <p>{content.globalFooterCopyright || `© ${new Date().getFullYear()} STAR LANDS. All rights reserved.`}</p>
         </div>
       </div>
     </footer>
