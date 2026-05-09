@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Send, Phone, Mail, MapPin } from 'lucide-react';
+import { openContactDialog } from '../layout/ContactDialog';
 import axios from 'axios';
 
 const ContactSection = () => {
@@ -40,15 +41,18 @@ const ContactSection = () => {
             </p>
 
             <div className="space-y-8">
-              <div className="flex items-center gap-6 group">
+              <button 
+                onClick={() => openContactDialog('call')}
+                className="flex items-center gap-6 group w-full text-left"
+              >
                 <div className="w-14 h-14 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white transition-all">
                   <Phone size={24} />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500 font-medium uppercase tracking-wider">Call Us</p>
-                  <p className="text-xl font-bold text-gray-900 dark:text-white">+1 234 567 890</p>
+                  <p className="text-sm text-gray-500 font-medium uppercase tracking-wider">Call Our Leadership</p>
+                  <p className="text-xl font-bold text-gray-900 dark:text-white">Shariff / Mohammed</p>
                 </div>
-              </div>
+              </button>
               <div className="flex items-center gap-6 group">
                 <div className="w-14 h-14 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white transition-all">
                   <Mail size={24} />

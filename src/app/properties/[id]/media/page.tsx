@@ -7,6 +7,7 @@ import {
   Map as MapIcon, Download, ChevronLeft, ChevronRight,
   Maximize2, MousePointer2, LayoutGrid
 } from 'lucide-react';
+import { openContactDialog } from '@/components/layout/ContactDialog';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -456,13 +457,12 @@ const MediaPage = () => {
                                 </span>
                               </td>
                               <td className="px-6 py-5 text-right">
-                                <a 
-                                  href={`https://wa.me/${property.contactPhone || '9123456789'}?text=I'm interested in Plot ${plot.number} of ${property.title}`}
-                                  target="_blank"
+                                <button 
+                                  onClick={() => openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`)}
                                   className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-white transition-colors"
                                 >
                                   Enquire Now
-                                </a>
+                                </button>
                               </td>
                             </tr>
                           ))}

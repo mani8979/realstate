@@ -9,6 +9,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import ThemeToggle from './ThemeToggle';
 
+import { openContactDialog } from './ContactDialog';
+
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -116,24 +118,22 @@ const Header = () => {
         <div className="hidden lg:flex items-center gap-6">
           <ThemeToggle />
           <div className="h-6 w-[1px] bg-white/10" />
-          <a
-            href={content.btnCallLink || "tel:+919876543210"}
-            className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white hover:text-primary transition-colors"
+          <button
+            onClick={() => openContactDialog('call')}
+            className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white hover:text-primary transition-colors group"
           >
             <div className="p-2 bg-white/5 rounded-lg border border-white/10 group-hover:bg-primary/20">
               <Phone size={16} />
             </div>
             <span>{content.btnCall || 'Call'}</span>
-          </a>
-          <a
-            href={content.btnEnquireLink || "https://wa.me/919876543210"}
-            target="_blank"
-            rel="noopener noreferrer"
+          </button>
+          <button
+            onClick={() => openContactDialog('whatsapp')}
             className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white bg-primary px-6 py-3 rounded-xl hover:bg-primary-dark transition-all shadow-xl shadow-primary/20 transform hover:scale-105"
           >
             <MessageSquare size={16} />
             <span>{content.btnEnquire || 'Enquire'}</span>
-          </a>
+          </button>
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -179,27 +179,27 @@ const Header = () => {
               ))}
               
               <div className="grid grid-cols-1 gap-4 mt-8">
-                <a
-                  href={content.btnCallLink || "tel:+919876543210"}
+                <button
+                  onClick={() => { openContactDialog('call'); setIsMobileMenuOpen(false); }}
                   className="flex items-center justify-center gap-3 bg-white/5 border border-white/10 text-white p-5 rounded-2xl font-black uppercase tracking-widest text-xs"
                 >
                   <Phone size={20} className="text-primary" />
                   {content.btnCall || 'Call Support'}
-                </a>
-                <a
-                  href={content.btnEnquireLink || "https://wa.me/919876543210"}
+                </button>
+                <button
+                  onClick={() => { openContactDialog('whatsapp'); setIsMobileMenuOpen(false); }}
                   className="flex items-center justify-center gap-3 bg-primary text-white p-5 rounded-2xl font-black uppercase tracking-widest text-xs"
                 >
                   <MessageSquare size={20} />
                   {content.btnEnquire || 'WhatsApp Us'}
-                </a>
+                </button>
               </div>
             </nav>
           </motion.div>
         )}
       </AnimatePresence>
     </header>
-  );
+);
 };
 
 export default Header;
