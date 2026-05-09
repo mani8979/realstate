@@ -17,12 +17,19 @@ const FloatingDragon = () => {
   const { scrollYProgress } = useScroll();
 
   // Swaying logic - Must be above early returns
-  const modelX = useTransform(scrollYProgress, (pos) => {
-    const horizontalMove = Math.cos(pos * Math.PI * 3) * 30;
-    return `${horizontalMove}vw`;
-  });
+  // Path-aware movement to stay in "Empty Spaces"
+  // 0.0 - 0.2: Hero (Dragon at Far Right, avoiding Price Box)
+  // 0.2 - 0.4: Section 1 Left (Dragon stays Right)
+  // 0.4 - 0.6: Section 2 Right (Dragon moves Left)
+  // 0.6 - 0.8: Section 3 Center (Dragon stays far Left or Right)
+  const modelX = useTransform(scrollYProgress, 
+    [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1],
+    ["32vw", "32vw", "35vw", "-35vw", "35vw", "-35vw", "35vw", "0vw"]
+  );
 
-  const modelY = useTransform(scrollYProgress, [0, 1], ['0vh', '80vh']);
+  const modelY = useTransform(scrollYProgress, [0, 1], ["-12vh", "88vh"]);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1.1, 0.8]);
+  const rotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
 
   useEffect(() => {
     setMounted(true);
@@ -76,7 +83,7 @@ const FloatingDragon = () => {
   return (
     <>
       <motion.div 
-        style={{ x: modelX, y: modelY }}
+        style={{ x: modelX, y: modelY, scale, rotate }}
         className="fixed top-0 left-0 w-full h-screen pointer-events-none z-[100] flex items-center justify-center overflow-visible"
       >
         <div className="w-[150px] h-[200px] md:w-[250px] md:h-[300px] pointer-events-auto cursor-pointer" onClick={() => setShowPopup(true)}>
