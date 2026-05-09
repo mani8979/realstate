@@ -122,60 +122,60 @@ const PropertyDetails = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/20"></div>
         
         {/* Quick Media Icons - Floating Over Hero */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1.5 md:gap-6 z-30 bg-black/40 backdrop-blur-3xl px-4 md:px-10 py-3 md:py-4 rounded-full border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] w-fit max-w-[95vw] overflow-x-auto no-scrollbar">
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center justify-center gap-3.5 md:gap-6 z-30 bg-black/60 backdrop-blur-2xl px-5 md:px-10 py-3.5 md:py-5 rounded-[2.5rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-fit max-w-[95vw]">
           {property.landPhotos?.length > 0 && (
             <Link 
               href={`/properties/${property._id}/media?type=photos`}
-              className="flex flex-col items-center gap-1 group transition-all shrink-0"
+              className="flex flex-col items-center gap-1.5 group transition-all shrink-0"
             >
-              <div className="w-9 h-9 md:w-12 md:h-12 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:bg-primary group-hover:text-black transition-all">
-                <ImageIcon size={18} />
+              <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-300">
+                <ImageIcon size={20} className="md:size-24" />
               </div>
-              <span className="text-[8px] uppercase font-black tracking-widest opacity-0 group-hover:opacity-100 transition-all">Photos</span>
+              <span className="text-[7px] md:text-[9px] uppercase font-black tracking-[0.2em] text-white/40 group-hover:text-primary transition-colors">Photos</span>
             </Link>
           )}
           {property.videoUrl && (
             <Link 
               href={`/properties/${property._id}/media?type=video`}
-              className="flex flex-col items-center gap-1 group transition-all shrink-0"
+              className="flex flex-col items-center gap-1.5 group transition-all shrink-0"
             >
-              <div className="w-9 h-9 md:w-12 md:h-12 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:bg-primary group-hover:text-black transition-all">
-                <Play size={18} />
+              <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-300">
+                <Play size={20} className="md:size-24" />
               </div>
-              <span className="text-[8px] uppercase font-black tracking-widest opacity-0 group-hover:opacity-100 transition-all">Video</span>
+              <span className="text-[7px] md:text-[9px] uppercase font-black tracking-[0.2em] text-white/40 group-hover:text-primary transition-colors">Video</span>
             </Link>
           )}
           {property.landBrochure?.length > 0 && (
             <Link 
               href={`/properties/${property._id}/media?type=brochure`}
-              className="flex flex-col items-center gap-1 group transition-all shrink-0"
+              className="flex flex-col items-center gap-1.5 group transition-all shrink-0"
             >
-              <div className="w-9 h-9 md:w-12 md:h-12 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:bg-primary group-hover:text-black transition-all">
-                <Download size={18} />
+              <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-300">
+                <Download size={20} className="md:size-24" />
               </div>
-              <span className="text-[8px] uppercase font-black tracking-widest opacity-0 group-hover:opacity-100 transition-all">Brochure</span>
+              <span className="text-[7px] md:text-[9px] uppercase font-black tracking-[0.2em] text-white/40 group-hover:text-primary transition-colors">Brochure</span>
             </Link>
           )}
           {property.layoutImage && (
             <Link 
               href={`/properties/${property._id}/media?type=plot_plan`}
-              className="flex flex-col items-center gap-1 group transition-all shrink-0"
+              className="flex flex-col items-center gap-1.5 group transition-all shrink-0"
             >
-              <div className="w-9 h-9 md:w-12 md:h-12 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:bg-primary group-hover:text-black transition-all">
-                <LayoutGrid size={18} />
+              <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-300">
+                <LayoutGrid size={20} className="md:size-24" />
               </div>
-              <span className="text-[8px] uppercase font-black tracking-widest opacity-0 group-hover:opacity-100 transition-all">Plot Plan</span>
+              <span className="text-[7px] md:text-[9px] uppercase font-black tracking-[0.2em] text-white/40 group-hover:text-primary transition-colors">Plots</span>
             </Link>
           )}
           {property.mapUrl && (
             <Link 
               href={`/properties/${property._id}/media?type=map`}
-              className="flex flex-col items-center gap-1 group transition-all shrink-0"
+              className="flex flex-col items-center gap-1.5 group transition-all shrink-0"
             >
-              <div className="w-9 h-9 md:w-12 md:h-12 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:bg-primary group-hover:text-black transition-all">
-                <MapIcon size={18} />
+              <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-300">
+                <MapIcon size={20} className="md:size-24" />
               </div>
-              <span className="text-[8px] uppercase font-black tracking-widest opacity-0 group-hover:opacity-100 transition-all">Map</span>
+              <span className="text-[7px] md:text-[9px] uppercase font-black tracking-[0.2em] text-white/40 group-hover:text-primary transition-colors">Map</span>
             </Link>
           )}
         </div>
