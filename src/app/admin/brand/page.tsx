@@ -32,6 +32,8 @@ export default function BrandAdmin() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploadingHeader, setUploadingHeader] = useState(false);
+  const [uploadingFooter, setUploadingFooter] = useState(false);
+  const [uploadingFavicon, setUploadingFavicon] = useState(false);
 
   useEffect(() => {
     fetch('/api/content')
@@ -84,21 +86,21 @@ export default function BrandAdmin() {
 
       <div className="space-y-8">
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Header Configuration</h2>
+          <h2 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">Global Brand Assets</h2>
+          <p className="text-xs text-gray-500 mb-6 border-b border-gray-100 dark:border-gray-800 pb-4">Manage your logos and site icons in one place to update the entire platform.</p>
           
           <div className="grid grid-cols-1 gap-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-bold text-gray-500 mb-2">Header Logo Image</label>
                 {content.headerLogoImage ? (
-                  <div className="relative w-32 h-32 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 group">
-                    <img src={content.headerLogoImage} alt="Header Logo" className="w-full h-full object-contain" />
+                  <div className="relative w-32 h-32 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 group bg-black/5 flex items-center justify-center p-2">
+                    <img src={content.headerLogoImage} alt="Header Logo" className="max-w-full max-h-full object-contain" />
                     <button
                       type="button"
                       onClick={() => setContent({ ...content, headerLogoImage: '' })}
                       className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                     >
-                      <Save size={14} className="hidden" />
                       <span className="text-xs font-bold">X</span>
                     </button>
                   </div>
@@ -137,6 +139,109 @@ export default function BrandAdmin() {
                     )}
                   </div>
                 )}
+                <p className="text-[10px] text-gray-500 mt-2 italic">* This logo appears in the top navigation across all pages.</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Footer Logo Image</label>
+                {content.footerLogoImage ? (
+                  <div className="relative w-32 h-32 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 group bg-black/5 flex items-center justify-center p-2">
+                    <img src={content.footerLogoImage} alt="Footer Logo" className="max-w-full max-h-full object-contain" />
+                    <button
+                      type="button"
+                      onClick={() => setContent({ ...content, footerLogoImage: '' })}
+                      className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <span className="text-xs font-bold">X</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      disabled={uploadingFooter}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setUploadingFooter(true);
+                        try {
+                          const formData = new FormData();
+                          formData.append('file', file);
+                          const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                          if (res.ok) {
+                            const data = await res.json();
+                            setContent({ ...content, footerLogoImage: data.url });
+                          } else {
+                            alert('Upload failed. Please check your Cloudinary settings.');
+                          }
+                        } catch (err) {
+                          alert('Upload error: ' + (err as any).message);
+                        } finally {
+                          setUploadingFooter(false);
+                        }
+                      }}
+                      className="w-full p-4 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
+                    />
+                    {uploadingFooter && (
+                      <div className="absolute inset-0 bg-black/20 flex items-center justify-center rounded-xl">
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                      </div>
+                    )}
+                  </div>
+                )}
+                <p className="text-[10px] text-gray-500 mt-2 italic">* This logo appears in the footer across all pages.</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Title Logo (Favicon)</label>
+                {content.faviconImage ? (
+                  <div className="relative w-32 h-32 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 group bg-black/5 flex items-center justify-center p-2">
+                    <img src={content.faviconImage} alt="Favicon" className="w-16 h-16 object-contain" />
+                    <button
+                      type="button"
+                      onClick={() => setContent({ ...content, faviconImage: '' })}
+                      className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <span className="text-xs font-bold">X</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      disabled={uploadingFavicon}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setUploadingFavicon(true);
+                        try {
+                          const formData = new FormData();
+                          formData.append('file', file);
+                          const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                          if (res.ok) {
+                            const data = await res.json();
+                            setContent({ ...content, faviconImage: data.url });
+                          } else {
+                            alert('Upload failed. Please check your Cloudinary settings.');
+                          }
+                        } catch (err) {
+                          alert('Upload error: ' + (err as any).message);
+                        } finally {
+                          setUploadingFavicon(false);
+                        }
+                      }}
+                      className="w-full p-4 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
+                    />
+                    {uploadingFavicon && (
+                      <div className="absolute inset-0 bg-black/20 flex items-center justify-center rounded-xl">
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                      </div>
+                    )}
+                  </div>
+                )}
+                <p className="text-[10px] text-gray-500 mt-2 italic">* This is the icon that appears in the browser tab.</p>
               </div>
               <div>
                 <label className="block text-sm font-bold text-gray-500 mb-2">Top Badge Text</label>

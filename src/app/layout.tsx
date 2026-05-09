@@ -18,11 +18,21 @@ const outfit = Outfit({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "REALS | Find Your Dream Property",
-  description: "Browse the best properties for sale, rent, or lease. Modern real estate solutions for everyone.",
-  keywords: ["real estate", "property", "buy house", "rent apartment", "commercial property"],
-};
+import dbConnect from "@/lib/db";
+import SiteContent from "@/lib/models/SiteContent";
+
+export async function generateMetadata(): Promise<Metadata> {
+  await dbConnect();
+  const content = await SiteContent.findOne().lean();
+  
+  return {
+    title: content?.heroTitle || "REALS | Find Your Dream Property",
+    description: content?.heroSubtitle || "Browse the best properties for sale, rent, or lease.",
+    icons: {
+      icon: content?.faviconImage || "/favicon.ico",
+    },
+  };
+}
 
 export default function RootLayout({
   children,

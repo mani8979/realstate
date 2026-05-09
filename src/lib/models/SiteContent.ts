@@ -78,6 +78,7 @@ export interface ISiteContent extends Document {
   globalThreeDModel: string;
   globalPopupTitle: string;
   globalPopupContent: string;
+  faviconImage: string;
 }
 
 const SiteContentSchema = new Schema<ISiteContent>(
@@ -158,7 +159,8 @@ const SiteContentSchema = new Schema<ISiteContent>(
     footerLogoImage: { type: String, default: "/branding/footer-logo.png" },
     globalThreeDModel: { type: String, default: "/models/untitled.glb" },
     globalPopupTitle: { type: String, default: "Cultivation Model" },
-    globalPopupContent: { type: String, default: "Dragon fruit cultivation is a high-demand and profitable farming option with long-term benefits.\n\n*Plantation Details (Per 100 Sq. Yards):*\n\n* 40 dragon fruit plants\n* 4 plants per pole\n* 10 poles in each 100 sq. yards\n\n*Plantation Period:*\n\n* Ideal season: May to November (approx.)\n\n*Yield Duration:*\n\n* Dragon fruit plants can yield fruits for up to 30 years\n\n*Profit Sharing (from the yield of dragon fruits crop):*\n\n* 50% to the company\n* 50% to the client\n\nThis model ensures:\n\n* Land ownership\n* Continuous agricultural income\n* Long-term asset appreciation\n\nAdditionally, the plantation can be removed anytime if the client wishes to convert the land for residential or other purposes." }
+    globalPopupContent: { type: String, default: "Dragon fruit cultivation is a high-demand and profitable farming option with long-term benefits.\n\n*Plantation Details (Per 100 Sq. Yards):*\n\n* 40 dragon fruit plants\n* 4 plants per pole\n* 10 poles in each 100 sq. yards\n\n*Plantation Period:*\n\n* Ideal season: May to November (approx.)\n\n*Yield Duration:*\n\n* Dragon fruit plants can yield fruits for up to 30 years\n\n*Profit Sharing (from the yield of dragon fruits crop):*\n\n* 50% to the company\n* 50% to the client\n\nThis model ensures:\n\n* Land ownership\n* Continuous agricultural income\n* Long-term asset appreciation\n\nAdditionally, the plantation can be removed anytime if the client wishes to convert the land for residential or other purposes." },
+    faviconImage: { type: String, default: "/favicon.ico" }
   },
   { timestamps: true }
 );
