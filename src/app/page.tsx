@@ -8,6 +8,8 @@ import FeaturedProperties from '@/components/main/FeaturedProperties';
 import CTA from '@/components/main/CTA';
 import BrandValues from '@/components/main/BrandValues';
 import LocationSection from '@/components/main/LocationSection';
+import Founder from '@/components/main/Founder';
+import MotivationBanner from '@/components/main/MotivationBanner';
 
 export const revalidate = 0; // Disable static caching for the home page
 
@@ -45,6 +47,19 @@ export default async function Home() {
   return (
     <div className="flex flex-col bg-black">
       <Hero />
+      
+      <MotivationBanner content={serializedContent} />
+
+      <Founder 
+        name={serializedContent.mainFounderName}
+        role={serializedContent.mainFounderRole}
+        bio={serializedContent.mainFounderBio}
+        vision={serializedContent.mainFounderVision}
+        exp={serializedContent.mainFounderExp}
+        image={serializedContent.mainFounderImage}
+        isMain={true}
+        experienceYears="18+"
+      />
       
       <div className="relative z-10">
         <FeaturedProperties properties={serializedLands.slice(0, 3)} />

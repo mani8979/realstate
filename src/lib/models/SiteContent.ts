@@ -87,10 +87,22 @@ export interface ISiteContent extends Document {
   founderVision: string;
   founderExp: string;
   founderImage: string;
-  officeAddress: string;
-  officeDescription: string;
   officeMapUrl: string;
   officeMapEmbedUrl: string;
+  // Founder (Main)
+  mainFounderName: string;
+  mainFounderRole: string;
+  mainFounderBio: string;
+  mainFounderVision: string;
+  mainFounderExp: string;
+  mainFounderImage: string;
+  // Co-Founder
+  cofounderName: string;
+  cofounderRole: string;
+  cofounderBio: string;
+  cofounderVision: string;
+  cofounderExp: string;
+  cofounderImage: string;
 }
 
 const SiteContentSchema = new Schema<ISiteContent>(
@@ -173,14 +185,23 @@ const SiteContentSchema = new Schema<ISiteContent>(
     globalPopupTitle: { type: String, default: "Cultivation Model" },
     globalPopupContent: { type: String, default: "Dragon fruit cultivation is a high-demand and profitable farming option with long-term benefits.\n\n*Plantation Details (Per 100 Sq. Yards):*\n\n* 40 dragon fruit plants\n* 4 plants per pole\n* 10 poles in each 100 sq. yards\n\n*Plantation Period:*\n\n* Ideal season: May to November (approx.)\n\n*Yield Duration:*\n\n* Dragon fruit plants can yield fruits for up to 30 years\n\n*Profit Sharing (from the yield of dragon fruits crop):*\n\n* 50% to the company\n* 50% to the client\n\nThis model ensures:\n\n* Land ownership\n* Continuous agricultural income\n* Long-term asset appreciation\n\nAdditionally, the plantation can be removed anytime if the client wishes to convert the land for residential or other purposes." },
     faviconImage: { type: String, default: "/favicon.ico" },
-    motivationLine: { type: String, default: "Success in real estate begins with trust and ends with customer satisfaction." },
-    motivationBgImage: { type: String, default: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2000" },
-    founderName: { type: String, default: "Muhammad Yaseen" },
-    founderRole: { type: String, default: "Co-Founder & Director" },
-    founderBio: { type: String, default: "Muhammad Yaseen is a dynamic real estate professional with 1.5 years of industry experience and a proven track record of achieving exceptional sales in a short span of time. Known for his strong communication skills and customer-first approach, he quickly builds trust and long-term relationships with clients. His expertise spans VMRDA-approved layouts, farm lands, and residential properties, helping customers make confident and profitable investment decisions." },
-    founderVision: { type: String, default: "Our vision is to provide trustworthy, legally verified, and high-growth real estate opportunities while building lasting relationships through transparency and commitment." },
-    founderExp: { type: String, default: "1.5 Years of Experience in Real Estate\nWorked as Director in Various Real Estate Ventures\nExpertise in VMRDA, Farm Lands & Residential Properties\nAchieved High Property Sales in a Short Time\nStrong Customer Relationship & Communication Skills\nSkilled in Client Handling and Property Consultation" },
-    founderImage: { type: String, default: "/founder.png" },
+    officeMapEmbedUrl: { type: String, default: "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3799.3510526367375!2d83.2109083!3d17.6820589!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTfCsDQwJzU1LjQiTiA4M8KwMTInMzkuMyJF!5e0!3m2!1sen!2sin!4v1715310000000!5m2!1sen!2sin" },
+    // Main Founder
+    mainFounderName: { type: String, default: "Mahaboob shariff" },
+    mainFounderRole: { type: String, default: "Founder, Managing Director" },
+    mainFounderBio: { type: String, default: "With over 18 years of experience in the real estate industry since 2007, he has built strong expertise across multiple sectors including plots, flats, farm lands, panchayat layouts, apartments, VUDA, and VMRDA projects. He previously worked as a General Manager at Sri Sai Infra for 11 years, where he played a key role in marketing leadership and customer development. Known for his deep market knowledge and professional approach, he has earned the trust and respect of both customers and industry professionals." },
+    mainFounderVision: { type: String, default: "Our vision is to provide trusted, legally verified, and value-driven real estate opportunities while building long-term relationships through transparency and commitment." },
+    mainFounderExp: { type: String, default: "18+ Years of Experience in Real Estate\nWorked as General Manager at Sri Sai Infra for 11 Years\nExpertise in Plots, Flats, Farm Lands & Apartments\nSpecialized Knowledge in Panchayat Layouts, VUDA & VMRDA Projects\nStrong Leadership in Real Estate Marketing\nExcellent Customer Relationship & Property Consultation Skills" },
+    mainFounderImage: { type: String, default: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800" },
+    // Co-Founder
+    cofounderName: { type: String, default: "Muhammad Yaseen" },
+    cofounderRole: { type: String, default: "Co-Founder & Director" },
+    cofounderBio: { type: String, default: "Muhammad Yaseen is a dynamic real estate professional with 1.5 years of industry experience and a proven track record of achieving exceptional sales in a short span of time. Known for his strong communication skills and customer-first approach, he quickly builds trust and long-term relationships with clients. His expertise spans VMRDA-approved layouts, farm lands, and residential properties, helping customers make confident and profitable investment decisions." },
+    cofounderVision: { type: String, default: "Our vision is to provide trustworthy, legally verified, and high-growth real estate opportunities while building lasting relationships through transparency and commitment." },
+    cofounderExp: { type: String, default: "1.5 Years of Experience in Real Estate\nWorked as Director in Various Real Estate Ventures\nExpertise in VMRDA, Farm Lands & Residential Properties\nAchieved High Property Sales in a Short Time\nStrong Customer Relationship & Communication Skills\nSkilled in Client Handling and Property Consultation" },
+    cofounderImage: { type: String, default: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=800" },
+    motivationLine: { type: String, default: "Real estate is built not only on land, but on trust, relationships, and long-term value." }
+  },
     officeAddress: { type: String, default: "Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026." },
     officeDescription: { type: String, default: "Look bro, this is the building. Shop No. 202 is located on the second floor, above Tumble Dry on the first floor." },
     officeMapUrl: { type: String, default: "https://maps.app.goo.gl/dvqvbugWe8XHJAnt7?g_st=aw" },

@@ -34,7 +34,8 @@ export default function BrandAdmin() {
   const [uploadingHeader, setUploadingHeader] = useState(false);
   const [uploadingFooter, setUploadingFooter] = useState(false);
   const [uploadingFavicon, setUploadingFavicon] = useState(false);
-  const [uploadingFounder, setUploadingFounder] = useState(false);
+  const [uploadingMainFounder, setUploadingMainFounder] = useState(false);
+  const [uploadingCoFounder, setUploadingCoFounder] = useState(false);
   const [uploadingMotivation, setUploadingMotivation] = useState(false);
 
   useEffect(() => {
@@ -341,18 +342,19 @@ export default function BrandAdmin() {
           </div>
         </div>
 
+        {/* Main Founder Section */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Founder Profile (Muhammad Yaseen)</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Main Founder Profile (Mahaboob shariff)</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-bold text-gray-500 mb-2">Founder Photo</label>
-                {content.founderImage ? (
+                {content.mainFounderImage ? (
                   <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 group">
-                    <img src={content.founderImage} alt="Founder" className="w-full h-full object-cover" />
+                    <img src={content.mainFounderImage} alt="Main Founder" className="w-full h-full object-cover" />
                     <button
                       type="button"
-                      onClick={() => setContent({ ...content, founderImage: '' })}
+                      onClick={() => setContent({ ...content, mainFounderImage: '' })}
                       className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"
                     >
                       <span className="text-xs font-bold">Remove Image</span>
@@ -363,24 +365,24 @@ export default function BrandAdmin() {
                     <input
                       type="file"
                       accept="image/*"
-                      disabled={uploadingFounder}
+                      disabled={uploadingMainFounder}
                       onChange={async (e) => {
                         const file = e.target.files?.[0];
                         if (!file) return;
-                        setUploadingFounder(true);
+                        setUploadingMainFounder(true);
                         try {
                           const formData = new FormData();
                           formData.append('file', file);
                           const res = await fetch('/api/upload', { method: 'POST', body: formData });
                           if (res.ok) {
                             const data = await res.json();
-                            setContent({ ...content, founderImage: data.url });
+                            setContent({ ...content, mainFounderImage: data.url });
                           }
-                        } catch (err) {} finally { setUploadingFounder(false); }
+                        } catch (err) {} finally { setUploadingMainFounder(false); }
                       }}
                       className="w-full p-10 rounded-2xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
                     />
-                    {uploadingFounder && <div className="absolute inset-0 bg-black/20 flex items-center justify-center rounded-2xl">Loading...</div>}
+                    {uploadingMainFounder && <div className="absolute inset-0 bg-black/20 flex items-center justify-center rounded-2xl">Loading...</div>}
                   </div>
                 )}
               </div>
@@ -389,23 +391,94 @@ export default function BrandAdmin() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-bold text-gray-500 mb-2">Full Name</label>
-                <input name="founderName" value={content.founderName || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+                <input name="mainFounderName" value={content.mainFounderName || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
               </div>
               <div>
                 <label className="block text-sm font-bold text-gray-500 mb-2">Designation / Role</label>
-                <input name="founderRole" value={content.founderRole || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+                <input name="mainFounderRole" value={content.mainFounderRole || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
               </div>
               <div>
                 <label className="block text-sm font-bold text-gray-500 mb-2">Biography (Bio)</label>
-                <textarea name="founderBio" rows={4} value={content.founderBio || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+                <textarea name="mainFounderBio" rows={4} value={content.mainFounderBio || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
               </div>
               <div>
-                <label className="block text-sm font-bold text-gray-500 mb-2">Mission & Vision Statement</label>
-                <textarea name="founderVision" rows={3} value={content.founderVision || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+                <label className="block text-sm font-bold text-gray-500 mb-2">Founder Vision Statement</label>
+                <textarea name="mainFounderVision" rows={3} value={content.mainFounderVision || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
               </div>
               <div>
                 <label className="block text-sm font-bold text-gray-500 mb-2">Experience & Expertise Points (One per line)</label>
-                <textarea name="founderExp" rows={5} value={content.founderExp || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-[10px] font-mono" />
+                <textarea name="mainFounderExp" rows={5} value={content.mainFounderExp || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-[10px] font-mono" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Co-Founder Section */}
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Co-Founder Profile (Muhammad Yaseen)</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Co-Founder Photo</label>
+                {content.cofounderImage ? (
+                  <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 group">
+                    <img src={content.cofounderImage} alt="Co-Founder" className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => setContent({ ...content, cofounderImage: '' })}
+                      className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <span className="text-xs font-bold">Remove Image</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      disabled={uploadingCoFounder}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setUploadingCoFounder(true);
+                        try {
+                          const formData = new FormData();
+                          formData.append('file', file);
+                          const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                          if (res.ok) {
+                            const data = await res.json();
+                            setContent({ ...content, cofounderImage: data.url });
+                          }
+                        } catch (err) {} finally { setUploadingCoFounder(false); }
+                      }}
+                      className="w-full p-10 rounded-2xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
+                    />
+                    {uploadingCoFounder && <div className="absolute inset-0 bg-black/20 flex items-center justify-center rounded-2xl">Loading...</div>}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Full Name</label>
+                <input name="cofounderName" value={content.cofounderName || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Designation / Role</label>
+                <input name="cofounderRole" value={content.cofounderRole || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Biography (Bio)</label>
+                <textarea name="cofounderBio" rows={4} value={content.cofounderBio || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Mission & Vision Statement</label>
+                <textarea name="cofounderVision" rows={3} value={content.cofounderVision || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Experience & Expertise Points (One per line)</label>
+                <textarea name="cofounderExp" rows={5} value={content.cofounderExp || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-[10px] font-mono" />
               </div>
             </div>
           </div>
