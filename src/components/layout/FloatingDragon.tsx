@@ -27,16 +27,23 @@ const FloatingDragon = () => {
 
   // Path-aware movement to stay in "Empty Spaces"
   // On mobile, we start much lower (after title/buttons) to avoid overlap
+  // Path-aware movement: Dynamic zig-zag to explore Left, Middle, and Right "Empty Spaces"
   const modelX = useTransform(scrollYProgress, 
     [0, 0.2, 0.4, 0.6, 0.8, 1],
     isMobile 
-      ? ["38vw", "38vw", "38vw", "38vw", "10vw", "0vw"]
-      : ["44vw", "46vw", "45vw", "47vw", "40vw", "0vw"]
+      ? ["35vw", "-35vw", "0vw", "35vw", "-10vw", "0vw"] // Mobile: Swing wide
+      : ["42vw", "-42vw", "0vw", "38vw", "-35vw", "10vw"] // Desktop: Full screen traverse
   );
 
-  const modelY = useTransform(scrollYProgress, [0, 1], [isMobile ? "30vh" : "15vh", "82vh"]);
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [isMobile ? 0.7 : 1.1, 1.6, 1.6, 1]);
-  const rotate = useTransform(scrollYProgress, [0, 1], [0, 720]);
+  const modelY = useTransform(scrollYProgress, 
+    [0, 0.25, 0.5, 0.75, 1], 
+    isMobile 
+      ? ["35vh", "15vh", "50vh", "75vh", "85vh"] 
+      : ["15vh", "45vh", "20vh", "65vh", "80vh"]
+  );
+
+  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [isMobile ? 0.6 : 0.9, 1.4, 1.4, 0.8]);
+  const rotate = useTransform(scrollYProgress, [0, 1], [0, 1080]);
 
   useEffect(() => {
     setMounted(true);
@@ -91,7 +98,7 @@ const FloatingDragon = () => {
     <>
       <motion.div 
         style={{ x: modelX, y: modelY, scale, rotate }}
-        className="fixed top-0 left-0 w-full h-screen pointer-events-none z-[100] flex items-center justify-center overflow-visible"
+        className="fixed top-0 left-0 w-full h-screen pointer-events-none z-5 flex items-center justify-center overflow-visible"
       >
         <div className="w-[200px] h-[260px] md:w-[300px] md:h-[380px] pointer-events-auto cursor-pointer" onClick={() => setShowPopup(true)}>
           <ModelViewer
