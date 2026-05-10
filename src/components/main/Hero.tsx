@@ -56,26 +56,26 @@ const Hero = ({ content: propContent }: { content?: any }) => {
         </motion.div>
       </div>
 
-      <div className="container mx-auto px-4 relative z-20 pt-20">
-        <div className="max-w-4xl">
+      <div className="container mx-auto px-6 relative z-20 pt-20 md:pt-32">
+        <div className="max-w-4xl mx-auto text-center md:text-left">
           <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 backdrop-blur-md text-primary border border-primary/30 mb-6"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 backdrop-blur-md text-primary border border-primary/30 mb-8"
           >
-            <Sparkles size={16} className="animate-pulse" />
-            <span className="text-xs font-bold uppercase tracking-[0.2em]">{content.heroBadgeText}</span>
+            <Sparkles size={14} className="animate-pulse" />
+            <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.3em]">{content.heroBadgeText || 'Premium Living'}</span>
           </motion.div>
           
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-5xl md:text-8xl font-black text-white mb-6 leading-tight tracking-tighter"
+            className="text-4xl md:text-8xl font-black text-white mb-8 leading-[1.1] md:leading-tight tracking-tighter uppercase"
           >
             {(content.heroTitle || 'Find Your Perfect Property').split(' ').map((word: string, i: number) => (
-              <span key={i} className={word.toLowerCase() === 'perfect' ? "text-transparent bg-clip-text bg-gradient-to-r from-primary via-yellow-500 to-primary animate-gradient-x" : ""}>
+              <span key={i} className={word.toLowerCase() === 'perfect' || word.toLowerCase() === 'signature' ? "text-transparent bg-clip-text bg-gradient-to-r from-primary via-yellow-500 to-primary animate-gradient-x" : ""}>
                 {word}{' '}
               </span>
             ))}
@@ -85,42 +85,41 @@ const Hero = ({ content: propContent }: { content?: any }) => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-lg md:text-2xl text-gray-300 mb-10 max-w-2xl leading-relaxed font-light"
+            className="text-base md:text-2xl text-gray-400 mb-12 max-w-2xl mx-auto md:mx-0 leading-relaxed font-medium"
           >
-            {content.heroSubtitle}
+            {content.heroSubtitle || 'Discover exclusive lands and luxury developments tailored for your vision.'}
           </motion.p>
 
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-wrap gap-4 mb-16"
+            className="flex flex-col sm:flex-row flex-wrap items-center justify-center md:justify-start gap-4 md:gap-6"
           >
             <button
               onClick={() => router.push(content.heroCta1Link || '/properties')}
-              className="bg-primary hover:bg-primary/90 text-white font-bold px-8 py-4 rounded-full transition-all flex items-center gap-2 group shadow-2xl shadow-primary/40"
+              className="w-full sm:w-auto bg-primary hover:bg-white text-white hover:text-black font-black px-10 py-5 rounded-2xl transition-all flex items-center justify-center gap-3 group shadow-2xl shadow-primary/30 uppercase tracking-widest text-xs"
             >
-              <span>{content.heroCtaText || 'Explore Properties'}</span>
+              <span>{content.heroCtaText || 'Explore Portfolio'}</span>
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </button>
             <button
               onClick={() => openContactDialog('book')}
-              className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/20 font-bold px-8 py-4 rounded-full transition-all flex items-center gap-2 group"
+              className="w-full sm:w-auto bg-white/5 hover:bg-white/10 backdrop-blur-md text-white border border-white/10 font-black px-10 py-5 rounded-2xl transition-all flex items-center justify-center gap-3 group uppercase tracking-widest text-xs"
             >
-              <span>{content.heroCta2Text || 'Book Site Visit'}</span>
+              <span>{content.heroCta2Text || 'Site Visit'}</span>
               <Calendar size={20} className="group-hover:scale-110 transition-transform text-primary" />
             </button>
             <a
-              href={content.heroCta3Link || 'https://chat.whatsapp.com/123456'}
+              href={content.heroCta3Link || '#'}
               target="_blank"
-              className="bg-primary/20 hover:bg-primary/30 backdrop-blur-md text-white border border-primary/40 font-bold px-8 py-4 rounded-full transition-all flex items-center gap-2 group"
+              className="w-full sm:w-auto bg-primary/10 hover:bg-primary/20 backdrop-blur-md text-white border border-primary/20 font-black px-10 py-5 rounded-2xl transition-all flex items-center justify-center gap-3 group uppercase tracking-widest text-xs"
             >
-              <span>{content.heroCta3Text || 'Latest Updates'}</span>
+              <span>{content.heroCta3Text || 'Updates'}</span>
               <Sparkles size={20} className="group-hover:rotate-12 transition-transform text-primary animate-pulse" />
             </a>
           </motion.div>
         </div>
-
       </div>
 
       {/* Decorative Elements */}

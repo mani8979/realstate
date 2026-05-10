@@ -15,89 +15,110 @@ const Footer = async () => {
   }
 
   return (
-    <footer className="bg-gray-900 text-gray-300 pt-16 pb-8">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-          {/* Brand */}
-          <div className="space-y-6">
-            <Link href="/" className="flex items-center gap-2">
+    <footer className="bg-zinc-950 text-gray-300 pt-24 pb-12 border-t border-white/5 relative overflow-hidden">
+      {/* Decorative Glow */}
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] translate-y-1/2 translate-x-1/2 pointer-events-none" />
+
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
+          {/* Brand & Mission */}
+          <div className="space-y-8 text-center md:text-left flex flex-col items-center md:items-start">
+            <Link href="/" className="flex items-center gap-3 group">
               {content.footerLogoImage ? (
-                <div className="relative h-12 w-32">
+                <div className="relative h-14 w-40">
                   <img src={content.footerLogoImage} alt={content.logoTitle} className="h-full w-full object-contain" />
                 </div>
               ) : (
                 <>
-                  <div className="bg-primary p-2 rounded-lg text-white">
-                    <Home size={24} />
+                  <div className="bg-primary p-3 rounded-2xl text-white group-hover:rotate-[15deg] transition-all shadow-xl shadow-primary/20">
+                    <Home size={28} />
                   </div>
-                  <span className="text-2xl font-bold tracking-tight text-white">
-                    {content.logoTitle || 'STAR LANDS'}<span className="text-primary">{content.logoSubtitle || 'DEVELOPERS'}</span>
-                  </span>
+                  <div className="flex flex-col leading-none">
+                    <span className="text-2xl font-black tracking-tighter text-white">
+                      {content.logoTitle || 'STAR LANDS'}
+                    </span>
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
+                      {content.logoSubtitle || 'DEVELOPERS'}
+                    </span>
+                  </div>
                 </>
               )}
             </Link>
-            <p className="text-gray-400 leading-relaxed">
-              {content.globalFooterDesc || 'Find your dream property with our expert real estate services. We specialize in buying, selling, and renting premium properties.'}
+            <p className="text-gray-400 leading-relaxed max-w-xs text-sm md:text-base font-medium">
+              {content.globalFooterDesc || 'Crafting prestigious living spaces and premium investment opportunities in Vizag since 2006.'}
             </p>
             <div className="flex items-center gap-4">
-              <a href="#" className="p-2 bg-gray-800 rounded-full hover:bg-primary hover:text-white transition-all">
-                <Globe size={20} />
-              </a>
-              <a href="#" className="p-2 bg-gray-800 rounded-full hover:bg-primary hover:text-white transition-all">
-                <Share2 size={20} />
-              </a>
-              <a href="#" className="p-2 bg-gray-800 rounded-full hover:bg-primary hover:text-white transition-all">
-                <MessageSquare size={20} />
-              </a>
-              <a href="#" className="p-2 bg-gray-800 rounded-full hover:bg-primary hover:text-white transition-all">
-                <Info size={20} />
-              </a>
+              {[Globe, Share2, MessageSquare, Info].map((Icon, i) => (
+                <a key={i} href="#" className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center hover:bg-primary hover:text-white transition-all group">
+                  <Icon size={20} className="group-hover:scale-110 transition-transform" />
+                </a>
+              ))}
             </div>
           </div>
 
-          <div>
-            <h3 className="text-white font-bold text-lg mb-6">Quick Links</h3>
-            <ul className="space-y-4">
-              <li><Link href="/" className="hover:text-primary transition-colors">{content.navHome || 'Home'}</Link></li>
-              <li><Link href="/properties" className="hover:text-primary transition-colors">{content.navProperties || 'Properties'}</Link></li>
-              <li><Link href="/about" className="hover:text-primary transition-colors">{content.navAbout || 'About Us'}</Link></li>
-              <li><Link href="/contact" className="hover:text-primary transition-colors">{content.navContact || 'Contact'}</Link></li>
-              <li><Link href="/admin" className="hover:text-primary transition-colors">Admin Login</Link></li>
+          {/* Quick Links */}
+          <div className="text-center md:text-left">
+            <h3 className="text-white font-black uppercase tracking-widest text-xs mb-8">Navigation</h3>
+            <ul className="space-y-5">
+              {[
+                { name: content.navHome || 'Home', href: '/' },
+                { name: content.navProperties || 'Properties', href: '/properties' },
+                { name: content.navAbout || 'About Us', href: '/about' },
+                { name: content.navContact || 'Contact', href: '/contact' },
+                { name: content.navJoin || 'Join Careers', href: '/join' },
+              ].map((link) => (
+                <li key={link.name}>
+                  <Link href={link.href} className="text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">{link.name}</Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Categories */}
-          <div>
-            <h3 className="text-white font-bold text-lg mb-6">Property Types</h3>
-            <ul className="space-y-4">
-              <li><Link href="/properties?type=House" className="hover:text-primary transition-colors">Houses</Link></li>
-              <li><Link href="/properties?type=Apartment" className="hover:text-primary transition-colors">Apartments</Link></li>
-              <li><Link href="/properties?type=Land" className="hover:text-primary transition-colors">Lands</Link></li>
-              <li><Link href="/properties?type=Commercial" className="hover:text-primary transition-colors">Commercial</Link></li>
+          {/* Collections */}
+          <div className="text-center md:text-left">
+            <h3 className="text-white font-black uppercase tracking-widest text-xs mb-8">Portfolios</h3>
+            <ul className="space-y-5">
+              {['Premium Lands', 'Luxury Houses', 'Modern Apartments', 'Commercial Hubs'].map((type) => (
+                <li key={type}>
+                  <Link href={`/properties?type=${type.split(' ')[1]}`} className="text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">{type}</Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          <div>
-            <h3 className="text-white font-bold text-lg mb-6">Contact Us</h3>
-            <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <MapPin className="text-primary mt-1 flex-shrink-0" size={20} />
-                <span>{content.contactAddress || 'Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026.'}</span>
+          {/* Contact Details */}
+          <div className="text-center md:text-left">
+            <h3 className="text-white font-black uppercase tracking-widest text-xs mb-8">Get In Touch</h3>
+            <ul className="space-y-6">
+              <li className="flex flex-col md:flex-row items-center md:items-start gap-4">
+                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary shrink-0">
+                  <MapPin size={18} />
+                </div>
+                <span className="text-sm text-gray-400 leading-relaxed font-medium">
+                  {content.contactAddress || 'Flat No. 202, Opposite D-Mart, Srinagar, Gajuwaka, Vizag – 530026.'}
+                </span>
               </li>
-              <li className="flex items-center gap-3">
-                <Phone className="text-primary flex-shrink-0" size={20} />
-                <span>{content.contactPhone || '+1 234 567 890'}</span>
+              <li className="flex flex-col md:flex-row items-center md:items-start gap-4">
+                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary shrink-0">
+                  <Phone size={18} />
+                </div>
+                <span className="text-sm text-gray-400 font-bold">{content.contactPhone || '91 96660 80645'}</span>
               </li>
-              <li className="flex items-center gap-3">
-                <Mail className="text-primary flex-shrink-0" size={20} />
-                <span>{content.contactEmail || 'info@realestate.com'}</span>
+              <li className="flex flex-col md:flex-row items-center md:items-start gap-4">
+                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary shrink-0">
+                  <Mail size={18} />
+                </div>
+                <span className="text-sm text-gray-400 font-bold">{content.contactEmail || 'info@starlands.in'}</span>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-gray-800 pt-8 text-center text-sm text-gray-500">
-          <p>{content.globalFooterCopyright || `© ${new Date().getFullYear()} STAR LANDS. All rights reserved.`}</p>
+        {/* Bottom Copyright */}
+        <div className="border-t border-white/5 pt-12 text-center">
+          <p className="text-[10px] font-black text-gray-600 uppercase tracking-[0.5em]">
+            {content.globalFooterCopyright || `© ${new Date().getFullYear()} STAR LANDS DEVELOPERS. Crafted with excellence.`}
+          </p>
         </div>
       </div>
     </footer>

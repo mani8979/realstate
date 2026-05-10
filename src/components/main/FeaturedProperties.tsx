@@ -52,18 +52,18 @@ const FeaturedProperties = ({ properties = [], content: propContent }: { propert
 
       <div className="container mx-auto px-6 relative z-10">
         {/* Cinematic Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-20 md:mb-32 gap-8 md:gap-12">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-16 md:mb-32 gap-8 md:gap-12 text-center md:text-left">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             className="max-w-4xl"
           >
-            <div className="flex items-center gap-4 text-primary font-black uppercase tracking-[0.5em] text-[10px] mb-6 md:mb-8">
-              <div className="w-12 md:w-16 h-[2px] bg-primary" />
+            <div className="flex items-center justify-center md:justify-start gap-4 text-primary font-black uppercase tracking-[0.3em] md:tracking-[0.5em] text-[8px] md:text-[10px] mb-6 md:mb-8">
+              <div className="w-8 md:w-16 h-[2px] bg-primary" />
               <span>{content.featuredBadgeText}</span>
             </div>
-            <h3 className="text-5xl md:text-7xl lg:text-[10rem] font-black text-white leading-[0.9] md:leading-[0.8] tracking-tighter uppercase mb-0">
+            <h3 className="text-4xl md:text-7xl lg:text-[10rem] font-black text-white leading-[1.1] md:leading-[0.8] tracking-tighter uppercase mb-0">
               {content.featuredTitle} <br /> 
               <span className="text-primary italic font-light lowercase">
                 {content.featuredSubtitle}
@@ -78,14 +78,14 @@ const FeaturedProperties = ({ properties = [], content: propContent }: { propert
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex flex-col gap-6 md:gap-10 lg:text-right lg:items-end"
+            className="flex flex-col gap-6 md:gap-10 lg:text-right lg:items-end items-center md:items-start"
           >
-            <p className="text-gray-400 max-w-sm text-lg md:text-xl font-medium leading-relaxed">
+            <p className="text-gray-400 max-w-sm text-base md:text-xl font-medium leading-relaxed">
               Exquisite properties defined by architectural brilliance and prime positioning.
             </p>
             <Link
               href="/properties"
-              className="group w-fit flex items-center gap-6 bg-primary text-white px-8 md:px-12 py-5 md:py-7 rounded-2xl font-black uppercase tracking-[0.3em] text-[10px] md:text-xs hover:bg-white hover:text-black transition-all shadow-[0_30px_60px_rgba(212,175,55,0.3)]"
+              className="group w-fit flex items-center gap-6 bg-primary text-white px-8 md:px-12 py-4 md:py-7 rounded-2xl font-black uppercase tracking-[0.3em] text-[10px] md:text-xs hover:bg-white hover:text-black transition-all shadow-[0_30px_60px_rgba(212,175,55,0.3)]"
             >
               <span>{content.featuredCtaText}</span>
               <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
@@ -98,19 +98,19 @@ const FeaturedProperties = ({ properties = [], content: propContent }: { propert
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-16 md:mb-24 bg-gradient-to-r from-primary/20 via-primary/5 to-transparent border border-primary/20 p-6 md:p-12 rounded-[2rem] md:rounded-[4rem] backdrop-blur-2xl flex flex-col md:flex-row md:items-center gap-6 md:gap-12 relative overflow-hidden"
+          className="mb-12 md:mb-24 bg-gradient-to-r from-primary/20 via-primary/5 to-transparent border border-white/5 p-8 md:p-12 rounded-[2rem] md:rounded-[4rem] backdrop-blur-2xl flex flex-col md:flex-row md:items-center gap-6 md:gap-12 relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 p-4 md:p-8">
-            <Sparkles className="text-primary/20" size={80} />
+            <Sparkles className="text-primary/10" size={60} md:size={80} />
           </div>
           
           <div className="flex items-center gap-6 md:gap-8 relative z-10">
             <div className="w-14 h-14 md:w-20 md:h-20 bg-primary flex items-center justify-center rounded-2xl md:rounded-[2rem] shadow-2xl shadow-primary/40">
               <TrendingUp className="text-white w-6 h-6 md:w-8 md:h-8" />
             </div>
-            <div>
-              <p className="text-primary font-black uppercase tracking-[0.4em] text-[9px] md:text-xs mb-2 md:mb-3">{content.featuredBannerTitle}</p>
-              <p className="text-white font-black text-xl md:text-4xl tracking-tighter">{content.featuredBannerText}</p>
+            <div className="text-left">
+              <p className="text-primary font-black uppercase tracking-[0.4em] text-[8px] md:text-xs mb-1 md:mb-3">{content.featuredBannerTitle}</p>
+              <p className="text-white font-black text-xl md:text-4xl tracking-tighter leading-tight">{content.featuredBannerText}</p>
             </div>
           </div>
         </motion.div>
