@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Leaf, Sparkles } from 'lucide-react';
 
 const BrandValues = ({ content: propContent }: { content?: any }) => {
   const [content, setContent] = useState<any>(propContent || {

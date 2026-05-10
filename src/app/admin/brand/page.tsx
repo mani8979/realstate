@@ -726,9 +726,6 @@ export default function BrandAdmin() {
             </div>
           </div>
         </div>
-            </div>
-          </div>
-        </div>
 
         {/* Global Footer & Detailed Contact Settings */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
