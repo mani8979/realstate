@@ -23,22 +23,8 @@ const AboutPage = async () => {
     <div className="bg-black">
       <AboutClient />
       
-      {/* Co-Founder Section */}
-      <div className="py-12">
-        <Founder 
-          name={serializedContent.cofounderName}
-          role={serializedContent.cofounderRole}
-          bio={serializedContent.cofounderBio}
-          vision={serializedContent.cofounderVision}
-          exp={serializedContent.cofounderExp}
-          image={serializedContent.cofounderImage}
-          isMain={false}
-          experienceYears="1.5+"
-        />
-      </div>
-
       {/* Main Founder Section */}
-      <div className="pb-24">
+      <div className="py-12">
         <Founder 
           name={serializedContent.mainFounderName}
           role={serializedContent.mainFounderRole}
@@ -48,6 +34,20 @@ const AboutPage = async () => {
           image={serializedContent.mainFounderImage}
           isMain={true}
           experienceYears="18+"
+        />
+      </div>
+
+      {/* Co-Founder Section */}
+      <div className="pb-24">
+        <Founder 
+          name={serializedContent.cofounderName}
+          role={serializedContent.cofounderRole}
+          bio={serializedContent.cofounderBio}
+          vision={serializedContent.cofounderVision}
+          exp={serializedContent.cofounderExp}
+          image={serializedContent.cofounderImage}
+          isMain={false}
+          experienceYears="1.5+"
         />
       </div>
 

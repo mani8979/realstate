@@ -48,8 +48,6 @@ export default async function Home() {
     <div className="flex flex-col bg-black">
       <Hero />
       
-      <MotivationBanner content={serializedContent} />
-
       <Founder 
         name={serializedContent.mainFounderName}
         role={serializedContent.mainFounderRole}
