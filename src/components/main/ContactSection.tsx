@@ -27,6 +27,12 @@ const ContactSection = () => {
     try {
       await axios.post('/api/enquiries', formData);
       setStatus('success');
+      
+      // WhatsApp redirect to specified number
+      const message = `Full Name: ${formData.name}\nPhone: ${formData.phone}\nMessage: ${formData.message}`;
+      const encodedMessage = encodeURIComponent(message);
+      window.open(`https://wa.me/919666080645?text=${encodedMessage}`, '_blank');
+
       setFormData({ name: '', phone: '', message: '' });
       setTimeout(() => setStatus('idle'), 5000);
     } catch (error) {

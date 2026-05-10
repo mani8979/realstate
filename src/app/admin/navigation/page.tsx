@@ -12,9 +12,9 @@ export default function NavigationAdmin() {
     navAbout: 'About',
     navContact: 'Contact',
     btnCall: 'Call',
-    btnCallLink: 'tel:+919876543210',
+    btnCallLink: 'tel:+919666080645',
     btnEnquire: 'Enquire',
-    btnEnquireLink: 'https://wa.me/919876543210'
+    btnEnquireLink: 'https://wa.me/919666080645'
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

@@ -86,6 +86,12 @@ const PropertyDetails = () => {
         propertyId: property?._id
       });
       setFormStatus('success');
+
+      // WhatsApp redirect to specified number
+      const message = `Property: ${property?.title}\nFull Name: ${formData.name}\nPhone: ${formData.phone}\nMessage: ${formData.message}`;
+      const encodedMessage = encodeURIComponent(message);
+      window.open(`https://wa.me/919666080645?text=${encodedMessage}`, '_blank');
+
       setTimeout(() => setFormStatus('idle'), 5000);
     } catch (error) {
       setFormStatus('error');
@@ -523,14 +529,14 @@ const PropertyDetails = () => {
               {/* Quick Actions */}
               <div className="grid grid-cols-2 gap-4 md:col-span-1">
                 <a
-                  href={`tel:+919876543210`}
+                  href={`tel:+919666080645`}
                   className="bg-white/5 hover:bg-primary border border-white/10 hover:border-primary text-white hover:text-black font-bold p-6 rounded-3xl flex flex-col items-center justify-center gap-3 transition-all group"
                 >
                   <Phone size={28} className="group-hover:scale-110 transition-transform" />
                   <span className="text-[10px] uppercase tracking-[0.2em]">Call Now</span>
                 </a>
                 <a
-                  href={`https://wa.me/919876543210?text=Hi, I'm interested in ${property.title}`}
+                  href={`https://wa.me/919666080645?text=Hi, I'm interested in ${property.title}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-[#25D366]/10 hover:bg-[#25D366] border border-[#25D366]/30 hover:border-[#25D366] text-[#25D366] hover:text-white font-bold p-6 rounded-3xl flex flex-col items-center justify-center gap-3 transition-all group"
