@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { MapPin, Navigation, ExternalLink, Building2 } from 'lucide-react';
+import { MapPin, Navigation, Building2 } from 'lucide-react';
 
 interface LocationSectionProps {
   content?: {
@@ -72,16 +72,6 @@ const LocationSection = ({ content }: LocationSectionProps) => {
                       </div>
                     </div>
                   </div>
-
-                  <a 
-                    href={mapUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="btn-primary w-full group"
-                  >
-                    Open in Google Maps
-                    <ExternalLink size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                  </a>
                 </div>
               </div>
             </div>
@@ -101,6 +91,19 @@ const LocationSection = ({ content }: LocationSectionProps) => {
                   title="Office Location Map"
                   className="grayscale-[0.5] invert-[0.9] hue-rotate-[180deg]"
                 />
+                
+                {/* Floating Directions Arrow Overlay */}
+                <div className="absolute top-8 right-8 z-20">
+                  <a 
+                    href={mapUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="w-16 h-16 bg-primary text-black rounded-2xl flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:scale-110 transition-all group"
+                    title="Get Directions"
+                  >
+                    <Navigation size={32} className="fill-current group-hover:rotate-12 transition-transform" />
+                  </a>
+                </div>
               </div>
 
               {/* Floating badges */}
