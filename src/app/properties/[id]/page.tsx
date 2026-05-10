@@ -168,29 +168,15 @@ const PropertyDetails = () => {
             </Link>
           )}
           {property.mapUrl && (
-            <>
-              <Link 
-                href={`/properties/${property._id}/media?type=map`}
-                className="flex flex-col items-center gap-1.5 group transition-all shrink-0"
-              >
-                <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-300">
-                  <MapIcon size={20} className="md:size-24" />
-                </div>
-                <span className="text-[7px] md:text-[9px] uppercase font-black tracking-[0.2em] text-white/40 group-hover:text-primary transition-colors">Map View</span>
-              </Link>
-              
-              <a 
-                href={property.mapUrl.includes('google.com/maps/embed') ? property.mapUrl.replace('embed', 'viewer').split('!1s')[1] ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(property.location)}` : property.mapUrl : property.mapUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex flex-col items-center gap-1.5 group transition-all shrink-0"
-              >
-                <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-primary/20 border border-primary/30 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-300 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
-                  <MapPin size={20} className="md:size-24" />
-                </div>
-                <span className="text-[7px] md:text-[9px] uppercase font-black tracking-[0.2em] text-primary group-hover:text-white transition-colors">Open in Maps</span>
-              </a>
-            </>
+            <Link 
+              href={`/properties/${property._id}/media?type=map`}
+              className="flex flex-col items-center gap-1.5 group transition-all shrink-0"
+            >
+              <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-300">
+                <MapIcon size={20} className="md:size-24" />
+              </div>
+              <span className="text-[7px] md:text-[9px] uppercase font-black tracking-[0.2em] text-white/40 group-hover:text-primary transition-colors">Map</span>
+            </Link>
           )}
         </div>
       </div>

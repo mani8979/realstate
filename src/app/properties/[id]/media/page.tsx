@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { 
   X, ArrowLeft, Play, Image as ImageIcon, 
   Map as MapIcon, Download, ChevronLeft, ChevronRight,
-  Maximize2, MousePointer2, LayoutGrid, MapPin, ExternalLink
+  Maximize2, MousePointer2, LayoutGrid
 } from 'lucide-react';
 import { openContactDialog } from '@/components/layout/ContactDialog';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
@@ -488,20 +488,6 @@ const MediaPage = () => {
                   className="absolute inset-0 w-full h-full border-none"
                   loading="lazy"
                 ></iframe>
-                
-                {/* External Link Overlay */}
-                <div className="absolute top-6 left-6 z-20">
-                  <a 
-                    href={property.mapUrl.includes('google.com/maps/embed') ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(property.location)}` : property.mapUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded-lg font-bold text-xs shadow-xl hover:bg-primary transition-all group"
-                  >
-                    <MapPin size={14} className="text-primary group-hover:text-black transition-colors" />
-                    <span>Open in Maps</span>
-                    <ExternalLink size={12} className="opacity-50" />
-                  </a>
-                </div>
               </div>
             </motion.div>
           )}
