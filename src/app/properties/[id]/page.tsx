@@ -222,6 +222,23 @@ const PropertyDetails = () => {
                   <span>View Cultivation Info</span>
                 </button>
               )}
+
+              {/* Description */}
+              {property.description && (
+                <div className="mt-2">
+                  <p className={`text-gray-400 text-base md:text-lg leading-relaxed ${!isReadMore ? 'line-clamp-4' : ''}`}>
+                    {property.description}
+                  </p>
+                  {property.description.length > 300 && (
+                    <button
+                      onClick={() => setIsReadMore(!isReadMore)}
+                      className="mt-3 text-primary font-bold uppercase tracking-widest text-xs hover:text-white transition-colors"
+                    >
+                      {isReadMore ? '↑ Show Less' : '↓ Read More'}
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col items-center md:items-end gap-4">
