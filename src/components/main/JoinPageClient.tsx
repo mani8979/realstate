@@ -17,9 +17,9 @@ const JoinPageClient = ({ serializedContent, rules, qualifications }: JoinPageCl
 
   return (
     <>
-      <div className="bg-black text-white min-h-screen pt-20">
+      <div className="bg-black text-white min-h-screen">
         {/* Hero Section */}
-        <section className="relative py-32 overflow-hidden">
+        <section className="relative overflow-hidden">
           {/* Dynamic Background */}
           <div className="absolute inset-0 z-0">
             <img 
@@ -31,7 +31,7 @@ const JoinPageClient = ({ serializedContent, rules, qualifications }: JoinPageCl
           </div>
 
           <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/20 blur-[140px] rounded-full opacity-60" />
-          <div className="container mx-auto px-6 relative z-10 text-center">
+          <div className="container mx-auto px-6 relative z-10 text-center pt-32 md:pt-48 pb-12 md:pb-24">
             <div className="flex justify-center mb-6">
               <span className="px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-2">
                 <Sparkles size={12} />
