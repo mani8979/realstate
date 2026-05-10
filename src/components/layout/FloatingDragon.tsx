@@ -204,9 +204,6 @@ const FloatingDragon = () => {
                   </div>
                 </div>
 
-                <p className="text-gray-400 italic text-sm border-l-2 border-primary/30 pl-4 py-2">
-                  Additionally, the plantation can be removed anytime if the client wishes to convert the land for residential or other purposes.
-                </p>
               </div>
 
               <button 

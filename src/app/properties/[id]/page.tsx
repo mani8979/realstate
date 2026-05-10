@@ -270,9 +270,6 @@ const PropertyDetails = () => {
                       </p>
                     </div>
                   </div>
-                  <p className="text-gray-400 text-lg leading-relaxed bg-white/5 p-6 rounded-2xl border-l-4 border-primary">
-                    However, the plantation can be removed anytime and the land can be made ready immediately for residential or any other use as per the client’s requirement.
-                  </p>
                 </div>
               </div>
             </motion.div>
@@ -412,9 +409,6 @@ const PropertyDetails = () => {
                       Dragon fruit cultivation is a high-demand and profitable farming option with long-term benefits. 
                       Plants can yield fruits for <strong>up to 30 years</strong>, providing long-term income stability.
                     </p>
-                    <div className="p-6 bg-white/5 rounded-2xl border-l-4 border-primary italic text-gray-400">
-                      "Additionally, the plantation can be removed anytime if the client wishes to convert the land for residential or other purposes."
-                    </div>
                   </div>
                   <div className="md:w-1/3 flex justify-center">
                     <div className="w-48 h-48 rounded-full bg-primary/20 flex items-center justify-center animate-pulse border-2 border-primary/30">
@@ -646,9 +640,6 @@ const PropertyDetails = () => {
                   </div>
                 </div>
 
-                <p className="text-gray-400 italic text-sm border-l-2 border-primary/30 pl-4 py-2">
-                  Additionally, the plantation can be removed anytime if the client wishes to convert the land for residential or other purposes.
-                </p>
               </div>
 
               <button 
