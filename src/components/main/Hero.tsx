@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Search, MapPin, Home, DollarSign, ArrowRight, Sparkles, Star, Phone, MessageSquare } from 'lucide-react';
+import { Search, MapPin, Home, DollarSign, ArrowRight, Sparkles, Star, Phone, MessageSquare, Calendar } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
@@ -93,18 +93,18 @@ const Hero = () => {
             className="flex flex-wrap gap-4 mb-16"
           >
             <button
-              onClick={() => openContactDialog('book')}
+              onClick={() => router.push(content.heroCta1Link || '/properties')}
               className="bg-primary hover:bg-primary/90 text-white font-bold px-8 py-4 rounded-full transition-all flex items-center gap-2 group shadow-2xl shadow-primary/40"
             >
-              <span>{content.heroCtaText || 'Book Site Visit'}</span>
+              <span>{content.heroCtaText || 'Explore Properties'}</span>
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </button>
             <button
-              onClick={() => window.open(content.heroCta2Link, '_blank')}
+              onClick={() => openContactDialog('book')}
               className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/20 font-bold px-8 py-4 rounded-full transition-all flex items-center gap-2 group"
             >
-              <span>{content.heroCta2Text}</span>
-              <MessageSquare size={20} className="group-hover:scale-110 transition-transform" />
+              <span>{content.heroCta2Text || 'Book Site Visit'}</span>
+              <Calendar size={20} className="group-hover:scale-110 transition-transform text-primary" />
             </button>
           </motion.div>
         </div>

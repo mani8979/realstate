@@ -60,16 +60,15 @@ export const ContactDialog = () => {
       return;
     }
 
-    const message = `🚀 *New Site Visit Booking* 🚀\n\n👤 *Name:* ${formData.name}\n📞 *Phone:* ${formData.phone}\n🔗 *Page:* ${window.location.href}`;
-
-    try {
-      const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      // Save to database & send Telegram via API
+      const response = await fetch('/api/enquiries', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          chat_id: chatId,
-          text: message,
-          parse_mode: 'Markdown'
+          name: formData.name,
+          phone: formData.phone,
+          message: `Requested a Site Visit from page: ${window.location.href}`,
+          type: 'Site Visit'
         })
       });
 

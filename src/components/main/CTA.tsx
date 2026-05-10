@@ -1,8 +1,10 @@
+'use client';
+
 import React from 'react';
-import Link from 'next/link';
-import { ArrowRight, Phone, MessageSquare, Sparkles } from 'lucide-react';
+import { Phone, Calendar, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { openContactDialog } from '../layout/ContactDialog';
 
 const CTA = ({ content }: { content?: any }) => {
   const phoneNumber = (content?.ctaSectionBtn2 || '919123456789').replace(/\s+/g, '');
@@ -41,15 +43,13 @@ const CTA = ({ content }: { content?: any }) => {
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-              <a
-                href={`https://wa.me/${phoneNumber}?text=I'm interested in booking a site visit.`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-black px-12 py-6 rounded-2xl transition-all flex items-center justify-center gap-3 group shadow-2xl shadow-primary/40 uppercase tracking-widest text-xs"
+              <button
+                onClick={() => openContactDialog('book')}
+                className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white font-black px-12 py-6 rounded-2xl transition-all flex items-center justify-center gap-3 group shadow-2xl shadow-primary/40 uppercase tracking-widest text-xs"
               >
                 <span>{content?.ctaSectionBtn1 || 'Schedule a Site Visit'}</span>
-                <MessageSquare size={20} className="group-hover:scale-110 transition-transform" />
-              </a>
+                <Calendar size={20} className="group-hover:scale-110 transition-transform" />
+              </button>
               <a
                 href={`tel:${phoneNumber}`}
                 className="w-full sm:w-auto bg-white/5 hover:bg-white/10 text-white font-black px-12 py-6 rounded-2xl border border-white/10 transition-all flex items-center justify-center gap-3 backdrop-blur-md uppercase tracking-widest text-xs"
