@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Save, Info } from 'lucide-react';
+import { Save, Info, Upload, X } from 'lucide-react';
 
 export default function JoinAdmin() {
   const [content, setContent] = useState<any>({
@@ -15,10 +15,13 @@ export default function JoinAdmin() {
     joinTeamTitle: '',
     joinTeamMembers: '',
     chatWithUsText: '',
-    navJoin: ''
+    navJoin: '',
+    joinOfficeImage1: '',
+    joinOfficeImage2: ''
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/content')
@@ -33,6 +36,30 @@ export default function JoinAdmin() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setContent({ ...content, [e.target.name]: e.target.value });
+  };
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(field);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (data.url) {
+        setContent({ ...content, [field]: data.url });
+      }
+    } catch (err) {
+      alert('Upload failed');
+    } finally {
+      setUploading(null);
+    }
   };
 
   const handleSave = async () => {
@@ -154,6 +181,46 @@ export default function JoinAdmin() {
               <input name="chatWithUsText" value={content.chatWithUsText || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
             </div>
           </div>
+        </div>
+
+        {/* Office Gallery */}
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Office Gallery Photos</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Office Photo 1</label>
+              {content.joinOfficeImage1 ? (
+                <div className="relative aspect-video rounded-3xl overflow-hidden border border-gray-200 dark:border-gray-800 group">
+                  <img src={content.joinOfficeImage1} alt="Office 1" className="w-full h-full object-cover" />
+                  <button onClick={() => setContent({ ...content, joinOfficeImage1: '' })} className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all"><X size={20} /></button>
+                </div>
+              ) : (
+                <label className="flex flex-col items-center justify-center w-full aspect-video rounded-3xl border-2 border-dashed border-gray-300 dark:border-gray-800 hover:border-primary transition-all cursor-pointer bg-gray-50 dark:bg-gray-800/50">
+                  <Upload size={32} className="text-gray-400 mb-2" />
+                  <span className="text-sm font-bold text-gray-500">Upload Photo 1</span>
+                  <input type="file" className="hidden" onChange={(e) => handleUpload(e, 'joinOfficeImage1')} />
+                </label>
+              )}
+            </div>
+
+            <div className="space-y-4">
+              <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Office Photo 2</label>
+              {content.joinOfficeImage2 ? (
+                <div className="relative aspect-video rounded-3xl overflow-hidden border border-gray-200 dark:border-gray-800 group">
+                  <img src={content.joinOfficeImage2} alt="Office 2" className="w-full h-full object-cover" />
+                  <button onClick={() => setContent({ ...content, joinOfficeImage2: '' })} className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all"><X size={20} /></button>
+                </div>
+              ) : (
+                <label className="flex flex-col items-center justify-center w-full aspect-video rounded-3xl border-2 border-dashed border-gray-300 dark:border-gray-800 hover:border-primary transition-all cursor-pointer bg-gray-50 dark:bg-gray-800/50">
+                  <Upload size={32} className="text-gray-400 mb-2" />
+                  <span className="text-sm font-bold text-gray-500">Upload Photo 2</span>
+                  <input type="file" className="hidden" onChange={(e) => handleUpload(e, 'joinOfficeImage2')} />
+                </label>
+              )}
+            </div>
+          </div>
+          {(uploading === 'joinOfficeImage1' || uploading === 'joinOfficeImage2') && <p className="text-primary text-xs font-bold mt-4 animate-pulse uppercase tracking-widest">Uploading Image...</p>}
         </div>
       </div>
     </div>

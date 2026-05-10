@@ -110,6 +110,14 @@ const Hero = ({ content: propContent }: { content?: any }) => {
               <span>{content.heroCta2Text || 'Book Site Visit'}</span>
               <Calendar size={20} className="group-hover:scale-110 transition-transform text-primary" />
             </button>
+            <a
+              href={content.heroCta3Link || 'https://chat.whatsapp.com/123456'}
+              target="_blank"
+              className="bg-primary/20 hover:bg-primary/30 backdrop-blur-md text-white border border-primary/40 font-bold px-8 py-4 rounded-full transition-all flex items-center gap-2 group"
+            >
+              <span>{content.heroCta3Text || 'Latest Updates'}</span>
+              <Sparkles size={20} className="group-hover:rotate-12 transition-transform text-primary animate-pulse" />
+            </a>
           </motion.div>
         </div>
 

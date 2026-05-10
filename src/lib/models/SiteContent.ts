@@ -8,6 +8,8 @@ export interface ISiteContent extends Document {
   heroCta1Link: string;
   heroCta2Text: string;
   heroCta2Link: string;
+  heroCta3Text: string;
+  heroCta3Link: string;
   heroBgImage: string;
   featuredBadgeText: string;
   featuredTitle: string;
@@ -129,6 +131,8 @@ export interface ISiteContent extends Document {
   joinTeamMembers: string; 
   chatWithUsText: string;
   navJoin: string;
+  joinOfficeImage1: string;
+  joinOfficeImage2: string;
 }
 
 const SiteContentSchema = new Schema<ISiteContent>(
@@ -140,6 +144,8 @@ const SiteContentSchema = new Schema<ISiteContent>(
     heroCta1Link: { type: String, default: "/properties" },
     heroCta2Text: { type: String, default: "Book Site Visit" },
     heroCta2Link: { type: String, default: "https://wa.me/1234567890" },
+    heroCta3Text: { type: String, default: "Latest Updates" },
+    heroCta3Link: { type: String, default: "https://chat.whatsapp.com/123456" },
     heroBgImage: { type: String, default: "/luxury_villa_hero_1777953581914.png" },
     featuredBadgeText: { type: String, default: "Investment Opportunities" },
     featuredTitle: { type: String, default: "Featured" },
@@ -257,7 +263,9 @@ const SiteContentSchema = new Schema<ISiteContent>(
     joinTeamTitle: { type: String, default: "Join as a Team" },
     joinTeamMembers: { type: String, default: "Shariff - 919666080645\nMohammed - 919573785434" },
     chatWithUsText: { type: String, default: "Chat With Us" },
-    navJoin: { type: String, default: "Join" }
+    navJoin: { type: String, default: "Join" },
+    joinOfficeImage1: { type: String, default: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000" },
+    joinOfficeImage2: { type: String, default: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=1000" }
   },
   { timestamps: true }
 );

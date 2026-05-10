@@ -98,6 +98,27 @@ const JoinPage = async () => {
             </div>
 
           </div>
+      </section>
+
+      {/* Office Gallery */}
+      <section className="py-24 border-t border-white/5">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col gap-12">
+            <div className="text-center space-y-4">
+               <h2 className="text-4xl font-black uppercase tracking-tighter">Our Professional Workspace</h2>
+               <p className="text-gray-400 max-w-2xl mx-auto leading-relaxed">Take a look at where the magic happens. We provide a state-of-the-art environment for our teams to excel.</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+               <div className="relative aspect-video rounded-[3rem] overflow-hidden border border-white/10 group">
+                  <img src={serializedContent.joinOfficeImage1 || "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000"} alt="Office 1" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+               </div>
+               <div className="relative aspect-video rounded-[3rem] overflow-hidden border border-white/10 group">
+                  <img src={serializedContent.joinOfficeImage2 || "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=1000"} alt="Office 2" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+               </div>
+            </div>
+          </div>
         </div>
       </section>
 

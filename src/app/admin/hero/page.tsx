@@ -174,24 +174,25 @@ export default function HeroAdmin() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-100 dark:border-gray-800 pt-4">
               <div>
-                <label className="block text-sm font-bold text-gray-500 mb-2">Secondary Button Text</label>
-                <input 
-                  name="heroCta2Text"
-                  value={content.heroCta2Text || ''}
-                  onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                />
+                <label className="block text-sm font-bold text-gray-500 mb-2">CTA 2 Text</label>
+                <input name="heroCta2Text" value={content.heroCta2Text || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
               </div>
               <div>
-                <label className="block text-sm font-bold text-gray-500 mb-2">Secondary Button Link</label>
-                <input 
-                  name="heroCta2Link"
-                  value={content.heroCta2Link || ''}
-                  onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                />
+                <label className="block text-sm font-bold text-gray-500 mb-2">CTA 2 Link (Optional)</label>
+                <input name="heroCta2Link" value={content.heroCta2Link || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-100 dark:border-gray-800 pt-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">CTA 3 Text (Latest Updates)</label>
+                <input name="heroCta3Text" value={content.heroCta3Text || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">CTA 3 Link (Group/Updates Link)</label>
+                <input name="heroCta3Link" value={content.heroCta3Link || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
               </div>
             </div>
           </div>
