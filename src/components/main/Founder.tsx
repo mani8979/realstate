@@ -84,12 +84,10 @@ const Founder: React.FC<FounderProps> = ({
           >
             <div className="space-y-6">
               <div className="flex flex-col gap-3">
-                <div className="flex items-center gap-2">
-                  <div className="h-[1px] w-8 bg-primary" />
-                  <h2 className="text-primary font-black uppercase tracking-[0.5em] text-xs drop-shadow-[0_0_10px_rgba(255,107,0,0.3)]">
-                    Leadership Profile
-                  </h2>
-                </div>
+                <span className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary w-fit">
+                   <Target size={14} className="animate-pulse" />
+                   <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em]">Leadership Profile</span>
+                </span>
               </div>
               <h3 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.95] drop-shadow-2xl">
                 The {isMain ? "Founder's" : "Co-Founder's"} <br />
