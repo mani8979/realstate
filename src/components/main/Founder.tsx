@@ -29,7 +29,7 @@ const Founder: React.FC<FounderProps> = ({
       <div className={`absolute bottom-0 left-0 w-1/3 h-1/2 ${isMain ? 'bg-amber-500/10' : 'bg-blue-500/10'} blur-[140px] rounded-full translate-y-1/2 -translate-x-1/2 opacity-60`} />
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className={`grid grid-cols-1 lg:grid-cols-12 gap-16 items-center ${!isMain ? 'lg:direction-rtl' : ''}`}>
+        <div className={`grid grid-cols-1 lg:grid-cols-12 gap-16 items-start ${!isMain ? 'lg:direction-rtl' : ''}`}>
           
           {/* Image Side */}
           <motion.div 
