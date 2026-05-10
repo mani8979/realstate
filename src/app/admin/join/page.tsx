@@ -18,6 +18,11 @@ export default function JoinAdmin() {
     joinOfficeImage1: '',
     joinOfficeImage2: '',
     joinBgImage: '',
+    joinWorkspaceTitle: '',
+    joinWorkspaceDesc: '',
+    joinIndividualTitle: '',
+    joinIndividualDesc: '',
+    joinTeamDesc: '',
     joinTeamLeads: []
   });
   const [loading, setLoading] = useState(true);
@@ -175,6 +180,49 @@ export default function JoinAdmin() {
             <div>
               <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Description</label>
               <textarea name="joinDesc" rows={3} value={content.joinDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+            </div>
+            <div>
+              <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Floating Chat Label</label>
+              <input name="chatWithUsText" value={content.chatWithUsText || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" placeholder="e.g. Chat With Us" />
+            </div>
+          </div>
+        </div>
+
+        {/* Workspace & Path Details */}
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Workspace & Path Details</h2>
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Workspace Title</label>
+                <input name="joinWorkspaceTitle" value={content.joinWorkspaceTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              </div>
+              <div>
+                <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Workspace Description</label>
+                <textarea name="joinWorkspaceDesc" rows={2} value={content.joinWorkspaceDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-gray-100 dark:border-gray-800 pt-6">
+              <div>
+                <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Individual Path Title</label>
+                <input name="joinIndividualTitle" value={content.joinIndividualTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              </div>
+              <div>
+                <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Individual Path Description</label>
+                <textarea name="joinIndividualDesc" rows={2} value={content.joinIndividualDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-gray-100 dark:border-gray-800 pt-6">
+              <div>
+                <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Team Path Title</label>
+                <input name="joinTeamTitle" value={content.joinTeamTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              </div>
+              <div>
+                <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Team Path Description</label>
+                <textarea name="joinTeamDesc" rows={2} value={content.joinTeamDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              </div>
             </div>
           </div>
         </div>
