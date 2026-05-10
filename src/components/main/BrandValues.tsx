@@ -53,26 +53,26 @@ const BrandValues = ({ content: propContent }: { content?: any }) => {
   ];
 
   return (
-    <section id="values-section" className="py-40 !bg-[#064e3b] dark:!bg-[#064e3b] overflow-hidden relative border-y-8 border-[#10b981]/20">
+    <section id="values-section" className="py-20 md:py-40 !bg-[#064e3b] dark:!bg-[#064e3b] overflow-hidden relative border-y-8 border-[#10b981]/20">
       {/* Royal Decorative Elements */}
       <div className="absolute top-0 right-0 w-[800px] h-full bg-[#10b981]/5 -skew-x-12 translate-x-1/2 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/10 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2" />
       
       <div className="container mx-auto px-6 relative z-10">
         {/* Royal Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-32 gap-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 md:mb-32 gap-8 md:gap-12">
           <div className="max-w-2xl">
             <motion.p
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              className="text-[#10b981] font-black uppercase tracking-[0.6em] text-[10px] mb-8 flex items-center gap-6"
+              className="text-[#10b981] font-black uppercase tracking-[0.6em] text-[10px] mb-6 md:mb-8 flex items-center gap-4 md:gap-6"
             >
-              <span className="w-16 h-[2px] bg-[#10b981]"></span>
+              <span className="w-12 md:w-16 h-[2px] bg-[#10b981]"></span>
               {content.brandBadge}
             </motion.p>
             
-            <h3 className="text-7xl md:text-[8rem] font-black text-white uppercase tracking-tighter leading-[0.8]">
-              {content.brandTitle1} <span className="text-primary block italic mt-4 lowercase">{content.brandTitle2}</span>
+            <h3 className="text-4xl md:text-7xl lg:text-[8rem] font-black text-white uppercase tracking-tighter leading-[0.9] md:leading-[0.8]">
+              {content.brandTitle1} <span className="text-primary block italic mt-2 md:mt-4 lowercase">{content.brandTitle2}</span>
             </h3>
           </div>
           
@@ -85,7 +85,7 @@ const BrandValues = ({ content: propContent }: { content?: any }) => {
         </div>
 
         {/* Emerald Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
           {values.map((item, i) => (
             <motion.div 
               key={i}
@@ -95,26 +95,26 @@ const BrandValues = ({ content: propContent }: { content?: any }) => {
               transition={{ duration: 0.8, delay: i * 0.15, ease: [0.22, 1, 0.36, 1] }}
               className="group"
             >
-              <div className="h-full p-12 rounded-[4rem] bg-white/5 border border-white/10 backdrop-blur-lg transition-all duration-700 hover:bg-white hover:border-white hover:-translate-y-8 overflow-hidden relative">
+              <div className="h-full p-8 md:p-12 rounded-[2rem] md:rounded-[4rem] bg-white/5 border border-white/10 backdrop-blur-lg transition-all duration-700 hover:bg-white hover:border-white hover:-translate-y-4 md:hover:-translate-y-8 overflow-hidden relative">
                 {/* Massive background number */}
-                <div className="absolute -bottom-10 -right-10 text-[15rem] font-black text-white/[0.03] group-hover:text-primary/10 transition-colors">
+                <div className="absolute -bottom-6 -right-6 md:-bottom-10 md:-right-10 text-8xl md:text-[15rem] font-black text-white/[0.03] group-hover:text-primary/10 transition-colors">
                   {i + 1}
                 </div>
 
                 <div className="relative z-10">
-                  <div className="w-20 h-20 bg-[#10b981] group-hover:bg-primary text-white rounded-[2rem] flex items-center justify-center mb-12 shadow-2xl shadow-black/40 transition-all duration-500 group-hover:rotate-[360deg]">
-                    <Sparkles size={32} />
+                  <div className="w-16 h-16 md:w-20 md:h-20 bg-[#10b981] group-hover:bg-primary text-white rounded-2xl md:rounded-[2rem] flex items-center justify-center mb-8 md:mb-12 shadow-2xl shadow-black/40 transition-all duration-500 group-hover:rotate-[360deg]">
+                    <Sparkles size={28} md:size={32} />
                   </div>
                   
-                  <h4 className="text-4xl font-black text-white group-hover:text-slate-900 mb-8 uppercase tracking-tighter leading-tight transition-colors">
+                  <h4 className="text-2xl md:text-4xl font-black text-white group-hover:text-slate-900 mb-6 md:mb-8 uppercase tracking-tighter leading-tight transition-colors">
                     {item.title}
                   </h4>
                   
-                  <p className="text-white/60 group-hover:text-slate-600 leading-relaxed font-medium text-lg transition-colors">
+                  <p className="text-white/60 group-hover:text-slate-600 leading-relaxed font-medium text-base md:text-lg transition-colors">
                     {item.desc}
                   </p>
                   
-                  <div className="mt-16 inline-flex items-center gap-4 text-[#10b981] font-black uppercase tracking-[0.4em] text-[10px] py-3 px-6 bg-white/5 rounded-full group-hover:bg-primary/10 transition-colors">
+                  <div className="mt-12 md:mt-16 inline-flex items-center gap-4 text-[#10b981] font-black uppercase tracking-[0.4em] text-[9px] md:text-[10px] py-3 px-6 bg-white/5 rounded-full group-hover:bg-primary/10 transition-colors">
                     <div className="w-2 h-2 rounded-full bg-[#10b981]" />
                     {item.sideHeading}
                   </div>
