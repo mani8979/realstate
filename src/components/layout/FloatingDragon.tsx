@@ -30,8 +30,8 @@ const FloatingDragon = () => {
   const modelX = useTransform(scrollYProgress, 
     [0, 0.2, 0.4, 0.6, 0.8, 1],
     isMobile 
-      ? ["38vw", "38vw", "-38vw", "38vw", "-38vw", "0vw"]
-      : ["46vw", "48vw", "-48vw", "48vw", "-48vw", "0vw"]
+      ? ["38vw", "38vw", "38vw", "38vw", "38vw", "0vw"]
+      : ["46vw", "48vw", "46vw", "48vw", "46vw", "0vw"]
   );
 
   const modelY = useTransform(scrollYProgress, [0, 1], [isMobile ? "30vh" : "10vh", "90vh"]);
