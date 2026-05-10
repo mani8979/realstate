@@ -8,28 +8,28 @@ const features = [
   {
     sideHeading: 'Quality First',
     title: 'Verified Properties',
-    desc: 'Every listing is manually verified by our team to ensure the highest standards.',
+    desc: 'Every listing is manually verified by our team.',
     icon: UserCheck,
     color: 'text-emerald-500 bg-emerald-500/10'
   },
   {
     sideHeading: 'Legally Secure',
     title: 'Clear Documentation',
-    desc: '100% legal transparency and absolute title clarity for every property we list.',
+    desc: '100% legal transparency and title clarity.',
     icon: ShieldCheck,
     color: 'text-blue-500 bg-blue-500/10'
   },
   {
     sideHeading: 'Honest Deals',
     title: '100% Transparency',
-    desc: 'No hidden costs. Direct registration. We believe in absolute honesty in every deal.',
+    desc: 'No hidden costs. Direct registration.',
     icon: Zap,
     color: 'text-amber-500 bg-amber-500/10'
   },
   {
     sideHeading: 'Vizag Expert',
     title: 'Personalized Care',
-    desc: 'We listen to your needs and help you find the property that matches your lifestyle.',
+    desc: 'We help you find the property that matches your lifestyle.',
     icon: Heart,
     color: 'text-primary bg-primary/10'
   }
@@ -85,11 +85,11 @@ const WhyChooseUs = () => {
             >
               <div className="flex items-center gap-2 text-primary font-black uppercase tracking-[0.4em] text-[10px] mb-4">
                  <Sparkles size={14} />
-                 <span>Our Advantage</span>
+                 <span>Our Core Pillars</span>
               </div>
-              <h3 className="text-5xl md:text-7xl font-black text-slate-900 dark:text-white mb-8 leading-[0.9] tracking-tighter uppercase">Expertise You <br /> <span className="text-primary italic">Can Trust</span></h3>
+              <h3 className="text-5xl md:text-7xl font-black text-slate-900 dark:text-white mb-8 leading-[0.9] tracking-tighter uppercase">Why <br /> <span className="text-primary italic">Choose Us</span></h3>
               <p className="text-gray-500 dark:text-gray-400 text-xl leading-relaxed font-light">
-                With over a decade of excellence in Visakhapatnam's real estate market, we've helped thousands find their perfect place. Our commitment to transparency defines every interaction.
+                Dedicated to creating sustainable and premium living environments.
               </p>
             </motion.div>
 
@@ -106,9 +106,9 @@ const WhyChooseUs = () => {
                   }
                 }
               }}
-              className="grid grid-cols-1 sm:grid-cols-2 gap-12"
+              className="grid grid-cols-2 sm:grid-cols-2 gap-4 sm:gap-12"
             >
-              {features.map((feature) => (
+              {features.map((feature, index) => (
                 <motion.div 
                   key={feature.title}
                   variants={{
@@ -123,22 +123,21 @@ const WhyChooseUs = () => {
                       }
                     }
                   }}
-                  className="group flex flex-col gap-6 p-8 rounded-3xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all duration-500 border border-transparent hover:border-gray-100 dark:hover:border-white/10"
+                  className={`group flex flex-col gap-4 sm:gap-6 p-4 sm:p-8 rounded-2xl sm:rounded-3xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all duration-500 border border-transparent hover:border-gray-100 dark:hover:border-white/10 ${index < 2 ? 'col-span-1' : 'col-span-2 sm:col-span-1'}`}
                 >
-                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:rotate-[15deg] transform ${feature.color}`}>
-                    <feature.icon size={32} />
+                  <div className={`w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:rotate-[15deg] transform ${feature.color}`}>
+                    <feature.icon size={24} className="sm:size-32" />
                   </div>
                   <div>
-                    <div className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-2">{feature.sideHeading}</div>
-                    <h4 className="text-2xl font-black text-slate-900 dark:text-white mb-3 uppercase tracking-tight">{feature.title}</h4>
-                    <p className="text-gray-500 dark:text-gray-400 leading-relaxed font-medium">
+                    <div className="text-[8px] sm:text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-1 sm:mb-2">{feature.sideHeading}</div>
+                    <h4 className="text-lg sm:text-2xl font-black text-slate-900 dark:text-white mb-2 sm:mb-3 uppercase tracking-tight leading-tight">{feature.title}</h4>
+                    <p className="text-gray-500 dark:text-gray-400 text-xs sm:text-base leading-relaxed font-medium">
                       {feature.desc}
                     </p>
                   </div>
                 </motion.div>
               ))}
             </motion.div>
-          </div>
         </div>
       </div>
     </section>
