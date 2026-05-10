@@ -20,6 +20,16 @@ const JoinPageClient = ({ serializedContent, rules, qualifications }: JoinPageCl
       <div className="bg-black text-white min-h-screen pt-20">
         {/* Hero Section */}
         <section className="relative py-32 overflow-hidden">
+          {/* Dynamic Background */}
+          <div className="absolute inset-0 z-0">
+            <img 
+              src={serializedContent.joinBgImage || "https://images.unsplash.com/photo-1582408921715-18e7806365c1?q=80&w=2000"} 
+              alt="Join Background" 
+              className="w-full h-full object-cover opacity-40"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-black via-black/80 to-black" />
+          </div>
+
           <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/20 blur-[140px] rounded-full opacity-60" />
           <div className="container mx-auto px-6 relative z-10 text-center">
             <div className="flex justify-center mb-6">
@@ -28,10 +38,10 @@ const JoinPageClient = ({ serializedContent, rules, qualifications }: JoinPageCl
                 {serializedContent.joinBadge || 'Career Opportunities'}
               </span>
             </div>
-            <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-8 leading-[0.9]">
+            <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-8 leading-[0.9] text-white">
               {serializedContent.joinTitle || 'Join With Us'}
             </h1>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed font-medium italic">
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed font-medium italic">
               {serializedContent.joinDesc || 'Become a part of our elite real estate network and build your future with the best in the industry.'}
             </p>
           </div>

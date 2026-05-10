@@ -133,6 +133,7 @@ export interface ISiteContent extends Document {
   navJoin: string;
   joinOfficeImage1: string;
   joinOfficeImage2: string;
+  joinBgImage: string;
   // Team Leads (Dynamic Array)
   joinTeamLeads: {
     name: string;
@@ -272,6 +273,7 @@ const SiteContentSchema = new Schema<ISiteContent>(
     navJoin: { type: String, default: "Join" },
     joinOfficeImage1: { type: String, default: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000" },
     joinOfficeImage2: { type: String, default: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=1000" },
+    joinBgImage: { type: String, default: "https://images.unsplash.com/photo-1582408921715-18e7806365c1?q=80&w=2000" },
     joinTeamLeads: {
       type: [{
         name: String,

@@ -348,7 +348,77 @@ export default function SiteContentAdmin() {
             </div>
           </div>
         </div>
+        {/* Join Page Content */}
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Join Page Specifics</h2>
+          
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-bold text-gray-500 mb-2">Join Page Background Image URL</label>
+              <input 
+                name="joinBgImage"
+                value={content.joinBgImage || ''}
+                onChange={handleChange}
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                placeholder="e.g. https://images.unsplash.com/..."
+              />
+            </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-100 dark:border-gray-800 pt-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Join Badge</label>
+                <input name="joinBadge" value={content.joinBadge || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Join Title</label>
+                <input name="joinTitle" value={content.joinTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              </div>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-bold text-gray-500 mb-2">Join Description</label>
+              <textarea name="joinDesc" rows={3} value={content.joinDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-100 dark:border-gray-800 pt-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Office Image 1</label>
+                <input name="joinOfficeImage1" value={content.joinOfficeImage1 || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Office Image 2</label>
+                <input name="joinOfficeImage2" value={content.joinOfficeImage2 || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-100 dark:border-gray-800 pt-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Individual Btn Text</label>
+                <input name="joinIndividualBtnText" value={content.joinIndividualBtnText || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Individual Phone</label>
+                <input name="joinIndividualPhone" value={content.joinIndividualPhone || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-100 dark:border-gray-800 pt-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Team Title</label>
+                <input name="joinTeamTitle" value={content.joinTeamTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Rules (Newline separated)</label>
+                <textarea name="joinRules" rows={4} value={content.joinRules || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              </div>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-bold text-gray-500 mb-2">Qualifications (Newline separated)</label>
+              <textarea name="joinQualifications" rows={4} value={content.joinQualifications || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+            </div>
+          </div>
+        </div>
 
       </div>
     </div>
