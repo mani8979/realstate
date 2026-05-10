@@ -201,25 +201,33 @@ const SmoothSlider = ({ lands }: SmoothSliderProps) => {
               </div>
 
               {/* Content Box Overlaid */}
-              <div className="container mx-auto px-6 md:px-24 relative z-10 w-full drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] pointer-events-none">
+              <div className="container mx-auto px-6 md:px-24 relative z-10 w-full drop-shadow-[0_4px_10px_rgba(0,0,0,0.9)] pointer-events-none">
                 <div className="max-w-3xl content-box pointer-events-auto">
-                <p className="text-primary font-black text-xs md:text-sm uppercase tracking-[0.5em] mb-4 md:mb-6">
+                <p className="text-primary font-black text-[8px] md:text-sm uppercase tracking-[0.3em] md:tracking-[0.5em] mb-2 md:mb-6">
                   Signature Collection
                 </p>
                 <h1 
                   onClick={() => router.push(`/properties/${land._id}`)}
-                  className="text-4xl md:text-6xl lg:text-7xl font-black text-white uppercase leading-[0.95] mb-8 md:mb-12 tracking-[-0.04em] cursor-pointer hover:text-primary transition-colors"
+                  className="text-3xl md:text-6xl lg:text-7xl font-black text-white uppercase leading-[1.1] md:leading-[0.95] mb-6 md:mb-12 tracking-tighter cursor-pointer hover:text-primary transition-colors"
                 >
                   {land.title}
                 </h1>
                 
-                <div className="flex items-end gap-4 mb-10 md:mb-16">
+                <div className="flex flex-col md:flex-row md:items-end gap-6 md:gap-4 mb-8 md:mb-16">
                   <div>
-                    <p className="text-[#e2e2e2] text-[10px] font-black uppercase tracking-[0.3em] mb-2 drop-shadow-md">Investment</p>
-                    <p className="text-white text-4xl md:text-6xl font-black tracking-tighter drop-shadow-lg">
+                    <p className="text-gray-400 text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] mb-1 md:mb-2">Investment Starting At</p>
+                    <p className="text-white text-4xl md:text-6xl font-black tracking-tighter">
                       ₹{land.price.toLocaleString('en-IN')}
                     </p>
                   </div>
+                  
+                  {/* Mobile Action Button */}
+                  <button 
+                    onClick={() => router.push(`/properties/${land._id}`)}
+                    className="md:hidden w-fit bg-primary text-white text-[10px] font-black uppercase tracking-widest px-8 py-4 rounded-xl border border-primary/20 shadow-xl shadow-primary/20 active:scale-95 transition-all"
+                  >
+                    View Experience
+                  </button>
                 </div>
               </div>
               </div>
