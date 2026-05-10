@@ -200,8 +200,7 @@ const SiteContentSchema = new Schema<ISiteContent>(
     cofounderVision: { type: String, default: "Our vision is to provide trustworthy, legally verified, and high-growth real estate opportunities while building lasting relationships through transparency and commitment." },
     cofounderExp: { type: String, default: "1.5 Years of Experience in Real Estate\nWorked as Director in Various Real Estate Ventures\nExpertise in VMRDA, Farm Lands & Residential Properties\nAchieved High Property Sales in a Short Time\nStrong Customer Relationship & Communication Skills\nSkilled in Client Handling and Property Consultation" },
     cofounderImage: { type: String, default: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=800" },
-    motivationLine: { type: String, default: "Real estate is built not only on land, but on trust, relationships, and long-term value." }
-  },
+    motivationLine: { type: String, default: "Real estate is built not only on land, but on trust, relationships, and long-term value." },
     officeAddress: { type: String, default: "Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026." },
     officeDescription: { type: String, default: "Look bro, this is the building. Shop No. 202 is located on the second floor, above Tumble Dry on the first floor." },
     officeMapUrl: { type: String, default: "https://maps.app.goo.gl/dvqvbugWe8XHJAnt7?g_st=aw" },
