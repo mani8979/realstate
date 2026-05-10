@@ -139,10 +139,6 @@ const Founder: React.FC<FounderProps> = ({
         </div>
       </div>
     </section>
-
-        </div>
-      </div>
-    </section>
   );
 };
 
