@@ -29,14 +29,14 @@ const Founder: React.FC<FounderProps> = ({
       <div className={`absolute bottom-0 left-0 w-1/3 h-1/2 ${isMain ? 'bg-amber-500/10' : 'bg-blue-500/10'} blur-[140px] rounded-full translate-y-1/2 -translate-x-1/2 opacity-60`} />
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className={`grid grid-cols-1 lg:grid-cols-12 gap-16 items-start ${!isMain ? 'lg:direction-rtl' : ''}`}>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
           
-          {/* Image Side */}
+          {/* Left Side: Photo & Professional Summary */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className={`lg:col-span-5 relative ${!isMain ? 'lg:order-last' : ''}`}
+            className="lg:col-span-5 space-y-10"
           >
             <div className={`relative aspect-[4/5] rounded-[3rem] overflow-hidden border border-white/20 shadow-[0_0_50px_rgba(0,0,0,0.5)] group ${isMain ? 'ring-2 ring-primary/40' : ''}`}>
               <img 
@@ -46,33 +46,45 @@ const Founder: React.FC<FounderProps> = ({
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
               
-              {/* Name at very bottom */}
-              <div className="absolute bottom-0 left-0 right-0 bg-black/80 backdrop-blur-xl border-t border-white/10 py-8 text-center">
-                <p className="text-3xl font-black text-white uppercase tracking-[0.25em] drop-shadow-md">{name}</p>
+              {/* Name Overlay */}
+              <div className="absolute bottom-0 left-0 right-0 bg-black/60 backdrop-blur-md border-t border-white/10 py-6 text-center">
+                <p className="text-2xl font-black text-white uppercase tracking-[0.2em]">{name}</p>
+                <p className="text-[10px] text-primary font-bold uppercase tracking-widest mt-1">{role}</p>
               </div>
             </div>
-            
-            {/* Experience Card */}
-            <motion.div 
-              initial={{ x: isMain ? 50 : -50, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
-              className={`absolute ${isMain ? '-right-10' : '-left-10'} top-1/4 bg-primary p-8 rounded-3xl shadow-[0_20px_50px_rgba(255,107,0,0.3)] hidden md:block border border-white/20`}
-            >
-              <div className="flex items-center gap-5">
-                <Trophy size={40} className="text-white drop-shadow-lg" />
-                <div>
-                  <p className="text-4xl font-black text-white leading-none drop-shadow-md">{experienceYears}</p>
-                  <p className="text-[10px] font-black uppercase text-white tracking-[0.2em] mt-1">Years Experience</p>
-                </div>
-              </div>
-            </motion.div>
+
+            {/* Experience Highlights below Photo */}
+            {isMain && (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                className="bg-white/5 border border-white/10 p-10 rounded-[3rem] backdrop-blur-sm space-y-6"
+              >
+                <h4 className="text-primary font-black uppercase tracking-[0.2em] text-xs border-b border-primary/20 pb-4">Professional Highlights</h4>
+                <ul className="space-y-4">
+                   {[
+                     "18+ Years of Experience in Real Estate",
+                     "Worked as General Manager at Sri Sai Infra for 11 Years",
+                     "Expertise in Plots, Flats, Farm Lands & Apartments",
+                     "Specialized Knowledge in Panchayat Layouts, VUDA & VMRDA Projects",
+                     "Strong Leadership in Real Estate Marketing",
+                     "Excellent Customer Relationship & Property Consultation Skills"
+                   ].map((item, idx) => (
+                     <li key={idx} className="flex gap-4 items-start text-sm text-gray-300">
+                        <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                           <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                        </div>
+                        <span className="leading-relaxed">{item}</span>
+                     </li>
+                   ))}
+                </ul>
+              </motion.div>
+            )}
           </motion.div>
 
-          {/* Content Side */}
+          {/* Right Side: Vision & Bio */}
           <motion.div 
-            initial={{ opacity: 0, x: isMain ? 50 : -50 }}
+            initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             className="lg:col-span-7 space-y-12"
@@ -82,68 +94,51 @@ const Founder: React.FC<FounderProps> = ({
                 <div className="flex items-center gap-2">
                   <div className="h-[1px] w-8 bg-primary" />
                   <h2 className="text-primary font-black uppercase tracking-[0.5em] text-xs drop-shadow-[0_0_10px_rgba(255,107,0,0.3)]">
-                    {isMain ? 'Founder / Leadership' : 'Co-Founder / Director'}
+                    Leadership Profile
                   </h2>
                 </div>
-                <h4 className="text-white/80 font-bold uppercase tracking-[0.25em] text-lg pl-10">{role}</h4>
               </div>
               <h3 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.95] drop-shadow-2xl">
-                {isMain ? 'Leading the' : 'Driving our'} <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-primary to-amber-400 drop-shadow-sm">{isMain ? 'Vision' : 'Growth'}</span>
+                The Founder's <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-primary to-amber-400">Vision</span>
               </h3>
             </div>
 
             <div className="relative">
               <Quote size={64} className="absolute -top-8 -left-8 text-primary/10" />
               <p className="text-2xl md:text-3xl text-gray-100 font-light leading-relaxed italic relative z-10 pl-10 border-l-4 border-primary/50 py-2">
+                "Our vision is to provide trusted, legally verified, and value-driven real estate opportunities while building long-term relationships through transparency and commitment."
+              </p>
+            </div>
+
+            <div className="bg-white/5 border border-white/10 p-10 rounded-[3rem] space-y-6 backdrop-blur-sm">
+              <h4 className="text-xs font-black uppercase tracking-[0.3em] text-primary">Executive Summary</h4>
+              <p className="text-gray-300 text-lg leading-relaxed font-medium italic">
                 {bio}
               </p>
             </div>
 
-            <div className="bg-white/5 border border-white/10 p-10 rounded-[3rem] space-y-8 backdrop-blur-sm hover:bg-white/10 transition-all duration-500">
-              <div className="flex items-center gap-4">
-                <div className="bg-primary/20 p-3 rounded-xl">
-                  <Target size={24} className="text-primary" />
-                </div>
-                <h4 className="text-sm font-black uppercase tracking-[0.3em] text-white underline decoration-primary/50 underline-offset-8">
-                  {isMain ? 'The Founder\'s Vision' : 'The Mission Forward'}
-                </h4>
-              </div>
-              <p className="text-gray-200 text-lg leading-relaxed font-medium">
-                {vision}
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {expertise.map((item: string, idx: number) => (
-                <div key={idx} className="flex items-center gap-4 bg-white/5 p-5 rounded-2xl border border-white/10 hover:border-primary/50 transition-all group/item hover:bg-white/10">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover/item:bg-primary group-hover/item:text-white transition-all shadow-lg">
-                    <Shield size={18} />
-                  </div>
-                  <span className="text-xs font-black text-white uppercase tracking-wider group-hover/item:text-primary transition-colors">{item}</span>
-                </div>
-              ))}
-            </div>
-
             {isMain && (
-              <div className="flex flex-wrap gap-12 pt-8 border-t border-white/10">
+              <div className="flex flex-wrap gap-10 lg:gap-16 pt-8 border-t border-white/10">
                 <div className="space-y-2">
-                  <p className="text-4xl font-black text-white drop-shadow-lg">18+</p>
-                  <p className="text-[10px] font-black uppercase text-primary tracking-[0.3em] drop-shadow-sm">Years of Trust</p>
+                  <p className="text-4xl lg:text-5xl font-black text-white">18+</p>
+                  <p className="text-[10px] font-black uppercase text-primary tracking-[0.3em]">Years of Trust</p>
                 </div>
-                <div className="w-px h-16 bg-white/20 hidden md:block" />
                 <div className="space-y-2">
-                  <p className="text-4xl font-black text-white drop-shadow-lg">100%</p>
-                  <p className="text-[10px] font-black uppercase text-primary tracking-[0.3em] drop-shadow-sm">Transparency</p>
+                  <p className="text-4xl lg:text-5xl font-black text-white">100%</p>
+                  <p className="text-[10px] font-black uppercase text-primary tracking-[0.3em]">Transparency</p>
                 </div>
-                <div className="w-px h-16 bg-white/20 hidden md:block" />
                 <div className="space-y-2">
-                  <p className="text-4xl font-black text-white drop-shadow-lg">Infinite</p>
-                  <p className="text-[10px] font-black uppercase text-primary tracking-[0.3em] drop-shadow-sm">Commitment</p>
+                  <p className="text-4xl lg:text-5xl font-black text-white">Infinite</p>
+                  <p className="text-[10px] font-black uppercase text-primary tracking-[0.3em]">Commitment</p>
                 </div>
               </div>
             )}
           </motion.div>
+
+        </div>
+      </div>
+    </section>
 
         </div>
       </div>
