@@ -103,6 +103,20 @@ export interface ISiteContent extends Document {
   officeDescription: string;
   officeShopNo: string;
   officeFloor: string;
+  // Contact Page Specific
+  contactBadge: string;
+  contactTitle: string;
+  contactDesc: string;
+  contactCallLabel: string;
+  contactCallSub: string;
+  contactEmailLabel: string;
+  contactEmailSub: string;
+  contactVisitLabel: string;
+  contactVisitSub: string;
+  contactFormNameLabel: string;
+  contactFormPhoneLabel: string;
+  contactFormMsgLabel: string;
+  contactFormBtnText: string;
 }
 
 const SiteContentSchema = new Schema<ISiteContent>(
@@ -207,7 +221,20 @@ const SiteContentSchema = new Schema<ISiteContent>(
     officeShopNo: { type: String, default: "SHOP NO. 202" },
     officeFloor: { type: String, default: "SECOND FLOOR" },
     officeMapUrl: { type: String, default: "https://maps.app.goo.gl/dvqvbugWe8XHJAnt7?g_st=aw" },
-    officeMapEmbedUrl: { type: String, default: "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3799.3510526367375!2d83.2109083!3d17.6820589!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTfCsDQwJzU1LjQiTiA4M8KwMTInMzkuMyJF!5e0!3m2!1sen!2sin!4v1715310000000!5m2!1sen!2sin" }
+    officeMapEmbedUrl: { type: String, default: "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3799.3510526367375!2d83.2109083!3d17.6820589!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTfCsDQwJzU1LjQiTiA4M8KwMTInMzkuMyJF!5e0!3m2!1sen!2sin!4v1715310000000!5m2!1sen!2sin" },
+    contactBadge: { type: String, default: "Get In Touch" },
+    contactTitle: { type: String, default: "Have Any Questions?" },
+    contactDesc: { type: String, default: "Our team is ready to help you find the perfect property. Send us a message and we'll get back to you within 24 hours." },
+    contactCallLabel: { type: String, default: "Call Our Leadership" },
+    contactCallSub: { type: String, default: "Shariff / Mohammed" },
+    contactEmailLabel: { type: String, default: "Email Us" },
+    contactEmailSub: { type: String, default: "info@realestate.com" },
+    contactVisitLabel: { type: String, default: "Visit Us" },
+    contactVisitSub: { type: String, default: "Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026." },
+    contactFormNameLabel: { type: String, default: "Your Name" },
+    contactFormPhoneLabel: { type: String, default: "Phone Number" },
+    contactFormMsgLabel: { type: String, default: "Message" },
+    contactFormBtnText: { type: String, default: "Send Message" }
   },
   { timestamps: true }
 );

@@ -5,7 +5,7 @@ import { Send, Phone, Mail, MapPin } from 'lucide-react';
 import { openContactDialog } from '../layout/ContactDialog';
 import axios from 'axios';
 
-const ContactSection = () => {
+const ContactSection = ({ content }: { content?: any }) => {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -48,10 +48,14 @@ const ContactSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* Info Side */}
           <div>
-            <h2 className="text-primary font-bold tracking-widest uppercase text-sm mb-4">Get In Touch</h2>
-            <h3 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-8">Have Any Questions?</h3>
+            <h2 className="text-primary font-bold tracking-widest uppercase text-sm mb-4">
+              {content?.contactBadge || 'Get In Touch'}
+            </h2>
+            <h3 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-8">
+              {content?.contactTitle || 'Have Any Questions?'}
+            </h3>
             <p className="text-gray-600 dark:text-gray-400 text-lg mb-12">
-              Our team is ready to help you find the perfect property. Send us a message and we'll get back to you within 24 hours.
+              {content?.contactDesc || "Our team is ready to help you find the perfect property. Send us a message and we'll get back to you within 24 hours."}
             </p>
 
             <div className="space-y-8">
@@ -63,8 +67,12 @@ const ContactSection = () => {
                   <Phone size={24} />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500 font-medium uppercase tracking-wider">Call Our Leadership</p>
-                  <p className="text-xl font-bold text-gray-900 dark:text-white">Shariff / Mohammed</p>
+                  <p className="text-sm text-gray-500 font-medium uppercase tracking-wider">
+                    {content?.contactCallLabel || 'Call Our Leadership'}
+                  </p>
+                  <p className="text-xl font-bold text-gray-900 dark:text-white">
+                    {content?.contactCallSub || 'Shariff / Mohammed'}
+                  </p>
                 </div>
               </button>
               <div className="flex items-center gap-6 group">
@@ -72,8 +80,12 @@ const ContactSection = () => {
                   <Mail size={24} />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500 font-medium uppercase tracking-wider">Email Us</p>
-                  <p className="text-xl font-bold text-gray-900 dark:text-white">info@realestate.com</p>
+                  <p className="text-sm text-gray-500 font-medium uppercase tracking-wider">
+                    {content?.contactEmailLabel || 'Email Us'}
+                  </p>
+                  <p className="text-xl font-bold text-gray-900 dark:text-white">
+                    {content?.contactEmailSub || 'info@realestate.com'}
+                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-6 group">
@@ -81,8 +93,12 @@ const ContactSection = () => {
                   <MapPin size={24} />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500 font-medium uppercase tracking-wider">Visit Us</p>
-                  <p className="text-xl font-bold text-gray-900 dark:text-white">Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026.</p>
+                  <p className="text-sm text-gray-500 font-medium uppercase tracking-wider">
+                    {content?.contactVisitLabel || 'Visit Us'}
+                  </p>
+                  <p className="text-xl font-bold text-gray-900 dark:text-white">
+                    {content?.contactVisitSub || 'Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026.'}
+                  </p>
                 </div>
               </div>
             </div>
@@ -90,7 +106,7 @@ const ContactSection = () => {
             {/* Map Placeholder */}
             <div className="mt-12 rounded-3xl overflow-hidden h-64 shadow-lg border-4 border-white dark:border-gray-800">
               <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d193595.15830869428!2d-74.119763973046!3d40.69766374874431!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sin!4v1714561234567!5m2!1sen!2sin" 
+                src={content?.officeMapEmbedUrl || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d193595.15830869428!2d-74.119763973046!3d40.69766374874431!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sin!4v1714561234567!5m2!1sen!2sin"} 
                 width="100%" 
                 height="100%" 
                 style={{ border: 0 }} 
@@ -104,7 +120,9 @@ const ContactSection = () => {
           <div className="bg-white dark:bg-gray-800 p-10 rounded-[2.5rem] shadow-xl border border-gray-100 dark:border-gray-700">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Your Name</label>
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                  {content?.contactFormNameLabel || 'Your Name'}
+                </label>
                 <input
                   type="text"
                   required
@@ -115,7 +133,9 @@ const ContactSection = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Phone Number</label>
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                  {content?.contactFormPhoneLabel || 'Phone Number'}
+                </label>
                 <input
                   type="tel"
                   required
@@ -126,7 +146,9 @@ const ContactSection = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Message</label>
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                  {content?.contactFormMsgLabel || 'Message'}
+                </label>
                 <textarea
                   required
                   rows={5}
@@ -147,7 +169,7 @@ const ContactSection = () => {
                 ) : (
                   <>
                     <Send size={20} className="group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
-                    <span>Send Message</span>
+                    <span>{content?.contactFormBtnText || 'Send Message'}</span>
                   </>
                 )}
               </button>
