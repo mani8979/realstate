@@ -134,6 +134,11 @@ export interface ISiteContent extends Document {
   joinOfficeImage1: string;
   joinOfficeImage2: string;
   joinBgImage: string;
+  joinWorkspaceTitle: string;
+  joinWorkspaceDesc: string;
+  joinIndividualTitle: string;
+  joinIndividualDesc: string;
+  joinTeamDesc: string;
   // Team Leads (Dynamic Array)
   joinTeamLeads: {
     name: string;
@@ -274,6 +279,11 @@ const SiteContentSchema = new Schema<ISiteContent>(
     joinOfficeImage1: { type: String, default: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000" },
     joinOfficeImage2: { type: String, default: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=1000" },
     joinBgImage: { type: String, default: "https://images.unsplash.com/photo-1582408921715-18e7806365c1?q=80&w=2000" },
+    joinWorkspaceTitle: { type: String, default: "Our Professional Workspace" },
+    joinWorkspaceDesc: { type: String, default: "Take a look at where the magic happens. We provide a state-of-the-art environment for our teams to excel." },
+    joinIndividualTitle: { type: String, default: "Join as Individual" },
+    joinIndividualDesc: { type: String, default: "Looking to start your journey solo? We provide the platform and mentorship you need to succeed." },
+    joinTeamDesc: { type: String, default: "Connect with our team leads directly to discuss collaboration opportunities." },
     joinTeamLeads: {
       type: [{
         name: String,

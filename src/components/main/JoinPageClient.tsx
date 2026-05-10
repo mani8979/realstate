@@ -97,8 +97,8 @@ const JoinPageClient = ({ serializedContent, rules, qualifications }: JoinPageCl
           <div className="container mx-auto px-6">
             <div className="flex flex-col gap-12">
               <div className="text-center space-y-4">
-                 <h2 className="text-4xl font-black uppercase tracking-tighter">Our Professional Workspace</h2>
-                 <p className="text-gray-400 max-w-2xl mx-auto leading-relaxed">Take a look at where the magic happens. We provide a state-of-the-art environment for our teams to excel.</p>
+                 <h2 className="text-4xl font-black uppercase tracking-tighter">{serializedContent.joinWorkspaceTitle || 'Our Professional Workspace'}</h2>
+                 <p className="text-gray-400 max-w-2xl mx-auto leading-relaxed">{serializedContent.joinWorkspaceDesc || 'Take a look at where the magic happens. We provide a state-of-the-art environment for our teams to excel.'}</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                  <div className="relative aspect-video rounded-[3rem] overflow-hidden border border-white/10 group">
@@ -120,9 +120,9 @@ const JoinPageClient = ({ serializedContent, rules, qualifications }: JoinPageCl
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
               <div className="space-y-10">
                 <div className="space-y-6">
-                  <h3 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Join as <br/><span className="text-primary">Individual</span></h3>
+                  <h3 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">{serializedContent.joinIndividualTitle || 'Join as Individual'}</h3>
                   <p className="text-gray-400 text-lg leading-relaxed max-w-md">
-                    Looking to start your journey solo? We provide the platform and mentorship you need to succeed.
+                    {serializedContent.joinIndividualDesc || 'Looking to start your journey solo? We provide the platform and mentorship you need to succeed.'}
                   </p>
                 </div>
                 <a 
@@ -139,7 +139,7 @@ const JoinPageClient = ({ serializedContent, rules, qualifications }: JoinPageCl
                 <div className="space-y-6">
                   <h3 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">{serializedContent.joinTeamTitle || 'Join as a Team'}</h3>
                   <p className="text-gray-400 text-lg leading-relaxed max-w-md">
-                    Connect with our team leads directly to discuss collaboration opportunities.
+                    {serializedContent.joinTeamDesc || 'Connect with our team leads directly to discuss collaboration opportunities.'}
                   </p>
                 </div>
                 <button 

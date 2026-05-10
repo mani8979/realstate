@@ -404,18 +404,46 @@ export default function SiteContentAdmin() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-100 dark:border-gray-800 pt-4">
               <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Workspace Title</label>
+                <input name="joinWorkspaceTitle" value={content.joinWorkspaceTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Workspace Description</label>
+                <textarea name="joinWorkspaceDesc" rows={2} value={content.joinWorkspaceDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-100 dark:border-gray-800 pt-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Individual Title</label>
+                <input name="joinIndividualTitle" value={content.joinIndividualTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Individual Description</label>
+                <textarea name="joinIndividualDesc" rows={2} value={content.joinIndividualDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-100 dark:border-gray-800 pt-4">
+              <div>
                 <label className="block text-sm font-bold text-gray-500 mb-2">Team Title</label>
                 <input name="joinTeamTitle" value={content.joinTeamTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
               </div>
               <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Team Description</label>
+                <textarea name="joinTeamDesc" rows={2} value={content.joinTeamDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-100 dark:border-gray-800 pt-4">
+              <div>
                 <label className="block text-sm font-bold text-gray-500 mb-2">Rules (Newline separated)</label>
                 <textarea name="joinRules" rows={4} value={content.joinRules || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
               </div>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-bold text-gray-500 mb-2">Qualifications (Newline separated)</label>
-              <textarea name="joinQualifications" rows={4} value={content.joinQualifications || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Qualifications (Newline separated)</label>
+                <textarea name="joinQualifications" rows={4} value={content.joinQualifications || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              </div>
             </div>
           </div>
         </div>
