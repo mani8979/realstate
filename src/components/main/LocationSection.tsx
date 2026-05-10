@@ -9,6 +9,8 @@ interface LocationSectionProps {
     officeDescription?: string;
     officeMapUrl?: string;
     officeMapEmbedUrl?: string;
+    officeShopNo?: string;
+    officeFloor?: string;
   };
 }
 
@@ -104,8 +106,12 @@ const LocationSection = ({ content }: LocationSectionProps) => {
                     <Building2 className="text-primary" size={24} />
                   </div>
                   <div>
-                    <div className="text-white font-black text-sm uppercase tracking-tighter">Shop No. 202</div>
-                    <div className="text-gray-400 text-xs uppercase tracking-widest">Second Floor</div>
+                    <div className="text-white font-black text-sm uppercase tracking-tighter">
+                      {content?.officeShopNo || "Shop No. 202"}
+                    </div>
+                    <div className="text-gray-400 text-xs uppercase tracking-widest">
+                      {content?.officeFloor || "Second Floor"}
+                    </div>
                   </div>
                 </div>
               </div>

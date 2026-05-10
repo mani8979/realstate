@@ -747,6 +747,75 @@ export default function BrandAdmin() {
           </div>
         </div>
 
+        {/* Office & Location Settings */}
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Office & Location Settings</h2>
+          <div className="grid grid-cols-1 gap-6">
+            <div>
+              <label className="block text-sm font-bold text-gray-500 mb-2">Office Address</label>
+              <textarea 
+                name="officeAddress"
+                rows={2}
+                value={content.officeAddress || ''}
+                onChange={handleChange}
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-500 mb-2">Location Instructions (Description)</label>
+              <textarea 
+                name="officeDescription"
+                rows={3}
+                value={content.officeDescription || ''}
+                onChange={handleChange}
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                placeholder="e.g. Look bro, this is the building..."
+              />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Shop Number</label>
+                <input 
+                  name="officeShopNo"
+                  value={content.officeShopNo || ''}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  placeholder="e.g. SHOP NO. 202"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Floor Level</label>
+                <input 
+                  name="officeFloor"
+                  value={content.officeFloor || ''}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  placeholder="e.g. SECOND FLOOR"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-500 mb-2">Google Maps Link (Direct Link)</label>
+              <input 
+                name="officeMapUrl"
+                value={content.officeMapUrl || ''}
+                onChange={handleChange}
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-500 mb-2">Google Maps Embed URL (Iframe src)</label>
+              <textarea 
+                name="officeMapEmbedUrl"
+                rows={3}
+                value={content.officeMapEmbedUrl || ''}
+                onChange={handleChange}
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-mono text-[10px]"
+              />
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );
