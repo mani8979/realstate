@@ -8,6 +8,7 @@ interface LocationSectionProps {
     officeAddress?: string;
     officeDescription?: string;
     officeMapUrl?: string;
+    officeMapEmbedUrl?: string;
   };
 }
 
@@ -16,8 +17,11 @@ const LocationSection = ({ content }: LocationSectionProps) => {
   const description = content?.officeDescription || "Look bro, this is the building. Shop No. 202 is located on the second floor, above Tumble Dry on the first floor.";
   const mapUrl = content?.officeMapUrl || "https://maps.app.goo.gl/dvqvbugWe8XHJAnt7?g_st=aw";
   
-  // Use the address to generate a reliable embed URL with iwloc=0 to hide the info card if possible
-  const embedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=15&ie=UTF8&iwloc=0&output=embed`;
+  // Use the admin-provided embed URL if available, otherwise generate one from coordinates/address
+  // Default coordinates from the user's provided map link
+  const defaultEmbed = "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3799.3510526367375!2d83.2109083!3d17.6820589!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTfCsDQwJzU1LjQiTiA4M8KwMTInMzkuMyJF!5e0!3m2!1sen!2sin!4v1715310000000!5m2!1sen!2sin";
+  
+  const embedUrl = content?.officeMapEmbedUrl || defaultEmbed;
 
   return (
     <section className="relative py-24 bg-black overflow-hidden">
@@ -40,7 +44,7 @@ const LocationSection = ({ content }: LocationSectionProps) => {
                 </div>
                 <h2 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-none">
                   FIND US <br/>
-                  <span className="text-transparent bg-clip-text bg-gradient-r from-primary to-emerald-400">LOCALLY</span>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-400">LOCALLY</span>
                 </h2>
               </div>
 

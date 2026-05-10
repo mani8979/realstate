@@ -262,6 +262,18 @@ export default function FooterAdmin() {
                 placeholder="https://maps.app.goo.gl/..."
               />
             </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-500 mb-2">Google Maps Direct Embed URL (iframe src)</label>
+              <textarea 
+                name="officeMapEmbedUrl"
+                rows={3}
+                value={content.officeMapEmbedUrl || ''}
+                onChange={handleChange}
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                placeholder="https://www.google.com/maps/embed?pb=..."
+              />
+              <p className="text-xs text-gray-400 mt-2">Paste the iframe src from Google Maps (Share &gt; Embed a map) for 100% accuracy.</p>
+            </div>
           </div>
         </div>
 

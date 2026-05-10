@@ -90,6 +90,7 @@ export interface ISiteContent extends Document {
   officeAddress: string;
   officeDescription: string;
   officeMapUrl: string;
+  officeMapEmbedUrl: string;
 }
 
 const SiteContentSchema = new Schema<ISiteContent>(
@@ -182,7 +183,8 @@ const SiteContentSchema = new Schema<ISiteContent>(
     founderImage: { type: String, default: "/founder.png" },
     officeAddress: { type: String, default: "Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026." },
     officeDescription: { type: String, default: "Look bro, this is the building. Shop No. 202 is located on the second floor, above Tumble Dry on the first floor." },
-    officeMapUrl: { type: String, default: "https://maps.app.goo.gl/dvqvbugWe8XHJAnt7?g_st=aw" }
+    officeMapUrl: { type: String, default: "https://maps.app.goo.gl/dvqvbugWe8XHJAnt7?g_st=aw" },
+    officeMapEmbedUrl: { type: String, default: "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3799.3510526367375!2d83.2109083!3d17.6820589!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTfCsDQwJzU1LjQiTiA4M8KwMTInMzkuMyJF!5e0!3m2!1sen!2sin!4v1715310000000!5m2!1sen!2sin" }
   },
   { timestamps: true }
 );
