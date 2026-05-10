@@ -251,6 +251,30 @@ export default function BrandAdmin() {
         </div>
 
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Global Identity</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-bold text-gray-500 mb-2">Logo Title (e.g. STAR LANDS)</label>
+              <input 
+                name="logoTitle"
+                value={content.logoTitle || ''}
+                onChange={handleChange}
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-500 mb-2">Logo Subtitle (e.g. DEVELOPERS)</label>
+              <input 
+                name="logoSubtitle"
+                value={content.logoSubtitle || ''}
+                onChange={handleChange}
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Home Branding & Motivation</h2>
           
           <div className="grid grid-cols-1 gap-6">
@@ -702,6 +726,179 @@ export default function BrandAdmin() {
             </div>
           </div>
         </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Global Footer & Detailed Contact Settings */}
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Global Footer & Contact Details</h2>
+          <div className="grid grid-cols-1 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Footer Reveal Heading (e.g. GET IN TOUCH)</label>
+                <input 
+                  name="footerTitle"
+                  value={content.footerTitle || ''}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Copyright Text</label>
+                <input 
+                  name="footerCopyright"
+                  value={content.footerCopyright || ''}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-6 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800">
+              <div className="space-y-4">
+                <h3 className="text-xs font-black uppercase text-primary tracking-widest">Inquiry Column</h3>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Label (e.g. Inquiries)</label>
+                  <input 
+                    name="footerInquiriesLabel"
+                    value={content.footerInquiriesLabel || ''}
+                    onChange={handleChange}
+                    className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Phone Number</label>
+                  <input 
+                    name="footerPhone"
+                    value={content.footerPhone || ''}
+                    onChange={handleChange}
+                    className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Availability Text (e.g. Mon-Sat...)</label>
+                  <input 
+                    name="footerPhoneSub"
+                    value={content.footerPhoneSub || ''}
+                    onChange={handleChange}
+                    className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-xs font-black uppercase text-primary tracking-widest">Office Column</h3>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Label (e.g. Main Office)</label>
+                  <input 
+                    name="footerOfficeLabel"
+                    value={content.footerOfficeLabel || ''}
+                    onChange={handleChange}
+                    className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Address Display (Use \n for line breaks)</label>
+                  <textarea 
+                    name="footerAddress"
+                    rows={2}
+                    value={content.footerAddress || ''}
+                    onChange={handleChange}
+                    className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Subtext (e.g. Visit us for coffee...)</label>
+                  <input 
+                    name="footerAddressSub"
+                    value={content.footerAddressSub || ''}
+                    onChange={handleChange}
+                    className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Footer Service 1 Text (e.g. Luxury Interior)</label>
+                <input 
+                  name="footerService1"
+                  value={content.footerService1 || ''}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Footer Service 2 Text (e.g. Consultation)</label>
+                <input 
+                  name="footerService2"
+                  value={content.footerService2 || ''}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Global Contact Info (Standard Footer) */}
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Global Contact Info (Standard Footer)</h2>
+          <div className="grid grid-cols-1 gap-6">
+            <div>
+              <label className="block text-sm font-bold text-gray-500 mb-2">Footer Description Text</label>
+              <textarea 
+                name="globalFooterDesc"
+                rows={2}
+                value={content.globalFooterDesc || ''}
+                onChange={handleChange}
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+              />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Contact Phone</label>
+                <input 
+                  name="contactPhone"
+                  value={content.contactPhone || ''}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Contact Email</label>
+                <input 
+                  name="contactEmail"
+                  value={content.contactEmail || ''}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Copyright (Standard Footer)</label>
+                <input 
+                  name="globalFooterCopyright"
+                  value={content.globalFooterCopyright || ''}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-500 mb-2">Contact Address</label>
+              <textarea 
+                name="contactAddress"
+                rows={2}
+                value={content.contactAddress || ''}
+                onChange={handleChange}
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+              />
+            </div>
+          </div>
+        </div>
+
         {/* Final CTA Section */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Final Call to Action</h2>
@@ -812,6 +1009,77 @@ export default function BrandAdmin() {
                 onChange={handleChange}
                 className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-mono text-[10px]"
               />
+            </div>
+          </div>
+        </div>
+
+        {/* Global Footer (Reveal Style) */}
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Homepage Footer (Reveal Style)</h2>
+          <div className="grid grid-cols-1 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Footer Heading (e.g. GET IN TOUCH)</label>
+                <input 
+                  name="footerTitle"
+                  value={content.footerTitle || ''}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Footer Copyright</label>
+                <input 
+                  name="footerCopyright"
+                  value={content.footerCopyright || ''}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-6 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800">
+              <div className="space-y-4">
+                <h3 className="text-xs font-black uppercase text-primary tracking-widest">Inquiry Column</h3>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Label</label>
+                  <input name="footerInquiriesLabel" value={content.footerInquiriesLabel || ''} onChange={handleChange} className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900" />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Phone Number</label>
+                  <input name="footerPhone" value={content.footerPhone || ''} onChange={handleChange} className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900" />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Availability Subtext</label>
+                  <input name="footerPhoneSub" value={content.footerPhoneSub || ''} onChange={handleChange} className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900" />
+                </div>
+              </div>
+              <div className="space-y-4">
+                <h3 className="text-xs font-black uppercase text-primary tracking-widest">Office Column</h3>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Label</label>
+                  <input name="footerOfficeLabel" value={content.footerOfficeLabel || ''} onChange={handleChange} className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900" />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Address Display</label>
+                  <textarea name="footerAddress" rows={2} value={content.footerAddress || ''} onChange={handleChange} className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900" />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Subtext</label>
+                  <input name="footerAddressSub" value={content.footerAddressSub || ''} onChange={handleChange} className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900" />
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Footer Service 1 Text</label>
+                <input name="footerService1" value={content.footerService1 || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Footer Service 2 Text</label>
+                <input name="footerService2" value={content.footerService2 || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+              </div>
             </div>
           </div>
         </div>

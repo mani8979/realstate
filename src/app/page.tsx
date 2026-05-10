@@ -46,7 +46,7 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col bg-black">
-      <Hero />
+      <Hero content={serializedContent} />
       
       <Founder 
         name={serializedContent.mainFounderName}
@@ -60,11 +60,24 @@ export default async function Home() {
       />
       
       <div className="relative z-10">
-        <FeaturedProperties properties={serializedLands.slice(0, 3)} />
+        <FeaturedProperties properties={serializedLands.slice(0, 3)} content={serializedContent} />
+      </div>
+
+      {/* Cinematic Transition Divider */}
+      <div className="relative z-10 py-24 bg-black overflow-hidden">
+        <div className="container mx-auto px-6">
+          <div className="flex items-center gap-10">
+            <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-primary/50 to-primary" />
+            <div className="p-6 rounded-full border-2 border-primary/30 bg-primary/5 backdrop-blur-md shadow-[0_0_50px_rgba(212,175,55,0.2)]">
+               <div className="w-6 h-6 rotate-45 border-4 border-primary animate-pulse" />
+            </div>
+            <div className="h-[2px] flex-1 bg-gradient-to-l from-transparent via-primary/50 to-primary" />
+          </div>
+        </div>
       </div>
 
       <div className="relative z-10">
-        <BrandValues />
+        <BrandValues content={serializedContent} />
       </div>
 
       <div className="relative z-10 py-20 bg-slate-950">

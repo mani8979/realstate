@@ -9,23 +9,27 @@ import { openContactDialog } from '../layout/ContactDialog';
 
 
 
-const Hero = () => {
+const Hero = ({ content: propContent }: { content?: any }) => {
   const router = useRouter();
   
-  const [content, setContent] = useState<any>({
+  const [content, setContent] = useState<any>(propContent || {
     heroBgImage: '' // Initialize empty to prevent flicker
   });
 
   useEffect(() => {
-    fetch('/api/content')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success && data.data) {
-          setContent((prev: any) => ({ ...prev, ...data.data }));
-        }
-      })
-      .catch(err => console.error("Error fetching hero content:", err));
-  }, []);
+    if (!propContent) {
+      fetch('/api/content')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.data) {
+            setContent((prev: any) => ({ ...prev, ...data.data }));
+          }
+        })
+        .catch(err => console.error("Error fetching hero content:", err));
+    } else {
+      setContent(propContent);
+    }
+  }, [propContent]);
 
   return (
     <section className="relative min-h-screen w-full flex items-center justify-center overflow-x-hidden">
