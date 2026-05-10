@@ -106,7 +106,7 @@ const FeaturedProperties = ({ properties = [], content: propContent }: { propert
           
           <div className="flex items-center gap-6 md:gap-8 relative z-10">
             <div className="w-14 h-14 md:w-20 md:h-20 bg-primary flex items-center justify-center rounded-2xl md:rounded-[2rem] shadow-2xl shadow-primary/40">
-              <TrendingUp className="text-white" size={24} md:size={32} />
+              <TrendingUp className="text-white w-6 h-6 md:w-8 md:h-8" />
             </div>
             <div>
               <p className="text-primary font-black uppercase tracking-[0.4em] text-[9px] md:text-xs mb-2 md:mb-3">{content.featuredBannerTitle}</p>

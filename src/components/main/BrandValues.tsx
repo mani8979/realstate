@@ -103,7 +103,7 @@ const BrandValues = ({ content: propContent }: { content?: any }) => {
 
                 <div className="relative z-10">
                   <div className="w-16 h-16 md:w-20 md:h-20 bg-[#10b981] group-hover:bg-primary text-white rounded-2xl md:rounded-[2rem] flex items-center justify-center mb-8 md:mb-12 shadow-2xl shadow-black/40 transition-all duration-500 group-hover:rotate-[360deg]">
-                    <Sparkles size={28} md:size={32} />
+                    <Sparkles className="w-7 h-7 md:w-8 md:h-8" />
                   </div>
                   
                   <h4 className="text-2xl md:text-4xl font-black text-white group-hover:text-slate-900 mb-6 md:mb-8 uppercase tracking-tighter leading-tight transition-colors">
