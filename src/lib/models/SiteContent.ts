@@ -133,6 +133,16 @@ export interface ISiteContent extends Document {
   navJoin: string;
   joinOfficeImage1: string;
   joinOfficeImage2: string;
+  // Team Leads
+  teamLead1Name: string;
+  teamLead1Phone: string;
+  teamLead1Image: string;
+  teamLead2Name: string;
+  teamLead2Phone: string;
+  teamLead2Image: string;
+  teamLead3Name: string;
+  teamLead3Phone: string;
+  teamLead3Image: string;
 }
 
 const SiteContentSchema = new Schema<ISiteContent>(
@@ -265,7 +275,16 @@ const SiteContentSchema = new Schema<ISiteContent>(
     chatWithUsText: { type: String, default: "Chat With Us" },
     navJoin: { type: String, default: "Join" },
     joinOfficeImage1: { type: String, default: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000" },
-    joinOfficeImage2: { type: String, default: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=1000" }
+    joinOfficeImage2: { type: String, default: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=1000" },
+    teamLead1Name: { type: String, default: "Mahaboob Shariff" },
+    teamLead1Phone: { type: String, default: "919666080645" },
+    teamLead1Image: { type: String, default: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800" },
+    teamLead2Name: { type: String, default: "Muhammad Yaseen" },
+    teamLead2Phone: { type: String, default: "919573785434" },
+    teamLead2Image: { type: String, default: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=800" },
+    teamLead3Name: { type: String, default: "Professional Consultant" },
+    teamLead3Phone: { type: String, default: "919666080645" },
+    teamLead3Image: { type: String, default: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800" }
   },
   { timestamps: true }
 );

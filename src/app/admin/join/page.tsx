@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Save, Info, Upload, X } from 'lucide-react';
+import { Save, Info, Upload, X, Users } from 'lucide-react';
 
 export default function JoinAdmin() {
   const [content, setContent] = useState<any>({
@@ -13,11 +13,19 @@ export default function JoinAdmin() {
     joinIndividualBtnText: '',
     joinIndividualPhone: '',
     joinTeamTitle: '',
-    joinTeamMembers: '',
     chatWithUsText: '',
     navJoin: '',
     joinOfficeImage1: '',
-    joinOfficeImage2: ''
+    joinOfficeImage2: '',
+    teamLead1Name: '',
+    teamLead1Phone: '',
+    teamLead1Image: '',
+    teamLead2Name: '',
+    teamLead2Phone: '',
+    teamLead2Image: '',
+    teamLead3Name: '',
+    teamLead3Phone: '',
+    teamLead3Image: ''
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -103,7 +111,6 @@ export default function JoinAdmin() {
         {/* Main Content */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Main Page Content</h2>
-          
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
@@ -115,12 +122,10 @@ export default function JoinAdmin() {
                 <input name="joinBadge" value={content.joinBadge || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
               </div>
             </div>
-
             <div>
               <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Page Title</label>
               <input name="joinTitle" value={content.joinTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
             </div>
-
             <div>
               <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Description</label>
               <textarea name="joinDesc" rows={3} value={content.joinDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
@@ -131,7 +136,6 @@ export default function JoinAdmin() {
         {/* Office & Rules */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Office & Requirements</h2>
-          
           <div className="space-y-6">
             <div>
               <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Rules & Regulations (One per line)</label>
@@ -144,49 +148,52 @@ export default function JoinAdmin() {
           </div>
         </div>
 
-        {/* Join Actions */}
+        {/* Team Leads (Popup Management) */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4 flex items-center justify-between">
-            <span>Recruitment Actions</span>
-            <div className="flex items-center gap-2 text-[10px] text-gray-400 font-bold uppercase tracking-widest">
-              <Info size={12} />
-              WhatsApp triggers
-            </div>
+          <h2 className="text-xl font-bold mb-8 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4 flex items-center gap-3">
+             <Users size={24} className="text-primary" />
+             Team Leaders Management (Popup)
           </h2>
           
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Individual Button Text</label>
-                <input name="joinIndividualBtnText" value={content.joinIndividualBtnText || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+          <div className="space-y-12">
+            {[1, 2, 3].map((num) => (
+              <div key={num} className="p-6 rounded-3xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700">
+                <h3 className="text-lg font-bold mb-6 uppercase tracking-wider text-primary">Team Lead {num}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-4">
+                    <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Photo</label>
+                    {content[`teamLead${num}Image`] ? (
+                      <div className="relative aspect-square w-32 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 group">
+                        <img src={content[`teamLead${num}Image`]} alt={`Lead ${num}`} className="w-full h-full object-cover" />
+                        <button onClick={() => setContent({ ...content, [`teamLead${num}Image`]: '' })} className="absolute inset-0 bg-black/40 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all"><X size={20} /></button>
+                      </div>
+                    ) : (
+                      <label className="flex flex-col items-center justify-center aspect-square w-32 rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-700 hover:border-primary transition-all cursor-pointer">
+                        <Upload size={24} className="text-gray-400 mb-1" />
+                        <span className="text-[10px] font-bold text-gray-500 uppercase">Upload</span>
+                        <input type="file" className="hidden" onChange={(e) => handleUpload(e, `teamLead${num}Image`)} />
+                      </label>
+                    )}
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Full Name</label>
+                      <input name={`teamLead${num}Name`} value={content[`teamLead${num}Name`] || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2">WhatsApp Number</label>
+                      <input name={`teamLead${num}Phone`} value={content[`teamLead${num}Phone`] || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div>
-                <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Individual Phone (WhatsApp)</label>
-                <input name="joinIndividualPhone" value={content.joinIndividualPhone || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
-              </div>
-            </div>
-
-            <div className="border-t border-gray-100 dark:border-gray-800 pt-6">
-              <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Team Section Title</label>
-              <input name="joinTeamTitle" value={content.joinTeamTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
-            </div>
-
-            <div>
-              <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Team Members (Format: Name - Phone, one per line)</label>
-              <textarea name="joinTeamMembers" rows={4} value={content.joinTeamMembers || ''} onChange={handleChange} placeholder="Shariff - 919666080645&#10;Mohammed - 919573785434" className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
-            </div>
-
-            <div className="border-t border-gray-100 dark:border-gray-800 pt-6">
-              <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Global Chat Label</label>
-              <input name="chatWithUsText" value={content.chatWithUsText || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
-            </div>
+            ))}
           </div>
         </div>
 
         {/* Office Gallery */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Office Gallery Photos</h2>
-          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-4">
               <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Office Photo 1</label>
@@ -203,7 +210,6 @@ export default function JoinAdmin() {
                 </label>
               )}
             </div>
-
             <div className="space-y-4">
               <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Office Photo 2</label>
               {content.joinOfficeImage2 ? (
@@ -220,7 +226,7 @@ export default function JoinAdmin() {
               )}
             </div>
           </div>
-          {(uploading === 'joinOfficeImage1' || uploading === 'joinOfficeImage2') && <p className="text-primary text-xs font-bold mt-4 animate-pulse uppercase tracking-widest">Uploading Image...</p>}
+          {(uploading) && <p className="text-primary text-xs font-bold mt-4 animate-pulse uppercase tracking-widest">Uploading Media...</p>}
         </div>
       </div>
     </div>
