@@ -54,7 +54,7 @@ const Founder: React.FC<FounderProps> = ({
             </div>
 
             {/* Experience Highlights below Photo */}
-            {isMain && (
+            {expertise.length > 0 && (
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -62,14 +62,7 @@ const Founder: React.FC<FounderProps> = ({
               >
                 <h4 className="text-primary font-black uppercase tracking-[0.2em] text-xs border-b border-primary/20 pb-4">Professional Highlights</h4>
                 <ul className="space-y-4">
-                   {[
-                     "18+ Years of Experience in Real Estate",
-                     "Worked as General Manager at Sri Sai Infra for 11 Years",
-                     "Expertise in Plots, Flats, Farm Lands & Apartments",
-                     "Specialized Knowledge in Panchayat Layouts, VUDA & VMRDA Projects",
-                     "Strong Leadership in Real Estate Marketing",
-                     "Excellent Customer Relationship & Property Consultation Skills"
-                   ].map((item, idx) => (
+                   {expertise.map((item, idx) => (
                      <li key={idx} className="flex gap-4 items-start text-sm text-gray-300">
                         <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                            <div className="w-1.5 h-1.5 rounded-full bg-primary" />
@@ -99,7 +92,7 @@ const Founder: React.FC<FounderProps> = ({
                 </div>
               </div>
               <h3 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.95] drop-shadow-2xl">
-                The Founder's <br />
+                The {isMain ? "Founder's" : "Co-Founder's"} <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-primary to-amber-400">Vision</span>
               </h3>
             </div>
@@ -107,7 +100,7 @@ const Founder: React.FC<FounderProps> = ({
             <div className="relative">
               <Quote size={64} className="absolute -top-8 -left-8 text-primary/10" />
               <p className="text-2xl md:text-3xl text-gray-100 font-light leading-relaxed italic relative z-10 pl-10 border-l-4 border-primary/50 py-2">
-                "Our vision is to provide trusted, legally verified, and value-driven real estate opportunities while building long-term relationships through transparency and commitment."
+                "{vision || "Our vision is to provide trusted, legally verified, and value-driven real estate opportunities while building long-term relationships through transparency and commitment."}"
               </p>
             </div>
 
@@ -118,22 +111,20 @@ const Founder: React.FC<FounderProps> = ({
               </p>
             </div>
 
-            {isMain && (
-              <div className="flex flex-wrap gap-10 lg:gap-16 pt-8 border-t border-white/10">
-                <div className="space-y-2">
-                  <p className="text-4xl lg:text-5xl font-black text-white">18+</p>
-                  <p className="text-[10px] font-black uppercase text-primary tracking-[0.3em]">Years of Trust</p>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-4xl lg:text-5xl font-black text-white">100%</p>
-                  <p className="text-[10px] font-black uppercase text-primary tracking-[0.3em]">Transparency</p>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-4xl lg:text-5xl font-black text-white">Infinite</p>
-                  <p className="text-[10px] font-black uppercase text-primary tracking-[0.3em]">Commitment</p>
-                </div>
+            <div className="flex flex-wrap gap-10 lg:gap-16 pt-8 border-t border-white/10">
+              <div className="space-y-2">
+                <p className="text-4xl lg:text-5xl font-black text-white">{experienceYears}</p>
+                <p className="text-[10px] font-black uppercase text-primary tracking-[0.3em]">Years of Trust</p>
               </div>
-            )}
+              <div className="space-y-2">
+                <p className="text-4xl lg:text-5xl font-black text-white">100%</p>
+                <p className="text-[10px] font-black uppercase text-primary tracking-[0.3em]">Transparency</p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-4xl lg:text-5xl font-black text-white">Infinite</p>
+                <p className="text-[10px] font-black uppercase text-primary tracking-[0.3em]">Commitment</p>
+              </div>
+            </div>
           </motion.div>
 
         </div>

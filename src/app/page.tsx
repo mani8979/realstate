@@ -58,6 +58,17 @@ export default async function Home() {
         isMain={true}
         experienceYears="18+"
       />
+
+      <Founder 
+        name={serializedContent.cofounderName}
+        role={serializedContent.cofounderRole}
+        bio={serializedContent.cofounderBio}
+        vision={serializedContent.cofounderVision}
+        exp={serializedContent.cofounderExp}
+        image={serializedContent.cofounderImage}
+        isMain={false}
+        experienceYears="1.5+"
+      />
       
       <div className="relative z-10">
         <FeaturedProperties properties={serializedLands.slice(0, 3)} content={serializedContent} />

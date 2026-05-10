@@ -7,26 +7,38 @@ import { cn } from '@/lib/utils';
 
 type DialogType = 'call' | 'whatsapp' | 'book' | null;
 
-const CONTACTS = [
-  {
-    name: 'Shariff Mabob',
-    role: 'Founder, Managing Director',
-    phone: '+919666080645',
-    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=100'
-  },
-  {
-    name: 'Mohammed Yaseen',
-    role: 'Co-Founder, Director',
-    phone: '+919573785434',
-    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=100'
-  }
-];
-
 export const ContactDialog = () => {
   const [activeDialog, setActiveDialog] = useState<DialogType>(null);
   const [customMessage, setCustomMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState({ name: '', phone: '' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [contacts, setContacts] = useState<any[]>([]);
+
+  // Fetch dynamic contact info from SiteContent
+  useEffect(() => {
+    fetch('/api/content')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.data) {
+          const content = data.data;
+          setContacts([
+            {
+              name: content.mainFounderName || 'Mahaboob shariff',
+              role: content.mainFounderRole || 'Founder, Managing Director',
+              phone: content.mainFounderPhone || '919666080645',
+              image: content.mainFounderImage || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=100'
+            },
+            {
+              name: content.cofounderName || 'Muhammad Yaseen',
+              role: content.cofounderRole || 'Co-Founder & Director',
+              phone: content.cofounderPhone || '919573785434',
+              image: content.cofounderImage || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=100'
+            }
+          ]);
+        }
+      })
+      .catch(err => console.error("Error fetching contact dialog content:", err));
+  }, []);
 
   // Listener for custom events to trigger dialogs from anywhere
   useEffect(() => {
@@ -143,7 +155,7 @@ export const ContactDialog = () => {
             <div className="p-8 pt-0">
               {(activeDialog === 'call' || activeDialog === 'whatsapp') && (
                 <div className="space-y-4 mt-4">
-                  {CONTACTS.map((contact, index) => (
+                  {contacts.map((contact, index) => (
                     <motion.a
                       key={index}
                       initial={{ opacity: 0, x: -20 }}

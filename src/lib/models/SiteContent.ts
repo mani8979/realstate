@@ -90,6 +90,7 @@ export interface ISiteContent extends Document {
   mainFounderVision: string;
   mainFounderExp: string;
   mainFounderImage: string;
+  mainFounderPhone: string;
   // Co-Founder
   cofounderName: string;
   cofounderRole: string;
@@ -97,6 +98,7 @@ export interface ISiteContent extends Document {
   cofounderVision: string;
   cofounderExp: string;
   cofounderImage: string;
+  cofounderPhone: string;
   officeAddress: string;
   officeDescription: string;
   officeShopNo: string;
@@ -190,6 +192,7 @@ const SiteContentSchema = new Schema<ISiteContent>(
     mainFounderVision: { type: String, default: "Our vision is to provide trusted, legally verified, and value-driven real estate opportunities while building long-term relationships through transparency and commitment." },
     mainFounderExp: { type: String, default: "18+ Years of Experience in Real Estate\nWorked as General Manager at Sri Sai Infra for 11 Years\nExpertise in Plots, Flats, Farm Lands & Apartments\nSpecialized Knowledge in Panchayat Layouts, VUDA & VMRDA Projects\nStrong Leadership in Real Estate Marketing\nExcellent Customer Relationship & Property Consultation Skills" },
     mainFounderImage: { type: String, default: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800" },
+    mainFounderPhone: { type: String, default: "919666080645" },
     // Co-Founder
     cofounderName: { type: String, default: "Muhammad Yaseen" },
     cofounderRole: { type: String, default: "Co-Founder & Director" },
@@ -197,6 +200,7 @@ const SiteContentSchema = new Schema<ISiteContent>(
     cofounderVision: { type: String, default: "Our vision is to provide trustworthy, legally verified, and high-growth real estate opportunities while building lasting relationships through transparency and commitment." },
     cofounderExp: { type: String, default: "1.5 Years of Experience in Real Estate\nWorked as Director in Various Real Estate Ventures\nExpertise in VMRDA, Farm Lands & Residential Properties\nAchieved High Property Sales in a Short Time\nStrong Customer Relationship & Communication Skills\nSkilled in Client Handling and Property Consultation" },
     cofounderImage: { type: String, default: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=800" },
+    cofounderPhone: { type: String, default: "919573785434" },
     motivationLine: { type: String, default: "Real estate is built not only on land, but on trust, relationships, and long-term value." },
     officeAddress: { type: String, default: "Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026." },
     officeDescription: { type: String, default: "Look bro, this is the building. Shop No. 202 is located on the second floor, above Tumble Dry on the first floor." },
