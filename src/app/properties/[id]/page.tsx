@@ -79,6 +79,14 @@ const PropertyDetails = () => {
   const handleEnquiry = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormStatus('loading');
+
+    // Phone validation (10 digits)
+    const phoneDigits = formData.phone.replace(/\D/g, '');
+    if (phoneDigits.length !== 10) {
+      setFormStatus('error');
+      return;
+    }
+
     try {
       await axios.post('/api/enquiries', {
         ...formData,
@@ -519,6 +527,13 @@ const PropertyDetails = () => {
                         </button>
                     </div>
                     {formStatus === 'success' && <div className="col-span-full bg-primary/20 p-4 rounded-2xl text-primary font-bold text-center animate-bounce uppercase tracking-widest text-xs">Enquiry sent successfully! We will contact you soon.</div>}
+                    {formStatus === 'error' && (
+                      <div className="col-span-full bg-red-500/20 p-4 rounded-2xl text-red-500 font-bold text-center uppercase tracking-widest text-xs">
+                        {formData.phone.replace(/\D/g, '').length !== 10 
+                          ? 'Please enter a valid 10-digit mobile number.' 
+                          : 'Error sending enquiry. Please try again.'}
+                      </div>
+                    )}
                  </form>
               </motion.div>
 
