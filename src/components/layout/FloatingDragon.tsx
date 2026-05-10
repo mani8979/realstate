@@ -28,15 +28,15 @@ const FloatingDragon = () => {
   // Path-aware movement to stay in "Empty Spaces"
   // On mobile, we start much lower (after title/buttons) to avoid overlap
   const modelX = useTransform(scrollYProgress, 
-    [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1],
+    [0, 0.2, 0.4, 0.6, 0.8, 1],
     isMobile 
-      ? ["35vw", "35vw", "38vw", "-38vw", "38vw", "-38vw", "38vw", "0vw"]
-      : ["32vw", "32vw", "35vw", "-35vw", "35vw", "-35vw", "35vw", "0vw"]
+      ? ["38vw", "38vw", "-38vw", "38vw", "-38vw", "0vw"]
+      : ["40vw", "42vw", "-42vw", "42vw", "-42vw", "0vw"]
   );
 
-  const modelY = useTransform(scrollYProgress, [0, 1], [isMobile ? "25vh" : "-12vh", "88vh"]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [isMobile ? 0.6 : 0.8, 1.1, 0.8]);
-  const rotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
+  const modelY = useTransform(scrollYProgress, [0, 1], [isMobile ? "30vh" : "10vh", "90vh"]);
+  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [isMobile ? 0.5 : 0.7, 1, 1, 0.8]);
+  const rotate = useTransform(scrollYProgress, [0, 1], [0, 720]);
 
   useEffect(() => {
     setMounted(true);
