@@ -16,8 +16,8 @@ const LocationSection = ({ content }: LocationSectionProps) => {
   const description = content?.officeDescription || "Look bro, this is the building. Shop No. 202 is located on the second floor, above Tumble Dry on the first floor.";
   const mapUrl = content?.officeMapUrl || "https://maps.app.goo.gl/dvqvbugWe8XHJAnt7?g_st=aw";
   
-  // Use the address to generate a reliable embed URL
-  const embedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+  // Use the address to generate a reliable embed URL with iwloc=0 to hide the info card if possible
+  const embedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=15&ie=UTF8&iwloc=0&output=embed`;
 
   return (
     <section className="relative py-24 bg-black overflow-hidden">
@@ -40,7 +40,7 @@ const LocationSection = ({ content }: LocationSectionProps) => {
                 </div>
                 <h2 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-none">
                   FIND US <br/>
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-400">LOCALLY</span>
+                  <span className="text-transparent bg-clip-text bg-gradient-r from-primary to-emerald-400">LOCALLY</span>
                 </h2>
               </div>
 
@@ -91,19 +91,6 @@ const LocationSection = ({ content }: LocationSectionProps) => {
                   title="Office Location Map"
                   className="grayscale-[0.5] invert-[0.9] hue-rotate-[180deg]"
                 />
-                
-                {/* Floating Directions Arrow Overlay */}
-                <div className="absolute top-8 right-8 z-20">
-                  <a 
-                    href={mapUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="w-16 h-16 bg-primary text-black rounded-2xl flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:scale-110 transition-all group"
-                    title="Get Directions"
-                  >
-                    <Navigation size={32} className="fill-current group-hover:rotate-12 transition-transform" />
-                  </a>
-                </div>
               </div>
 
               {/* Floating badges */}
