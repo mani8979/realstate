@@ -181,7 +181,6 @@ const SiteContentSchema = new Schema<ISiteContent>(
     globalPopupTitle: { type: String, default: "Cultivation Model" },
     globalPopupContent: { type: String, default: "Dragon fruit cultivation is a high-demand and profitable farming option with long-term benefits.\n\n*Plantation Details (Per 100 Sq. Yards):*\n\n* 40 dragon fruit plants\n* 4 plants per pole\n* 10 poles in each 100 sq. yards\n\n*Plantation Period:*\n\n* Ideal season: May to November (approx.)\n\n*Yield Duration:*\n\n* Dragon fruit plants can yield fruits for up to 30 years\n\n*Profit Sharing (from the yield of dragon fruits crop):*\n\n* 50% to the company\n* 50% to the client\n\nThis model ensures:\n\n* Land ownership\n* Continuous agricultural income\n* Long-term asset appreciation\n\nAdditionally, the plantation can be removed anytime if the client wishes to convert the land for residential or other purposes." },
     faviconImage: { type: String, default: "/favicon.ico" },
-    officeMapEmbedUrl: { type: String, default: "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3799.3510526367375!2d83.2109083!3d17.6820589!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTfCsDQwJzU1LjQiTiA4M8KwMTInMzkuMyJF!5e0!3m2!1sen!2sin!4v1715310000000!5m2!1sen!2sin" },
     // Main Founder
     mainFounderName: { type: String, default: "Mahaboob shariff" },
     mainFounderRole: { type: String, default: "Founder, Managing Director" },
