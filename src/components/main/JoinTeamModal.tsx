@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X, MessageSquare, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -18,6 +18,16 @@ interface JoinTeamModalProps {
 }
 
 const JoinTeamModal = ({ isOpen, onClose, members, chatLabel }: JoinTeamModalProps) => {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
   return (
     <AnimatePresence>
       {isOpen && (
@@ -34,24 +44,24 @@ const JoinTeamModal = ({ isOpen, onClose, members, chatLabel }: JoinTeamModalPro
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-2xl bg-zinc-900 border border-white/10 rounded-[3rem] overflow-hidden shadow-2xl"
+            className="relative w-full max-w-2xl max-h-[90vh] bg-zinc-900 border border-white/10 rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl flex flex-col"
           >
             {/* Header */}
-            <div className="p-8 border-b border-white/5 flex justify-between items-center bg-gradient-to-r from-primary/10 to-transparent">
+            <div className="p-6 md:p-8 border-b border-white/5 flex justify-between items-center bg-gradient-to-r from-primary/10 to-transparent shrink-0">
               <div>
-                <h2 className="text-3xl font-black uppercase tracking-tighter text-white">Join as a Team</h2>
-                <p className="text-gray-400 text-sm font-medium mt-1">Connect with our leadership to start your journey.</p>
+                <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tighter text-white">Join as a Team</h2>
+                <p className="text-gray-400 text-xs md:text-sm font-medium mt-1">Connect with our leadership to start your journey.</p>
               </div>
               <button 
                 onClick={onClose}
-                className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-primary hover:text-white transition-all"
+                className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-primary hover:text-white transition-all"
               >
                 <X size={24} />
               </button>
             </div>
 
             {/* Members List */}
-            <div className="p-8 space-y-6 max-h-[60vh] overflow-y-auto custom-scrollbar">
+            <div className="p-4 md:p-8 space-y-6 overflow-y-auto custom-scrollbar flex-grow">
               {members.map((member, i) => (
                 <div 
                   key={i}
@@ -79,7 +89,7 @@ const JoinTeamModal = ({ isOpen, onClose, members, chatLabel }: JoinTeamModalPro
             </div>
 
             {/* Footer */}
-            <div className="p-6 bg-black/40 text-center border-t border-white/5">
+            <div className="p-6 bg-black/40 text-center border-t border-white/5 shrink-0">
                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.4em]">Professional Real Estate Network</p>
             </div>
           </motion.div>
