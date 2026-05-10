@@ -81,12 +81,6 @@ export interface ISiteContent extends Document {
   faviconImage: string;
   motivationLine: string;
   motivationBgImage: string;
-  founderName: string;
-  founderRole: string;
-  founderBio: string;
-  founderVision: string;
-  founderExp: string;
-  founderImage: string;
   officeMapUrl: string;
   officeMapEmbedUrl: string;
   // Founder (Main)
@@ -103,6 +97,8 @@ export interface ISiteContent extends Document {
   cofounderVision: string;
   cofounderExp: string;
   cofounderImage: string;
+  officeAddress: string;
+  officeDescription: string;
 }
 
 const SiteContentSchema = new Schema<ISiteContent>(
