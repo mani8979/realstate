@@ -61,7 +61,10 @@ const JoinTeamModal = ({ isOpen, onClose, members, chatLabel }: JoinTeamModalPro
             </div>
 
             {/* Members List */}
-            <div className="p-4 md:p-8 space-y-6 overflow-y-auto custom-scrollbar flex-grow">
+            <div 
+              className="p-4 md:p-8 space-y-6 overflow-y-auto custom-scrollbar flex-grow min-h-0"
+              data-lenis-prevent
+            >
               {members.map((member, i) => (
                 <div 
                   key={i}
