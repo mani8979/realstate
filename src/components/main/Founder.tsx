@@ -3,7 +3,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Quote, Trophy, Shield, Target } from 'lucide-react';
-import Image from 'next/image';
 
 interface FounderProps {
   name: string;
@@ -40,11 +39,10 @@ const Founder: React.FC<FounderProps> = ({
             className={`lg:col-span-5 relative ${!isMain ? 'lg:order-last' : ''}`}
           >
             <div className={`relative aspect-[4/5] rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl group ${isMain ? 'ring-2 ring-primary/20' : ''}`}>
-              <Image 
+              <img 
                 src={image || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1000"} 
                 alt={name}
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
               
