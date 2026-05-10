@@ -7,6 +7,7 @@ import Hero from '@/components/main/Hero';
 import FeaturedProperties from '@/components/main/FeaturedProperties';
 import CTA from '@/components/main/CTA';
 import BrandValues from '@/components/main/BrandValues';
+import LocationSection from '@/components/main/LocationSection';
 
 export const revalidate = 0; // Disable static caching for the home page
 
@@ -67,6 +68,10 @@ export default async function Home() {
 
       <div className="relative z-10">
         <CTA content={serializedContent} />
+      </div>
+
+      <div className="relative z-10">
+        <LocationSection />
       </div>
     </div>
   );

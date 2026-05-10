@@ -68,7 +68,7 @@ const ContactSection = () => {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 font-medium uppercase tracking-wider">Visit Us</p>
-                  <p className="text-xl font-bold text-gray-900 dark:text-white">123 Real Estate Ave, Property City</p>
+                  <p className="text-xl font-bold text-gray-900 dark:text-white">Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026.</p>
                 </div>
               </div>
             </div>

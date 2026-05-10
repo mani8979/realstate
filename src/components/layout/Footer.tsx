@@ -82,7 +82,7 @@ const Footer = async () => {
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <MapPin className="text-primary mt-1 flex-shrink-0" size={20} />
-                <span>{content.contactAddress || '123 Real Estate Ave, Property City, PC 12345'}</span>
+                <span>{content.contactAddress || 'Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026.'}</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="text-primary flex-shrink-0" size={20} />
