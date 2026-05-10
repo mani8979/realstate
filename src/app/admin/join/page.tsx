@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Save, Info, Upload, X, Users } from 'lucide-react';
+import { Save, Info, Upload, X, Users, Plus, Trash2 } from 'lucide-react';
 
 export default function JoinAdmin() {
   const [content, setContent] = useState<any>({
@@ -17,15 +17,7 @@ export default function JoinAdmin() {
     navJoin: '',
     joinOfficeImage1: '',
     joinOfficeImage2: '',
-    teamLead1Name: '',
-    teamLead1Phone: '',
-    teamLead1Image: '',
-    teamLead2Name: '',
-    teamLead2Phone: '',
-    teamLead2Image: '',
-    teamLead3Name: '',
-    teamLead3Phone: '',
-    teamLead3Image: ''
+    joinTeamLeads: []
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -46,11 +38,31 @@ export default function JoinAdmin() {
     setContent({ ...content, [e.target.name]: e.target.value });
   };
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
+  const handleLeadChange = (index: number, field: string, value: string) => {
+    const updatedLeads = [...content.joinTeamLeads];
+    updatedLeads[index] = { ...updatedLeads[index], [field]: value };
+    setContent({ ...content, joinTeamLeads: updatedLeads });
+  };
+
+  const addLead = () => {
+    setContent({
+      ...content,
+      joinTeamLeads: [...content.joinTeamLeads, { name: '', phone: '', image: '' }]
+    });
+  };
+
+  const removeLead = (index: number) => {
+    const updatedLeads = content.joinTeamLeads.filter((_: any, i: number) => i !== index);
+    setContent({ ...content, joinTeamLeads: updatedLeads });
+  };
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: string, index?: number) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setUploading(field);
+    const uploadKey = index !== undefined ? `lead-${index}` : field;
+    setUploading(uploadKey);
+    
     const formData = new FormData();
     formData.append('file', file);
 
@@ -61,7 +73,11 @@ export default function JoinAdmin() {
       });
       const data = await res.json();
       if (data.url) {
-        setContent({ ...content, [field]: data.url });
+        if (index !== undefined) {
+          handleLeadChange(index, 'image', data.url);
+        } else {
+          setContent({ ...content, [field]: data.url });
+        }
       }
     } catch (err) {
       alert('Upload failed');
@@ -148,46 +164,81 @@ export default function JoinAdmin() {
           </div>
         </div>
 
-        {/* Team Leads (Popup Management) */}
+        {/* Dynamic Team Leads */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-8 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4 flex items-center gap-3">
-             <Users size={24} className="text-primary" />
-             Team Leaders Management (Popup)
-          </h2>
+          <div className="flex justify-between items-center mb-8 border-b border-gray-100 dark:border-gray-800 pb-4">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+               <Users size={24} className="text-primary" />
+               Team Leaders (Popup)
+            </h2>
+            <button 
+              onClick={addLead}
+              className="flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-xl text-xs font-bold hover:bg-primary hover:text-white transition-all"
+            >
+              <Plus size={16} />
+              Add Member
+            </button>
+          </div>
           
-          <div className="space-y-12">
-            {[1, 2, 3].map((num) => (
-              <div key={num} className="p-6 rounded-3xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700">
-                <h3 className="text-lg font-bold mb-6 uppercase tracking-wider text-primary">Team Lead {num}</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-4">
-                    <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Photo</label>
-                    {content[`teamLead${num}Image`] ? (
-                      <div className="relative aspect-square w-32 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 group">
-                        <img src={content[`teamLead${num}Image`]} alt={`Lead ${num}`} className="w-full h-full object-cover" />
-                        <button onClick={() => setContent({ ...content, [`teamLead${num}Image`]: '' })} className="absolute inset-0 bg-black/40 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all"><X size={20} /></button>
+          <div className="space-y-6">
+            {content.joinTeamLeads.map((lead: any, index: number) => (
+              <div key={index} className="p-6 rounded-3xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 relative group">
+                <button 
+                  onClick={() => removeLead(index)}
+                  className="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors"
+                >
+                  <Trash2 size={20} />
+                </button>
+                
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                  <div className="md:col-span-1">
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Photo</label>
+                    {lead.image ? (
+                      <div className="relative aspect-square rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 group/img">
+                        <img src={lead.image} alt={lead.name} className="w-full h-full object-cover" />
+                        <button onClick={() => handleLeadChange(index, 'image', '')} className="absolute inset-0 bg-black/40 text-white flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-all"><X size={16} /></button>
                       </div>
                     ) : (
-                      <label className="flex flex-col items-center justify-center aspect-square w-32 rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-700 hover:border-primary transition-all cursor-pointer">
-                        <Upload size={24} className="text-gray-400 mb-1" />
+                      <label className="flex flex-col items-center justify-center aspect-square rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-700 hover:border-primary transition-all cursor-pointer">
+                        <Upload size={20} className="text-gray-400 mb-1" />
                         <span className="text-[10px] font-bold text-gray-500 uppercase">Upload</span>
-                        <input type="file" className="hidden" onChange={(e) => handleUpload(e, `teamLead${num}Image`)} />
+                        <input type="file" className="hidden" onChange={(e) => handleUpload(e, '', index)} />
                       </label>
                     )}
+                    {uploading === `lead-${index}` && <p className="text-[10px] text-primary font-bold mt-2 animate-pulse">Uploading...</p>}
                   </div>
-                  <div className="space-y-4">
+                  
+                  <div className="md:col-span-3 space-y-4">
                     <div>
-                      <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Full Name</label>
-                      <input name={`teamLead${num}Name`} value={content[`teamLead${num}Name`] || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+                      <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Full Name</label>
+                      <input 
+                        value={lead.name || ''} 
+                        onChange={(e) => handleLeadChange(index, 'name', e.target.value)} 
+                        className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-medium text-sm" 
+                        placeholder="Lead Name"
+                      />
                     </div>
                     <div>
-                      <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2">WhatsApp Number</label>
-                      <input name={`teamLead${num}Phone`} value={content[`teamLead${num}Phone`] || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+                      <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">WhatsApp Number</label>
+                      <input 
+                        value={lead.phone || ''} 
+                        onChange={(e) => handleLeadChange(index, 'phone', e.target.value)} 
+                        className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-medium text-sm" 
+                        placeholder="91 00000 00000"
+                      />
                     </div>
                   </div>
                 </div>
               </div>
             ))}
+            
+            {content.joinTeamLeads.length === 0 && (
+              <div className="text-center py-12 border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-3xl text-gray-400">
+                <Users size={48} className="mx-auto mb-4 opacity-20" />
+                <p className="font-bold">No team leads added yet.</p>
+                <button onClick={addLead} className="text-primary font-black uppercase tracking-widest text-xs mt-2 hover:underline">Add First Member</button>
+              </div>
+            )}
           </div>
         </div>
 

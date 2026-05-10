@@ -13,23 +13,7 @@ interface JoinPageClientProps {
 const JoinPageClient = ({ serializedContent, rules, qualifications }: JoinPageClientProps) => {
   const [isTeamModalOpen, setIsTeamModalOpen] = useState(false);
 
-  const teamMembers = [
-    {
-      name: serializedContent.teamLead1Name || 'Mahaboob Shariff',
-      phone: serializedContent.teamLead1Phone || '919666080645',
-      image: serializedContent.teamLead1Image || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800'
-    },
-    {
-      name: serializedContent.teamLead2Name || 'Muhammad Yaseen',
-      phone: serializedContent.teamLead2Phone || '919573785434',
-      image: serializedContent.teamLead2Image || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=800'
-    },
-    {
-      name: serializedContent.teamLead3Name || 'Professional Consultant',
-      phone: serializedContent.teamLead3Phone || '919666080645',
-      image: serializedContent.teamLead3Image || 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800'
-    }
-  ].filter(m => m.name && m.phone);
+  const teamMembers = (serializedContent.joinTeamLeads || []).filter((m: any) => m.name && m.phone);
 
   return (
     <>
