@@ -101,7 +101,7 @@ const FeaturedProperties = ({ properties = [], content: propContent }: { propert
           className="mb-12 md:mb-24 bg-gradient-to-r from-primary/20 via-primary/5 to-transparent border border-white/5 p-8 md:p-12 rounded-[2rem] md:rounded-[4rem] backdrop-blur-2xl flex flex-col md:flex-row md:items-center gap-6 md:gap-12 relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 p-4 md:p-8">
-            <Sparkles className="text-primary/10" size={60} md:size={80} />
+            <Sparkles className="text-primary/10 w-[60px] h-[60px] md:w-[80px] md:h-[80px]" />
           </div>
           
           <div className="flex items-center gap-6 md:gap-8 relative z-10">
