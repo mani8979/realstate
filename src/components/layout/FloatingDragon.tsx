@@ -30,12 +30,12 @@ const FloatingDragon = () => {
   const modelX = useTransform(scrollYProgress, 
     [0, 0.2, 0.4, 0.6, 0.8, 1],
     isMobile 
-      ? ["38vw", "38vw", "38vw", "38vw", "38vw", "0vw"]
-      : ["46vw", "48vw", "46vw", "48vw", "46vw", "0vw"]
+      ? ["38vw", "38vw", "38vw", "38vw", "10vw", "0vw"]
+      : ["44vw", "46vw", "45vw", "47vw", "40vw", "0vw"]
   );
 
-  const modelY = useTransform(scrollYProgress, [0, 1], [isMobile ? "30vh" : "10vh", "90vh"]);
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [isMobile ? 0.6 : 1.2, 1.8, 1.8, 1.2]);
+  const modelY = useTransform(scrollYProgress, [0, 1], [isMobile ? "30vh" : "15vh", "82vh"]);
+  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [isMobile ? 0.7 : 1.1, 1.6, 1.6, 1]);
   const rotate = useTransform(scrollYProgress, [0, 1], [0, 720]);
 
   useEffect(() => {
@@ -93,7 +93,7 @@ const FloatingDragon = () => {
         style={{ x: modelX, y: modelY, scale, rotate }}
         className="fixed top-0 left-0 w-full h-screen pointer-events-none z-[100] flex items-center justify-center overflow-visible"
       >
-        <div className="w-[180px] h-[240px] md:w-[350px] md:h-[450px] pointer-events-auto cursor-pointer" onClick={() => setShowPopup(true)}>
+        <div className="w-[200px] h-[260px] md:w-[300px] md:h-[380px] pointer-events-auto cursor-pointer" onClick={() => setShowPopup(true)}>
           <ModelViewer
             ref={modelViewerRef}
             src={settings.globalThreeDModel}
