@@ -53,7 +53,14 @@ export const ContactDialog = () => {
     
     const botToken = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
     const chatId = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID;
-    
+
+    // Phone validation (10 digits)
+    const phoneDigits = formData.phone.replace(/\D/g, '');
+    if (phoneDigits.length !== 10) {
+      setStatus('error');
+      return;
+    }
+
     if (!botToken || !chatId) {
       console.error('Telegram credentials not configured');
       setStatus('error');
@@ -225,7 +232,11 @@ export const ContactDialog = () => {
                       </button>
                       
                       {status === 'error' && (
-                        <p className="text-red-500 text-center text-xs font-bold">Failed to send request. Please try again.</p>
+                        <p className="text-red-500 text-center text-xs font-bold">
+                          {formData.phone.replace(/\D/g, '').length !== 10 
+                            ? 'Please enter a valid 10-digit mobile number.' 
+                            : 'Failed to send request. Please try again.'}
+                        </p>
                       )}
                     </form>
                   )}

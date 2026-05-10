@@ -16,6 +16,14 @@ const ContactSection = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('loading');
+    
+    // Phone validation (10 digits)
+    const phoneDigits = formData.phone.replace(/\D/g, '');
+    if (phoneDigits.length !== 10) {
+      setStatus('error');
+      return;
+    }
+
     try {
       await axios.post('/api/enquiries', formData);
       setStatus('success');
@@ -142,7 +150,11 @@ const ContactSection = () => {
                 <p className="text-emerald-500 font-bold text-center animate-in fade-in slide-in-from-top">Message sent successfully!</p>
               )}
               {status === 'error' && (
-                <p className="text-red-500 font-bold text-center animate-in fade-in slide-in-from-top">Error sending message. Please try again.</p>
+                <p className="text-red-500 font-bold text-center animate-in fade-in slide-in-from-top">
+                  {formData.phone.replace(/\D/g, '').length !== 10 
+                    ? 'Please enter a valid 10-digit mobile number.' 
+                    : 'Error sending message. Please try again.'}
+                </p>
               )}
             </form>
           </div>
