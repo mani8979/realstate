@@ -1,7 +1,14 @@
-import React from 'react';
-import { MapPin, Navigation, ExternalLink, Building2 } from 'lucide-react';
+'use client';
+
+import React, { useState } from 'react';
+import { MapPin, Navigation, ExternalLink, Building2, X, Maximize2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const LocationSection = () => {
+  const [isMapOpen, setIsMapOpen] = useState(false);
+  const address = "Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026.";
+  const embedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+
   return (
     <section className="relative py-24 bg-black overflow-hidden">
       {/* Background elements */}
@@ -39,7 +46,7 @@ const LocationSection = () => {
                       Address
                     </h3>
                     <p className="text-2xl md:text-3xl font-bold text-white leading-tight">
-                      Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026.
+                      {address}
                     </p>
                   </div>
 
@@ -56,25 +63,22 @@ const LocationSection = () => {
                     </div>
                   </div>
 
-                  <a 
-                    href="https://maps.app.goo.gl/dvqvbugWe8XHJAnt7?g_st=aw" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
+                  <button 
+                    onClick={() => setIsMapOpen(true)}
                     className="btn-primary w-full group"
                   >
-                    Open in Google Maps
-                    <ExternalLink size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                  </a>
+                    View Interactive Map
+                    <Maximize2 size={18} className="group-hover:scale-110 transition-transform" />
+                  </button>
                 </div>
               </div>
             </div>
 
             {/* Right side: Visual Representation */}
-            <div className="relative group">
+            <div className="relative group cursor-pointer" onClick={() => setIsMapOpen(true)}>
               <div className="absolute -inset-4 bg-gradient-to-tr from-primary/20 to-gold/20 blur-2xl opacity-50 group-hover:opacity-100 transition-opacity duration-700"></div>
               
               <div className="relative aspect-square md:aspect-[4/5] rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl">
-                {/* We'll use a placeholder image or a static map if possible, but for now a premium looking "map-like" visual */}
                 <div className="absolute inset-0 bg-slate-900 flex items-center justify-center">
                   <div className="text-center p-8">
                     <div className="mb-8 inline-block p-6 bg-black/50 backdrop-blur-xl rounded-full border border-white/10">
@@ -82,18 +86,12 @@ const LocationSection = () => {
                     </div>
                     <h4 className="text-2xl font-black text-white mb-4 uppercase tracking-tighter">Strategic Location</h4>
                     <p className="text-gray-400 mb-8 max-w-sm mx-auto">Located in the heart of Gajuwaka, our office is easily accessible and positioned for your convenience.</p>
-                    <a 
-                      href="https://maps.app.goo.gl/dvqvbugWe8XHJAnt7?g_st=aw"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-gold font-bold uppercase tracking-widest text-xs hover:text-white transition-colors"
-                    >
-                      View on Interactive Map <ExternalLink size={14} />
-                    </a>
+                    <div className="inline-flex items-center gap-2 text-gold font-bold uppercase tracking-widest text-xs group-hover:text-white transition-colors">
+                      Click to Expand Map <Maximize2 size={14} />
+                    </div>
                   </div>
                 </div>
 
-                {/* Decorative grid */}
                 <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
               </div>
 
@@ -114,6 +112,67 @@ const LocationSection = () => {
           </div>
         </div>
       </div>
+
+      {/* Map Modal */}
+      <AnimatePresence>
+        {isMapOpen && (
+          <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 md:p-10">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMapOpen(false)}
+              className="absolute inset-0 bg-black/90 backdrop-blur-xl"
+            />
+            
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative w-full max-w-5xl aspect-video bg-zinc-900 rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl"
+            >
+              <button 
+                onClick={() => setIsMapOpen(false)}
+                className="absolute top-6 right-6 z-10 p-3 bg-black/50 hover:bg-primary text-white rounded-full backdrop-blur-md transition-all group"
+              >
+                <X size={24} className="group-hover:rotate-90 transition-transform" />
+              </button>
+
+              <iframe 
+                src={embedUrl}
+                width="100%" 
+                height="100%" 
+                style={{ border: 0 }} 
+                allowFullScreen={true} 
+                loading="lazy"
+                title="Office Location Map"
+                className="grayscale-[0.5] invert-[0.9] hue-rotate-[180deg]"
+              />
+
+              <div className="absolute bottom-6 left-6 right-6 pointer-events-none">
+                <div className="glass-card p-4 flex items-center justify-between border-primary/20">
+                   <div className="flex items-center gap-3">
+                      <div className="bg-primary p-2 rounded-lg">
+                        <MapPin size={16} className="text-white" />
+                      </div>
+                      <p className="text-white font-bold text-xs md:text-sm uppercase tracking-tighter truncate max-w-[200px] md:max-w-md">
+                        {address}
+                      </p>
+                   </div>
+                   <a 
+                    href="https://maps.app.goo.gl/dvqvbugWe8XHJAnt7?g_st=aw" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="pointer-events-auto flex items-center gap-2 text-primary font-black uppercase tracking-widest text-[10px] hover:text-white transition-colors"
+                   >
+                     Google Maps <ExternalLink size={12} />
+                   </a>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
