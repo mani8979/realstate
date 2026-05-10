@@ -98,6 +98,7 @@ const JoinPage = async () => {
             </div>
 
           </div>
+        </div>
       </section>
 
       {/* Office Gallery */}
