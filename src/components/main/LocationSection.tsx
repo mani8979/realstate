@@ -3,8 +3,20 @@
 import React from 'react';
 import { MapPin, Navigation, ExternalLink, Building2 } from 'lucide-react';
 
-const LocationSection = () => {
-  const address = "Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026.";
+interface LocationSectionProps {
+  content?: {
+    officeAddress?: string;
+    officeDescription?: string;
+    officeMapUrl?: string;
+  };
+}
+
+const LocationSection = ({ content }: LocationSectionProps) => {
+  const address = content?.officeAddress || "Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026.";
+  const description = content?.officeDescription || "Look bro, this is the building. Shop No. 202 is located on the second floor, above Tumble Dry on the first floor.";
+  const mapUrl = content?.officeMapUrl || "https://maps.app.goo.gl/dvqvbugWe8XHJAnt7?g_st=aw";
+  
+  // Use the address to generate a reliable embed URL
   const embedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
 
   return (
@@ -55,14 +67,14 @@ const LocationSection = () => {
                       </div>
                       <div className="space-y-2">
                         <p className="text-gray-400 font-medium italic text-lg leading-relaxed">
-                          “Look bro, this is the building. Shop No. 202 is located on the second floor, above Tumble Dry on the first floor.”
+                          {description}
                         </p>
                       </div>
                     </div>
                   </div>
 
                   <a 
-                    href="https://maps.app.goo.gl/dvqvbugWe8XHJAnt7?g_st=aw" 
+                    href={mapUrl} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="btn-primary w-full group"

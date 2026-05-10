@@ -228,6 +228,43 @@ export default function FooterAdmin() {
           </div>
         </div>
 
+        {/* Office Location Section (Home Page) */}
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Home Office Location (Map Section)</h2>
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-bold text-gray-500 mb-2">Office Address</label>
+              <textarea 
+                name="officeAddress"
+                rows={2}
+                value={content.officeAddress || ''}
+                onChange={handleChange}
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-500 mb-2">Location Description (The "Look bro" text)</label>
+              <textarea 
+                name="officeDescription"
+                rows={2}
+                value={content.officeDescription || ''}
+                onChange={handleChange}
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-500 mb-2">Google Maps External Link (URL for button)</label>
+              <input 
+                name="officeMapUrl"
+                value={content.officeMapUrl || ''}
+                onChange={handleChange}
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                placeholder="https://maps.app.goo.gl/..."
+              />
+            </div>
+          </div>
+        </div>
+
         {/* Legal Pages Section */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Legal Pages</h2>

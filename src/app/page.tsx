@@ -71,7 +71,7 @@ export default async function Home() {
       </div>
 
       <div className="relative z-10">
-        <LocationSection />
+        <LocationSection content={serializedContent} />
       </div>
     </div>
   );

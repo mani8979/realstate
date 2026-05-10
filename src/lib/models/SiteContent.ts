@@ -87,6 +87,9 @@ export interface ISiteContent extends Document {
   founderVision: string;
   founderExp: string;
   founderImage: string;
+  officeAddress: string;
+  officeDescription: string;
+  officeMapUrl: string;
 }
 
 const SiteContentSchema = new Schema<ISiteContent>(
@@ -176,7 +179,10 @@ const SiteContentSchema = new Schema<ISiteContent>(
     founderBio: { type: String, default: "Muhammad Yaseen is a dynamic real estate professional with 1.5 years of industry experience and a proven track record of achieving exceptional sales in a short span of time. Known for his strong communication skills and customer-first approach, he quickly builds trust and long-term relationships with clients. His expertise spans VMRDA-approved layouts, farm lands, and residential properties, helping customers make confident and profitable investment decisions." },
     founderVision: { type: String, default: "Our vision is to provide trustworthy, legally verified, and high-growth real estate opportunities while building lasting relationships through transparency and commitment." },
     founderExp: { type: String, default: "1.5 Years of Experience in Real Estate\nWorked as Director in Various Real Estate Ventures\nExpertise in VMRDA, Farm Lands & Residential Properties\nAchieved High Property Sales in a Short Time\nStrong Customer Relationship & Communication Skills\nSkilled in Client Handling and Property Consultation" },
-    founderImage: { type: String, default: "/founder.png" }
+    founderImage: { type: String, default: "/founder.png" },
+    officeAddress: { type: String, default: "Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026." },
+    officeDescription: { type: String, default: "Look bro, this is the building. Shop No. 202 is located on the second floor, above Tumble Dry on the first floor." },
+    officeMapUrl: { type: String, default: "https://maps.app.goo.gl/dvqvbugWe8XHJAnt7?g_st=aw" }
   },
   { timestamps: true }
 );
