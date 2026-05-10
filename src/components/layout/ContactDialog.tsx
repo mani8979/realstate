@@ -60,6 +60,7 @@ export const ContactDialog = () => {
       return;
     }
 
+    try {
       // Save to database & send Telegram via API
       const response = await fetch('/api/enquiries', {
         method: 'POST',
