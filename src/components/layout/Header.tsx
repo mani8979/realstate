@@ -22,6 +22,7 @@ const Header = () => {
     navProperties: "Properties",
     navAbout: "About",
     navContact: "Contact",
+    navJoin: "Join",
     btnCall: "Call",
     btnEnquire: "Enquire"
   });
@@ -48,6 +49,7 @@ const Header = () => {
     { name: content.navProperties || 'Properties', href: '/properties' },
     { name: content.navAbout || 'About', href: '/about' },
     { name: content.navContact || 'Contact', href: '/contact' },
+    { name: content.navJoin || 'Join', href: '/join' },
   ];
 
   const isAdmin = pathname.startsWith('/admin') || pathname.startsWith('/studio') || pathname.includes('/media');

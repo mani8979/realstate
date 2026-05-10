@@ -117,6 +117,18 @@ export interface ISiteContent extends Document {
   contactFormPhoneLabel: string;
   contactFormMsgLabel: string;
   contactFormBtnText: string;
+  // Join Page Specific
+  joinBadge: string;
+  joinTitle: string;
+  joinDesc: string;
+  joinRules: string;
+  joinQualifications: string;
+  joinIndividualBtnText: string;
+  joinIndividualPhone: string;
+  joinTeamTitle: string;
+  joinTeamMembers: string; 
+  chatWithUsText: string;
+  navJoin: string;
 }
 
 const SiteContentSchema = new Schema<ISiteContent>(
@@ -234,7 +246,18 @@ const SiteContentSchema = new Schema<ISiteContent>(
     contactFormNameLabel: { type: String, default: "Your Name" },
     contactFormPhoneLabel: { type: String, default: "Phone Number" },
     contactFormMsgLabel: { type: String, default: "Message" },
-    contactFormBtnText: { type: String, default: "Send Message" }
+    contactFormBtnText: { type: String, default: "Send Message" },
+    joinBadge: { type: String, default: "Career Opportunities" },
+    joinTitle: { type: String, default: "Join With Us" },
+    joinDesc: { type: String, default: "Become a part of our elite real estate network and build your future with the best in the industry." },
+    joinRules: { type: String, default: "Professional Ethics First\nTransparent Communication\nCommitted to Client Success\nAdherence to Legal Guidelines" },
+    joinQualifications: { type: String, default: "Excellent Communication Skills\nStrong Market Knowledge\nSelf-Motivated & Driven\nReal Estate Experience Preferred" },
+    joinIndividualBtnText: { type: String, default: "Join as Individual" },
+    joinIndividualPhone: { type: String, default: "919666080645" },
+    joinTeamTitle: { type: String, default: "Join as a Team" },
+    joinTeamMembers: { type: String, default: "Shariff - 919666080645\nMohammed - 919573785434" },
+    chatWithUsText: { type: String, default: "Chat With Us" },
+    navJoin: { type: String, default: "Join" }
   },
   { timestamps: true }
 );

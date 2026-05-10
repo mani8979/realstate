@@ -38,6 +38,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'Hero Section', href: '/admin/hero', icon: LayoutDashboard },
     { name: 'Featured Section', href: '/admin/featured', icon: Star },
     { name: 'Leadership (Founders)', href: '/admin/founder', icon: Users },
+    { name: 'Join Page', href: '/admin/join', icon: Users },
     { name: 'Home Extras', href: '/admin/brand', icon: ShieldCheck },
     { name: 'Navigation', href: '/admin/navigation', icon: Menu },
     { name: 'Footer & Legal', href: '/admin/footer', icon: LayoutDashboard },
