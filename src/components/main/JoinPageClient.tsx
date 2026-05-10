@@ -25,9 +25,9 @@ const JoinPageClient = ({ serializedContent, rules, qualifications }: JoinPageCl
             <img 
               src={serializedContent.joinBgImage || "https://images.unsplash.com/photo-1582408921715-18e7806365c1?q=80&w=2000"} 
               alt="Join Background" 
-              className="w-full h-full object-cover opacity-40"
+              className="w-full h-full object-cover opacity-70"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-black via-black/80 to-black" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
           </div>
 
           <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/20 blur-[140px] rounded-full opacity-60" />
