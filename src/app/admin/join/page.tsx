@@ -17,6 +17,7 @@ export default function JoinAdmin() {
     navJoin: '',
     joinOfficeImage1: '',
     joinOfficeImage2: '',
+    joinBgImage: '',
     joinTeamLeads: []
   });
   const [loading, setLoading] = useState(true);
@@ -124,6 +125,35 @@ export default function JoinAdmin() {
       </div>
 
       <div className="space-y-8">
+        {/* Hero Background */}
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Hero Background</h2>
+          <div className="space-y-4">
+            <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Background Image</label>
+            {content.joinBgImage ? (
+              <div className="relative aspect-[21/9] rounded-3xl overflow-hidden border border-gray-200 dark:border-gray-800 group">
+                <img src={content.joinBgImage} alt="Join Hero BG" className="w-full h-full object-cover" />
+                <button 
+                  onClick={() => setContent({ ...content, joinBgImage: '' })} 
+                  className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all shadow-lg"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+            ) : (
+              <label className="flex flex-col items-center justify-center w-full aspect-[21/9] rounded-3xl border-2 border-dashed border-gray-300 dark:border-gray-800 hover:border-primary transition-all cursor-pointer bg-gray-50 dark:bg-gray-800/50">
+                <Upload size={32} className="text-gray-400 mb-2" />
+                <span className="text-sm font-bold text-gray-500">Upload Hero Background</span>
+                <input type="file" className="hidden" onChange={(e) => handleUpload(e, 'joinBgImage')} />
+              </label>
+            )}
+            <div className="flex items-center gap-2 text-xs text-gray-500 italic mt-2">
+              <Info size={14} className="text-primary" />
+              <span>Recommended: High-quality landscape image (2000x800px+).</span>
+            </div>
+          </div>
+        </div>
+
         {/* Main Content */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Main Page Content</h2>
