@@ -28,8 +28,10 @@ export async function PUT(req: Request) {
       content = await SiteContent.create(body);
     }
     
-    // Trigger revalidation for the home page
+    // Trigger revalidation for pages
     revalidatePath('/');
+    revalidatePath('/about');
+    revalidatePath('/gallery');
     
     return NextResponse.json({ success: true, data: content });
   } catch (error) {

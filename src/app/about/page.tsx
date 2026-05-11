@@ -2,6 +2,7 @@ import React from 'react';
 import dbConnect from '@/lib/db';
 import SiteContent from '@/lib/models/SiteContent';
 import AboutClient from '@/components/main/AboutClient';
+import AboutGallery from '@/components/main/AboutGallery';
 import Founder from '@/components/main/Founder';
 import CTA from '@/components/main/CTA';
 
@@ -24,6 +25,9 @@ const AboutPage = async () => {
   return (
     <div className="bg-black">
       <AboutClient />
+
+      {/* Gallery Section */}
+      <AboutGallery images={serializedContent.aboutGallery} />
       
       {/* Main Founder Section */}
       <div className="py-12">

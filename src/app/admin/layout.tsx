@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { LayoutDashboard, Home, MessageSquare, LogOut, PlusCircle, Building, Menu, Star, ShieldCheck, Users } from 'lucide-react';
+import { LayoutDashboard, Home, MessageSquare, LogOut, PlusCircle, Building, Menu, Star, ShieldCheck, Users, Image } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -39,6 +39,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'Featured Section', href: '/admin/featured', icon: Star },
     { name: 'Leadership (Founders)', href: '/admin/founder', icon: Users },
     { name: 'Join Page', href: '/admin/join', icon: Users },
+    { name: 'Gallery (About)', href: '/admin/gallery', icon: Image },
     { name: 'Home Extras', href: '/admin/brand', icon: ShieldCheck },
     { name: 'Navigation', href: '/admin/navigation', icon: Menu },
     { name: 'Footer & Legal', href: '/admin/footer', icon: LayoutDashboard },

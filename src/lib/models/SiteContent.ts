@@ -145,6 +145,11 @@ export interface ISiteContent extends Document {
     phone: string;
     image: string;
   }[];
+  // Gallery (About Page)
+  aboutGallery: {
+    url: string;
+    caption: string;
+  }[];
 }
 
 const SiteContentSchema = new Schema<ISiteContent>(
@@ -307,6 +312,13 @@ const SiteContentSchema = new Schema<ISiteContent>(
           image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800"
         }
       ]
+    },
+    aboutGallery: {
+      type: [{
+        url: String,
+        caption: String
+      }],
+      default: []
     }
   },
   { timestamps: true }
