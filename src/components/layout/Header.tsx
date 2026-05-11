@@ -65,20 +65,33 @@ const Header = () => {
           <nav className="flex items-center justify-between gap-8">
             {/* Logo */}
             <Link href="/" className="group relative z-10">
-              <div className="flex flex-col">
-                <span className={cn(
-                  "text-2xl md:text-3xl font-black tracking-tighter leading-none transition-colors duration-500",
-                  isScrolled ? "text-black dark:text-white" : "text-white"
-                )}>
-                  {content.logoTitle || 'STAR LANDS'}
-                </span>
-                <span className={cn(
-                  "text-[10px] md:text-xs font-bold tracking-[0.3em] leading-none mt-1 transition-all duration-500",
-                  isScrolled ? "text-primary" : "text-primary/90"
-                )}>
-                  {content.logoSubtitle || 'DEVELOPERS'}
-                </span>
-              </div>
+              {content.headerLogoImage ? (
+                <div className="relative h-10 md:h-14 w-auto flex items-center">
+                  <img 
+                    src={content.headerLogoImage} 
+                    alt={content.logoTitle || "Logo"} 
+                    className={cn(
+                      "h-full w-auto object-contain transition-all duration-500",
+                      !isScrolled && "brightness-0 invert" 
+                    )} 
+                  />
+                </div>
+              ) : (
+                <div className="flex flex-col">
+                  <span className={cn(
+                    "text-2xl md:text-3xl font-black tracking-tighter leading-none transition-colors duration-500",
+                    isScrolled ? "text-black dark:text-white" : "text-white"
+                  )}>
+                    {content.logoTitle || 'STAR LANDS'}
+                  </span>
+                  <span className={cn(
+                    "text-[10px] md:text-xs font-bold tracking-[0.3em] leading-none mt-1 transition-all duration-500",
+                    isScrolled ? "text-primary" : "text-primary/90"
+                  )}>
+                    {content.logoSubtitle || 'DEVELOPERS'}
+                  </span>
+                </div>
+              )}
             </Link>
 
             {/* Desktop Navigation */}
