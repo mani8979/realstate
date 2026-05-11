@@ -40,7 +40,7 @@ const FeaturedProperties = ({ properties = [], content: propContent }: { propert
   if (displayProperties.length === 0) return null;
 
   return (
-    <section id="featured-properties-section" className="py-20 md:py-40 !bg-white dark:bg-black dark:!bg-white dark:bg-black overflow-x-hidden relative border-b-8 border-white/5">
+    <section id="featured-properties-section" className="py-20 md:py-40 bg-white dark:bg-black overflow-x-hidden relative border-b-8 border-white/5">
       {/* Cinematic Tech Elements */}
       <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'linear-gradient(rgba(212,175,55,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(212,175,55,0.05) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[150px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />

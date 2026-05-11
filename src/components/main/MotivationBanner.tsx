@@ -23,7 +23,7 @@ const MotivationBanner: React.FC<MotivationBannerProps> = ({ content }) => {
           className="object-cover"
         />
         {/* Overlay */}
-        <div className="absolute inset-0 bg-white dark:bg-black/60 backdrop-blur-[2px] z-10" />
+        <div className="absolute inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-[2px] z-10" />
       </div>
 
       <div className="container mx-auto px-6 relative z-20 text-center">
@@ -35,7 +35,7 @@ const MotivationBanner: React.FC<MotivationBannerProps> = ({ content }) => {
           className="max-w-4xl mx-auto"
         >
           <Quote size={64} className="mx-auto text-primary mb-8 opacity-50" />
-          <h2 className="text-3xl md:text-5xl font-black text-black dark:text-white uppercase tracking-tighter leading-tight mb-8 drop-shadow-2xl">
+          <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter leading-tight mb-8 drop-shadow-2xl">
             "{content.motivationLine}"
           </h2>
           <div className="w-24 h-1 bg-primary mx-auto rounded-full shadow-[0_0_15px_rgba(255,107,0,0.5)]" />
@@ -43,7 +43,7 @@ const MotivationBanner: React.FC<MotivationBannerProps> = ({ content }) => {
       </div>
 
       {/* Parallax Decor */}
-      <div className="absolute -bottom-1 left-0 w-full h-24 bg-gradient-to-t from-black to-transparent z-20" />
+      <div className="absolute -bottom-1 left-0 w-full h-24 bg-gradient-to-t from-white dark:from-black to-transparent z-20" />
     </section>
   );
 };
