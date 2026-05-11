@@ -16,10 +16,11 @@ const navItems = [
   { name: 'Leader Profile', href: '/admin/founder', icon: Users },
   { name: 'Collection', href: '/admin/featured', icon: Star },
   { name: 'Header Settings', href: '/admin/navigation', icon: Menu },
-  { name: 'Why Choose Us', icon: ShieldCheck, href: '/admin/brand#why-choose-us' },
+  { name: 'Global Branding', href: '/admin/branding', icon: Layout },
+  { name: 'Why Choose Us', href: '/admin/brand', icon: ShieldCheck },
   { name: 'Premium Gallery', icon: Image, href: '/admin/gallery' },
-  { name: 'Vision & Legacy', icon: Target, href: '/admin/brand#vision' },
-  { name: 'Ready To Claim', icon: Star, href: '/admin/brand#ready-to-claim' },
+  { name: 'Vision & Legacy', icon: Target, href: '/admin/about#vision' },
+  { name: 'Ready To Claim', icon: Star, href: '/admin/about#cta' },
   { name: 'Property Categories', href: '/admin/categories', icon: List },
 ];
 

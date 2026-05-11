@@ -193,6 +193,39 @@ export default function HeroAdmin() {
                 <input name="heroCta3Link" value={content.heroCta3Link || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
               </div>
             </div>
+
+            <div className="space-y-6 pt-6 border-t border-gray-100 dark:border-gray-800">
+               <h3 className="text-xl font-bold text-gray-900 dark:text-white">Home Branding & Motivation</h3>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-4">
+                     <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Motivation Line</label>
+                     <textarea name="motivationLine" rows={3} value={content.motivationLine || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-medium" placeholder="Success in real estate begins with trust..." />
+                     <p className="text-[10px] text-gray-500 italic">* Appears in the high-impact banner section below the Hero.</p>
+                  </div>
+                  <div className="space-y-4">
+                     <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Motivation Banner Background</label>
+                     {content.motivationBgImage ? (
+                        <div className="relative aspect-video rounded-xl overflow-hidden group">
+                           <img src={content.motivationBgImage} alt="Motivation BG" className="w-full h-full object-cover" />
+                           <button onClick={() => setContent({...content, motivationBgImage: ''})} className="absolute inset-0 bg-black/40 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all font-bold">Change Photo</button>
+                        </div>
+                     ) : (
+                        <label className="flex flex-col items-center justify-center aspect-video rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-800 cursor-pointer hover:border-primary transition-all bg-gray-50 dark:bg-gray-800/50">
+                           <input type="file" className="hidden" onChange={async (e) => {
+                             const file = e.target.files?.[0];
+                             if (!file) return;
+                             const formData = new FormData();
+                             formData.append('file', file);
+                             const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                             const data = await res.json();
+                             if (data.url) setContent({...content, motivationBgImage: data.url});
+                           }} />
+                           <span className="text-xs font-bold text-gray-500">Upload Motivation BG</span>
+                        </label>
+                     )}
+                  </div>
+               </div>
+            </div>
           </div>
         </div>
       </div>
