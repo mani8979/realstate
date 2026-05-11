@@ -7,9 +7,9 @@ import Image from 'next/image';
 import axios from 'axios';
 
 const AdminProperties = () => {
-  const [properties, setProperties] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [properties, setProperties] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   const fetchProperties = async () => {
     try {

@@ -5,7 +5,7 @@ import { MessageSquare, Calendar, Phone, Trash2, Search } from 'lucide-react';
 import axios from 'axios';
 
 const AdminEnquiries = () => {
-  const [enquiries, setEnquiries] = useState([]);
+  const [enquiries, setEnquiries] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
