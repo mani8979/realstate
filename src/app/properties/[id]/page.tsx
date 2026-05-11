@@ -250,13 +250,13 @@ const PropertyDetails = () => {
                 property.alignment === 'right' ? 'justify-end' : 
                 'justify-start'
               }`}>
-                {property.fruitImage && property.title.toLowerCase().includes('lendy pink valley') && (
+                {(property.fruitImage || property.fruitInfo) && (
                   <button 
                     onClick={() => setShowFruitPopup(true)}
                     className="inline-flex items-center gap-3 bg-[#10b981] hover:bg-white text-black px-6 md:px-10 py-4 rounded-full font-black uppercase tracking-widest text-xs transition-all duration-300 shadow-[0_0_30px_rgba(16,185,129,0.3)] hover:scale-105 group"
                   >
                     <Leaf size={18} className="group-hover:scale-110 transition-transform" />
-                    <span>View Cultivation Info</span>
+                    <span>View Plantation & Cultivation Info</span>
                   </button>
                 )}
               </div>
@@ -486,67 +486,62 @@ const PropertyDetails = () => {
               </div>
               
               <h3 className="text-4xl md:text-6xl font-black text-primary uppercase tracking-tighter mb-8 leading-none">
-                Cultivation <br/> <span className="text-black dark:text-white">Model</span>
+                {property.title.toLowerCase().includes('sandalwood') ? 'Plantation' : 'Cultivation'} <br/> <span className="text-black dark:text-white">Model</span>
               </h3>
               
               <div className="space-y-10 text-gray-700 dark:text-gray-300">
-                <p className="text-xl leading-relaxed font-medium">
-                  Dragon fruit cultivation is a high-demand and profitable farming option with long-term benefits.
-                </p>
-
-                <div className="space-y-4">
-                  <p className="text-primary font-black uppercase tracking-[0.2em] text-xs">Plantation Details (Per 100 Sq. Yards)</p>
-                  <ul className="grid grid-cols-1 gap-3">
-                    <li className="flex gap-3 items-center bg-black/5 dark:bg-white/5 p-4 rounded-xl border border-white/5">
-                      <span className="text-primary font-bold">→</span> 40 dragon fruit plants
-                    </li>
-                    <li className="flex gap-3 items-center bg-black/5 dark:bg-white/5 p-4 rounded-xl border border-white/5">
-                      <span className="text-primary font-bold">→</span> 4 plants per pole
-                    </li>
-                    <li className="flex gap-3 items-center bg-black/5 dark:bg-white/5 p-4 rounded-xl border border-white/5">
-                      <span className="text-primary font-bold">→</span> 10 poles in each 100 sq. yards
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <p className="text-primary font-black uppercase tracking-[0.2em] text-[10px]">Plantation Period</p>
-                    <p className="text-black dark:text-white font-bold italic text-lg">May to November</p>
+                {property.fruitInfo ? (
+                  <div className="text-xl leading-relaxed font-medium whitespace-pre-line prose dark:prose-invert max-w-none">
+                    {property.fruitInfo}
                   </div>
-                  <div className="space-y-2">
-                    <p className="text-primary font-black uppercase tracking-[0.2em] text-[10px]">Yield Duration</p>
-                    <p className="text-black dark:text-white font-bold italic text-lg">Up to 30 Years</p>
-                  </div>
-                </div>
+                ) : (
+                  <>
+                    <p className="text-xl leading-relaxed font-medium">
+                      Dragon fruit cultivation is a high-demand and profitable farming option with long-term benefits.
+                    </p>
 
-                <div className="p-8 bg-primary/10 rounded-3xl border border-primary/20 space-y-4">
-                  <p className="text-primary font-black uppercase tracking-[0.2em] text-xs text-center">Profit Sharing</p>
-                  <div className="flex items-center justify-center gap-10">
-                    <div className="text-center">
-                      <p className="text-4xl font-black text-black dark:text-white">50%</p>
-                      <p className="text-[10px] uppercase font-bold text-gray-600 dark:text-gray-400">Company</p>
+                    <div className="space-y-4">
+                      <p className="text-primary font-black uppercase tracking-[0.2em] text-xs">Plantation Details (Per 100 Sq. Yards)</p>
+                      <ul className="grid grid-cols-1 gap-3">
+                        <li className="flex gap-3 items-center bg-black/5 dark:bg-white/5 p-4 rounded-xl border border-white/5">
+                          <span className="text-primary font-bold">→</span> 40 dragon fruit plants
+                        </li>
+                        <li className="flex gap-3 items-center bg-black/5 dark:bg-white/5 p-4 rounded-xl border border-white/5">
+                          <span className="text-primary font-bold">→</span> 4 plants per pole
+                        </li>
+                        <li className="flex gap-3 items-center bg-black/5 dark:bg-white/5 p-4 rounded-xl border border-white/5">
+                          <span className="text-primary font-bold">→</span> 10 poles in each 100 sq. yards
+                        </li>
+                      </ul>
                     </div>
-                    <div className="h-10 w-[1px] bg-primary/30"></div>
-                    <div className="text-center">
-                      <p className="text-4xl font-black text-primary">50%</p>
-                      <p className="text-[10px] uppercase font-bold text-gray-600 dark:text-gray-400">Client</p>
-                    </div>
-                  </div>
-                </div>
 
-                <div className="space-y-6">
-                  <p className="text-primary font-black uppercase tracking-[0.2em] text-xs">This model ensures</p>
-                  <div className="grid grid-cols-1 gap-3">
-                    {["Land ownership", "Continuous agricultural income", "Long-term asset appreciation"].map((t, i) => (
-                      <div key={i} className="flex items-center gap-3 text-lg">
-                        <div className="w-2 h-2 rounded-full bg-primary"></div>
-                        {t}
+                    <div className="grid grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <p className="text-primary font-black uppercase tracking-[0.2em] text-[10px]">Plantation Period</p>
+                        <p className="text-black dark:text-white font-bold italic text-lg">May to November</p>
                       </div>
-                    ))}
-                  </div>
-                </div>
+                      <div className="space-y-2">
+                        <p className="text-primary font-black uppercase tracking-[0.2em] text-[10px]">Yield Duration</p>
+                        <p className="text-black dark:text-white font-bold italic text-lg">Up to 30 Years</p>
+                      </div>
+                    </div>
 
+                    <div className="p-8 bg-primary/10 rounded-3xl border border-primary/20 space-y-4">
+                      <p className="text-primary font-black uppercase tracking-[0.2em] text-xs text-center">Profit Sharing</p>
+                      <div className="flex items-center justify-center gap-10">
+                        <div className="text-center">
+                          <p className="text-4xl font-black text-black dark:text-white">50%</p>
+                          <p className="text-[10px] uppercase font-bold text-gray-600 dark:text-gray-400">Company</p>
+                        </div>
+                        <div className="h-10 w-[1px] bg-primary/30"></div>
+                        <div className="text-center">
+                          <p className="text-4xl font-black text-primary">50%</p>
+                          <p className="text-[10px] uppercase font-bold text-gray-600 dark:text-gray-400">Client</p>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
 
               <button 
