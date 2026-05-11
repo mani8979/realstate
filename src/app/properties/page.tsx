@@ -16,6 +16,17 @@ const PropertiesPage = () => {
     subType: searchParams.get('subType') || '',
     budget: searchParams.get('budget') || '',
   });
+  const [categories, setCategories] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetch('/api/content')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.data?.propertyCategories) {
+          setCategories(data.data.propertyCategories.map((c: any) => c.name));
+        }
+      });
+  }, []);
 
   const fetchProperties = async () => {
     setLoading(true);
@@ -32,7 +43,7 @@ const PropertiesPage = () => {
 
   useEffect(() => {
     fetchProperties();
-  }, []);
+  }, [filters]); // Refetch when filters change
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,32 +86,12 @@ const PropertiesPage = () => {
                   onChange={(e) => setFilters({ ...filters, type: e.target.value, subType: '' })}
                 >
                   <option value="">All Types</option>
-                  <option value="House">House</option>
-                  <option value="Apartment">Apartment</option>
-                  <option value="Land">Land</option>
-                  <option value="Commercial">Commercial</option>
+                  {categories.map(cat => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
                 </select>
               </div>
             </div>
-
-            {filters.type === 'Land' && (
-              <div className="space-y-2 animate-in slide-in-from-left duration-300">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-wider px-1">Land Category</label>
-                <div className="relative">
-                  <Star className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" size={18} />
-                  <select
-                    className="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-900 rounded-xl focus:ring-2 focus:ring-primary/50 transition-all border-none appearance-none cursor-pointer"
-                    value={filters.subType}
-                    onChange={(e) => setFilters({ ...filters, subType: e.target.value })}
-                  >
-                    <option value="">All Categories</option>
-                    <option value="Residential">Residential Lands</option>
-                    <option value="Commercial">Commercial Lands</option>
-                    <option value="Farm Land">Farm Lands</option>
-                  </select>
-                </div>
-              </div>
-            )}
 
             <div className="space-y-2">
               <label className="text-xs font-bold text-gray-400 uppercase tracking-wider px-1">Max Price</label>

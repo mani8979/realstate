@@ -42,6 +42,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'Gallery (About)', href: '/admin/gallery', icon: Image },
     { name: 'Home Extras', href: '/admin/brand', icon: ShieldCheck },
     { name: 'Navigation', href: '/admin/navigation', icon: Menu },
+    { name: 'Categories', href: '/admin/categories', icon: Star },
     { name: 'Footer & Legal', href: '/admin/footer', icon: LayoutDashboard },
     { name: 'Properties', href: '/admin/properties', icon: Building },
     { name: 'Add Property', href: '/admin/properties/add', icon: PlusCircle },

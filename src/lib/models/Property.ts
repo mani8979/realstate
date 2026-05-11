@@ -41,8 +41,7 @@ const PropertySchema = new Schema<IProperty>(
     location: { type: String, required: true },
     type: { 
       type: String, 
-      required: true, 
-      enum: ['House', 'Apartment', 'Plot', 'Land', 'Commercial'] 
+      required: true
     },
     subType: { type: String },
     description: { type: String, required: true },

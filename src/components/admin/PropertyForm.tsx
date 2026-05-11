@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Image as ImageIcon, X, Plus, Save, Loader2, ChevronUp, ChevronDown, Play, Target, Hash, Settings, Trash, Sliders, Maximize2, ChevronLeft, Zap, List } from 'lucide-react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -62,6 +62,17 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     }
   }, [initialData]);
   const [uploading, setUploading] = useState(false);
+  const [categories, setCategories] = useState<string[]>(['House', 'Apartment', 'Plot', 'Land', 'Commercial']);
+
+  useEffect(() => {
+    fetch('/api/content')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.data?.propertyCategories) {
+          setCategories(data.data.propertyCategories.map((c: any) => c.name));
+        }
+      });
+  }, []);
   const [uploadingFruit, setUploadingFruit] = useState(false);
   const [showLayoutEditor, setShowLayoutEditor] = useState(false);
   const [mappingPlot, setMappingPlot] = useState<{ x: number, y: number } | null>(null);
@@ -496,10 +507,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                 value={formData.type}
                 onChange={(e) => setFormData({ ...formData, type: e.target.value })}
               >
-                <option value="House">House</option>
-                <option value="Apartment">Apartment</option>
-                <option value="Land">Land</option>
-                <option value="Commercial">Commercial</option>
+                {categories.map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
               </select>
             </div>
           </div>

@@ -150,6 +150,13 @@ export interface ISiteContent extends Document {
     url: string;
     caption: string;
   }[];
+  // Property Categories
+  propertyCategories: {
+    name: string;
+    icon: string;
+    color: string;
+    href: string;
+  }[];
 }
 
 const SiteContentSchema = new Schema<ISiteContent>(
@@ -319,6 +326,21 @@ const SiteContentSchema = new Schema<ISiteContent>(
         caption: String
       }],
       default: []
+    },
+    propertyCategories: {
+      type: [{
+        name: String,
+        icon: String,
+        color: String,
+        href: String
+      }],
+      default: [
+        { name: 'Houses', icon: 'Home', color: 'bg-blue-50 text-blue-600', href: '/properties?type=House' },
+        { name: 'Apartments', icon: 'Building2', color: 'bg-emerald-50 text-emerald-600', href: '/properties?type=Apartment' },
+        { name: 'Plots', icon: 'Landmark', color: 'bg-amber-50 text-amber-600', href: '/properties?type=Plot' },
+        { name: 'Farm Lands', icon: 'Warehouse', color: 'bg-green-50 text-green-600', href: '/properties?type=Plot&subType=Farm Land' },
+        { name: 'Commercial', icon: 'Building2', color: 'bg-indigo-50 text-indigo-600', href: '/properties?type=Commercial' },
+      ]
     }
   },
   { timestamps: true }

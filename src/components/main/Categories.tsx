@@ -1,17 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Home, Building2, Landmark, Warehouse } from 'lucide-react';
+import { Home, Building2, Landmark, Warehouse, ShoppingBag, TreePine, MapPin } from 'lucide-react';
 
-const categories = [
-  { name: 'Houses', icon: Home, count: '120+', color: 'bg-blue-50 text-blue-600', href: '/properties?type=House' },
-  { name: 'Apartments', icon: Building2, count: '85+', color: 'bg-emerald-50 text-emerald-600', href: '/properties?type=Apartment' },
-  { name: 'Residential Lands', icon: Landmark, count: '45+', color: 'bg-amber-50 text-amber-600', href: '/properties?type=Plot&subType=Residential' },
-  { name: 'Commercial Lands', icon: Warehouse, count: '30+', color: 'bg-purple-50 text-purple-600', href: '/properties?type=Plot&subType=Commercial' },
-  { name: 'Farm Lands', icon: Landmark, count: '25+', color: 'bg-green-50 text-green-600', href: '/properties?type=Plot&subType=Farm Land' },
-  { name: 'Commercial', icon: Building2, count: '15+', color: 'bg-indigo-50 text-indigo-600', href: '/properties?type=Commercial' },
-];
+const ICON_MAP: Record<string, any> = {
+  Home,
+  Building2,
+  Landmark,
+  Warehouse,
+  ShoppingBag,
+  TreePine,
+  MapPin
+};
 
 const Categories = () => {
+  const [categories, setCategories] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetch('/api/content')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.data?.propertyCategories) {
+          setCategories(data.data.propertyCategories);
+        }
+      });
+  }, []);
+
+  if (categories.length === 0) return null;
+
   return (
     <section className="py-24 bg-gray-50 dark:bg-gray-900/50">
       <div className="container mx-auto px-4">
@@ -24,19 +39,23 @@ const Categories = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {categories.map((cat) => (
-            <Link
-              key={cat.name}
-              href={cat.href}
-              className="group bg-white dark:bg-gray-800 p-10 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center card-hover"
-            >
-              <div className={`p-6 rounded-2xl mb-6 transition-transform group-hover:scale-110 ${cat.color}`}>
-                <cat.icon size={48} />
-              </div>
-              <h4 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{cat.name}</h4>
-              <p className="text-gray-500 font-medium">{cat.count} Properties</p>
-            </Link>
-          ))}
+          {categories.map((cat) => {
+            const Icon = ICON_MAP[cat.icon] || Home;
+            return (
+              <Link
+                key={cat.name}
+                href={cat.href}
+                className="group bg-white dark:bg-gray-800 p-10 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center card-hover"
+              >
+                <div className={`p-6 rounded-2xl mb-6 transition-transform group-hover:scale-110 ${cat.color}`}>
+                  <Icon size={48} />
+                </div>
+                <h4 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{cat.name}</h4>
+                {/* Count could be dynamic later if we fetch actual property counts */}
+                <p className="text-gray-500 font-medium">Browse All</p>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>
