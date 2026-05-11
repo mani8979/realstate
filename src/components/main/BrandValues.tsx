@@ -79,7 +79,7 @@ const BrandValues = ({ content: propContent }: { content?: any }) => {
           <div className="hidden lg:block text-right">
              <div className="bg-white/5 backdrop-blur-md p-10 rounded-[3rem] border border-white/10">
                 <Leaf className="text-primary mb-6" size={48} />
-                <p className="text-white/60 font-medium max-w-[200px] text-sm">Dedicated to creating sustainable and premium living environments.</p>
+                <p className="text-white/60 font-medium max-w-[200px] text-sm">{content.brandDesc || 'Dedicated to creating sustainable and premium living environments.'}</p>
              </div>
           </div>
         </div>

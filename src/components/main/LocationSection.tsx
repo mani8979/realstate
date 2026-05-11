@@ -42,11 +42,11 @@ const LocationSection = ({ content }: LocationSectionProps) => {
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="h-[2px] w-12 bg-primary"></div>
-                  <span className="text-primary font-black uppercase tracking-[0.3em] text-xs">Our Presence</span>
+                  <span className="text-primary font-black uppercase tracking-[0.3em] text-xs">{content?.locationBadge || 'Our Presence'}</span>
                 </div>
                 <h2 className="text-5xl md:text-7xl font-black text-black dark:text-white uppercase tracking-tighter leading-none">
-                  FIND US <br/>
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-400">LOCALLY</span>
+                  {content?.locationTitle1 || 'FIND US'} <br/>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-400">{content?.locationTitle2 || 'LOCALLY'}</span>
                 </h2>
               </div>
 

@@ -5,23 +5,43 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { LayoutDashboard, Home, MessageSquare, LogOut, PlusCircle, Building, Menu, Star, ShieldCheck, Users, Image, Phone, MapPin, Sparkles, List, Info, Target, Layout } from 'lucide-react';
 
-const navItems = [
-  { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-  { name: 'Manage Properties', href: '/admin/properties', icon: Building },
-  { name: 'Add New Property', href: '/admin/properties/add', icon: PlusCircle },
-  { name: 'Enquiries / Leads', href: '/admin/enquiries', icon: MessageSquare },
-  { name: 'About Page', href: '/admin/about', icon: Info },
-  { name: 'Join Page', href: '/admin/join', icon: Users },
-  { name: 'Hero Section', href: '/admin/hero', icon: Sparkles },
-  { name: 'Leader Profile', href: '/admin/founder', icon: Users },
-  { name: 'Collection', href: '/admin/featured', icon: Star },
-  { name: 'Header Settings', href: '/admin/navigation', icon: Menu },
-  { name: 'Global Branding', href: '/admin/branding', icon: Layout },
-  { name: 'Why Choose Us', href: '/admin/brand', icon: ShieldCheck },
-  { name: 'Premium Gallery', icon: Image, href: '/admin/gallery' },
-  { name: 'Vision & Legacy', icon: Target, href: '/admin/about#vision' },
-  { name: 'Ready To Claim', icon: Star, href: '/admin/about#cta' },
-  { name: 'Property Categories', href: '/admin/categories', icon: List },
+const navigation = [
+  {
+    title: 'Main Operations',
+    items: [
+      { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+      { name: 'Manage Properties', href: '/admin/properties', icon: Building },
+      { name: 'Add New Property', href: '/admin/properties/add', icon: PlusCircle },
+      { name: 'Enquiries / Leads', href: '/admin/enquiries', icon: MessageSquare },
+    ]
+  },
+  {
+    title: 'Homepage Sections',
+    items: [
+      { name: 'Hero Section', href: '/admin/hero', icon: Sparkles },
+      { name: 'Why Choose Us', href: '/admin/brand', icon: ShieldCheck },
+      { name: 'Leader Profile', href: '/admin/founder', icon: Users },
+      { name: 'Featured Collection', href: '/admin/featured', icon: Star },
+      { name: 'Premium Gallery', href: '/admin/gallery', icon: Image },
+      { name: 'Ready To Claim', href: '/admin/ready-to-claim', icon: Target },
+    ]
+  },
+  {
+    title: 'Page Content',
+    items: [
+      { name: 'About Page', href: '/admin/about', icon: Info },
+      { name: 'Join Page', href: '/admin/join', icon: Users },
+    ]
+  },
+  {
+    title: 'Site Settings',
+    items: [
+      { name: 'Global Branding', href: '/admin/branding', icon: Layout },
+      { name: 'Header Settings', href: '/admin/navigation', icon: Menu },
+      { name: 'Footer & Location', href: '/admin/footer', icon: MapPin },
+      { name: 'Property Categories', href: '/admin/categories', icon: List },
+    ]
+  }
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -80,20 +100,29 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </Link>
             </div>
 
-            <nav className="flex-grow py-6 overflow-y-auto scrollbar-hide px-3 space-y-1">
-              {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all whitespace-nowrap ${
-                    pathname === item.href 
-                      ? 'bg-primary text-black dark:text-white shadow-lg shadow-primary/20' 
-                      : 'text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-900'
-                  }`}
-                >
-                  <item.icon size={20} className="shrink-0" />
-                  {isSidebarOpen && <span className="text-sm">{item.name}</span>}
-                </Link>
+            <nav className="flex-grow py-6 overflow-y-auto scrollbar-hide px-3 space-y-6">
+              {navigation.map((section) => (
+                <div key={section.title} className="space-y-1">
+                  {isSidebarOpen && (
+                    <h3 className="px-4 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2">
+                      {section.title}
+                    </h3>
+                  )}
+                  {section.items.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all whitespace-nowrap ${
+                        pathname === item.href 
+                          ? 'bg-primary text-black dark:text-white shadow-lg shadow-primary/20' 
+                          : 'text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-900'
+                      }`}
+                    >
+                      <item.icon size={20} className="shrink-0" />
+                      {isSidebarOpen && <span className="text-sm">{item.name}</span>}
+                    </Link>
+                  ))}
+                </div>
               ))}
             </nav>
 
@@ -128,7 +157,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {/* Mobile Nav (Horizontal Scroll) */}
             <div className="lg:hidden w-full overflow-x-auto scrollbar-hide border-b border-gray-100 dark:border-gray-900 bg-white dark:bg-black sticky top-[65px] z-50">
               <nav className="flex items-center gap-2 p-3 px-6 min-w-max">
-                {navItems.map((item) => (
+                {navigation.flatMap(s => s.items).map((item) => (
                   <Link
                     key={item.name}
                     href={item.href}

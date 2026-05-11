@@ -93,6 +93,10 @@ export default function WhyChooseUsAdmin() {
                     <input name="brandTitle2" value={content.brandTitle2 || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold" />
                  </div>
               </div>
+              <div className="md:col-span-2 space-y-4">
+                 <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Brand Description (Subtitle)</label>
+                 <textarea name="brandDesc" rows={2} value={content.brandDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800" />
+              </div>
            </div>
         </div>
 

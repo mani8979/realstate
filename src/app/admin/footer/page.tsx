@@ -302,6 +302,20 @@ export default function FooterAdmin() {
         <div id="location" className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 mt-8">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Home Office Location (Map Section)</h2>
           <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+               <div>
+                 <label className="block text-sm font-bold text-gray-500 mb-2">Location Badge</label>
+                 <input name="locationBadge" value={content.locationBadge || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+               </div>
+               <div>
+                 <label className="block text-sm font-bold text-gray-500 mb-2">Title 1</label>
+                 <input name="locationTitle1" value={content.locationTitle1 || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+               </div>
+               <div>
+                 <label className="block text-sm font-bold text-gray-500 mb-2">Title 2 (Gradient)</label>
+                 <input name="locationTitle2" value={content.locationTitle2 || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+               </div>
+            </div>
             <div>
               <label className="block text-sm font-bold text-gray-500 mb-2">Office Address</label>
               <textarea 

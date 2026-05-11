@@ -20,6 +20,7 @@ export interface ISiteContent extends Document {
   brandBadge: string;
   brandTitle1: string;
   brandTitle2: string;
+  brandDesc: string;
   brandP1Side: string;
   brandP1Title: string;
   brandP1Desc: string;
@@ -110,6 +111,9 @@ export interface ISiteContent extends Document {
   cofounderPhone: string;
   officeAddress: string;
   officeDescription: string;
+  locationBadge: string;
+  locationTitle1: string;
+  locationTitle2: string;
   officeShopNo: string;
   officeFloor: string;
   // Contact Page Specific
@@ -205,6 +209,7 @@ const SiteContentSchema = new Schema<ISiteContent>(
     brandBadge: { type: String, default: "Our Core Pillars" },
     brandTitle1: { type: String, default: "Why" },
     brandTitle2: { type: String, default: "Choose Us" },
+    brandDesc: { type: String, default: "Dedicated to creating sustainable and premium living environments." },
     brandP1Side: { type: String, default: "Quality First" },
     brandP1Title: { type: String, default: "Verified Properties" },
     brandP1Desc: { type: String, default: "Every listing is manually verified by our team." },
@@ -289,6 +294,9 @@ const SiteContentSchema = new Schema<ISiteContent>(
     motivationLine: { type: String, default: "Real estate is built not only on land, but on trust, relationships, and long-term value." },
     officeMapUrl: { type: String, default: "https://maps.app.goo.gl/dvqvbugWe8XHJAnt7?g_st=aw" },
     officeMapEmbedUrl: { type: String, default: "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3799.3510526367375!2d83.2109083!3d17.6820589!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTfCsDQwJzU1LjQiTiA4M8KwMTInMzkuMyJF!5e0!3m2!1sen!2sin!4v1715310000000!5m2!1sen!2sin" },
+    locationBadge: { type: String, default: "Our Presence" },
+    locationTitle1: { type: String, default: "FIND US" },
+    locationTitle2: { type: String, default: "LOCALLY" },
     socialFacebook: { type: String, default: "https://www.facebook.com/people/star-land-developers/" },
     socialInstagram: { type: String, default: "https://www.instagram.com/star_land_developer" },
     contactBadge: { type: String, default: "Get In Touch" },
