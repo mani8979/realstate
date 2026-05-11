@@ -23,7 +23,7 @@ const Founder: React.FC<FounderProps> = ({
   const expertise = exp ? exp.split('\n') : [];
 
   return (
-    <section className={`relative py-20 md:py-32 overflow-hidden ${isMain ? 'bg-zinc-950' : 'bg-white dark:bg-black'}`}>
+    <section className={`relative py-20 md:py-32 overflow-hidden ${isMain ? 'bg-zinc-50 dark:bg-zinc-950' : 'bg-white dark:bg-black'}`}>
       {/* Background Decor */}
       <div className={`absolute top-0 right-0 w-full md:w-1/2 h-full ${isMain ? 'bg-primary/20' : 'bg-primary/10'} blur-[80px] md:blur-[140px] rounded-full -translate-y-1/2 translate-x-1/2 opacity-60`} />
       <div className={`absolute bottom-0 left-0 w-full md:w-1/3 h-1/2 ${isMain ? 'bg-amber-500/10' : 'bg-blue-500/10'} blur-[80px] md:blur-[140px] rounded-full translate-y-1/2 -translate-x-1/2 opacity-60`} />
@@ -97,7 +97,7 @@ const Founder: React.FC<FounderProps> = ({
 
             <div className="relative">
               <Quote size={48} className="md:size-16 absolute -top-6 -left-6 md:-top-8 md:-left-8 text-primary/10" />
-              <p className="text-xl md:text-3xl text-gray-100 font-medium leading-relaxed italic relative z-10 pl-8 md:pl-10 border-l-4 border-primary/50 py-2">
+              <p className="text-xl md:text-3xl text-gray-900 dark:text-gray-100 font-medium leading-relaxed italic relative z-10 pl-8 md:pl-10 border-l-4 border-primary/50 py-2">
                 "{vision || "Our vision is to provide trusted, legally verified, and value-driven real estate opportunities while building long-term relationships through transparency and commitment."}"
               </p>
             </div>
