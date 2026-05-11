@@ -10,6 +10,7 @@ export default function GalleryAdmin() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     fetch('/api/content')
@@ -22,8 +23,7 @@ export default function GalleryAdmin() {
       });
   }, []);
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
+  const uploadFiles = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
 
     setUploading(true);
@@ -55,6 +55,26 @@ export default function GalleryAdmin() {
     } finally {
       setUploading(false);
     }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    uploadFiles(e.target.files);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    uploadFiles(e.dataTransfer.files);
   };
 
   const handleRemove = (index: number) => {
@@ -112,15 +132,35 @@ export default function GalleryAdmin() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         {/* Add New Image Card */}
-        <label className="flex flex-col items-center justify-center aspect-square rounded-[2.5rem] border-4 border-dashed border-gray-200 dark:border-gray-800 hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer bg-gray-50 dark:bg-gray-900/50 group">
-          <div className="w-16 h-16 rounded-full bg-white dark:bg-gray-800 shadow-xl flex items-center justify-center text-gray-400 group-hover:text-primary group-hover:scale-110 transition-all">
+        <label 
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          className={`flex flex-col items-center justify-center aspect-square rounded-[2.5rem] border-4 border-dashed transition-all cursor-pointer group relative ${
+            isDragging 
+              ? 'border-primary bg-primary/10 scale-105 shadow-2xl shadow-primary/20' 
+              : 'border-gray-200 dark:border-gray-800 hover:border-primary/50 hover:bg-primary/5 bg-gray-50 dark:bg-gray-900/50'
+          }`}
+        >
+          <div className={`w-16 h-16 rounded-full shadow-xl flex items-center justify-center transition-all ${
+            isDragging ? 'bg-primary text-white scale-110' : 'bg-white dark:bg-gray-800 text-gray-400 group-hover:text-primary group-hover:scale-110'
+          }`}>
             <Plus size={32} />
           </div>
-          <span className="text-sm font-black uppercase tracking-widest text-gray-400 mt-4 group-hover:text-primary transition-all">Add Photos</span>
-          <input type="file" className="hidden" onChange={handleUpload} accept="image/*" multiple />
-          {uploading && <div className="absolute inset-0 bg-white/80 dark:bg-black/80 flex items-center justify-center rounded-[2.5rem] backdrop-blur-sm">
-            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-primary"></div>
-          </div>}
+          <span className={`text-sm font-black uppercase tracking-widest mt-4 transition-all ${
+            isDragging ? 'text-primary' : 'text-gray-400 group-hover:text-primary'
+          }`}>
+            {isDragging ? 'Drop to Upload' : 'Add Photos'}
+          </span>
+          <p className="text-[10px] text-gray-400 mt-1 font-bold">or drag and drop</p>
+          <input type="file" className="hidden" onChange={handleFileChange} accept="image/*" multiple />
+          
+          {uploading && (
+            <div className="absolute inset-0 bg-white/80 dark:bg-black/80 flex flex-col items-center justify-center rounded-[2.5rem] backdrop-blur-sm z-10">
+              <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-primary mb-4"></div>
+              <span className="text-[10px] font-black uppercase tracking-widest text-primary animate-pulse">Uploading...</span>
+            </div>
+          )}
         </label>
 
         {/* Existing Images */}
