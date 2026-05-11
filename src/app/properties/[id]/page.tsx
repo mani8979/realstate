@@ -346,9 +346,9 @@ const PropertyDetails = () => {
                       <h3 className="text-primary font-black uppercase tracking-widest text-xs mb-6">{detail.sideHeading}</h3>
                     )}
                     {detail.isPointed ? (
-                      <ul className={`space-y-4 ${isCenter ? 'inline-block text-left' : ''}`}>
+                      <ul className={`space-y-4 ${isCenter || isRight ? 'inline-block text-left' : ''}`}>
                         {detail.content.split('\n').filter((line: string) => line.trim()).map((line: string, i: number) => (
-                          <li key={i} className={`flex gap-3 text-gray-700 dark:text-gray-300 text-lg ${isRight ? 'justify-end' : ''}`}>
+                          <li key={i} className="flex gap-3 text-gray-700 dark:text-gray-300 text-lg">
                             <span className="text-primary font-bold shrink-0">•</span>
                             <span className="text-left">{line.trim()}</span>
                           </li>
