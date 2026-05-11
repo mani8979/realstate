@@ -25,7 +25,7 @@ const AddProperty = () => {
   return (
     <div className="space-y-10 pb-20">
       <div>
-        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-black dark:text-white">Add New Property</h1>
+        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">Add New Property</h1>
         <p className="text-gray-500">Create a new listing for your real estate portfolio.</p>
       </div>
 

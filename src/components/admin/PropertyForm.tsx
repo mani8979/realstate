@@ -12,53 +12,65 @@ interface PropertyFormProps {
 }
 
 const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, loading }) => {
-  const [formData, setFormData] = useState(initialData || {
-    title: '',
-    price: '',
-    location: '',
-    type: 'House',
-    description: '',
-    images: [],
-    bedrooms: '',
-    bathrooms: '',
-    area: '',
-    featured: false,
-    fruitImage: '',
-    fruitInfo: '',
-    landPhotos: [],
-    threeDElement: '',
-    videoUrl: '',
-    mapUrl: '',
-    landBrochure: [],
-    details: [],
-    layoutImage: '',
-    plots: initialData?.plots?.map((p: any, i: number) => ({
-      ...p,
-      x: p.x ?? 0,
-      y: p.y ?? 0,
-      width: p.width ?? 5,
-      height: p.height ?? 3
-    })) || [],
-    alignment: 'left'
+  const [formData, setFormData] = useState(() => {
+    const base = {
+      title: '',
+      price: '',
+      location: '',
+      type: 'House',
+      description: '',
+      images: [],
+      bedrooms: '',
+      bathrooms: '',
+      area: '',
+      featured: false,
+      fruitImage: '',
+      fruitInfo: '',
+      landPhotos: [],
+      threeDElement: '',
+      videoUrl: '',
+      mapUrl: '',
+      landBrochure: [],
+      details: [],
+      layoutImage: '',
+      plots: [],
+      alignment: 'left'
+    };
+    if (!initialData) return base;
+    return {
+      ...base,
+      ...initialData,
+      details: Array.isArray(initialData.details) ? initialData.details : [],
+      plots: Array.isArray(initialData.plots) ? initialData.plots.map((p: any) => ({
+        ...p,
+        x: p.x ?? 0,
+        y: p.y ?? 0,
+        width: p.width ?? 5,
+        height: p.height ?? 3
+      })) : [],
+      landPhotos: Array.isArray(initialData.landPhotos) ? initialData.landPhotos : [],
+      landBrochure: Array.isArray(initialData.landBrochure) ? initialData.landBrochure : [],
+      alignment: initialData.alignment || 'left',
+      subType: initialData.subType || ''
+    };
   });
 
-  // Sync state with initialData when it updates (e.g. after save)
   React.useEffect(() => {
     if (initialData) {
       setFormData((prev: any) => ({
         ...prev,
         ...initialData,
         subType: initialData.subType || '',
-        landPhotos: initialData.landPhotos || [],
-        landBrochure: initialData.landBrochure || [],
-        details: initialData.details || [],
-        plots: initialData.plots?.map((p: any, i: number) => ({
+        landPhotos: Array.isArray(initialData.landPhotos) ? initialData.landPhotos : [],
+        landBrochure: Array.isArray(initialData.landBrochure) ? initialData.landBrochure : [],
+        details: Array.isArray(initialData.details) ? initialData.details : [],
+        plots: Array.isArray(initialData.plots) ? initialData.plots.map((p: any) => ({
           ...p,
           x: p.x ?? 0,
           y: p.y ?? 0,
           width: p.width ?? 5,
           height: p.height ?? 3
-        })) || [],
+        })) : [],
         alignment: initialData.alignment || 'left'
       }));
     }
@@ -481,15 +493,15 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     <form onSubmit={handleSubmit} className="space-y-10">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
         {/* Basic Info */}
-        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white mb-4">Basic Information</h3>
+        <div className="bg-white dark:bg-gray-900/50 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Basic Information</h3>
           
           <div className="space-y-2">
             <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1">Property Title</label>
             <input
               type="text"
               required
-              className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
+              className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
               placeholder="e.g. Luxury Beachfront Villa"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
@@ -502,7 +514,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
               <input
                 type="number"
                 required
-                className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
+                className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
                 placeholder="0.00"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
@@ -511,7 +523,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1">Property Type</label>
               <select
-                className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all cursor-pointer font-bold"
+                className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all cursor-pointer font-bold"
                 value={formData.type}
                 onChange={(e) => setFormData({ ...formData, type: e.target.value, subType: '' })}
               >
@@ -586,7 +598,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
             <input
               type="text"
               required
-              className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
+              className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
               placeholder="e.g. Miami, Florida"
               value={formData.location}
               onChange={(e) => setFormData({ ...formData, location: e.target.value })}
@@ -598,7 +610,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
               <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1">Beds</label>
               <input
                 type="number"
-                className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
+                className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
                 placeholder="0"
                 value={formData.bedrooms}
                 onChange={(e) => setFormData({ ...formData, bedrooms: e.target.value })}
@@ -608,7 +620,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
               <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1">Baths</label>
               <input
                 type="number"
-                className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
+                className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
                 placeholder="0"
                 value={formData.bathrooms}
                 onChange={(e) => setFormData({ ...formData, bathrooms: e.target.value })}
@@ -618,7 +630,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
               <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1">Area (sqft)</label>
               <input
                 type="text"
-                className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
+                className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
                 placeholder="2,500"
                 value={formData.area}
                 onChange={(e) => setFormData({ ...formData, area: e.target.value })}
@@ -641,8 +653,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
         {/* Media & Description */}
         <div className="space-y-10">
           {/* Images */}
-          <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white mb-6">Property Images</h3>
+          <div className="bg-white dark:bg-gray-900/50 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Property Images</h3>
             
             <div className="grid grid-cols-3 gap-4 mb-6">
               {formData.images.map((img: string, i: number) => (
@@ -685,12 +697,12 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           </div>
 
           {/* Description */}
-          <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white mb-4">Description</h3>
+          <div className="bg-white dark:bg-gray-900/50 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Description</h3>
             <textarea
               required
               rows={8}
-              className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all resize-none"
+              className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all resize-none"
               placeholder="Write a detailed description of the property..."
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -698,9 +710,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           </div>
 
           {/* Structured Details */}
-          <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+          <div className="bg-white dark:bg-gray-900/50 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
             <div className="flex items-center justify-between">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white">Structured Property Details</h3>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white">Structured Property Details</h3>
               <button
                 type="button"
                 onClick={() => setFormData({ ...formData, details: [...formData.details, { heading: '', content: '', sideHeading: '', showArrow: false, isPointed: false, alignment: 'left' }] })}
@@ -759,7 +771,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                       <label className="text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 px-1">Section Heading</label>
                       <input
                         type="text"
-                        className="w-full px-4 py-3 bg-white dark:bg-gray-50 dark:bg-gray-900 rounded-xl border-none focus:ring-2 focus:ring-primary/50 text-sm"
+                        className="w-full px-4 py-3 bg-white dark:bg-gray-900/50 rounded-xl border-none focus:ring-2 focus:ring-primary/50 text-sm"
                         placeholder="e.g. Location Advantages"
                         value={detail.heading}
                         onChange={(e) => {
@@ -773,7 +785,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                       <label className="text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 px-1">Side Heading (Optional)</label>
                       <input
                         type="text"
-                        className="w-full px-4 py-3 bg-white dark:bg-gray-50 dark:bg-gray-900 rounded-xl border-none focus:ring-2 focus:ring-primary/50 text-sm"
+                        className="w-full px-4 py-3 bg-white dark:bg-gray-900/50 rounded-xl border-none focus:ring-2 focus:ring-primary/50 text-sm"
                         placeholder="e.g. Prime Location"
                         value={detail.sideHeading}
                         onChange={(e) => {
@@ -789,7 +801,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                     <label className="text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 px-1">Content</label>
                     <textarea
                       rows={4}
-                      className="w-full px-4 py-3 bg-white dark:bg-gray-50 dark:bg-gray-900 rounded-xl border-none focus:ring-2 focus:ring-primary/50 text-sm resize-none"
+                      className="w-full px-4 py-3 bg-white dark:bg-gray-900/50 rounded-xl border-none focus:ring-2 focus:ring-primary/50 text-sm resize-none"
                       placeholder="Write the section content here... (New lines will be used for dots if 'Use Dots' is enabled)"
                       value={detail.content}
                       onChange={(e) => {
@@ -861,8 +873,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           </div>
 
           {/* 3D Model Details */}
-          <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white mb-4">3D Model (GLB/GLTF)</h3>
+          <div className="bg-white dark:bg-gray-900/50 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">3D Model (GLB/GLTF)</h3>
             <p className="text-sm text-gray-500 mb-6">Upload a 3D model that will scroll through the page. Supports .glb or .gltf files.</p>
             
             <div className="space-y-6">
@@ -874,7 +886,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                       <Save size={20} />
                     </div>
                     <div className="flex-grow min-w-0">
-                      <p className="text-sm font-bold text-gray-900 dark:text-black dark:text-white truncate">{formData.threeDElement.split('/').pop()}</p>
+                      <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{formData.threeDElement.split('/').pop()}</p>
                       <p className="text-xs text-gray-500">3D Model Loaded</p>
                     </div>
                     <button
@@ -914,8 +926,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           </div>
 
           {/* Farm/Fruit Details */}
-          <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white mb-4">Farm/Fruit Details (Optional)</h3>
+          <div className="bg-white dark:bg-gray-900/50 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Farm/Fruit Details (Optional)</h3>
             <p className="text-sm text-gray-500 mb-6">If this is a farm land with active cultivation, you can add a picture of the fruit/crop and some details. Users can click the image to view the details in a popup.</p>
             
             <div className="space-y-6">
@@ -960,7 +972,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                 <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1 mb-2 block">Crop/Fruit Info</label>
                 <textarea
                   rows={4}
-                  className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all resize-none"
+                  className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all resize-none"
                   placeholder="E.g., Farm land where dragon fruit cultivation is actively done..."
                   value={formData.fruitInfo || ''}
                   onChange={(e) => setFormData({ ...formData, fruitInfo: e.target.value })}
@@ -969,8 +981,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
             </div>
           </div>
           {/* Land Photos Section */}
-          <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white mb-4">Land Photos (Optional)</h3>
+          <div className="bg-white dark:bg-gray-900/50 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Land Photos (Optional)</h3>
             <p className="text-sm text-gray-500 mb-6">Specific gallery for land or plot images.</p>
             
             <div className="grid grid-cols-3 gap-4 mb-4">
@@ -1010,8 +1022,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           </div>
 
           {/* Land Video Section */}
-          <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white mb-4">Land Video (Optional)</h3>
+          <div className="bg-white dark:bg-gray-900/50 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Land Video (Optional)</h3>
             <p className="text-sm text-gray-500 mb-6">Upload a video directly or provide a YouTube link.</p>
             
             <div className="space-y-6">
@@ -1019,7 +1031,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                 <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1">YouTube Video URL</label>
                 <input
                   type="text"
-                  className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
+                  className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
                   placeholder="e.g. https://www.youtube.com/watch?v=..."
                   value={formData.videoUrl?.includes('youtube') ? formData.videoUrl : ''}
                   onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value })}
@@ -1040,7 +1052,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                       <Play size={20} />
                     </div>
                     <div className="flex-grow min-w-0">
-                      <p className="text-sm font-bold text-gray-900 dark:text-black dark:text-white truncate">{formData.videoUrl.split('/').pop()}</p>
+                      <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{formData.videoUrl.split('/').pop()}</p>
                       <p className="text-xs text-gray-500">Video Uploaded</p>
                     </div>
                     <button
@@ -1080,10 +1092,10 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           </div>
 
           {/* Plot Layout Section - Trigger Button */}
-          <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+          <div className="bg-white dark:bg-gray-900/50 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white mb-1">Interactive Plot Layout</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">Interactive Plot Layout</h3>
                 <p className="text-sm text-gray-500">Manage plot dimensions, availability, and positions.</p>
               </div>
               {formData.layoutImage && (
@@ -1105,7 +1117,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                     <button
                       type="button"
                       onClick={() => setShowLayoutEditor(true)}
-                      className="bg-white dark:bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-black dark:text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-all border border-black/10 dark:border-white/10"
+                      className="bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-all border border-black/10 dark:border-white/10"
                     >
                       <Settings size={32} />
                     </button>
@@ -1137,7 +1149,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                       {uploading ? <Loader2 size={32} className="animate-spin" /> : <Plus size={32} />}
                     </div>
                     <div className="text-center">
-                      <span className="block text-sm font-black text-gray-900 dark:text-black dark:text-white uppercase tracking-widest mb-1">Upload Layout Map</span>
+                      <span className="block text-sm font-black text-gray-900 dark:text-white uppercase tracking-widest mb-1">Upload Layout Map</span>
                       <span className="text-xs text-gray-600 dark:text-gray-400 font-medium text-center">Required for interactive mapping</span>
                     </div>
                   </button>
@@ -1489,11 +1501,11 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                       <motion.div 
                         initial={{ scale: 0.9, y: 30 }}
                         animate={{ scale: 1, y: 0 }}
-                        className="bg-white dark:bg-gray-50 dark:bg-gray-900 rounded-[3rem] p-10 w-full max-w-2xl shadow-2xl space-y-10 border border-black/10 dark:border-white/10"
+                        className="bg-white dark:bg-gray-900/50 rounded-[3rem] p-10 w-full max-w-2xl shadow-2xl space-y-10 border border-black/10 dark:border-white/10"
                       >
                         <div className="flex items-center justify-between">
                           <div className="space-y-1">
-                            <h4 className="text-2xl font-black uppercase tracking-tighter text-gray-900 dark:text-black dark:text-white">Configure Plot</h4>
+                            <h4 className="text-2xl font-black uppercase tracking-tighter text-gray-900 dark:text-white">Configure Plot</h4>
                             <p className="text-xs text-gray-500 uppercase tracking-widest font-bold">Spatial & Availability Settings</p>
                           </div>
                           <button 
@@ -1622,8 +1634,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
             )}
           </AnimatePresence>
           {/* Land Brochure Section */}
-          <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white mb-4">Land Brochure (Optional)</h3>
+          <div className="bg-white dark:bg-gray-900/50 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Land Brochure (Optional)</h3>
             <p className="text-sm text-gray-500 mb-6">Upload multiple PDF or image brochures for the land.</p>
             
             <div className="space-y-6">
@@ -1672,15 +1684,15 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           </div>
 
           {/* Map View Section */}
-          <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white mb-4">Location Map (Optional)</h3>
+          <div className="bg-white dark:bg-gray-900/50 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Location Map (Optional)</h3>
             <p className="text-sm text-gray-500 mb-6">Add a Google Maps embed URL.</p>
             
             <div className="space-y-4">
               <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1">Google Maps Embed URL</label>
               <input
                 type="text"
-                className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
+                className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
                 placeholder="e.g. https://www.google.com/maps/embed?pb=..."
                 value={formData.mapUrl}
                 onChange={(e) => setFormData({ ...formData, mapUrl: e.target.value })}
