@@ -19,7 +19,7 @@ const AboutGallery = ({ images }: AboutGalleryProps) => {
   if (!images || images.length === 0) return null;
 
   return (
-    <section className="py-24 bg-black overflow-hidden">
+    <section className="py-24 bg-white dark:bg-black overflow-hidden">
       <div className="container mx-auto px-6 mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <motion.p 
@@ -33,7 +33,7 @@ const AboutGallery = ({ images }: AboutGalleryProps) => {
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter"
+            className="text-4xl md:text-6xl font-black text-black dark:text-white uppercase tracking-tighter"
           >
             Company <span className="text-primary">Gallery</span>
           </motion.h2>
@@ -45,10 +45,10 @@ const AboutGallery = ({ images }: AboutGalleryProps) => {
         >
           <Link 
             href="/gallery" 
-            className="group flex items-center gap-4 bg-white/5 hover:bg-primary border border-white/10 hover:border-primary px-8 py-4 rounded-2xl transition-all duration-500"
+            className="group flex items-center gap-4 bg-black/5 dark:bg-white/5 hover:bg-primary border border-black/10 dark:border-white/10 hover:border-primary px-8 py-4 rounded-2xl transition-all duration-500"
           >
-            <span className="text-white font-black uppercase tracking-widest text-[10px]">View All Photos</span>
-            <ArrowRight size={16} className="text-primary group-hover:text-white group-hover:translate-x-2 transition-all" />
+            <span className="text-black dark:text-white font-black uppercase tracking-widest text-[10px]">View All Photos</span>
+            <ArrowRight size={16} className="text-primary group-hover:text-black dark:text-white group-hover:translate-x-2 transition-all" />
           </Link>
         </motion.div>
       </div>
@@ -81,13 +81,13 @@ const AboutGallery = ({ images }: AboutGalleryProps) => {
                 <div className="w-10 h-[1px] bg-primary" />
                 <span className="text-primary font-black uppercase tracking-[0.3em] text-[8px]">Cinematic Shot {index + 1}</span>
               </div>
-              <h3 className="text-white font-black text-lg md:text-xl uppercase tracking-tight transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+              <h3 className="text-black dark:text-white font-black text-lg md:text-xl uppercase tracking-tight transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
                 {img.caption || 'Star Lands Premium Site'}
               </h3>
             </div>
 
             {/* Premium Border Overlay */}
-            <div className="absolute inset-0 border border-white/10 rounded-[2.5rem] pointer-events-none group-hover:border-primary/50 transition-colors duration-500" />
+            <div className="absolute inset-0 border border-black/10 dark:border-white/10 rounded-[2.5rem] pointer-events-none group-hover:border-primary/50 transition-colors duration-500" />
           </motion.div>
         ))}
 
@@ -101,10 +101,10 @@ const AboutGallery = ({ images }: AboutGalleryProps) => {
             href="/gallery"
             className="w-full h-full flex flex-col items-center justify-center bg-primary/5 border-2 border-dashed border-primary/20 rounded-[2.5rem] hover:bg-primary/10 hover:border-primary/40 transition-all group"
           >
-            <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all text-primary">
+            <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-primary group-hover:text-black dark:text-white transition-all text-primary">
               <PlusIcon size={32} />
             </div>
-            <span className="text-white font-black uppercase tracking-[0.4em] text-sm">See More</span>
+            <span className="text-black dark:text-white font-black uppercase tracking-[0.4em] text-sm">See More</span>
             <span className="text-primary font-bold uppercase tracking-widest text-[10px] mt-2">View Full Collection</span>
           </Link>
         </motion.div>

@@ -47,13 +47,13 @@ const AdminProperties = () => {
     <div className="space-y-10">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">Property Management</h1>
+          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-black dark:text-white">Property Management</h1>
           <p className="text-gray-500">Manage your listings, prices, and availability.</p>
         </div>
         
         <Link 
           href="/admin/properties/add" 
-          className="bg-primary hover:bg-primary-dark text-white font-bold px-8 py-4 rounded-2xl flex items-center gap-2 transition-all shadow-xl shadow-primary/20"
+          className="bg-primary hover:bg-primary-dark text-black dark:text-white font-bold px-8 py-4 rounded-2xl flex items-center gap-2 transition-all shadow-xl shadow-primary/20"
         >
           <PlusCircle size={20} />
           <span>Add New Property</span>
@@ -63,7 +63,7 @@ const AdminProperties = () => {
       <div className="bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
         <div className="p-8 border-b border-gray-100 dark:border-gray-800">
           <div className="relative w-full">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 dark:text-gray-400" size={20} />
             <input
               type="text"
               placeholder="Search properties by title or location..."
@@ -78,11 +78,11 @@ const AdminProperties = () => {
           <table className="w-full text-left">
             <thead>
               <tr className="bg-gray-50 dark:bg-gray-800/50">
-                <th className="px-8 py-5 text-sm font-bold text-gray-400 uppercase tracking-widest">Property</th>
-                <th className="px-8 py-5 text-sm font-bold text-gray-400 uppercase tracking-widest">Location</th>
-                <th className="px-8 py-5 text-sm font-bold text-gray-400 uppercase tracking-widest">Type</th>
-                <th className="px-8 py-5 text-sm font-bold text-gray-400 uppercase tracking-widest">Price</th>
-                <th className="px-8 py-5 text-sm font-bold text-gray-400 uppercase tracking-widest text-right">Actions</th>
+                <th className="px-8 py-5 text-sm font-bold text-gray-600 dark:text-gray-400 uppercase tracking-widest">Property</th>
+                <th className="px-8 py-5 text-sm font-bold text-gray-600 dark:text-gray-400 uppercase tracking-widest">Location</th>
+                <th className="px-8 py-5 text-sm font-bold text-gray-600 dark:text-gray-400 uppercase tracking-widest">Type</th>
+                <th className="px-8 py-5 text-sm font-bold text-gray-600 dark:text-gray-400 uppercase tracking-widest">Price</th>
+                <th className="px-8 py-5 text-sm font-bold text-gray-600 dark:text-gray-400 uppercase tracking-widest text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
@@ -94,7 +94,7 @@ const AdminProperties = () => {
                         <div className="relative w-16 h-16 rounded-xl overflow-hidden shadow-sm">
                           <Image src={p.images?.[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=1000'} alt={p.title || 'Property'} fill className="object-cover" />
                         </div>
-                        <span className="font-bold text-gray-900 dark:text-white line-clamp-1">{p.title}</span>
+                        <span className="font-bold text-gray-900 dark:text-black dark:text-white line-clamp-1">{p.title}</span>
                       </div>
                     </td>
                     <td className="px-8 py-6 text-gray-500 text-sm">
@@ -104,7 +104,7 @@ const AdminProperties = () => {
                       </div>
                     </td>
                     <td className="px-8 py-6">
-                      <span className="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 font-bold px-3 py-1 rounded-lg text-xs">
+                      <span className="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-600 dark:text-gray-400 font-bold px-3 py-1 rounded-lg text-xs">
                         {p.type}
                       </span>
                     </td>
@@ -115,13 +115,13 @@ const AdminProperties = () => {
                       <div className="flex items-center justify-end gap-2">
                         <Link 
                           href={`/admin/properties/edit/${p._id}`}
-                          className="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 rounded-xl hover:bg-blue-600 hover:text-white transition-all"
+                          className="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 rounded-xl hover:bg-blue-600 hover:text-black dark:text-white transition-all"
                         >
                           <Pencil size={18} />
                         </Link>
                         <button 
                           onClick={() => handleDelete(p._id)}
-                          className="p-3 bg-red-50 dark:bg-red-900/20 text-red-600 rounded-xl hover:bg-red-600 hover:text-white transition-all"
+                          className="p-3 bg-red-50 dark:bg-red-900/20 text-red-600 rounded-xl hover:bg-red-600 hover:text-black dark:text-white transition-all"
                         >
                           <Trash2 size={18} />
                         </button>

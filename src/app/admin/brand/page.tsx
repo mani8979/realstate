@@ -76,11 +76,11 @@ export default function BrandAdmin() {
   return (
     <div className="max-w-4xl">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-black uppercase text-gray-900 dark:text-white">Home Extra Settings</h1>
+        <h1 className="text-3xl font-black uppercase text-gray-900 dark:text-black dark:text-white">Home Extra Settings</h1>
         <button 
           onClick={handleSave}
           disabled={saving}
-          className="bg-primary text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-primary/90 transition-all"
+          className="bg-primary text-black dark:text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-primary/90 transition-all"
         >
           <Save size={20} />
           {saving ? 'Saving...' : 'Save Changes'}
@@ -89,7 +89,7 @@ export default function BrandAdmin() {
 
       <div className="space-y-8">
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">Global Brand Assets</h2>
+          <h2 className="text-xl font-bold mb-2 text-gray-900 dark:text-black dark:text-white">Global Brand Assets</h2>
           <p className="text-xs text-gray-500 mb-6 border-b border-gray-100 dark:border-gray-800 pb-4">Manage your logos and site icons in one place to update the entire platform.</p>
           
           <div className="grid grid-cols-1 gap-6">
@@ -97,12 +97,12 @@ export default function BrandAdmin() {
               <div>
                 <label className="block text-sm font-bold text-gray-500 mb-2">Header Logo Image</label>
                 {content.headerLogoImage ? (
-                  <div className="relative w-32 h-32 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 group bg-black/5 flex items-center justify-center p-2">
+                  <div className="relative w-32 h-32 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 group bg-white dark:bg-black/5 flex items-center justify-center p-2">
                     <img src={content.headerLogoImage} alt="Header Logo" className="max-w-full max-h-full object-contain" />
                     <button
                       type="button"
                       onClick={() => setContent({ ...content, headerLogoImage: '' })}
-                      className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-2 right-2 bg-red-500 text-black dark:text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                     >
                       <span className="text-xs font-bold">X</span>
                     </button>
@@ -133,10 +133,10 @@ export default function BrandAdmin() {
                           setUploadingHeader(false);
                         }
                       }}
-                      className="w-full p-4 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
+                      className="w-full p-4 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white"
                     />
                     {uploadingHeader && (
-                      <div className="absolute inset-0 bg-black/20 flex items-center justify-center rounded-xl">
+                      <div className="absolute inset-0 bg-white dark:bg-black/20 flex items-center justify-center rounded-xl">
                         <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
                       </div>
                     )}
@@ -148,12 +148,12 @@ export default function BrandAdmin() {
               <div>
                 <label className="block text-sm font-bold text-gray-500 mb-2">Footer Logo Image</label>
                 {content.footerLogoImage ? (
-                  <div className="relative w-32 h-32 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 group bg-black/5 flex items-center justify-center p-2">
+                  <div className="relative w-32 h-32 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 group bg-white dark:bg-black/5 flex items-center justify-center p-2">
                     <img src={content.footerLogoImage} alt="Footer Logo" className="max-w-full max-h-full object-contain" />
                     <button
                       type="button"
                       onClick={() => setContent({ ...content, footerLogoImage: '' })}
-                      className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-2 right-2 bg-red-500 text-black dark:text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                     >
                       <span className="text-xs font-bold">X</span>
                     </button>
@@ -184,10 +184,10 @@ export default function BrandAdmin() {
                           setUploadingFooter(false);
                         }
                       }}
-                      className="w-full p-4 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
+                      className="w-full p-4 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white"
                     />
                     {uploadingFooter && (
-                      <div className="absolute inset-0 bg-black/20 flex items-center justify-center rounded-xl">
+                      <div className="absolute inset-0 bg-white dark:bg-black/20 flex items-center justify-center rounded-xl">
                         <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
                       </div>
                     )}
@@ -199,12 +199,12 @@ export default function BrandAdmin() {
               <div>
                 <label className="block text-sm font-bold text-gray-500 mb-2">Title Logo (Favicon)</label>
                 {content.faviconImage ? (
-                  <div className="relative w-32 h-32 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 group bg-black/5 flex items-center justify-center p-2">
+                  <div className="relative w-32 h-32 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 group bg-white dark:bg-black/5 flex items-center justify-center p-2">
                     <img src={content.faviconImage} alt="Favicon" className="w-16 h-16 object-contain" />
                     <button
                       type="button"
                       onClick={() => setContent({ ...content, faviconImage: '' })}
-                      className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-2 right-2 bg-red-500 text-black dark:text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                     >
                       <span className="text-xs font-bold">X</span>
                     </button>
@@ -235,10 +235,10 @@ export default function BrandAdmin() {
                           setUploadingFavicon(false);
                         }
                       }}
-                      className="w-full p-4 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
+                      className="w-full p-4 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white"
                     />
                     {uploadingFavicon && (
-                      <div className="absolute inset-0 bg-black/20 flex items-center justify-center rounded-xl">
+                      <div className="absolute inset-0 bg-white dark:bg-black/20 flex items-center justify-center rounded-xl">
                         <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
                       </div>
                     )}
@@ -251,7 +251,7 @@ export default function BrandAdmin() {
         </div>
 
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Global Identity</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Global Identity</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-bold text-gray-500 mb-2">Logo Title (e.g. STAR LANDS)</label>
@@ -259,7 +259,7 @@ export default function BrandAdmin() {
                 name="logoTitle"
                 value={content.logoTitle || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
             <div>
@@ -268,14 +268,14 @@ export default function BrandAdmin() {
                 name="logoSubtitle"
                 value={content.logoSubtitle || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
           </div>
         </div>
 
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Home Branding & Motivation</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Home Branding & Motivation</h2>
           
           <div className="grid grid-cols-1 gap-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -285,7 +285,7 @@ export default function BrandAdmin() {
                   name="motivationLine"
                   value={content.motivationLine || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
                   placeholder="e.g. Success in real estate begins with trust..."
                 />
                 <p className="text-[10px] text-gray-500 mt-2 italic">* Appears in the high-impact banner section below the Hero.</p>
@@ -299,7 +299,7 @@ export default function BrandAdmin() {
                     <button
                       type="button"
                       onClick={() => setContent({ ...content, motivationBgImage: '' })}
-                      className="absolute inset-0 bg-red-500/80 text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-[10px]"
+                      className="absolute inset-0 bg-red-500/80 text-black dark:text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-[10px]"
                     >
                       Change Photo
                     </button>
@@ -326,7 +326,7 @@ export default function BrandAdmin() {
                       }}
                       className="w-full p-2 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-[10px]"
                     />
-                    {uploadingMotivation && <div className="absolute inset-0 bg-black/20 flex items-center justify-center rounded-xl text-[10px]">Uploading...</div>}
+                    {uploadingMotivation && <div className="absolute inset-0 bg-white dark:bg-black/20 flex items-center justify-center rounded-xl text-[10px]">Uploading...</div>}
                   </div>
                 )}
               </div>
@@ -339,7 +339,7 @@ export default function BrandAdmin() {
                   name="brandBadge"
                   value={content.brandBadge || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
                 />
               </div>
               <div className="flex gap-6">
@@ -349,7 +349,7 @@ export default function BrandAdmin() {
                     name="brandTitle1"
                     value={content.brandTitle1 || ''}
                     onChange={handleChange}
-                    className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                    className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
                   />
                 </div>
                 <div className="flex-1">
@@ -358,7 +358,7 @@ export default function BrandAdmin() {
                     name="brandTitle2"
                     value={content.brandTitle2 || ''}
                     onChange={handleChange}
-                    className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                    className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
                   />
                 </div>
               </div>
@@ -368,7 +368,7 @@ export default function BrandAdmin() {
 
         {/* Main Founder Section */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Main Founder Profile (Mahaboob shariff)</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Main Founder Profile (Mahaboob shariff)</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="space-y-6">
               <div>
@@ -379,7 +379,7 @@ export default function BrandAdmin() {
                     <button
                       type="button"
                       onClick={() => setContent({ ...content, mainFounderImage: '' })}
-                      className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-4 right-4 bg-red-500 text-black dark:text-white p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"
                     >
                       <span className="text-xs font-bold">Remove Image</span>
                     </button>
@@ -404,9 +404,9 @@ export default function BrandAdmin() {
                           }
                         } catch (err) {} finally { setUploadingMainFounder(false); }
                       }}
-                      className="w-full p-10 rounded-2xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
+                      className="w-full p-10 rounded-2xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white"
                     />
-                    {uploadingMainFounder && <div className="absolute inset-0 bg-black/20 flex items-center justify-center rounded-2xl">Loading...</div>}
+                    {uploadingMainFounder && <div className="absolute inset-0 bg-white dark:bg-black/20 flex items-center justify-center rounded-2xl">Loading...</div>}
                   </div>
                 )}
               </div>
@@ -439,7 +439,7 @@ export default function BrandAdmin() {
 
         {/* Co-Founder Section */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Co-Founder Profile (Muhammad Yaseen)</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Co-Founder Profile (Muhammad Yaseen)</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="space-y-6">
               <div>
@@ -450,7 +450,7 @@ export default function BrandAdmin() {
                     <button
                       type="button"
                       onClick={() => setContent({ ...content, cofounderImage: '' })}
-                      className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-4 right-4 bg-red-500 text-black dark:text-white p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"
                     >
                       <span className="text-xs font-bold">Remove Image</span>
                     </button>
@@ -475,9 +475,9 @@ export default function BrandAdmin() {
                           }
                         } catch (err) {} finally { setUploadingCoFounder(false); }
                       }}
-                      className="w-full p-10 rounded-2xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
+                      className="w-full p-10 rounded-2xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white"
                     />
-                    {uploadingCoFounder && <div className="absolute inset-0 bg-black/20 flex items-center justify-center rounded-2xl">Loading...</div>}
+                    {uploadingCoFounder && <div className="absolute inset-0 bg-white dark:bg-black/20 flex items-center justify-center rounded-2xl">Loading...</div>}
                   </div>
                 )}
               </div>
@@ -509,7 +509,7 @@ export default function BrandAdmin() {
         </div>
 
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Pillar 1</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Pillar 1</h2>
           <div className="grid grid-cols-1 gap-4">
             <div>
               <label className="block text-sm font-bold text-gray-500 mb-2">Side Heading (e.g. Quality First)</label>
@@ -517,7 +517,7 @@ export default function BrandAdmin() {
                 name="brandP1Side"
                 value={content.brandP1Side || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
             <div>
@@ -526,7 +526,7 @@ export default function BrandAdmin() {
                 name="brandP1Title"
                 value={content.brandP1Title || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
             <div>
@@ -536,14 +536,14 @@ export default function BrandAdmin() {
                 rows={2}
                 value={content.brandP1Desc || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
           </div>
         </div>
 
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Pillar 2</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Pillar 2</h2>
           <div className="grid grid-cols-1 gap-4">
             <div>
               <label className="block text-sm font-bold text-gray-500 mb-2">Side Heading (e.g. Legally Secure)</label>
@@ -551,7 +551,7 @@ export default function BrandAdmin() {
                 name="brandP2Side"
                 value={content.brandP2Side || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
             <div>
@@ -560,7 +560,7 @@ export default function BrandAdmin() {
                 name="brandP2Title"
                 value={content.brandP2Title || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
             <div>
@@ -570,14 +570,14 @@ export default function BrandAdmin() {
                 rows={2}
                 value={content.brandP2Desc || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
           </div>
         </div>
 
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Pillar 3</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Pillar 3</h2>
           <div className="grid grid-cols-1 gap-4">
             <div>
               <label className="block text-sm font-bold text-gray-500 mb-2">Side Heading (e.g. Honest Deals)</label>
@@ -585,7 +585,7 @@ export default function BrandAdmin() {
                 name="brandP3Side"
                 value={content.brandP3Side || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
             <div>
@@ -594,7 +594,7 @@ export default function BrandAdmin() {
                 name="brandP3Title"
                 value={content.brandP3Title || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
             <div>
@@ -604,14 +604,14 @@ export default function BrandAdmin() {
                 rows={2}
                 value={content.brandP3Desc || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
           </div>
         </div>
 
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Cinematic Showcase (Gallery)</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Cinematic Showcase (Gallery)</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-bold text-gray-500 mb-2">Gallery Badge</label>
@@ -619,7 +619,7 @@ export default function BrandAdmin() {
                 name="galleryBadge"
                 value={content.galleryBadge || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
             <div>
@@ -628,7 +628,7 @@ export default function BrandAdmin() {
                 name="galleryTitle"
                 value={content.galleryTitle || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
             <div>
@@ -637,7 +637,7 @@ export default function BrandAdmin() {
                 name="marqueeText"
                 value={content.marqueeText || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
             <div>
@@ -647,14 +647,14 @@ export default function BrandAdmin() {
                 rows={2}
                 value={content.scrollStackDesc || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
           </div>
         </div>
 
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Legacy & Values Section</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Legacy & Values Section</h2>
           <div className="grid grid-cols-1 gap-4">
             <div>
               <label className="block text-sm font-bold text-gray-500 mb-2">Legacy Top Badge</label>
@@ -662,7 +662,7 @@ export default function BrandAdmin() {
                 name="legacyBadge"
                 value={content.legacyBadge || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -672,7 +672,7 @@ export default function BrandAdmin() {
                   name="legacyTitle1"
                   value={content.legacyTitle1 || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
                 />
               </div>
               <div>
@@ -681,7 +681,7 @@ export default function BrandAdmin() {
                   name="legacyHeading1"
                   value={content.legacyHeading1 || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
                 />
               </div>
             </div>
@@ -692,7 +692,7 @@ export default function BrandAdmin() {
                 rows={2}
                 value={content.legacyDesc1 || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
@@ -702,7 +702,7 @@ export default function BrandAdmin() {
                   name="legacyTitle2"
                   value={content.legacyTitle2 || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
                 />
               </div>
               <div>
@@ -711,7 +711,7 @@ export default function BrandAdmin() {
                   name="legacyList1"
                   value={content.legacyList1 || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
                 />
               </div>
               <div>
@@ -720,7 +720,7 @@ export default function BrandAdmin() {
                   name="legacyList2"
                   value={content.legacyList2 || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
                 />
               </div>
             </div>
@@ -729,7 +729,7 @@ export default function BrandAdmin() {
 
         {/* Global Footer & Detailed Contact Settings */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Global Footer & Contact Details</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Global Footer & Contact Details</h2>
           <div className="grid grid-cols-1 gap-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -738,7 +738,7 @@ export default function BrandAdmin() {
                   name="footerTitle"
                   value={content.footerTitle || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
                 />
               </div>
               <div>
@@ -747,7 +747,7 @@ export default function BrandAdmin() {
                   name="footerCopyright"
                   value={content.footerCopyright || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
                 />
               </div>
             </div>
@@ -756,30 +756,30 @@ export default function BrandAdmin() {
               <div className="space-y-4">
                 <h3 className="text-xs font-black uppercase text-primary tracking-widest">Inquiry Column</h3>
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Label (e.g. Inquiries)</label>
+                  <label className="block text-[10px] font-bold text-gray-600 dark:text-gray-400 uppercase mb-1">Label (e.g. Inquiries)</label>
                   <input 
                     name="footerInquiriesLabel"
                     value={content.footerInquiriesLabel || ''}
                     onChange={handleChange}
-                    className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm"
+                    className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-black dark:text-white text-sm"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Phone Number</label>
+                  <label className="block text-[10px] font-bold text-gray-600 dark:text-gray-400 uppercase mb-1">Phone Number</label>
                   <input 
                     name="footerPhone"
                     value={content.footerPhone || ''}
                     onChange={handleChange}
-                    className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm"
+                    className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-black dark:text-white text-sm"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Availability Text (e.g. Mon-Sat...)</label>
+                  <label className="block text-[10px] font-bold text-gray-600 dark:text-gray-400 uppercase mb-1">Availability Text (e.g. Mon-Sat...)</label>
                   <input 
                     name="footerPhoneSub"
                     value={content.footerPhoneSub || ''}
                     onChange={handleChange}
-                    className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm"
+                    className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-black dark:text-white text-sm"
                   />
                 </div>
               </div>
@@ -787,31 +787,31 @@ export default function BrandAdmin() {
               <div className="space-y-4">
                 <h3 className="text-xs font-black uppercase text-primary tracking-widest">Office Column</h3>
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Label (e.g. Main Office)</label>
+                  <label className="block text-[10px] font-bold text-gray-600 dark:text-gray-400 uppercase mb-1">Label (e.g. Main Office)</label>
                   <input 
                     name="footerOfficeLabel"
                     value={content.footerOfficeLabel || ''}
                     onChange={handleChange}
-                    className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm"
+                    className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-black dark:text-white text-sm"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Address Display (Use \n for line breaks)</label>
+                  <label className="block text-[10px] font-bold text-gray-600 dark:text-gray-400 uppercase mb-1">Address Display (Use \n for line breaks)</label>
                   <textarea 
                     name="footerAddress"
                     rows={2}
                     value={content.footerAddress || ''}
                     onChange={handleChange}
-                    className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm"
+                    className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-black dark:text-white text-sm"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Subtext (e.g. Visit us for coffee...)</label>
+                  <label className="block text-[10px] font-bold text-gray-600 dark:text-gray-400 uppercase mb-1">Subtext (e.g. Visit us for coffee...)</label>
                   <input 
                     name="footerAddressSub"
                     value={content.footerAddressSub || ''}
                     onChange={handleChange}
-                    className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm"
+                    className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-black dark:text-white text-sm"
                   />
                 </div>
               </div>
@@ -824,7 +824,7 @@ export default function BrandAdmin() {
                   name="footerService1"
                   value={content.footerService1 || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
                 />
               </div>
               <div>
@@ -833,7 +833,7 @@ export default function BrandAdmin() {
                   name="footerService2"
                   value={content.footerService2 || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
                 />
               </div>
             </div>
@@ -842,7 +842,7 @@ export default function BrandAdmin() {
 
         {/* Global Contact Info (Standard Footer) */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Global Contact Info (Standard Footer)</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Global Contact Info (Standard Footer)</h2>
           <div className="grid grid-cols-1 gap-6">
             <div>
               <label className="block text-sm font-bold text-gray-500 mb-2">Footer Description Text</label>
@@ -851,7 +851,7 @@ export default function BrandAdmin() {
                 rows={2}
                 value={content.globalFooterDesc || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -861,7 +861,7 @@ export default function BrandAdmin() {
                   name="contactPhone"
                   value={content.contactPhone || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
                 />
               </div>
               <div>
@@ -870,7 +870,7 @@ export default function BrandAdmin() {
                   name="contactEmail"
                   value={content.contactEmail || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
                 />
               </div>
               <div>
@@ -879,7 +879,7 @@ export default function BrandAdmin() {
                   name="globalFooterCopyright"
                   value={content.globalFooterCopyright || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
                 />
               </div>
             </div>
@@ -890,7 +890,7 @@ export default function BrandAdmin() {
                 rows={2}
                 value={content.contactAddress || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
           </div>
@@ -898,7 +898,7 @@ export default function BrandAdmin() {
 
         {/* Final CTA Section */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Final Call to Action</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Final Call to Action</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="md:col-span-2">
               <label className="block text-sm font-bold text-gray-500 mb-2">Heading Title (Use \n for new line)</label>
@@ -907,7 +907,7 @@ export default function BrandAdmin() {
                 rows={2}
                 value={content.ctaSectionTitle || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
             <div className="md:col-span-2">
@@ -917,7 +917,7 @@ export default function BrandAdmin() {
                 rows={2}
                 value={content.ctaSectionDesc || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
             <div>
@@ -926,7 +926,7 @@ export default function BrandAdmin() {
                 name="ctaSectionBtn1"
                 value={content.ctaSectionBtn1 || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
             <div>
@@ -935,7 +935,7 @@ export default function BrandAdmin() {
                 name="ctaSectionBtn2"
                 value={content.ctaSectionBtn2 || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
           </div>
@@ -943,7 +943,7 @@ export default function BrandAdmin() {
 
         {/* Office & Location Settings */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Office & Location Settings</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Office & Location Settings</h2>
           <div className="grid grid-cols-1 gap-6">
             <div>
               <label className="block text-sm font-bold text-gray-500 mb-2">Office Address</label>
@@ -952,7 +952,7 @@ export default function BrandAdmin() {
                 rows={2}
                 value={content.officeAddress || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
             <div>
@@ -962,7 +962,7 @@ export default function BrandAdmin() {
                 rows={3}
                 value={content.officeDescription || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
                 placeholder="e.g. Look bro, this is the building..."
               />
             </div>
@@ -973,7 +973,7 @@ export default function BrandAdmin() {
                   name="officeShopNo"
                   value={content.officeShopNo || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
                   placeholder="e.g. SHOP NO. 202"
                 />
               </div>
@@ -983,7 +983,7 @@ export default function BrandAdmin() {
                   name="officeFloor"
                   value={content.officeFloor || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
                   placeholder="e.g. SECOND FLOOR"
                 />
               </div>
@@ -994,7 +994,7 @@ export default function BrandAdmin() {
                 name="officeMapUrl"
                 value={content.officeMapUrl || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
             <div>
@@ -1004,7 +1004,7 @@ export default function BrandAdmin() {
                 rows={3}
                 value={content.officeMapEmbedUrl || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-mono text-[10px]"
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-mono text-[10px]"
               />
             </div>
           </div>
@@ -1012,7 +1012,7 @@ export default function BrandAdmin() {
 
         {/* Global Footer (Reveal Style) */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Homepage Footer (Reveal Style)</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Homepage Footer (Reveal Style)</h2>
           <div className="grid grid-cols-1 gap-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -1021,7 +1021,7 @@ export default function BrandAdmin() {
                   name="footerTitle"
                   value={content.footerTitle || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
                 />
               </div>
               <div>
@@ -1030,7 +1030,7 @@ export default function BrandAdmin() {
                   name="footerCopyright"
                   value={content.footerCopyright || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
                 />
               </div>
             </div>
@@ -1039,30 +1039,30 @@ export default function BrandAdmin() {
               <div className="space-y-4">
                 <h3 className="text-xs font-black uppercase text-primary tracking-widest">Inquiry Column</h3>
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Label</label>
+                  <label className="block text-[10px] font-bold text-gray-600 dark:text-gray-400 uppercase mb-1">Label</label>
                   <input name="footerInquiriesLabel" value={content.footerInquiriesLabel || ''} onChange={handleChange} className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900" />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Phone Number</label>
+                  <label className="block text-[10px] font-bold text-gray-600 dark:text-gray-400 uppercase mb-1">Phone Number</label>
                   <input name="footerPhone" value={content.footerPhone || ''} onChange={handleChange} className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900" />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Availability Subtext</label>
+                  <label className="block text-[10px] font-bold text-gray-600 dark:text-gray-400 uppercase mb-1">Availability Subtext</label>
                   <input name="footerPhoneSub" value={content.footerPhoneSub || ''} onChange={handleChange} className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900" />
                 </div>
               </div>
               <div className="space-y-4">
                 <h3 className="text-xs font-black uppercase text-primary tracking-widest">Office Column</h3>
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Label</label>
+                  <label className="block text-[10px] font-bold text-gray-600 dark:text-gray-400 uppercase mb-1">Label</label>
                   <input name="footerOfficeLabel" value={content.footerOfficeLabel || ''} onChange={handleChange} className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900" />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Address Display</label>
+                  <label className="block text-[10px] font-bold text-gray-600 dark:text-gray-400 uppercase mb-1">Address Display</label>
                   <textarea name="footerAddress" rows={2} value={content.footerAddress || ''} onChange={handleChange} className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900" />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Subtext</label>
+                  <label className="block text-[10px] font-bold text-gray-600 dark:text-gray-400 uppercase mb-1">Subtext</label>
                   <input name="footerAddressSub" value={content.footerAddressSub || ''} onChange={handleChange} className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900" />
                 </div>
               </div>

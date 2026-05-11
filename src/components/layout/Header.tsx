@@ -60,7 +60,7 @@ const Header = () => {
       className={cn(
         'fixed top-0 left-0 right-0 z-[60] transition-all duration-500',
         isScrolled 
-          ? 'py-4 bg-black/60 backdrop-blur-2xl border-b border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.3)]' 
+          ? 'py-4 bg-white/90 dark:bg-white dark:bg-black/60 backdrop-blur-2xl border-b border-black/10 dark:border-black/10 dark:border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.1)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.3)]' 
           : 'py-8 bg-transparent'
       )}
     >
@@ -74,7 +74,7 @@ const Header = () => {
           ) : (
             <>
               <div className="relative">
-                <div className="bg-primary p-2.5 rounded-xl text-white group-hover:rotate-[15deg] transition-transform duration-500 shadow-lg shadow-primary/30">
+                <div className="bg-primary p-2.5 rounded-xl text-black dark:text-white group-hover:rotate-[15deg] transition-transform duration-500 shadow-lg shadow-primary/30">
                   <Home size={24} />
                 </div>
                 <div className="absolute -top-1 -right-1 bg-amber-400 p-1 rounded-full animate-pulse shadow-lg">
@@ -84,7 +84,7 @@ const Header = () => {
               <div className="flex flex-col leading-none">
                 <span className={cn(
                   "text-2xl font-black tracking-tighter transition-colors font-heading",
-                  isScrolled ? "text-white" : "text-white"
+                  "text-black dark:text-black dark:text-white"
                 )}>
                   {content.logoTitle}
                 </span>
@@ -104,7 +104,7 @@ const Header = () => {
                 'text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 hover:text-primary relative group',
                 pathname === link.href 
                   ? 'text-primary' 
-                  : 'text-gray-300'
+                  : 'text-gray-600 dark:text-gray-700 dark:text-gray-300'
               )}
             >
               {link.name}
@@ -119,19 +119,19 @@ const Header = () => {
         {/* Action Buttons */}
         <div className="hidden lg:flex items-center gap-6">
           <ThemeToggle />
-          <div className="h-6 w-[1px] bg-white/10" />
+          <div className="h-6 w-[1px] bg-black/10 dark:bg-white/10" />
           <button
             onClick={() => openContactDialog('call')}
-            className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white hover:text-primary transition-colors group"
+            className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-black dark:text-black dark:text-white hover:text-primary transition-colors group"
           >
-            <div className="p-2 bg-white/5 rounded-lg border border-white/10 group-hover:bg-primary/20">
+            <div className="p-2 bg-black/5 dark:bg-white/5 rounded-lg border border-black/10 dark:border-white/10 group-hover:bg-primary/20">
               <Phone size={16} />
             </div>
             <span>{content.btnCall || 'Call'}</span>
           </button>
           <button
             onClick={() => openContactDialog('whatsapp')}
-            className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white bg-primary px-6 py-3 rounded-xl hover:bg-primary-dark transition-all shadow-xl shadow-primary/20 transform hover:scale-105"
+            className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-black dark:text-white bg-primary px-6 py-3 rounded-xl hover:bg-primary-dark transition-all shadow-xl shadow-primary/20 transform hover:scale-105"
           >
             <MessageSquare size={16} />
             <span>{content.btnEnquire || 'Enquire'}</span>
@@ -142,7 +142,7 @@ const Header = () => {
         <div className="lg:hidden flex items-center gap-4">
           <ThemeToggle />
           <button
-            className="p-3 bg-white/5 rounded-xl border border-white/10 text-primary"
+            className="p-3 bg-black/5 dark:bg-white/5 rounded-xl border border-black/10 dark:border-white/10 text-primary"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -157,7 +157,7 @@ const Header = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="lg:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-3xl p-8 border-b border-white/10 shadow-2xl"
+            className="lg:hidden absolute top-full left-0 right-0 bg-white dark:bg-black/95 backdrop-blur-3xl p-8 border-b border-black/10 dark:border-white/10 shadow-2xl"
           >
             <nav className="flex flex-col gap-6">
               {navLinks.map((link, index) => (
@@ -171,7 +171,7 @@ const Header = () => {
                     href={link.href}
                     className={cn(
                       'text-2xl font-black uppercase tracking-tighter transition-colors',
-                      pathname === link.href ? 'text-primary' : 'text-white'
+                      pathname === link.href ? 'text-primary' : 'text-black dark:text-white'
                     )}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
@@ -183,14 +183,14 @@ const Header = () => {
               <div className="grid grid-cols-1 gap-4 mt-8">
                 <button
                   onClick={() => { openContactDialog('call'); setIsMobileMenuOpen(false); }}
-                  className="flex items-center justify-center gap-3 bg-white/5 border border-white/10 text-white p-5 rounded-2xl font-black uppercase tracking-widest text-xs"
+                  className="flex items-center justify-center gap-3 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-black dark:text-white p-5 rounded-2xl font-black uppercase tracking-widest text-xs"
                 >
                   <Phone size={20} className="text-primary" />
                   {content.btnCall || 'Call Support'}
                 </button>
                 <button
                   onClick={() => { openContactDialog('whatsapp'); setIsMobileMenuOpen(false); }}
-                  className="flex items-center justify-center gap-3 bg-primary text-white p-5 rounded-2xl font-black uppercase tracking-widest text-xs"
+                  className="flex items-center justify-center gap-3 bg-primary text-black dark:text-white p-5 rounded-2xl font-black uppercase tracking-widest text-xs"
                 >
                   <MessageSquare size={20} />
                   {content.btnEnquire || 'WhatsApp Us'}

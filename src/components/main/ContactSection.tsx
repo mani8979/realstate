@@ -51,10 +51,10 @@ const ContactSection = ({ content }: { content?: any }) => {
             <h2 className="text-primary font-bold tracking-widest uppercase text-sm mb-4">
               {content?.contactBadge || 'Get In Touch'}
             </h2>
-            <h3 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-8">
+            <h3 className="text-4xl font-extrabold text-gray-900 dark:text-black dark:text-white mb-8">
               {content?.contactTitle || 'Have Any Questions?'}
             </h3>
-            <p className="text-gray-600 dark:text-gray-400 text-lg mb-12">
+            <p className="text-gray-600 dark:text-gray-600 dark:text-gray-400 text-lg mb-12">
               {content?.contactDesc || "Our team is ready to help you find the perfect property. Send us a message and we'll get back to you within 24 hours."}
             </p>
 
@@ -63,40 +63,40 @@ const ContactSection = ({ content }: { content?: any }) => {
                 onClick={() => openContactDialog('call')}
                 className="flex items-center gap-6 group w-full text-left"
               >
-                <div className="w-14 h-14 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white transition-all">
+                <div className="w-14 h-14 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-black dark:text-white transition-all">
                   <Phone size={24} />
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 font-medium uppercase tracking-wider">
                     {content?.contactCallLabel || 'Call Our Leadership'}
                   </p>
-                  <p className="text-xl font-bold text-gray-900 dark:text-white">
+                  <p className="text-xl font-bold text-gray-900 dark:text-black dark:text-white">
                     {content?.contactCallSub || 'Shariff / Mohammed'}
                   </p>
                 </div>
               </button>
               <div className="flex items-center gap-6 group">
-                <div className="w-14 h-14 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white transition-all">
+                <div className="w-14 h-14 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-black dark:text-white transition-all">
                   <Mail size={24} />
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 font-medium uppercase tracking-wider">
                     {content?.contactEmailLabel || 'Email Us'}
                   </p>
-                  <p className="text-xl font-bold text-gray-900 dark:text-white">
+                  <p className="text-xl font-bold text-gray-900 dark:text-black dark:text-white">
                     {content?.contactEmailSub || 'info@realestate.com'}
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-6 group">
-                <div className="w-14 h-14 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white transition-all">
+                <div className="w-14 h-14 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-black dark:text-white transition-all">
                   <MapPin size={24} />
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 font-medium uppercase tracking-wider">
                     {content?.contactVisitLabel || 'Visit Us'}
                   </p>
-                  <p className="text-xl font-bold text-gray-900 dark:text-white">
+                  <p className="text-xl font-bold text-gray-900 dark:text-black dark:text-white">
                     {content?.contactVisitSub || 'Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026.'}
                   </p>
                 </div>
@@ -120,7 +120,7 @@ const ContactSection = ({ content }: { content?: any }) => {
           <div className="bg-white dark:bg-gray-800 p-10 rounded-[2.5rem] shadow-xl border border-gray-100 dark:border-gray-700">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-700 dark:text-gray-300">
                   {content?.contactFormNameLabel || 'Your Name'}
                 </label>
                 <input
@@ -133,7 +133,7 @@ const ContactSection = ({ content }: { content?: any }) => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-700 dark:text-gray-300">
                   {content?.contactFormPhoneLabel || 'Phone Number'}
                 </label>
                 <input
@@ -146,7 +146,7 @@ const ContactSection = ({ content }: { content?: any }) => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                <label className="text-sm font-bold text-gray-700 dark:text-gray-700 dark:text-gray-300">
                   {content?.contactFormMsgLabel || 'Message'}
                 </label>
                 <textarea
@@ -162,7 +162,7 @@ const ContactSection = ({ content }: { content?: any }) => {
               <button
                 type="submit"
                 disabled={status === 'loading'}
-                className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-5 rounded-2xl transition-all flex items-center justify-center gap-3 disabled:opacity-70 group shadow-lg shadow-primary/20"
+                className="w-full bg-primary hover:bg-primary-dark text-black dark:text-white font-bold py-5 rounded-2xl transition-all flex items-center justify-center gap-3 disabled:opacity-70 group shadow-lg shadow-primary/20"
               >
                 {status === 'loading' ? (
                   <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>

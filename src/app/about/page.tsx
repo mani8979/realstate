@@ -23,7 +23,7 @@ const AboutPage = async () => {
   const serializedContent = JSON.parse(JSON.stringify(content));
 
   return (
-    <div className="bg-black">
+    <div className="bg-white dark:bg-black">
       <AboutClient />
 
       {/* Gallery Section */}

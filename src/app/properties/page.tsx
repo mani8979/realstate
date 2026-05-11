@@ -55,7 +55,7 @@ const PropertiesPage = () => {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-12">
-          <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">Search Properties</h1>
+          <h1 className="text-4xl font-extrabold text-gray-900 dark:text-black dark:text-white mb-4">Search Properties</h1>
           <p className="text-gray-500">Discover your perfect match from our extensive listings.</p>
         </div>
 
@@ -63,7 +63,7 @@ const PropertiesPage = () => {
         <div className="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 mb-12">
           <form onSubmit={handleSearch} className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
             <div className="space-y-2">
-              <label className="text-xs font-bold text-gray-400 uppercase tracking-wider px-1">Site Location</label>
+              <label className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider px-1">Site Location</label>
               <div className="relative">
                 <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" size={18} />
                 <input
@@ -77,7 +77,7 @@ const PropertiesPage = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-bold text-gray-400 uppercase tracking-wider px-1">Property Type</label>
+              <label className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider px-1">Property Type</label>
               <div className="relative">
                 <Home className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" size={18} />
                 <select
@@ -95,7 +95,7 @@ const PropertiesPage = () => {
 
             {filters.type && categories.find(c => c.name === filters.type)?.subCategories?.length > 0 && (
               <div className="space-y-2 animate-in slide-in-from-left duration-300">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-wider px-1">Sub-Division</label>
+                <label className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider px-1">Sub-Division</label>
                 <div className="relative">
                   <Star className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" size={18} />
                   <select
@@ -113,7 +113,7 @@ const PropertiesPage = () => {
             )}
 
             <div className="space-y-2">
-              <label className="text-xs font-bold text-gray-400 uppercase tracking-wider px-1">Max Price</label>
+              <label className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider px-1">Max Price</label>
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-primary font-bold">₹</span>
                 <input
@@ -128,7 +128,7 @@ const PropertiesPage = () => {
 
             <button
               type="submit"
-              className="bg-primary hover:bg-primary-dark text-white font-bold h-12 rounded-xl transition-all flex items-center justify-center gap-2 group"
+              className="bg-primary hover:bg-primary-dark text-black dark:text-white font-bold h-12 rounded-xl transition-all flex items-center justify-center gap-2 group"
             >
               <Search size={18} />
               <span>Apply Filters</span>
@@ -151,10 +151,10 @@ const PropertiesPage = () => {
           </div>
         ) : (
           <div className="text-center py-24 bg-gray-50 dark:bg-gray-900/50 rounded-[3rem]">
-            <div className="w-20 h-20 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-400">
+            <div className="w-20 h-20 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-600 dark:text-gray-400">
               <SlidersHorizontal size={40} />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">No Properties Found</h3>
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-black dark:text-white mb-2">No Properties Found</h3>
             <p className="text-gray-500">Try adjusting your filters or search for a different location.</p>
             <button 
               onClick={() => {

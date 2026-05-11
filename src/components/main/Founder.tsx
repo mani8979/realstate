@@ -23,7 +23,7 @@ const Founder: React.FC<FounderProps> = ({
   const expertise = exp ? exp.split('\n') : [];
 
   return (
-    <section className={`relative py-20 md:py-32 overflow-hidden ${isMain ? 'bg-zinc-950' : 'bg-black'}`}>
+    <section className={`relative py-20 md:py-32 overflow-hidden ${isMain ? 'bg-zinc-950' : 'bg-white dark:bg-black'}`}>
       {/* Background Decor */}
       <div className={`absolute top-0 right-0 w-full md:w-1/2 h-full ${isMain ? 'bg-primary/20' : 'bg-primary/10'} blur-[80px] md:blur-[140px] rounded-full -translate-y-1/2 translate-x-1/2 opacity-60`} />
       <div className={`absolute bottom-0 left-0 w-full md:w-1/3 h-1/2 ${isMain ? 'bg-amber-500/10' : 'bg-blue-500/10'} blur-[80px] md:blur-[140px] rounded-full translate-y-1/2 -translate-x-1/2 opacity-60`} />
@@ -38,7 +38,7 @@ const Founder: React.FC<FounderProps> = ({
             viewport={{ once: true }}
             className="lg:col-span-5 space-y-8 md:space-y-10"
           >
-            <div className={`relative aspect-[4/5] rounded-[2.5rem] md:rounded-[3rem] overflow-hidden border border-white/20 shadow-[0_0_50px_rgba(0,0,0,0.5)] group ${isMain ? 'ring-2 ring-primary/40' : ''}`}>
+            <div className={`relative aspect-[4/5] rounded-[2.5rem] md:rounded-[3rem] overflow-hidden border border-black/20 dark:border-white/20 shadow-[0_0_50px_rgba(0,0,0,0.5)] group ${isMain ? 'ring-2 ring-primary/40' : ''}`}>
               <img 
                 src={image || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1000"} 
                 alt={name}
@@ -47,8 +47,8 @@ const Founder: React.FC<FounderProps> = ({
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90 md:opacity-80" />
               
               {/* Name Overlay */}
-              <div className="absolute bottom-0 left-0 right-0 bg-black/80 md:bg-black/60 backdrop-blur-md border-t border-white/10 py-5 md:py-6 text-center">
-                <p className="text-xl md:text-2xl font-black text-white uppercase tracking-[0.2em]">{name}</p>
+              <div className="absolute bottom-0 left-0 right-0 bg-white dark:bg-black/80 md:bg-white dark:bg-black/60 backdrop-blur-md border-t border-black/10 dark:border-white/10 py-5 md:py-6 text-center">
+                <p className="text-xl md:text-2xl font-black text-black dark:text-white uppercase tracking-[0.2em]">{name}</p>
                 <p className="text-[9px] md:text-[10px] text-primary font-bold uppercase tracking-widest mt-1">{role}</p>
               </div>
             </div>
@@ -58,12 +58,12 @@ const Founder: React.FC<FounderProps> = ({
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                className="bg-white/5 border border-white/10 p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] backdrop-blur-sm space-y-6"
+                className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] backdrop-blur-sm space-y-6"
               >
                 <h4 className="text-primary font-black uppercase tracking-[0.2em] text-[10px] md:text-xs border-b border-primary/20 pb-4">Professional Highlights</h4>
                 <ul className="space-y-4">
                    {expertise.map((item, idx) => (
-                     <li key={idx} className="flex gap-4 items-start text-xs md:text-sm text-gray-300">
+                     <li key={idx} className="flex gap-4 items-start text-xs md:text-sm text-gray-700 dark:text-gray-300">
                         <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                            <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                         </div>
@@ -89,7 +89,7 @@ const Founder: React.FC<FounderProps> = ({
                    <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em]">Leadership Profile</span>
                 </span>
               </div>
-              <h3 className="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[1.1] md:leading-[0.95]">
+              <h3 className="text-4xl md:text-7xl font-black text-black dark:text-white uppercase tracking-tighter leading-[1.1] md:leading-[0.95]">
                 The {isMain ? "Founder's" : "Co-Founder's"} <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-primary to-amber-400">Vision</span>
               </h3>
@@ -102,24 +102,24 @@ const Founder: React.FC<FounderProps> = ({
               </p>
             </div>
 
-            <div className="bg-white/5 border border-white/10 p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] space-y-6 backdrop-blur-sm">
+            <div className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] space-y-6 backdrop-blur-sm">
               <h4 className="text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-primary">Executive Summary</h4>
-              <p className="text-gray-300 text-base md:text-lg leading-relaxed font-medium italic">
+              <p className="text-gray-700 dark:text-gray-300 text-base md:text-lg leading-relaxed font-medium italic">
                 {bio}
               </p>
             </div>
 
-            <div className="grid grid-cols-3 gap-4 md:gap-16 pt-8 border-t border-white/10 text-center md:text-left">
+            <div className="grid grid-cols-3 gap-4 md:gap-16 pt-8 border-t border-black/10 dark:border-white/10 text-center md:text-left">
               <div className="space-y-2">
-                <p className="text-3xl md:text-5xl font-black text-white">{experienceYears}</p>
+                <p className="text-3xl md:text-5xl font-black text-black dark:text-white">{experienceYears}</p>
                 <p className="text-[8px] md:text-[10px] font-black uppercase text-primary tracking-[0.2em] md:tracking-[0.3em]">Trust</p>
               </div>
               <div className="space-y-2">
-                <p className="text-3xl md:text-5xl font-black text-white">100%</p>
+                <p className="text-3xl md:text-5xl font-black text-black dark:text-white">100%</p>
                 <p className="text-[8px] md:text-[10px] font-black uppercase text-primary tracking-[0.2em] md:tracking-[0.3em]">Honesty</p>
               </div>
               <div className="space-y-2">
-                <p className="text-3xl md:text-5xl font-black text-white">Full</p>
+                <p className="text-3xl md:text-5xl font-black text-black dark:text-white">Full</p>
                 <p className="text-[8px] md:text-[10px] font-black uppercase text-primary tracking-[0.2em] md:tracking-[0.3em]">Value</p>
               </div>
             </div>

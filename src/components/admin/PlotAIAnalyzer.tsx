@@ -182,20 +182,20 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[300] bg-black/95 backdrop-blur-2xl flex flex-col overflow-hidden"
+      className="fixed inset-0 z-[300] bg-white dark:bg-black/95 backdrop-blur-2xl flex flex-col overflow-hidden"
     >
       {/* ---- Header ---- */}
-      <div className="flex items-center justify-between px-8 py-5 border-b border-white/10 bg-black/60 flex-shrink-0">
+      <div className="flex items-center justify-between px-8 py-5 border-b border-black/10 dark:border-white/10 bg-white dark:bg-black/60 flex-shrink-0">
         <div className="flex items-center gap-4">
           <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center shadow-lg shadow-violet-500/30">
-            <Brain size={20} className="text-white" />
+            <Brain size={20} className="text-black dark:text-white" />
           </div>
           <div>
-            <h2 className="text-white font-black text-lg uppercase tracking-tighter leading-none">AI Plot Analyzer</h2>
+            <h2 className="text-black dark:text-white font-black text-lg uppercase tracking-tighter leading-none">AI Plot Analyzer</h2>
             <p className="text-violet-400 text-[10px] font-bold uppercase tracking-[0.2em]">Powered by Gemini Vision</p>
           </div>
         </div>
-        <button onClick={onClose} className="p-3 rounded-2xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all">
+        <button onClick={onClose} className="p-3 rounded-2xl bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:bg-white/10 text-gray-600 dark:text-gray-400 hover:text-black dark:text-white transition-all">
           <X size={20} />
         </button>
       </div>
@@ -214,10 +214,10 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
             >
               {/* Existing layout preview */}
               {layoutImageUrl && (
-                <div className="bg-white/5 rounded-3xl border border-white/10 p-6">
+                <div className="bg-black/5 dark:bg-white/5 rounded-3xl border border-black/10 dark:border-white/10 p-6">
                   <div className="flex items-center gap-3 mb-4">
                     <CheckCircle size={16} className="text-green-400" />
-                    <span className="text-white font-bold text-sm">Current Layout Image Detected</span>
+                    <span className="text-black dark:text-white font-bold text-sm">Current Layout Image Detected</span>
                     <span className="ml-auto text-[10px] text-green-400 bg-green-500/10 px-3 py-1 rounded-full font-bold uppercase tracking-widest">Ready to Analyze</span>
                   </div>
                   <div className="relative aspect-video rounded-2xl overflow-hidden bg-gray-900">
@@ -228,7 +228,7 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
 
               {/* Custom upload (override) */}
               <div className="space-y-3">
-                <label className="text-xs font-black text-gray-400 uppercase tracking-widest">
+                <label className="text-xs font-black text-gray-600 dark:text-gray-400 uppercase tracking-widest">
                   {layoutImageUrl ? 'Or Upload a Different Image to Analyze' : 'Upload Plot Layout Image'}
                 </label>
                 <div
@@ -237,7 +237,7 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
                   onDragLeave={() => setIsDragOver(false)}
                   onClick={() => fileRef.current?.click()}
                   className={`relative border-2 border-dashed rounded-3xl p-10 text-center cursor-pointer transition-all ${
-                    isDragOver ? 'border-violet-500 bg-violet-500/10' : 'border-white/10 hover:border-violet-500/50 hover:bg-violet-500/5'
+                    isDragOver ? 'border-violet-500 bg-violet-500/10' : 'border-black/10 dark:border-white/10 hover:border-violet-500/50 hover:bg-violet-500/5'
                   }`}
                 >
                   <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => e.target.files?.[0] && handleFile(e.target.files[0])} />
@@ -251,7 +251,7 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
                         <Upload size={28} className="text-violet-400" />
                       </div>
                       <div>
-                        <p className="text-white font-bold text-sm">Drop your plot layout here</p>
+                        <p className="text-black dark:text-white font-bold text-sm">Drop your plot layout here</p>
                         <p className="text-gray-500 text-xs mt-1">JPG, PNG, WEBP supported • Any quality</p>
                       </div>
                     </div>
@@ -274,9 +274,9 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
                   { icon: <Target size={18} />, label: 'OCR Numbers', desc: 'Reads plot labels & IDs' },
                   { icon: <Sparkles size={18} />, label: 'Auto-Classification', desc: 'Available / Booked / Sold' },
                 ].map((item, i) => (
-                  <div key={i} className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-2">
+                  <div key={i} className="p-4 rounded-2xl bg-black/5 dark:bg-white/5 border border-white/5 space-y-2">
                     <div className="text-violet-400">{item.icon}</div>
-                    <div className="text-white font-bold text-xs">{item.label}</div>
+                    <div className="text-black dark:text-white font-bold text-xs">{item.label}</div>
                     <div className="text-gray-500 text-[10px]">{item.desc}</div>
                   </div>
                 ))}
@@ -287,7 +287,7 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
                 type="button"
                 onClick={runAnalysis}
                 disabled={!layoutImageUrl && !uploadedFile}
-                className="w-full py-5 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-black uppercase tracking-widest text-sm hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-2xl shadow-violet-500/30 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                className="w-full py-5 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-black dark:text-white font-black uppercase tracking-widest text-sm hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-2xl shadow-violet-500/30 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-3"
               >
                 <Brain size={20} />
                 Analyze with AI
@@ -308,7 +308,7 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
               {/* Animated brain */}
               <div className="relative">
                 <div className="w-32 h-32 rounded-full bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center shadow-2xl shadow-violet-500/40">
-                  <Brain size={52} className="text-white" />
+                  <Brain size={52} className="text-black dark:text-white" />
                 </div>
                 {/* Orbiting particles */}
                 {[0, 1, 2, 3].map(i => (
@@ -328,7 +328,7 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
               </div>
 
               <div className="text-center space-y-3">
-                <h3 className="text-white text-2xl font-black uppercase tracking-tighter">Analyzing Layout</h3>
+                <h3 className="text-black dark:text-white text-2xl font-black uppercase tracking-tighter">Analyzing Layout</h3>
                 <p className="text-violet-400 text-sm font-bold">AI is scanning your plot map...</p>
               </div>
 
@@ -341,13 +341,13 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
                     animate={{ opacity: processingStep >= i ? 1 : 0.2 }}
                     className={`flex items-center gap-3 p-3 rounded-xl transition-all ${
                       processingStep === i ? 'bg-violet-500/20 border border-violet-500/30' :
-                      processingStep > i ? 'bg-green-500/10' : 'bg-white/5'
+                      processingStep > i ? 'bg-green-500/10' : 'bg-black/5 dark:bg-white/5'
                     }`}
                   >
                     <div className={`flex-shrink-0 ${processingStep > i ? 'text-green-400' : processingStep === i ? 'text-violet-400' : 'text-gray-600'}`}>
                       {processingStep > i ? <CheckCircle size={16} /> : step.icon}
                     </div>
-                    <span className={`text-xs font-bold ${processingStep >= i ? 'text-white' : 'text-gray-600'}`}>{step.label}</span>
+                    <span className={`text-xs font-bold ${processingStep >= i ? 'text-black dark:text-white' : 'text-gray-600'}`}>{step.label}</span>
                     {processingStep === i && (
                       <motion.div className="ml-auto w-4 h-4 border-2 border-violet-400 border-t-transparent rounded-full" animate={{ rotate: 360 }} transition={{ duration: 0.6, repeat: Infinity, ease: 'linear' }} />
                     )}
@@ -369,7 +369,7 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
               {/* Stats summary */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                  { label: 'Total Plots', value: stats.total, color: 'text-white', bg: 'bg-white/5', border: 'border-white/10' },
+                  { label: 'Total Plots', value: stats.total, color: 'text-black dark:text-white', bg: 'bg-black/5 dark:bg-white/5', border: 'border-black/10 dark:border-white/10' },
                   { label: 'Available', value: stats.available, color: 'text-green-400', bg: 'bg-green-500/10', border: 'border-green-500/20' },
                   { label: 'Booked', value: stats.booked, color: 'text-yellow-400', bg: 'bg-yellow-400/10', border: 'border-yellow-400/20' },
                   { label: 'Sold', value: stats.sold, color: 'text-red-400', bg: 'bg-red-500/10', border: 'border-red-500/20' },
@@ -382,7 +382,7 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
                     className={`p-5 rounded-3xl ${s.bg} border ${s.border} text-center`}
                   >
                     <div className={`text-4xl font-black ${s.color}`}>{s.value}</div>
-                    <div className="text-[10px] font-black uppercase tracking-widest text-gray-400 mt-1">{s.label}</div>
+                    <div className="text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 mt-1">{s.label}</div>
                   </motion.div>
                 ))}
               </div>
@@ -392,10 +392,10 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
                 <Sparkles size={18} className="text-violet-400 flex-shrink-0" />
                 <div className="flex-grow">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-black text-white uppercase tracking-widest">AI Confidence</span>
+                    <span className="text-xs font-black text-black dark:text-white uppercase tracking-widest">AI Confidence</span>
                     <span className="text-violet-400 font-black text-sm">{analysisResult.confidence}%</span>
                   </div>
-                  <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-black/10 dark:bg-white/10 rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${analysisResult.confidence}%` }}
@@ -405,15 +405,15 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
                   </div>
                 </div>
                 {analysisResult.notes && (
-                  <p className="text-gray-400 text-xs max-w-xs">{analysisResult.notes}</p>
+                  <p className="text-gray-600 dark:text-gray-400 text-xs max-w-xs">{analysisResult.notes}</p>
                 )}
               </div>
 
               {/* Visual map overlay */}
               {displayImage && editedPlots.length > 0 && (
                 <div className="space-y-3">
-                  <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Visual Preview — Detected Plots</label>
-                  <div className="relative rounded-3xl overflow-hidden border border-white/10 bg-gray-900">
+                  <label className="text-xs font-black text-gray-600 dark:text-gray-400 uppercase tracking-widest">Visual Preview — Detected Plots</label>
+                  <div className="relative rounded-3xl overflow-hidden border border-black/10 dark:border-white/10 bg-gray-900">
                     <div className="relative" style={{ paddingBottom: '60%' }}>
                       <Image src={displayImage} alt="Layout" fill className="object-contain" />
                       {/* Overlay detected plots */}
@@ -429,9 +429,9 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
                             transform: 'translate(-50%, -50%)',
                           }}
                           className={`flex items-center justify-center text-[8px] font-black rounded border border-white/60 bg-opacity-70 ${
-                            plot.status === 'sold'   ? 'bg-red-500 text-white' :
+                            plot.status === 'sold'   ? 'bg-red-500 text-black dark:text-white' :
                             plot.status === 'booked' ? 'bg-yellow-400 text-black' :
-                                                       'bg-green-500 text-white'
+                                                       'bg-green-500 text-black dark:text-white'
                           }`}
                           title={`${plot.plotNumber} - ${plot.status}`}
                         >
@@ -442,9 +442,9 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
                   </div>
                   {/* Legend */}
                   <div className="flex items-center gap-6 justify-center py-2">
-                    <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-sm bg-green-500" /><span className="text-[10px] text-gray-400 font-bold">Available</span></div>
-                    <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-sm bg-yellow-400" /><span className="text-[10px] text-gray-400 font-bold">Booked</span></div>
-                    <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-sm bg-red-500" /><span className="text-[10px] text-gray-400 font-bold">Sold</span></div>
+                    <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-sm bg-green-500" /><span className="text-[10px] text-gray-600 dark:text-gray-400 font-bold">Available</span></div>
+                    <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-sm bg-yellow-400" /><span className="text-[10px] text-gray-600 dark:text-gray-400 font-bold">Booked</span></div>
+                    <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-sm bg-red-500" /><span className="text-[10px] text-gray-600 dark:text-gray-400 font-bold">Sold</span></div>
                   </div>
                 </div>
               )}
@@ -452,12 +452,12 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
               {/* Editable plots list */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Review & Edit Detected Plots</label>
+                  <label className="text-xs font-black text-gray-600 dark:text-gray-400 uppercase tracking-widest">Review & Edit Detected Plots</label>
                   <span className="text-[10px] text-gray-500">{editedPlots.length} plots detected</span>
                 </div>
                 <div className="max-h-64 overflow-y-auto space-y-2 pr-1">
                   {editedPlots.map((plot, i) => (
-                    <div key={i} className="flex items-center gap-3 p-3 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 transition-all">
+                    <div key={i} className="flex items-center gap-3 p-3 rounded-2xl bg-black/5 dark:bg-white/5 border border-white/5 hover:border-black/10 dark:border-white/10 transition-all">
                       {/* Status dot */}
                       <div className={`w-3 h-3 rounded-full flex-shrink-0 ${
                         plot.status === 'sold' ? 'bg-red-500' : plot.status === 'booked' ? 'bg-yellow-400' : 'bg-green-500'
@@ -467,7 +467,7 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
                         type="text"
                         value={plot.plotNumber}
                         onChange={e => updatePlotNumber(i, e.target.value)}
-                        className="bg-transparent text-white text-xs font-bold flex-grow border-none focus:ring-0 p-0 min-w-0"
+                        className="bg-transparent text-black dark:text-white text-xs font-bold flex-grow border-none focus:ring-0 p-0 min-w-0"
                         placeholder="Plot #"
                       />
                       {/* Status buttons */}
@@ -479,8 +479,8 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
                             onClick={() => updatePlotStatus(i, s)}
                             className={`px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider transition-all ${
                               plot.status === s
-                                ? s === 'sold' ? 'bg-red-500 text-white' : s === 'booked' ? 'bg-yellow-400 text-black' : 'bg-green-500 text-white'
-                                : 'bg-white/5 text-gray-500 hover:bg-white/10'
+                                ? s === 'sold' ? 'bg-red-500 text-black dark:text-white' : s === 'booked' ? 'bg-yellow-400 text-black' : 'bg-green-500 text-black dark:text-white'
+                                : 'bg-black/5 dark:bg-white/5 text-gray-500 hover:bg-black/10 dark:bg-white/10'
                             }`}
                           >
                             {s.charAt(0).toUpperCase() + s.slice(1)}
@@ -497,11 +497,11 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
               </div>
 
               {/* Action buttons */}
-              <div className="flex gap-4 pt-4 border-t border-white/10">
+              <div className="flex gap-4 pt-4 border-t border-black/10 dark:border-white/10">
                 <button
                   type="button"
                   onClick={() => { setStage('idle'); setAnalysisResult(null); setEditedPlots([]); }}
-                  className="flex items-center gap-2 px-6 py-4 rounded-2xl bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 transition-all font-bold uppercase tracking-widest text-xs"
+                  className="flex items-center gap-2 px-6 py-4 rounded-2xl bg-black/5 dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:text-black dark:text-white hover:bg-black/10 dark:bg-white/10 transition-all font-bold uppercase tracking-widest text-xs"
                 >
                   <RefreshCw size={16} />
                   Re-analyze
@@ -509,7 +509,7 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
                 <button
                   type="button"
                   onClick={handleConfirm}
-                  className="flex-grow py-4 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-black uppercase tracking-widest text-sm hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-2xl shadow-violet-500/30 flex items-center justify-center gap-3"
+                  className="flex-grow py-4 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-black dark:text-white font-black uppercase tracking-widest text-sm hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-2xl shadow-violet-500/30 flex items-center justify-center gap-3"
                 >
                   <CheckCircle size={18} />
                   Apply {editedPlots.length} Plots to Map

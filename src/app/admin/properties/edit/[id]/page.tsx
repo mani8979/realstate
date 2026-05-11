@@ -42,7 +42,7 @@ const EditProperty = () => {
   return (
     <div className="space-y-10 pb-20">
       <div>
-        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">Edit Property</h1>
+        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-black dark:text-white">Edit Property</h1>
         <p className="text-gray-500">Update the details for "{property?.title}".</p>
       </div>
 

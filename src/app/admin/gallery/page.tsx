@@ -117,13 +117,13 @@ export default function GalleryAdmin() {
     <div className="max-w-6xl pb-20">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12">
         <div>
-          <h1 className="text-4xl font-black uppercase text-gray-900 dark:text-white tracking-tight">About Page Gallery</h1>
+          <h1 className="text-4xl font-black uppercase text-gray-900 dark:text-black dark:text-white tracking-tight">About Page Gallery</h1>
           <p className="text-gray-500 mt-2 font-medium">Manage the cinematic photo collection for your About Us section.</p>
         </div>
         <button 
           onClick={handleSave}
           disabled={saving}
-          className="bg-primary text-white px-10 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-primary/90 transition-all shadow-2xl shadow-primary/30 disabled:opacity-50"
+          className="bg-primary text-black dark:text-white px-10 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-primary/90 transition-all shadow-2xl shadow-primary/30 disabled:opacity-50"
         >
           <Save size={22} />
           {saving ? 'Saving...' : 'Publish Gallery'}
@@ -143,20 +143,20 @@ export default function GalleryAdmin() {
           }`}
         >
           <div className={`w-16 h-16 rounded-full shadow-xl flex items-center justify-center transition-all ${
-            isDragging ? 'bg-primary text-white scale-110' : 'bg-white dark:bg-gray-800 text-gray-400 group-hover:text-primary group-hover:scale-110'
+            isDragging ? 'bg-primary text-black dark:text-white scale-110' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 group-hover:text-primary group-hover:scale-110'
           }`}>
             <Plus size={32} />
           </div>
           <span className={`text-sm font-black uppercase tracking-widest mt-4 transition-all ${
-            isDragging ? 'text-primary' : 'text-gray-400 group-hover:text-primary'
+            isDragging ? 'text-primary' : 'text-gray-600 dark:text-gray-400 group-hover:text-primary'
           }`}>
             {isDragging ? 'Drop to Upload' : 'Add Photos'}
           </span>
-          <p className="text-[10px] text-gray-400 mt-1 font-bold">or drag and drop</p>
+          <p className="text-[10px] text-gray-600 dark:text-gray-400 mt-1 font-bold">or drag and drop</p>
           <input type="file" className="hidden" onChange={handleFileChange} accept="image/*" multiple />
           
           {uploading && (
-            <div className="absolute inset-0 bg-white/80 dark:bg-black/80 flex flex-col items-center justify-center rounded-[2.5rem] backdrop-blur-sm z-10">
+            <div className="absolute inset-0 bg-white/80 dark:bg-white dark:bg-black/80 flex flex-col items-center justify-center rounded-[2.5rem] backdrop-blur-sm z-10">
               <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-primary mb-4"></div>
               <span className="text-[10px] font-black uppercase tracking-widest text-primary animate-pulse">Uploading...</span>
             </div>
@@ -172,12 +172,12 @@ export default function GalleryAdmin() {
               
               <button
                 onClick={() => handleRemove(index)}
-                className="absolute top-4 right-4 bg-red-500/90 backdrop-blur-md text-white p-3 rounded-2xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-600 shadow-xl"
+                className="absolute top-4 right-4 bg-red-500/90 backdrop-blur-md text-black dark:text-white p-3 rounded-2xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-600 shadow-xl"
               >
                 <X size={18} />
               </button>
               
-              <div className="absolute bottom-4 left-4 text-white opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 flex items-center gap-2">
+              <div className="absolute bottom-4 left-4 text-black dark:text-white opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 flex items-center gap-2">
                 <ImageIcon size={14} className="text-primary" />
                 <span className="text-[10px] font-black uppercase tracking-widest">Image {index + 1}</span>
               </div>
@@ -197,9 +197,9 @@ export default function GalleryAdmin() {
       {content.aboutGallery?.length === 0 && !uploading && (
         <div className="mt-12 p-20 rounded-[3rem] border-2 border-dashed border-gray-100 dark:border-gray-900 flex flex-col items-center text-center">
           <div className="w-20 h-20 bg-gray-50 dark:bg-gray-900 rounded-full flex items-center justify-center mb-6">
-            <ImageIcon size={40} className="text-gray-300" />
+            <ImageIcon size={40} className="text-gray-700 dark:text-gray-300" />
           </div>
-          <h3 className="text-xl font-bold text-gray-400">Your gallery is empty</h3>
+          <h3 className="text-xl font-bold text-gray-600 dark:text-gray-400">Your gallery is empty</h3>
           <p className="text-gray-500 mt-2">Upload your first cinematic photo to showcase on the About page.</p>
         </div>
       )}

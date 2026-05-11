@@ -55,10 +55,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <aside className="w-72 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 flex flex-col">
         <div className="p-8 border-b border-gray-100 dark:border-gray-800">
           <Link href="/" className="flex items-center gap-2">
-            <div className="bg-primary p-2 rounded-lg text-white">
+            <div className="bg-primary p-2 rounded-lg text-black dark:text-white">
               <Building size={24} />
             </div>
-            <span className="text-xl font-bold tracking-tight dark:text-white">
+            <span className="text-xl font-bold tracking-tight dark:text-black dark:text-white">
               ADMIN<span className="text-primary">PANEL</span>
             </span>
           </Link>
@@ -71,7 +71,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               href={item.href}
               className={`flex items-center gap-3 p-4 rounded-xl font-bold transition-all ${
                 pathname === item.href 
-                  ? 'bg-primary text-white shadow-lg shadow-primary/20' 
+                  ? 'bg-primary text-black dark:text-white shadow-lg shadow-primary/20' 
                   : 'text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800'
               }`}
             >

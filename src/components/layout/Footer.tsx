@@ -16,7 +16,7 @@ const Footer = async () => {
   }
 
   return (
-    <footer className="bg-zinc-950 text-gray-300 pt-24 pb-12 border-t border-white/5 relative overflow-hidden">
+    <footer className="bg-zinc-950 text-gray-700 dark:text-gray-300 pt-24 pb-12 border-t border-white/5 relative overflow-hidden">
       {/* Decorative Glow */}
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
@@ -31,11 +31,11 @@ const Footer = async () => {
                 </div>
               ) : (
                 <>
-                  <div className="bg-primary p-3 rounded-2xl text-white group-hover:rotate-[15deg] transition-all shadow-xl shadow-primary/20">
+                  <div className="bg-primary p-3 rounded-2xl text-black dark:text-white group-hover:rotate-[15deg] transition-all shadow-xl shadow-primary/20">
                     <Home size={28} />
                   </div>
                   <div className="flex flex-col leading-none">
-                    <span className="text-2xl font-black tracking-tighter text-white">
+                    <span className="text-2xl font-black tracking-tighter text-black dark:text-white">
                       {content.logoTitle || 'STAR LANDS'}
                     </span>
                     <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">
@@ -45,16 +45,16 @@ const Footer = async () => {
                 </>
               )}
             </Link>
-            <p className="text-gray-400 leading-relaxed max-w-xs text-sm md:text-base font-medium">
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed max-w-xs text-sm md:text-base font-medium">
               {content.globalFooterDesc || 'Crafting prestigious living spaces and premium investment opportunities in Vizag since 2006.'}
             </p>
             <div className="flex items-center gap-4">
-              <a href={content.socialFacebook || "https://www.facebook.com/people/star-land-developers/"} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center hover:bg-[#1877F2] hover:text-white transition-all group" title="Facebook">
+              <a href={content.socialFacebook || "https://www.facebook.com/people/star-land-developers/"} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl flex items-center justify-center hover:bg-[#1877F2] hover:text-black dark:text-white transition-all group" title="Facebook">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:scale-110 transition-transform">
                   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
                 </svg>
               </a>
-              <a href={content.socialInstagram || "https://www.instagram.com/star_land_developer"} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center hover:bg-gradient-to-tr hover:from-[#f9ce34] hover:via-[#ee2a7b] hover:to-[#6228d7] hover:text-white transition-all group" title="Instagram">
+              <a href={content.socialInstagram || "https://www.instagram.com/star_land_developer"} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl flex items-center justify-center hover:bg-gradient-to-tr hover:from-[#f9ce34] hover:via-[#ee2a7b] hover:to-[#6228d7] hover:text-black dark:text-white transition-all group" title="Instagram">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:scale-110 transition-transform">
                   <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                   <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
@@ -67,7 +67,7 @@ const Footer = async () => {
 
           {/* Quick Links */}
           <div className="text-center md:text-left">
-            <h3 className="text-white font-black uppercase tracking-widest text-xs mb-8">Navigation</h3>
+            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-8">Navigation</h3>
             <ul className="space-y-5">
               {[
                 { name: content.navHome || 'Home', href: '/' },
@@ -77,7 +77,7 @@ const Footer = async () => {
                 { name: content.navJoin || 'Join Careers', href: '/join' },
               ].map((link) => (
                 <li key={link.name}>
-                  <Link href={link.href} className="text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">{link.name}</Link>
+                  <Link href={link.href} className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">{link.name}</Link>
                 </li>
               ))}
             </ul>
@@ -85,11 +85,11 @@ const Footer = async () => {
 
           {/* Collections */}
           <div className="text-center md:text-left">
-            <h3 className="text-white font-black uppercase tracking-widest text-xs mb-8">Portfolios</h3>
+            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-8">Portfolios</h3>
             <ul className="space-y-5">
               {['Premium Lands', 'Luxury Houses', 'Modern Apartments', 'Commercial Hubs'].map((type) => (
                 <li key={type}>
-                  <Link href={`/properties?type=${type.split(' ')[1]}`} className="text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">{type}</Link>
+                  <Link href={`/properties?type=${type.split(' ')[1]}`} className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">{type}</Link>
                 </li>
               ))}
             </ul>
@@ -97,13 +97,13 @@ const Footer = async () => {
 
           {/* Contact Details */}
           <div className="text-center md:text-left">
-            <h3 className="text-white font-black uppercase tracking-widest text-xs mb-8">Get In Touch</h3>
+            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-8">Get In Touch</h3>
             <ul className="space-y-6">
               <li className="flex flex-col md:flex-row items-center md:items-start gap-4">
                 <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary shrink-0">
                   <MapPin size={18} />
                 </div>
-                <span className="text-sm text-gray-400 leading-relaxed font-medium">
+                <span className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
                   {content.contactAddress || 'Flat No. 202, Opposite D-Mart, Srinagar, Gajuwaka, Vizag – 530026.'}
                 </span>
               </li>
@@ -111,13 +111,13 @@ const Footer = async () => {
                 <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary shrink-0">
                   <Phone size={18} />
                 </div>
-                <span className="text-sm text-gray-400 font-bold">{content.contactPhone || '91 96660 80645'}</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400 font-bold">{content.contactPhone || '91 96660 80645'}</span>
               </li>
               <li className="flex flex-col md:flex-row items-center md:items-start gap-4">
                 <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary shrink-0">
                   <Mail size={18} />
                 </div>
-                <span className="text-sm text-gray-400 font-bold">{content.contactEmail || 'starlanddevelopers2@gmail.com'}</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400 font-bold">{content.contactEmail || 'starlanddevelopers2@gmail.com'}</span>
               </li>
             </ul>
           </div>

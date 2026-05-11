@@ -116,13 +116,13 @@ export default function JoinAdmin() {
     <div className="max-w-4xl pb-20">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-black uppercase text-gray-900 dark:text-white">Join Page Settings</h1>
+          <h1 className="text-3xl font-black uppercase text-gray-900 dark:text-black dark:text-white">Join Page Settings</h1>
           <p className="text-gray-500">Manage recruitment info, rules, and team collaboration links.</p>
         </div>
         <button 
           onClick={handleSave}
           disabled={saving}
-          className="bg-primary text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-2 hover:bg-primary/90 transition-all shadow-xl shadow-primary/20"
+          className="bg-primary text-black dark:text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-2 hover:bg-primary/90 transition-all shadow-xl shadow-primary/20"
         >
           <Save size={20} />
           {saving ? 'Saving...' : 'Save Changes'}
@@ -132,7 +132,7 @@ export default function JoinAdmin() {
       <div className="space-y-8">
         {/* Hero Background */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Hero Background</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Hero Background</h2>
           <div className="space-y-4">
             <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Background Image</label>
             {content.joinBgImage ? (
@@ -140,14 +140,14 @@ export default function JoinAdmin() {
                 <img src={content.joinBgImage} alt="Join Hero BG" className="w-full h-full object-cover" />
                 <button 
                   onClick={() => setContent({ ...content, joinBgImage: '' })} 
-                  className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all shadow-lg"
+                  className="absolute top-4 right-4 bg-red-500 text-black dark:text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all shadow-lg"
                 >
                   <X size={20} />
                 </button>
               </div>
             ) : (
               <label className="flex flex-col items-center justify-center w-full aspect-[21/9] rounded-3xl border-2 border-dashed border-gray-300 dark:border-gray-800 hover:border-primary transition-all cursor-pointer bg-gray-50 dark:bg-gray-800/50">
-                <Upload size={32} className="text-gray-400 mb-2" />
+                <Upload size={32} className="text-gray-600 dark:text-gray-400 mb-2" />
                 <span className="text-sm font-bold text-gray-500">Upload Hero Background</span>
                 <input type="file" className="hidden" onChange={(e) => handleUpload(e, 'joinBgImage')} />
               </label>
@@ -161,67 +161,67 @@ export default function JoinAdmin() {
 
         {/* Main Content */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Main Page Content</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Main Page Content</h2>
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Nav Link Name</label>
-                <input name="navJoin" value={content.navJoin || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+                <input name="navJoin" value={content.navJoin || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
               </div>
               <div>
                 <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Top Badge Text</label>
-                <input name="joinBadge" value={content.joinBadge || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+                <input name="joinBadge" value={content.joinBadge || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
               </div>
             </div>
             <div>
               <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Page Title</label>
-              <input name="joinTitle" value={content.joinTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              <input name="joinTitle" value={content.joinTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
             </div>
             <div>
               <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Description</label>
-              <textarea name="joinDesc" rows={3} value={content.joinDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              <textarea name="joinDesc" rows={3} value={content.joinDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
             </div>
             <div>
               <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Floating Chat Label</label>
-              <input name="chatWithUsText" value={content.chatWithUsText || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" placeholder="e.g. Chat With Us" />
+              <input name="chatWithUsText" value={content.chatWithUsText || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" placeholder="e.g. Chat With Us" />
             </div>
           </div>
         </div>
 
         {/* Workspace & Path Details */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Workspace & Path Details</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Workspace & Path Details</h2>
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Workspace Title</label>
-                <input name="joinWorkspaceTitle" value={content.joinWorkspaceTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+                <input name="joinWorkspaceTitle" value={content.joinWorkspaceTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
               </div>
               <div>
                 <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Workspace Description</label>
-                <textarea name="joinWorkspaceDesc" rows={2} value={content.joinWorkspaceDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+                <textarea name="joinWorkspaceDesc" rows={2} value={content.joinWorkspaceDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-gray-100 dark:border-gray-800 pt-6">
               <div>
                 <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Individual Path Title</label>
-                <input name="joinIndividualTitle" value={content.joinIndividualTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+                <input name="joinIndividualTitle" value={content.joinIndividualTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
               </div>
               <div>
                 <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Individual Path Description</label>
-                <textarea name="joinIndividualDesc" rows={2} value={content.joinIndividualDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+                <textarea name="joinIndividualDesc" rows={2} value={content.joinIndividualDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-gray-100 dark:border-gray-800 pt-6">
               <div>
                 <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Team Path Title</label>
-                <input name="joinTeamTitle" value={content.joinTeamTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+                <input name="joinTeamTitle" value={content.joinTeamTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
               </div>
               <div>
                 <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Team Path Description</label>
-                <textarea name="joinTeamDesc" rows={2} value={content.joinTeamDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+                <textarea name="joinTeamDesc" rows={2} value={content.joinTeamDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
               </div>
             </div>
           </div>
@@ -229,15 +229,15 @@ export default function JoinAdmin() {
 
         {/* Office & Rules */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Office & Requirements</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Office & Requirements</h2>
           <div className="space-y-6">
             <div>
               <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Rules & Regulations (One per line)</label>
-              <textarea name="joinRules" rows={4} value={content.joinRules || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              <textarea name="joinRules" rows={4} value={content.joinRules || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
             </div>
             <div>
               <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Qualifications (One per line)</label>
-              <textarea name="joinQualifications" rows={4} value={content.joinQualifications || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+              <textarea name="joinQualifications" rows={4} value={content.joinQualifications || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
             </div>
           </div>
         </div>
@@ -245,13 +245,13 @@ export default function JoinAdmin() {
         {/* Dynamic Team Leads */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex justify-between items-center mb-8 border-b border-gray-100 dark:border-gray-800 pb-4">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white flex items-center gap-3">
                <Users size={24} className="text-primary" />
                Team Leaders (Popup)
             </h2>
             <button 
               onClick={addLead}
-              className="flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-xl text-xs font-bold hover:bg-primary hover:text-white transition-all"
+              className="flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-xl text-xs font-bold hover:bg-primary hover:text-black dark:text-white transition-all"
             >
               <Plus size={16} />
               Add Member
@@ -263,22 +263,22 @@ export default function JoinAdmin() {
               <div key={index} className="p-6 rounded-3xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 relative group">
                 <button 
                   onClick={() => removeLead(index)}
-                  className="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors"
+                  className="absolute top-4 right-4 text-gray-600 dark:text-gray-400 hover:text-red-500 transition-colors"
                 >
                   <Trash2 size={20} />
                 </button>
                 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                   <div className="md:col-span-1">
-                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Photo</label>
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 mb-2">Photo</label>
                     {lead.image ? (
                       <div className="relative aspect-square rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 group/img">
                         <img src={lead.image} alt={lead.name} className="w-full h-full object-cover" />
-                        <button onClick={() => handleLeadChange(index, 'image', '')} className="absolute inset-0 bg-black/40 text-white flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-all"><X size={16} /></button>
+                        <button onClick={() => handleLeadChange(index, 'image', '')} className="absolute inset-0 bg-white dark:bg-black/40 text-black dark:text-white flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-all"><X size={16} /></button>
                       </div>
                     ) : (
                       <label className="flex flex-col items-center justify-center aspect-square rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-700 hover:border-primary transition-all cursor-pointer">
-                        <Upload size={20} className="text-gray-400 mb-1" />
+                        <Upload size={20} className="text-gray-600 dark:text-gray-400 mb-1" />
                         <span className="text-[10px] font-bold text-gray-500 uppercase">Upload</span>
                         <input type="file" className="hidden" onChange={(e) => handleUpload(e, '', index)} />
                       </label>
@@ -288,20 +288,20 @@ export default function JoinAdmin() {
                   
                   <div className="md:col-span-3 space-y-4">
                     <div>
-                      <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Full Name</label>
+                      <label className="block text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 mb-1">Full Name</label>
                       <input 
                         value={lead.name || ''} 
                         onChange={(e) => handleLeadChange(index, 'name', e.target.value)} 
-                        className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-medium text-sm" 
+                        className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-black dark:text-white font-medium text-sm" 
                         placeholder="Lead Name"
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">WhatsApp Number</label>
+                      <label className="block text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 mb-1">WhatsApp Number</label>
                       <input 
                         value={lead.phone || ''} 
                         onChange={(e) => handleLeadChange(index, 'phone', e.target.value)} 
-                        className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-medium text-sm" 
+                        className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-black dark:text-white font-medium text-sm" 
                         placeholder="91 00000 00000"
                       />
                     </div>
@@ -311,7 +311,7 @@ export default function JoinAdmin() {
             ))}
             
             {content.joinTeamLeads.length === 0 && (
-              <div className="text-center py-12 border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-3xl text-gray-400">
+              <div className="text-center py-12 border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-3xl text-gray-600 dark:text-gray-400">
                 <Users size={48} className="mx-auto mb-4 opacity-20" />
                 <p className="font-bold">No team leads added yet.</p>
                 <button onClick={addLead} className="text-primary font-black uppercase tracking-widest text-xs mt-2 hover:underline">Add First Member</button>
@@ -322,18 +322,18 @@ export default function JoinAdmin() {
 
         {/* Office Gallery */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Office Gallery Photos</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Office Gallery Photos</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-4">
               <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Office Photo 1</label>
               {content.joinOfficeImage1 ? (
                 <div className="relative aspect-video rounded-3xl overflow-hidden border border-gray-200 dark:border-gray-800 group">
                   <img src={content.joinOfficeImage1} alt="Office 1" className="w-full h-full object-cover" />
-                  <button onClick={() => setContent({ ...content, joinOfficeImage1: '' })} className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all"><X size={20} /></button>
+                  <button onClick={() => setContent({ ...content, joinOfficeImage1: '' })} className="absolute top-4 right-4 bg-red-500 text-black dark:text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all"><X size={20} /></button>
                 </div>
               ) : (
                 <label className="flex flex-col items-center justify-center w-full aspect-video rounded-3xl border-2 border-dashed border-gray-300 dark:border-gray-800 hover:border-primary transition-all cursor-pointer bg-gray-50 dark:bg-gray-800/50">
-                  <Upload size={32} className="text-gray-400 mb-2" />
+                  <Upload size={32} className="text-gray-600 dark:text-gray-400 mb-2" />
                   <span className="text-sm font-bold text-gray-500">Upload Photo 1</span>
                   <input type="file" className="hidden" onChange={(e) => handleUpload(e, 'joinOfficeImage1')} />
                 </label>
@@ -344,11 +344,11 @@ export default function JoinAdmin() {
               {content.joinOfficeImage2 ? (
                 <div className="relative aspect-video rounded-3xl overflow-hidden border border-gray-200 dark:border-gray-800 group">
                   <img src={content.joinOfficeImage2} alt="Office 2" className="w-full h-full object-cover" />
-                  <button onClick={() => setContent({ ...content, joinOfficeImage2: '' })} className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all"><X size={20} /></button>
+                  <button onClick={() => setContent({ ...content, joinOfficeImage2: '' })} className="absolute top-4 right-4 bg-red-500 text-black dark:text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all"><X size={20} /></button>
                 </div>
               ) : (
                 <label className="flex flex-col items-center justify-center w-full aspect-video rounded-3xl border-2 border-dashed border-gray-300 dark:border-gray-800 hover:border-primary transition-all cursor-pointer bg-gray-50 dark:bg-gray-800/50">
-                  <Upload size={32} className="text-gray-400 mb-2" />
+                  <Upload size={32} className="text-gray-600 dark:text-gray-400 mb-2" />
                   <span className="text-sm font-bold text-gray-500">Upload Photo 2</span>
                   <input type="file" className="hidden" onChange={(e) => handleUpload(e, 'joinOfficeImage2')} />
                 </label>

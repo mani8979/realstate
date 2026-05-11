@@ -26,7 +26,7 @@ const LocationSection = ({ content }: LocationSectionProps) => {
   const embedUrl = content?.officeMapEmbedUrl || defaultEmbed;
 
   return (
-    <section className="relative py-24 bg-black overflow-hidden">
+    <section className="relative py-24 bg-white dark:bg-black overflow-hidden">
       {/* Background elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20">
         <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/20 blur-[120px] rounded-full"></div>
@@ -44,7 +44,7 @@ const LocationSection = ({ content }: LocationSectionProps) => {
                   <div className="h-[2px] w-12 bg-primary"></div>
                   <span className="text-primary font-black uppercase tracking-[0.3em] text-xs">Our Presence</span>
                 </div>
-                <h2 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-none">
+                <h2 className="text-5xl md:text-7xl font-black text-black dark:text-white uppercase tracking-tighter leading-none">
                   FIND US <br/>
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-400">LOCALLY</span>
                 </h2>
@@ -52,7 +52,7 @@ const LocationSection = ({ content }: LocationSectionProps) => {
 
               <div className="glass-card p-8 md:p-10 relative group hover:border-primary/30 transition-all duration-700">
                 <div className="absolute -top-6 -right-6 bg-primary p-4 rounded-2xl shadow-xl shadow-primary/20 rotate-12 group-hover:rotate-0 transition-all duration-500">
-                  <MapPin className="text-white" size={32} />
+                  <MapPin className="text-black dark:text-white" size={32} />
                 </div>
                 
                 <div className="space-y-8">
@@ -61,18 +61,18 @@ const LocationSection = ({ content }: LocationSectionProps) => {
                       <Building2 size={18} className="text-gold" />
                       Address
                     </h3>
-                    <p className="text-2xl md:text-3xl font-bold text-white leading-tight">
+                    <p className="text-2xl md:text-3xl font-bold text-black dark:text-white leading-tight">
                       {address}
                     </p>
                   </div>
 
-                  <div className="pt-6 border-t border-white/10">
+                  <div className="pt-6 border-t border-black/10 dark:border-white/10">
                     <div className="flex items-start gap-4">
                       <div className="bg-primary/10 p-3 rounded-xl mt-1">
                         <Navigation className="text-primary" size={20} />
                       </div>
                       <div className="space-y-2">
-                        <p className="text-gray-400 font-medium italic text-lg leading-relaxed">
+                        <p className="text-gray-600 dark:text-gray-400 font-medium italic text-lg leading-relaxed">
                           {description}
                         </p>
                       </div>
@@ -86,7 +86,7 @@ const LocationSection = ({ content }: LocationSectionProps) => {
             <div className="relative group">
               <div className="absolute -inset-4 bg-gradient-to-tr from-primary/20 to-gold/20 blur-2xl opacity-50"></div>
               
-              <div className="relative aspect-square md:aspect-[4/5] rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl bg-slate-900">
+              <div className="relative aspect-square md:aspect-[4/5] rounded-[3rem] overflow-hidden border border-black/10 dark:border-white/10 shadow-2xl bg-slate-900">
                 <iframe 
                   src={embedUrl}
                   width="100%" 
@@ -106,10 +106,10 @@ const LocationSection = ({ content }: LocationSectionProps) => {
                     <Building2 className="text-primary" size={24} />
                   </div>
                   <div>
-                    <div className="text-white font-black text-sm uppercase tracking-tighter">
+                    <div className="text-black dark:text-white font-black text-sm uppercase tracking-tighter">
                       {content?.officeShopNo || "Shop No. 202"}
                     </div>
-                    <div className="text-gray-400 text-xs uppercase tracking-widest">
+                    <div className="text-gray-600 dark:text-gray-400 text-xs uppercase tracking-widest">
                       {content?.officeFloor || "Second Floor"}
                     </div>
                   </div>

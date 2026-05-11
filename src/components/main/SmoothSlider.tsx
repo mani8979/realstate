@@ -164,7 +164,7 @@ const SmoothSlider = ({ lands }: SmoothSliderProps) => {
           fill
           className="object-cover opacity-80 blur-[40px] scale-110"
         />
-        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0 bg-white dark:bg-black/20" />
       </div>
 
       <div ref={containerRef} className="absolute inset-0 z-10">
@@ -193,7 +193,7 @@ const SmoothSlider = ({ lands }: SmoothSliderProps) => {
                   
                   {/* Hover indicator */}
                   <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover/slideimg:opacity-100 transition-opacity duration-700 flex items-center justify-center pointer-events-none">
-                    <span className="bg-black/60 backdrop-blur-md text-white px-8 py-4 rounded-full font-black uppercase tracking-[0.5em] text-[10px] border border-white/20">
+                    <span className="bg-white dark:bg-black/60 backdrop-blur-md text-black dark:text-white px-8 py-4 rounded-full font-black uppercase tracking-[0.5em] text-[10px] border border-black/20 dark:border-white/20">
                       View Experience
                     </span>
                   </div>
@@ -208,15 +208,15 @@ const SmoothSlider = ({ lands }: SmoothSliderProps) => {
                 </p>
                 <h1 
                   onClick={() => router.push(`/properties/${land._id}`)}
-                  className="text-3xl md:text-6xl lg:text-7xl font-black text-white uppercase leading-[1.1] md:leading-[0.95] mb-6 md:mb-12 tracking-tighter cursor-pointer hover:text-primary transition-colors"
+                  className="text-3xl md:text-6xl lg:text-7xl font-black text-black dark:text-white uppercase leading-[1.1] md:leading-[0.95] mb-6 md:mb-12 tracking-tighter cursor-pointer hover:text-primary transition-colors"
                 >
                   {land.title}
                 </h1>
                 
                 <div className="flex flex-col md:flex-row md:items-end gap-6 md:gap-4 mb-8 md:mb-16">
                   <div>
-                    <p className="text-gray-400 text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] mb-1 md:mb-2">Investment Starting At</p>
-                    <p className="text-white text-4xl md:text-6xl font-black tracking-tighter">
+                    <p className="text-gray-600 dark:text-gray-400 text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] mb-1 md:mb-2">Investment Starting At</p>
+                    <p className="text-black dark:text-white text-4xl md:text-6xl font-black tracking-tighter">
                       ₹{land.price.toLocaleString('en-IN')}
                     </p>
                   </div>
@@ -224,7 +224,7 @@ const SmoothSlider = ({ lands }: SmoothSliderProps) => {
                   {/* Mobile Action Button */}
                   <button 
                     onClick={() => router.push(`/properties/${land._id}`)}
-                    className="md:hidden w-fit bg-primary text-white text-[10px] font-black uppercase tracking-widest px-8 py-4 rounded-xl border border-primary/20 shadow-xl shadow-primary/20 active:scale-95 transition-all"
+                    className="md:hidden w-fit bg-primary text-black dark:text-white text-[10px] font-black uppercase tracking-widest px-8 py-4 rounded-xl border border-primary/20 shadow-xl shadow-primary/20 active:scale-95 transition-all"
                   >
                     View Experience
                   </button>
@@ -243,7 +243,7 @@ const SmoothSlider = ({ lands }: SmoothSliderProps) => {
             <p 
               key={land._id}
               onClick={() => moveSlider(i, i > activeSlideIndex ? 'next' : 'prev')}
-              className={`text-[#5e5e5e] text-[9px] font-black uppercase tracking-[0.2em] cursor-pointer transition-all duration-500 hover:text-white flex items-center gap-3 ${i === activeSlideIndex ? 'active-land-item' : ''}`}
+              className={`text-[#5e5e5e] text-[9px] font-black uppercase tracking-[0.2em] cursor-pointer transition-all duration-500 hover:text-black dark:text-white flex items-center gap-3 ${i === activeSlideIndex ? 'active-land-item' : ''}`}
             >
               <span className={`w-4 h-[1px] bg-white transition-all duration-500 ${i === activeSlideIndex ? 'w-8' : 'w-0 opacity-0'}`}></span>
               {land.title}
@@ -255,7 +255,7 @@ const SmoothSlider = ({ lands }: SmoothSliderProps) => {
 
       {/* Bottom Counter (Zip Styling) */}
       <div className="absolute left-1/2 -translate-x-1/2 bottom-10 z-[100] flex items-center gap-10">
-        <div className="text-white text-sm font-black flex items-center gap-4">
+        <div className="text-black dark:text-white text-sm font-black flex items-center gap-4">
           <span className="text-2xl">{(activeSlideIndex + 1).toString().padStart(2, '0')}</span>
           <span className="text-[#5e5e5e] text-xs">/</span>
           <span className="text-[#5e5e5e] text-xs">{totalSlides.toString().padStart(2, '0')}</span>
@@ -266,13 +266,13 @@ const SmoothSlider = ({ lands }: SmoothSliderProps) => {
       <div className="absolute right-10 bottom-10 z-[100] flex gap-4">
         <button 
           onClick={prevSlide}
-          className="w-14 h-14 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all group backdrop-blur-md"
+          className="w-14 h-14 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center text-black dark:text-white hover:bg-white hover:text-black transition-all group backdrop-blur-md"
         >
           <ChevronLeft size={24} className="group-hover:-translate-x-1 transition-transform" />
         </button>
         <button 
           onClick={nextSlide}
-          className="w-14 h-14 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all group backdrop-blur-md"
+          className="w-14 h-14 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center text-black dark:text-white hover:bg-white hover:text-black transition-all group backdrop-blur-md"
         >
           <ChevronRight size={24} className="group-hover:translate-x-1 transition-transform" />
         </button>

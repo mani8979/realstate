@@ -34,9 +34,13 @@
 html {
   width: 100%;
   max-width: 100%;
-  background-color: black;
+  background-color: white;
   position: relative;
   height: auto;
+}
+
+html.dark {
+  background-color: black;
 }
 
 html.lenis {
@@ -44,14 +48,19 @@ html.lenis {
 }
 
 body {
-  background: black;
-  color: white;
+  background: white;
+  color: black;
   width: 100%;
   max-width: 100%;
   font-family: var(--font-inter);
   position: relative;
   min-height: 100vh;
   overflow-x: hidden;
+}
+
+.dark body {
+  background: black;
+  color: white;
 }
 
 .lenis.lenis-smooth {

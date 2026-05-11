@@ -49,7 +49,7 @@ const ShareAction: React.FC<ShareActionProps> = ({
     return (
       <button 
         onClick={handleShare}
-        className={`w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center hover:bg-primary hover:text-white transition-all group ${className}`}
+        className={`w-12 h-12 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl flex items-center justify-center hover:bg-primary hover:text-black dark:text-white transition-all group ${className}`}
         title="Share Website"
       >
         <Share2 size={20} className="group-hover:scale-110 transition-transform" />
@@ -61,7 +61,7 @@ const ShareAction: React.FC<ShareActionProps> = ({
       return (
         <button 
             onClick={handleShare}
-            className={`flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-bold px-6 py-3 rounded-full border border-white/10 transition-all ${className}`}
+            className={`flex items-center gap-2 bg-black/10 dark:bg-white/10 hover:bg-white/20 text-black dark:text-white font-bold px-6 py-3 rounded-full border border-black/10 dark:border-white/10 transition-all ${className}`}
         >
             <Share2 size={18} />
             <span>Share Property</span>
@@ -72,7 +72,7 @@ const ShareAction: React.FC<ShareActionProps> = ({
   return (
     <button 
       onClick={handleShare}
-      className={`p-3 rounded-full backdrop-blur-md border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-all ${className}`}
+      className={`p-3 rounded-full backdrop-blur-md border border-black/20 dark:border-white/20 bg-black/10 dark:bg-white/10 text-black dark:text-white hover:bg-white/20 transition-all ${className}`}
       title="Share"
     >
       <Share2 size={20} />

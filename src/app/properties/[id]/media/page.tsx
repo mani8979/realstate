@@ -83,7 +83,7 @@ const MediaPage = () => {
   };
 
   if (loading) return (
-    <div className="min-h-screen bg-black flex items-center justify-center">
+    <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center">
       <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
     </div>
   );
@@ -102,19 +102,19 @@ const MediaPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden flex flex-col">
+    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white overflow-hidden flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between p-6 md:p-8 bg-gradient-to-b from-black/80 to-transparent z-50">
         <button 
           onClick={() => router.back()}
-          className="flex items-center gap-3 bg-white/10 hover:bg-white/20 px-4 md:px-6 py-2 md:py-3 rounded-full border border-white/20 transition-all group backdrop-blur-md"
+          className="flex items-center gap-3 bg-black/10 dark:bg-white/10 hover:bg-white/20 px-4 md:px-6 py-2 md:py-3 rounded-full border border-black/20 dark:border-white/20 transition-all group backdrop-blur-md"
         >
           <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
           <span className="font-bold uppercase tracking-widest text-[10px] md:text-xs">Exit</span>
         </button>
 
         <div className="hidden md:flex items-center gap-2">
-           <h1 className="text-xl font-black uppercase tracking-tighter text-white">{property.title}</h1>
+           <h1 className="text-xl font-black uppercase tracking-tighter text-black dark:text-white">{property.title}</h1>
            <span className="text-primary/50 text-[10px] font-bold uppercase tracking-widest px-3 py-1 border border-primary/20 rounded-full">Media Suite</span>
         </div>
 
@@ -137,7 +137,7 @@ const MediaPage = () => {
               exit={{ opacity: 0 }}
               className="w-full h-full p-4 md:p-10"
             >
-              <div className="w-full h-full bg-white/5 rounded-[3rem] overflow-hidden border border-white/10 relative shadow-2xl">
+              <div className="w-full h-full bg-black/5 dark:bg-white/5 rounded-[3rem] overflow-hidden border border-black/10 dark:border-white/10 relative shadow-2xl">
                 <ModelViewer
                   src={property.threeDElement}
                   auto-rotate
@@ -147,7 +147,7 @@ const MediaPage = () => {
                   style={{ width: '100%', height: '100%' }}
                 ></ModelViewer>
                 
-                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 text-white/30 text-[10px] font-bold uppercase tracking-widest pointer-events-none">
+                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 text-black dark:text-white/30 text-[10px] font-bold uppercase tracking-widest pointer-events-none">
                    <MousePointer2 size={12} />
                    <span>Click & Drag to Rotate</span>
                 </div>
@@ -178,7 +178,7 @@ const MediaPage = () => {
               <div className="absolute inset-x-0 bottom-32 flex items-center justify-center gap-8">
                 <button 
                   onClick={() => setPhotoIndex((prev) => (prev - 1 + property.landPhotos.length) % property.landPhotos.length)}
-                  className="w-14 h-14 rounded-full bg-white/5 hover:bg-primary hover:text-black border border-white/10 flex items-center justify-center transition-all"
+                  className="w-14 h-14 rounded-full bg-black/5 dark:bg-white/5 hover:bg-primary hover:text-black border border-black/10 dark:border-white/10 flex items-center justify-center transition-all"
                 >
                   <ChevronLeft size={24} />
                 </button>
@@ -192,13 +192,13 @@ const MediaPage = () => {
                 </div>
                 <button 
                   onClick={() => setPhotoIndex((prev) => (prev + 1) % property.landPhotos.length)}
-                  className="w-14 h-14 rounded-full bg-white/5 hover:bg-primary hover:text-black border border-white/10 flex items-center justify-center transition-all"
+                  className="w-14 h-14 rounded-full bg-black/5 dark:bg-white/5 hover:bg-primary hover:text-black border border-black/10 dark:border-white/10 flex items-center justify-center transition-all"
                 >
                   <ChevronRight size={24} />
                 </button>
               </div>
 
-              <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 text-white/30 text-[10px] font-bold uppercase tracking-widest">
+              <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 text-black dark:text-white/30 text-[10px] font-bold uppercase tracking-widest">
                  <MousePointer2 size={12} />
                  <span>Hover to Pause Auto-Scroll</span>
               </div>
@@ -213,7 +213,7 @@ const MediaPage = () => {
               exit={{ opacity: 0 }}
               className="w-full h-full p-4 md:p-20"
             >
-              <div className="w-full h-full bg-white/5 rounded-[3rem] overflow-hidden border border-white/10 relative shadow-2xl">
+              <div className="w-full h-full bg-black/5 dark:bg-white/5 rounded-[3rem] overflow-hidden border border-black/10 dark:border-white/10 relative shadow-2xl">
                 {property.videoUrl.includes('youtube') || property.videoUrl.includes('youtu.be') ? (
                   <iframe
                     src={getYouTubeEmbedUrl(property.videoUrl)}
@@ -251,17 +251,17 @@ const MediaPage = () => {
                     {property.landBrochure.some((item: string) => item.endsWith('.pdf')) && (
                       <div className="flex gap-2">
                         {property.landBrochure.filter((item: string) => item.endsWith('.pdf')).map((pdf: string, i: number) => (
-                          <a key={i} href={pdf} target="_blank" className="bg-white/5 hover:bg-primary hover:text-black p-3 rounded-xl transition-all border border-white/10" title="Download PDF">
+                          <a key={i} href={pdf} target="_blank" className="bg-black/5 dark:bg-white/5 hover:bg-primary hover:text-black p-3 rounded-xl transition-all border border-black/10 dark:border-white/10" title="Download PDF">
                              <Download size={18} />
                           </a>
                         ))}
                       </div>
                     )}
-                    <div className="h-10 w-px bg-white/10 mx-2"></div>
-                    <div className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-xl border border-white/10">
+                    <div className="h-10 w-px bg-black/10 dark:bg-white/10 mx-2"></div>
+                    <div className="flex items-center gap-2 bg-black/5 dark:bg-white/5 px-4 py-2 rounded-xl border border-black/10 dark:border-white/10">
                       <span className="text-primary font-black text-xs">{brochurePageIndex + 1}</span>
-                      <span className="text-white/30 text-xs">/</span>
-                      <span className="text-white/30 text-xs font-bold">{getBrochurePages(property.landBrochure).length}</span>
+                      <span className="text-black dark:text-white/30 text-xs">/</span>
+                      <span className="text-black dark:text-white/30 text-xs font-bold">{getBrochurePages(property.landBrochure).length}</span>
                     </div>
                   </div>
                 </div>
@@ -304,14 +304,14 @@ const MediaPage = () => {
                    <button 
                       disabled={brochurePageIndex === 0}
                       onClick={() => setBrochurePageIndex(prev => prev - 1)}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 md:w-16 md:h-16 rounded-full bg-primary text-black border border-white/10 flex items-center justify-center transition-all disabled:opacity-0 z-20 shadow-[0_0_30px_rgba(16,185,129,0.3)]"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 md:w-16 md:h-16 rounded-full bg-primary text-black border border-black/10 dark:border-white/10 flex items-center justify-center transition-all disabled:opacity-0 z-20 shadow-[0_0_30px_rgba(16,185,129,0.3)]"
                    >
                       <ChevronLeft size={32} />
                    </button>
                    <button 
                       disabled={brochurePageIndex === getBrochurePages(property.landBrochure).length - 1}
                       onClick={() => setBrochurePageIndex(prev => prev + 1)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 md:w-16 md:h-16 rounded-full bg-primary text-black border border-white/10 flex items-center justify-center transition-all disabled:opacity-0 z-20 shadow-[0_0_30px_rgba(16,185,129,0.3)]"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 md:w-16 md:h-16 rounded-full bg-primary text-black border border-black/10 dark:border-white/10 flex items-center justify-center transition-all disabled:opacity-0 z-20 shadow-[0_0_30px_rgba(16,185,129,0.3)]"
                    >
                       <ChevronRight size={32} />
                    </button>
@@ -341,7 +341,7 @@ const MediaPage = () => {
               <div className="flex flex-col md:flex-row gap-8 min-h-0">
                 {/* Layout Image with Markers */}
                 {/* Layout Image with Markers */}
-                <div className="flex-grow bg-white/5 rounded-[2.5rem] border border-white/10 overflow-hidden relative shadow-2xl group flex items-center justify-center min-h-[500px]">
+                <div className="flex-grow bg-black/5 dark:bg-white/5 rounded-[2.5rem] border border-black/10 dark:border-white/10 overflow-hidden relative shadow-2xl group flex items-center justify-center min-h-[500px]">
                   <div className="relative max-w-full max-h-full">
                     <Image 
                       src={property.layoutImage} 
@@ -367,7 +367,7 @@ const MediaPage = () => {
                         }}
                         className={`absolute -translate-x-1/2 -translate-y-1/2 group/plot cursor-pointer z-10 rounded-md border border-white shadow-lg flex items-center justify-center transition-all group-hover/plot:scale-125 ${
                           plot.status === 'sold' ? 'bg-yellow-400 text-black' :
-                          plot.status === 'booked' ? 'bg-green-500 text-white' :
+                          plot.status === 'booked' ? 'bg-green-500 text-black dark:text-white' :
                           'bg-white text-black'
                         }`}
                       >
@@ -375,11 +375,11 @@ const MediaPage = () => {
 
                         {/* Tooltip on Hover */}
                         <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover/plot:opacity-100 transition-all pointer-events-none whitespace-nowrap z-20">
-                          <div className="bg-black/90 backdrop-blur-md text-white px-3 py-1.5 rounded-lg border border-white/10 text-[10px] font-bold shadow-2xl">
+                          <div className="bg-white dark:bg-black/90 backdrop-blur-md text-black dark:text-white px-3 py-1.5 rounded-lg border border-black/10 dark:border-white/10 text-[10px] font-bold shadow-2xl">
                             Plot {plot.number} • <span className={
                               plot.status === 'sold' ? 'text-yellow-400' :
                               plot.status === 'booked' ? 'text-green-500' :
-                              'text-white'
+                              'text-black dark:text-white'
                             }>{plot.status.toUpperCase()}</span>
                           </div>
                         </div>
@@ -388,7 +388,7 @@ const MediaPage = () => {
                   </div>
 
                   <div className="absolute top-6 right-6 flex flex-col gap-2 z-20">
-                    <button className="bg-black/60 backdrop-blur-md text-white p-3 rounded-full hover:bg-primary hover:text-black transition-all">
+                    <button className="bg-white dark:bg-black/60 backdrop-blur-md text-black dark:text-white p-3 rounded-full hover:bg-primary hover:text-black transition-all">
                       <Maximize2 size={20} />
                     </button>
                   </div>
@@ -396,7 +396,7 @@ const MediaPage = () => {
 
                 {/* Status Board */}
                 <div className="w-full md:w-[350px] flex flex-col gap-6">
-                  <div className="bg-white/5 backdrop-blur-xl rounded-[2rem] border border-white/10 p-6 space-y-6">
+                  <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[2rem] border border-black/10 dark:border-white/10 p-6 space-y-6">
                     <div className="flex items-center justify-between">
                       <h3 className="text-lg font-black uppercase tracking-tighter">Plot Status</h3>
                       <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary bg-primary/10 px-3 py-1 rounded-full">Real-time</span>
@@ -404,17 +404,17 @@ const MediaPage = () => {
 
                     {/* Legend */}
                     <div className="grid grid-cols-3 gap-3">
-                      <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10">
+                      <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
                         <div className="w-4 h-4 rounded-full bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.5)]"></div>
-                        <span className="text-[8px] font-black uppercase tracking-widest text-white/50">Sold</span>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-black dark:text-white/50">Sold</span>
                       </div>
-                      <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10">
+                      <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
                         <div className="w-4 h-4 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.3)]"></div>
-                        <span className="text-[8px] font-black uppercase tracking-widest text-white/50">Booked</span>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-black dark:text-white/50">Booked</span>
                       </div>
-                      <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10">
+                      <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
                         <div className="w-4 h-4 rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.3)]"></div>
-                        <span className="text-[8px] font-black uppercase tracking-widest text-white/50">Available</span>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-black dark:text-white/50">Available</span>
                       </div>
                     </div>
 
@@ -424,8 +424,8 @@ const MediaPage = () => {
                         const mappedPlots = property.plots?.filter((p: any) => p.x !== undefined && p.y !== undefined && (p.x !== 0 || p.y !== 0)) || [];
                         return (
                           <>
-                            <div className="flex items-center justify-between p-4 rounded-2xl bg-black/40 border border-white/5">
-                              <span className="text-xs font-bold text-white/60">Total Plots</span>
+                            <div className="flex items-center justify-between p-4 rounded-2xl bg-white dark:bg-black/40 border border-white/5">
+                              <span className="text-xs font-bold text-black dark:text-white/60">Total Plots</span>
                               <span className="text-xl font-black">{mappedPlots.length}</span>
                             </div>
                             <div className="grid grid-cols-2 gap-3">
@@ -433,9 +433,9 @@ const MediaPage = () => {
                                 <span className="block text-[8px] font-black uppercase tracking-widest text-yellow-400/60 mb-1">Sold</span>
                                 <span className="text-lg font-black text-yellow-400">{mappedPlots.filter((p: any) => p.status === 'sold').length}</span>
                               </div>
-                              <div className="p-4 rounded-2xl bg-white/10 border border-white/20">
-                                <span className="block text-[8px] font-black uppercase tracking-widest text-white/60 mb-1">Available</span>
-                                <span className="text-lg font-black text-white">{mappedPlots.filter((p: any) => p.status === 'available' || p.status === 'unsold').length}</span>
+                              <div className="p-4 rounded-2xl bg-black/10 dark:bg-white/10 border border-black/20 dark:border-white/20">
+                                <span className="block text-[8px] font-black uppercase tracking-widest text-black dark:text-white/60 mb-1">Available</span>
+                                <span className="text-lg font-black text-black dark:text-white">{mappedPlots.filter((p: any) => p.status === 'available' || p.status === 'unsold').length}</span>
                               </div>
                             </div>
                           </>
@@ -445,10 +445,10 @@ const MediaPage = () => {
                   </div>
 
                   {/* Plot Status Table */}
-                  <div className="bg-white/5 backdrop-blur-xl rounded-[3rem] border border-white/10 p-8 flex flex-col gap-6 overflow-hidden flex-grow">
+                  <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[3rem] border border-black/10 dark:border-white/10 p-8 flex flex-col gap-6 overflow-hidden flex-grow">
                     <div className="flex items-center justify-between px-2">
                       <div className="space-y-1">
-                        <h3 className="text-xl font-black uppercase tracking-tighter text-white">Inventory Table</h3>
+                        <h3 className="text-xl font-black uppercase tracking-tighter text-black dark:text-white">Inventory Table</h3>
                         <p className="text-[10px] font-bold text-primary uppercase tracking-widest">Real-time Plot Availability</p>
                       </div>
                       <div className="bg-primary/10 px-4 py-2 rounded-xl border border-primary/20">
@@ -459,7 +459,7 @@ const MediaPage = () => {
                     <div className="flex-grow overflow-y-auto pr-4 custom-scrollbar">
                       <table className="w-full text-left border-separate border-spacing-y-3">
                         <thead>
-                          <tr className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">
+                          <tr className="text-[10px] font-black uppercase tracking-[0.2em] text-black dark:text-white/30">
                             <th className="px-6 py-4">Plot #</th>
                             <th className="px-6 py-4">Status</th>
                             <th className="px-6 py-4 text-right">Action</th>
@@ -467,7 +467,7 @@ const MediaPage = () => {
                         </thead>
                         <tbody>
                           {property.plots?.map((plot: any, idx: number) => (
-                            <tr key={idx} className="bg-white/5 border border-white/10 rounded-[1.5rem] overflow-hidden group hover:bg-white/10 transition-all">
+                            <tr key={idx} className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-[1.5rem] overflow-hidden group hover:bg-black/10 dark:bg-white/10 transition-all">
                               <td className="px-6 py-5">
                                 <div className="flex items-center gap-3">
                                   <div className={`w-2 h-8 rounded-full ${
@@ -475,14 +475,14 @@ const MediaPage = () => {
                                     plot.status === 'booked' ? 'bg-green-500' :
                                     'bg-white'
                                   }`}></div>
-                                  <span className="text-sm font-black text-white">{plot.number}</span>
+                                  <span className="text-sm font-black text-black dark:text-white">{plot.number}</span>
                                 </div>
                               </td>
                               <td className="px-6 py-5">
                                 <span className={`text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full border ${
                                   plot.status === 'sold' ? 'bg-yellow-400/10 text-yellow-400 border-yellow-400/20' :
                                   plot.status === 'booked' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
-                                  'bg-white/5 text-white border-white/10'
+                                  'bg-black/5 dark:bg-white/5 text-black dark:text-white border-black/10 dark:border-white/10'
                                 }`}>
                                   {plot.status}
                                 </span>
@@ -490,7 +490,7 @@ const MediaPage = () => {
                               <td className="px-6 py-5 text-right">
                                 <button 
                                   onClick={() => openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`)}
-                                  className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-white transition-colors"
+                                  className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-black dark:text-white transition-colors"
                                 >
                                   Enquire Now
                                 </button>
@@ -513,7 +513,7 @@ const MediaPage = () => {
               animate={{ opacity: 1 }}
               className="w-full h-full p-4 md:p-20"
             >
-              <div className="w-full h-full bg-white/5 rounded-[3rem] overflow-hidden border border-white/10 relative shadow-2xl">
+              <div className="w-full h-full bg-black/5 dark:bg-white/5 rounded-[3rem] overflow-hidden border border-black/10 dark:border-white/10 relative shadow-2xl">
                  <iframe
                   src={property.mapUrl}
                   className="absolute inset-0 w-full h-full border-none"
@@ -527,7 +527,7 @@ const MediaPage = () => {
 
       {/* Navigation Footer */}
       <div className="p-6 md:p-10 bg-gradient-to-t from-black/80 to-transparent z-50">
-        <div className="max-w-fit mx-auto flex items-center gap-2 md:gap-4 bg-white/5 backdrop-blur-3xl px-4 md:px-8 py-4 rounded-[2rem] border border-white/10">
+        <div className="max-w-fit mx-auto flex items-center gap-2 md:gap-4 bg-black/5 dark:bg-white/5 backdrop-blur-3xl px-4 md:px-8 py-4 rounded-[2rem] border border-black/10 dark:border-white/10">
           {tabs.filter(t => t.show).map((tab) => (
             <button
               key={tab.id}
@@ -535,7 +535,7 @@ const MediaPage = () => {
               className={`flex items-center gap-3 px-6 py-3 rounded-2xl transition-all font-bold uppercase tracking-widest text-xs ${
                 activeTab === tab.id 
                   ? 'bg-primary text-black scale-110 shadow-[0_0_30px_rgba(16,185,129,0.3)]' 
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-black dark:text-white hover:bg-black/5 dark:bg-white/5'
               }`}
             >
               {tab.icon}

@@ -32,8 +32,8 @@ const Categories = () => {
       <div className="container mx-auto px-4">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <h2 className="text-primary font-bold tracking-widest uppercase text-sm mb-4">Categories</h2>
-          <h3 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-6">Explore Our Properties</h3>
-          <p className="text-gray-600 dark:text-gray-400">
+          <h3 className="text-4xl font-extrabold text-gray-900 dark:text-black dark:text-white mb-6">Explore Our Properties</h3>
+          <p className="text-gray-600 dark:text-gray-600 dark:text-gray-400">
             Choose from a wide variety of property types tailored to your specific needs and lifestyle.
           </p>
         </div>
@@ -50,7 +50,7 @@ const Categories = () => {
                 <div className={`p-6 rounded-2xl mb-6 transition-transform group-hover:scale-110 ${cat.color}`}>
                   <Icon size={48} />
                 </div>
-                <h4 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{cat.name}</h4>
+                <h4 className="text-2xl font-bold text-gray-900 dark:text-black dark:text-white mb-2">{cat.name}</h4>
                 {/* Count could be dynamic later if we fetch actual property counts */}
                 <p className="text-gray-500 font-medium">Browse All</p>
               </Link>

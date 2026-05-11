@@ -113,7 +113,7 @@ export const ContactDialog = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={closeDialog}
-            className="absolute inset-0 bg-black/80 backdrop-blur-md"
+            className="absolute inset-0 bg-white dark:bg-black/80 backdrop-blur-md"
           />
 
           {/* Modal */}
@@ -121,13 +121,13 @@ export const ContactDialog = () => {
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            className="relative w-full max-w-md bg-zinc-900 border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl"
+            className="relative w-full max-w-md bg-zinc-900 border border-black/10 dark:border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl"
           >
             {/* Header */}
             <div className="relative p-8 pb-4">
               <button 
                 onClick={closeDialog}
-                className="absolute top-6 right-6 p-2 bg-white/5 rounded-full hover:bg-white/10 text-gray-400 transition-colors"
+                className="absolute top-6 right-6 p-2 bg-black/5 dark:bg-white/5 rounded-full hover:bg-black/10 dark:bg-white/10 text-gray-600 dark:text-gray-400 transition-colors"
               >
                 <X size={20} />
               </button>
@@ -139,7 +139,7 @@ export const ContactDialog = () => {
                   {activeDialog === 'book' && <Calendar size={24} />}
                 </div>
                 <div>
-                  <h3 className="text-2xl font-black text-white uppercase tracking-tighter">
+                  <h3 className="text-2xl font-black text-black dark:text-white uppercase tracking-tighter">
                     {activeDialog === 'call' && 'Direct Call'}
                     {activeDialog === 'whatsapp' && 'WhatsApp Chat'}
                     {activeDialog === 'book' && 'Book a Visit'}
@@ -163,13 +163,13 @@ export const ContactDialog = () => {
                       transition={{ delay: index * 0.1 }}
                       href={activeDialog === 'call' ? `tel:${contact.phone}` : `https://wa.me/${contact.phone.replace('+', '')}?text=${encodeURIComponent(customMessage || `Hi ${contact.name}, I'm interested in your real estate projects.`)}`}
                       target={activeDialog === 'whatsapp' ? "_blank" : undefined}
-                      className="flex items-center gap-4 p-4 bg-white/5 border border-white/5 rounded-3xl hover:bg-white/10 hover:border-primary/30 group transition-all"
+                      className="flex items-center gap-4 p-4 bg-black/5 dark:bg-white/5 border border-white/5 rounded-3xl hover:bg-black/10 dark:bg-white/10 hover:border-primary/30 group transition-all"
                     >
-                      <div className="relative h-14 w-14 rounded-2xl overflow-hidden border border-white/10">
+                      <div className="relative h-14 w-14 rounded-2xl overflow-hidden border border-black/10 dark:border-white/10">
                          <img src={contact.image} alt={contact.name} className="h-full w-full object-cover" />
                       </div>
                       <div className="flex-1">
-                        <p className="text-white font-black uppercase tracking-tight group-hover:text-primary transition-colors">{contact.name}</p>
+                        <p className="text-black dark:text-white font-black uppercase tracking-tight group-hover:text-primary transition-colors">{contact.name}</p>
                         <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest">{contact.role}</p>
                       </div>
                       <div className={cn(
@@ -192,8 +192,8 @@ export const ContactDialog = () => {
                           <CheckCircle2 size={48} className="animate-bounce" />
                         </div>
                       </div>
-                      <h4 className="text-2xl font-black text-white uppercase tracking-tighter">Booking Successful!</h4>
-                      <p className="text-gray-400 text-sm">Our team will contact you shortly to confirm the visit schedule.</p>
+                      <h4 className="text-2xl font-black text-black dark:text-white uppercase tracking-tighter">Booking Successful!</h4>
+                      <p className="text-gray-600 dark:text-gray-400 text-sm">Our team will contact you shortly to confirm the visit schedule.</p>
                     </div>
                   ) : (
                     <form onSubmit={handleBookVisit} className="space-y-6">
@@ -208,7 +208,7 @@ export const ContactDialog = () => {
                               placeholder="Enter your name"
                               value={formData.name}
                               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                              className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white font-medium focus:border-primary/50 focus:ring-0 outline-none transition-all"
+                              className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl py-4 pl-12 pr-4 text-black dark:text-white font-medium focus:border-primary/50 focus:ring-0 outline-none transition-all"
                             />
                           </div>
                         </div>
@@ -222,7 +222,7 @@ export const ContactDialog = () => {
                               placeholder="Enter mobile number"
                               value={formData.phone}
                               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                              className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white font-medium focus:border-primary/50 focus:ring-0 outline-none transition-all"
+                              className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl py-4 pl-12 pr-4 text-black dark:text-white font-medium focus:border-primary/50 focus:ring-0 outline-none transition-all"
                             />
                           </div>
                         </div>
@@ -231,7 +231,7 @@ export const ContactDialog = () => {
                       <button 
                         type="submit"
                         disabled={status === 'loading'}
-                        className="w-full bg-primary text-white py-5 rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-sm flex items-center justify-center gap-3 shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50"
+                        className="w-full bg-primary text-black dark:text-white py-5 rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-sm flex items-center justify-center gap-3 shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50"
                       >
                         {status === 'loading' ? (
                           <Loader2 size={20} className="animate-spin" />
@@ -257,7 +257,7 @@ export const ContactDialog = () => {
             </div>
 
             {/* Footer */}
-            <div className="bg-white/5 px-8 py-4 border-t border-white/10 flex items-center justify-center gap-2">
+            <div className="bg-black/5 dark:bg-white/5 px-8 py-4 border-t border-black/10 dark:border-white/10 flex items-center justify-center gap-2">
                <Trophy size={14} className="text-primary" />
                <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Vizag's Most Trusted Developers</span>
             </div>
