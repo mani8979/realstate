@@ -3,27 +3,23 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { LayoutDashboard, Home, MessageSquare, LogOut, PlusCircle, Building, Menu, Star, ShieldCheck, Users, Image, Phone, MapPin, Sparkles, List } from 'lucide-react';
+import { LayoutDashboard, Home, MessageSquare, LogOut, PlusCircle, Building, Menu, Star, ShieldCheck, Users, Image, Phone, MapPin, Sparkles, List, Info, Target } from 'lucide-react';
 
 const navItems = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { name: 'Manage Properties', href: '/admin/properties', icon: Building },
   { name: 'Add New Property', href: '/admin/properties/add', icon: PlusCircle },
   { name: 'Enquiries / Leads', href: '/admin/enquiries', icon: MessageSquare },
-  { name: 'Header Settings', href: '/admin/navigation', icon: Menu },
+  { name: 'About Page', href: '/admin/about', icon: Info },
+  { name: 'Join Page', href: '/admin/join', icon: Users },
   { name: 'Hero Section', href: '/admin/hero', icon: Sparkles },
   { name: 'Leader Profile', href: '/admin/founder', icon: Users },
   { name: 'Collection', href: '/admin/featured', icon: Star },
-  { name: 'Why Choose Us', href: '/admin/brand#why-choose-us', icon: ShieldCheck },
-  { name: 'Premium Gallery', href: '/admin/gallery', icon: Image },
-  { name: 'Vision & Legacy', href: '/admin/brand#vision', icon: ShieldCheck },
-  { name: 'Featured Lands', href: '/admin/brand#featured-lands', icon: Star },
-  { name: 'Get In Touch', href: '/admin/footer#get-in-touch', icon: Phone },
-  { name: 'Ready To Claim', href: '/admin/brand#ready-to-claim', icon: Star },
-  { name: 'Location', href: '/admin/footer#location', icon: MapPin },
-  { name: 'About Star Lands', href: '/admin/content#about-star-lands', icon: Image },
-  { name: 'Contact Info', href: '/admin/content#contact-info', icon: Phone },
-  { name: 'Join Team Leads', href: '/admin/join', icon: Users },
+  { name: 'Header Settings', href: '/admin/navigation', icon: Menu },
+  { name: 'Why Choose Us', icon: ShieldCheck, href: '/admin/brand#why-choose-us' },
+  { name: 'Premium Gallery', icon: Image, href: '/admin/gallery' },
+  { name: 'Vision & Legacy', icon: Target, href: '/admin/brand#vision' },
+  { name: 'Ready To Claim', icon: Star, href: '/admin/brand#ready-to-claim' },
   { name: 'Property Categories', href: '/admin/categories', icon: List },
 ];
 
