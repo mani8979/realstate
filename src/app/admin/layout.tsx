@@ -3,11 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { LayoutDashboard, Home, MessageSquare, LogOut, PlusCircle, Building, Menu, Star, ShieldCheck, Users, Image, Phone, MapPin } from 'lucide-react';
+import { LayoutDashboard, Home, MessageSquare, LogOut, PlusCircle, Building, Menu, Star, ShieldCheck, Users, Image, Phone, MapPin, Sparkles, List } from 'lucide-react';
 
 const navItems = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { name: 'Header', href: '/admin/navigation', icon: Menu },
+  { name: 'Hero Section', href: '/admin/hero', icon: Sparkles },
   { name: 'Leader Profile', href: '/admin/founder', icon: Users },
   { name: 'Collection', href: '/admin/featured', icon: Star },
   { name: 'Why Choose Us', href: '/admin/brand#why-choose-us', icon: ShieldCheck },
@@ -19,7 +20,8 @@ const navItems = [
   { name: 'Location', href: '/admin/footer#location', icon: MapPin },
   { name: 'About Star Lands', href: '/admin/content#about-star-lands', icon: Image },
   { name: 'Contact Info', href: '/admin/content#contact-info', icon: Phone },
-  { name: 'Join', href: '/admin/join', icon: Users },
+  { name: 'Join Team', href: '/admin/join', icon: Users },
+  { name: 'Categories', href: '/admin/categories', icon: List },
   { name: 'Properties', href: '/admin/properties', icon: Building },
   { name: 'Add Property', href: '/admin/properties/add', icon: PlusCircle },
   { name: 'Enquiries', href: '/admin/enquiries', icon: MessageSquare },
