@@ -23,28 +23,35 @@ export default function GalleryAdmin() {
   }, []);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
     setUploading(true);
-    const formData = new FormData();
-    formData.append('file', file);
+    const newImages: { url: string; caption: string }[] = [];
 
     try {
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData
-      });
-      const data = await res.json();
-      if (data.url) {
-        const newImage = { url: data.url, caption: '' };
-        setContent({ 
-          ...content, 
-          aboutGallery: [...(content.aboutGallery || []), newImage] 
+      for (let i = 0; i < files.length; i++) {
+        const formData = new FormData();
+        formData.append('file', files[i]);
+
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData
         });
+        const data = await res.json();
+        if (data.url) {
+          newImages.push({ url: data.url, caption: '' });
+        }
+      }
+
+      if (newImages.length > 0) {
+        setContent((prev: any) => ({ 
+          ...prev, 
+          aboutGallery: [...(prev.aboutGallery || []), ...newImages] 
+        }));
       }
     } catch (err) {
-      alert('Upload failed');
+      alert('Some uploads failed');
     } finally {
       setUploading(false);
     }
@@ -109,8 +116,8 @@ export default function GalleryAdmin() {
           <div className="w-16 h-16 rounded-full bg-white dark:bg-gray-800 shadow-xl flex items-center justify-center text-gray-400 group-hover:text-primary group-hover:scale-110 transition-all">
             <Plus size={32} />
           </div>
-          <span className="text-sm font-black uppercase tracking-widest text-gray-400 mt-4 group-hover:text-primary transition-all">Add Photo</span>
-          <input type="file" className="hidden" onChange={handleUpload} accept="image/*" />
+          <span className="text-sm font-black uppercase tracking-widest text-gray-400 mt-4 group-hover:text-primary transition-all">Add Photos</span>
+          <input type="file" className="hidden" onChange={handleUpload} accept="image/*" multiple />
           {uploading && <div className="absolute inset-0 bg-white/80 dark:bg-black/80 flex items-center justify-center rounded-[2.5rem] backdrop-blur-sm">
             <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-primary"></div>
           </div>}
