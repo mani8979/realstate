@@ -200,6 +200,30 @@ export default function FooterAdmin() {
               </div>
             </div>
 
+            <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 border-t border-gray-100 dark:border-gray-800 pt-6">
+              <h3 className="md:col-span-2 font-bold text-lg text-primary">Social Media Links</h3>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Facebook URL</label>
+                <input 
+                  name="socialFacebook"
+                  value={content.socialFacebook || ''}
+                  onChange={handleChange}
+                  placeholder="https://facebook.com/..."
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Instagram URL</label>
+                <input 
+                  name="socialInstagram"
+                  value={content.socialInstagram || ''}
+                  onChange={handleChange}
+                  placeholder="https://instagram.com/..."
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                />
+              </div>
+            </div>
+
             <div className="md:col-span-2 mt-4 border-t border-gray-100 dark:border-gray-800 pt-6">
               <label className="block text-sm font-bold text-gray-500 mb-2">Global Footer Short Description (Standard Footer)</label>
               <textarea 

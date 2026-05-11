@@ -85,6 +85,8 @@ export interface ISiteContent extends Document {
   motivationBgImage: string;
   officeMapUrl: string;
   officeMapEmbedUrl: string;
+  socialFacebook: string;
+  socialInstagram: string;
   // Founder (Main)
   mainFounderName: string;
   mainFounderRole: string;
@@ -259,12 +261,10 @@ const SiteContentSchema = new Schema<ISiteContent>(
     cofounderImage: { type: String, default: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=800" },
     cofounderPhone: { type: String, default: "919573785434" },
     motivationLine: { type: String, default: "Real estate is built not only on land, but on trust, relationships, and long-term value." },
-    officeAddress: { type: String, default: "Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026." },
-    officeDescription: { type: String, default: "Look bro, this is the building. Shop No. 202 is located on the second floor, above Tumble Dry on the first floor." },
-    officeShopNo: { type: String, default: "SHOP NO. 202" },
-    officeFloor: { type: String, default: "SECOND FLOOR" },
     officeMapUrl: { type: String, default: "https://maps.app.goo.gl/dvqvbugWe8XHJAnt7?g_st=aw" },
     officeMapEmbedUrl: { type: String, default: "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3799.3510526367375!2d83.2109083!3d17.6820589!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTfCsDQwJzU1LjQiTiA4M8KwMTInMzkuMyJF!5e0!3m2!1sen!2sin!4v1715310000000!5m2!1sen!2sin" },
+    socialFacebook: { type: String, default: "https://www.facebook.com/people/star-land-developers/" },
+    socialInstagram: { type: String, default: "https://www.instagram.com/star_land_developer" },
     contactBadge: { type: String, default: "Get In Touch" },
     contactTitle: { type: String, default: "Have Any Questions?" },
     contactDesc: { type: String, default: "Our team is ready to help you find the perfect property. Send us a message and we'll get back to you within 24 hours." },
