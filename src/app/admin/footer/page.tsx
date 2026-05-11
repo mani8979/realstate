@@ -1,24 +1,28 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Save } from 'lucide-react';
+import { Save, Globe, Share2, MapPin, Phone, Mail, Info, FileText, Layout } from 'lucide-react';
 
 export default function FooterAdmin() {
   const [content, setContent] = useState<any>({
-    footerTitle: 'GET IN TOUCH',
-    footerInquiriesLabel: 'Inquiries',
-    footerPhone: '+91 91234 56789',
-    footerPhoneSub: 'Available Mon-Sat, 9AM-7PM',
-    footerOfficeLabel: 'Main Office',
-    footerAddress: 'Beach Road, MVP Colony,\nVisakhapatnam, AP',
-    footerAddressSub: 'Visit us for a coffee and a chat.',
-    footerCopyright: '© 2026 STAR LANDS DEVELOPERS GROUP',
-    privacyPolicyContent: 'Privacy Policy Content goes here...',
-    termsOfServiceContent: 'Terms of Service Content goes here...',
+    logoTitle: 'STAR LANDS',
+    globalFooterDesc: 'Find your dream property with our expert real estate services. We specialize in buying, selling, and renting premium properties.',
+    navHome: 'Home',
+    navProperties: 'Properties',
+    navAbout: 'About',
+    navContact: 'Contact',
+    navJoin: 'Join',
     footerCol1Title: 'Navigation',
     footerCol2Title: 'Portfolios',
+    footerCol2Links: 'Premium Farm lands, Commercial Lands, Residential Lands, VMRDA Lands',
     footerCol3Title: 'Get In Touch',
-    footerCol2Links: 'Premium Lands, Luxury Houses, Modern Apartments, Commercial Hubs'
+    contactAddress: 'Flat No.202,Backside Complex,Opposite DMART,Srinagar,Gajuwaka,Visakhapatnam-530026',
+    contactPhone: '+91 9666080645',
+    contactEmail: 'starlanddevelopers2@gmail.com',
+    globalFooterCopyright: '© 2026 STAR LAND DEVELOPERS. All rights reserved.',
+    socialFacebook: '',
+    socialInstagram: '',
+    footerLogoImage: ''
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -47,7 +51,7 @@ export default function FooterAdmin() {
       });
       const data = await res.json();
       if (data.success) {
-        alert('Footer and Legal settings saved successfully!');
+        alert('Footer settings saved successfully!');
       }
     } catch (err) {
       alert('Failed to save settings');
@@ -55,393 +59,186 @@ export default function FooterAdmin() {
     setSaving(false);
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return (
+    <div className="h-64 flex items-center justify-center">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+    </div>
+  );
 
   return (
-    <div className="max-w-4xl pb-20">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-black uppercase text-gray-900 dark:text-white">Footer & Legal</h1>
+    <div className="max-w-6xl pb-20">
+      <div className="flex justify-between items-center mb-10">
+        <div>
+          <h1 className="text-4xl font-black uppercase text-gray-900 dark:text-white tracking-tighter">Footer Management</h1>
+          <p className="text-gray-500 mt-2 font-medium">Customize the global footer information across all pages.</p>
+        </div>
         <button 
           onClick={handleSave}
           disabled={saving}
-          className="bg-primary text-black dark:text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-primary/90 transition-all"
+          className="bg-primary text-black dark:text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-2 hover:shadow-2xl hover:shadow-primary/30 transition-all shadow-xl shadow-primary/20"
         >
           <Save size={20} />
-          {saving ? 'Saving...' : 'Save Changes'}
+          {saving ? 'Saving...' : 'Save Footer'}
         </button>
       </div>
 
-      <div className="space-y-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
-        {/* Footer Info Section */}
-        <div id="get-in-touch" className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Footer Contact Info</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+        {/* Column 1: Brand & Desc */}
+        <div className="space-y-8">
+          <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+            <h2 className="text-lg font-black uppercase tracking-widest text-primary mb-6 flex items-center gap-2">
+               <Globe size={18} />
+               Brand Identity
+            </h2>
+            <div className="space-y-6">
               <div>
-                <label className="block text-sm font-bold text-gray-500 mb-2">Main Big Title</label>
-                <input 
-                  name="footerTitle"
-                  value={content.footerTitle || ''}
-                  onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                />
+                <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Logo Title (e.g. REALS)</label>
+                <input name="logoTitle" value={content.logoTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold" />
               </div>
               <div>
-                <label className="block text-sm font-bold text-gray-500 mb-2">Footer Logo Image</label>
+                <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Global Footer Description</label>
+                <textarea name="globalFooterDesc" rows={3} value={content.globalFooterDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-medium" />
+              </div>
+              <div>
+                <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Footer Logo Image</label>
                 {content.footerLogoImage ? (
-                  <div className="relative w-32 h-16 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 group">
+                  <div className="relative aspect-[3/1] rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 group bg-gray-50 dark:bg-gray-800/50">
                     <img src={content.footerLogoImage} alt="Footer Logo" className="w-full h-full object-contain" />
-                    <button
-                      type="button"
-                      onClick={() => setContent({ ...content, footerLogoImage: '' })}
-                      className="absolute top-1 right-1 bg-red-500 text-black dark:text-white p-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <Save size={12} className="hidden" />
-                      <span className="text-[10px] font-bold">X</span>
-                    </button>
+                    <button onClick={() => setContent({ ...content, footerLogoImage: '' })} className="absolute inset-0 bg-black/40 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all font-bold">Remove Logo</button>
                   </div>
                 ) : (
-                  <div className="relative">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      disabled={uploadingFooter}
-                      onChange={async (e) => {
-                        const file = e.target.files?.[0];
-                        if (!file) return;
-                        setUploadingFooter(true);
-                        try {
-                          const formData = new FormData();
-                          formData.append('file', file);
-                          const res = await fetch('/api/upload', { method: 'POST', body: formData });
-                          if (res.ok) {
-                            const data = await res.json();
-                            setContent({ ...content, footerLogoImage: data.url });
-                          } else {
-                            alert('Upload failed. Please check your Cloudinary settings.');
-                          }
-                        } catch (err) {
-                          alert('Upload error: ' + (err as any).message);
-                        } finally {
-                          setUploadingFooter(false);
-                        }
-                      }}
-                      className="w-full p-2 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
-                    />
-                    {uploadingFooter && (
-                      <div className="absolute inset-0 bg-white dark:bg-black/20 flex items-center justify-center rounded-xl">
-                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-                      </div>
-                    )}
-                  </div>
+                  <label className="flex flex-col items-center justify-center aspect-[3/1] rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-800 cursor-pointer hover:border-primary transition-all bg-gray-50 dark:bg-gray-800/50 group">
+                    <input type="file" className="hidden" onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      setUploadingFooter(true);
+                      const formData = new FormData();
+                      formData.append('file', file);
+                      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                      const data = await res.json();
+                      if (data.url) setContent({ ...content, footerLogoImage: data.url });
+                      setUploadingFooter(false);
+                    }} />
+                    <Layout size={24} className="text-gray-400 group-hover:text-primary transition-colors" />
+                    <span className="text-xs font-bold text-gray-500 mt-2">Upload Footer Logo</span>
+                  </label>
                 )}
               </div>
             </div>
-            
-            <div className="space-y-4">
-              <h3 className="font-bold text-lg text-gray-700 dark:text-gray-300">Inquiries Block</h3>
-              <div>
-                <label className="block text-sm font-bold text-gray-500 mb-2">Label</label>
-                <input 
-                  name="footerInquiriesLabel"
-                  value={content.footerInquiriesLabel || ''}
-                  onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-gray-500 mb-2">Phone</label>
-                <input 
-                  name="footerPhone"
-                  value={content.footerPhone || ''}
-                  onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-gray-500 mb-2">Subtext</label>
-                <input 
-                  name="footerPhoneSub"
-                  value={content.footerPhoneSub || ''}
-                  onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <h3 className="font-bold text-lg text-gray-700 dark:text-gray-300">Office Block</h3>
-              <div>
-                <label className="block text-sm font-bold text-gray-500 mb-2">Label</label>
-                <input 
-                  name="footerOfficeLabel"
-                  value={content.footerOfficeLabel || ''}
-                  onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-gray-500 mb-2">Address</label>
-                <textarea 
-                  name="footerAddress"
-                  rows={2}
-                  value={content.footerAddress || ''}
-                  onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-gray-500 mb-2">Subtext</label>
-                <input 
-                  name="footerAddressSub"
-                  value={content.footerAddressSub || ''}
-                  onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                />
-              </div>
-            </div>
-
-            <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 border-t border-gray-100 dark:border-gray-800 pt-6">
-              <h3 className="md:col-span-2 font-bold text-lg text-primary">Social Media Links</h3>
-              <div>
-                <label className="block text-sm font-bold text-gray-500 mb-2">Facebook URL</label>
-                <input 
-                  name="socialFacebook"
-                  value={content.socialFacebook || ''}
-                  onChange={handleChange}
-                  placeholder="https://facebook.com/..."
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-gray-500 mb-2">Instagram URL</label>
-                <input 
-                  name="socialInstagram"
-                  value={content.socialInstagram || ''}
-                  onChange={handleChange}
-                  placeholder="https://instagram.com/..."
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                />
-              </div>
-            </div>
-
-            <div className="md:col-span-2 mt-4 border-t border-gray-100 dark:border-gray-800 pt-6">
-              <label className="block text-sm font-bold text-gray-500 mb-2">Global Footer Short Description (Standard Footer)</label>
-              <textarea 
-                name="globalFooterDesc"
-                rows={2}
-                value={content.globalFooterDesc || ''}
-                onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium mb-4"
-              />
-              <label className="block text-sm font-bold text-gray-500 mb-2">Copyright Text (Home Landing Page)</label>
-              <input 
-                name="footerCopyright"
-                value={content.footerCopyright || ''}
-                onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium mb-4"
-              />
-              <label className="block text-sm font-bold text-gray-500 mb-2">Copyright Text (Standard Footer)</label>
-              <input 
-                name="globalFooterCopyright"
-                value={content.globalFooterCopyright || ''}
-                onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium mb-4"
-              />
-              
-              <h3 className="font-bold text-lg text-gray-700 dark:text-gray-300 mb-4 mt-6">Footer Column Customization</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
-                <div>
-                  <label className="block text-sm font-bold text-gray-500 mb-2">Column 1 Title</label>
-                  <input 
-                    name="footerCol1Title"
-                    value={content.footerCol1Title || ''}
-                    onChange={handleChange}
-                    className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                    placeholder="Navigation"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-500 mb-2">Column 2 Title</label>
-                  <input 
-                    name="footerCol2Title"
-                    value={content.footerCol2Title || ''}
-                    onChange={handleChange}
-                    className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                    placeholder="Portfolios"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-500 mb-2">Column 3 Title</label>
-                  <input 
-                    name="footerCol3Title"
-                    value={content.footerCol3Title || ''}
-                    onChange={handleChange}
-                    className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                    placeholder="Get In Touch"
-                  />
-                </div>
-              </div>
-              
-              <label className="block text-sm font-bold text-gray-500 mb-2">Column 2 Links (Comma-separated)</label>
-              <textarea 
-                name="footerCol2Links"
-                rows={2}
-                value={content.footerCol2Links || ''}
-                onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                placeholder="Premium Lands, Luxury Houses, Modern Apartments, Commercial Hubs"
-              />
-            </div>
-
           </div>
-        </div>
 
-        {/* Office Location Section (Home Page) */}
-        <div id="location" className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 mt-8">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Home Office Location (Map Section)</h2>
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-               <div>
-                 <label className="block text-sm font-bold text-gray-500 mb-2">Location Badge</label>
-                 <input name="locationBadge" value={content.locationBadge || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
-               </div>
-               <div>
-                 <label className="block text-sm font-bold text-gray-500 mb-2">Title 1</label>
-                 <input name="locationTitle1" value={content.locationTitle1 || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
-               </div>
-               <div>
-                 <label className="block text-sm font-bold text-gray-500 mb-2">Title 2 (Gradient)</label>
-                 <input name="locationTitle2" value={content.locationTitle2 || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
-               </div>
-            </div>
-            <div>
-              <label className="block text-sm font-bold text-gray-500 mb-2">Office Address</label>
-              <textarea 
-                name="officeAddress"
-                rows={2}
-                value={content.officeAddress || ''}
-                onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-bold text-gray-500 mb-2">Location Description (The "Look bro" text)</label>
-              <textarea 
-                name="officeDescription"
-                rows={2}
-                value={content.officeDescription || ''}
-                onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-bold text-gray-500 mb-2">Google Maps External Link (URL for button)</label>
-              <input 
-                name="officeMapUrl"
-                value={content.officeMapUrl || ''}
-                onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                placeholder="https://maps.app.goo.gl/..."
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-bold text-gray-500 mb-2">Google Maps Direct Embed URL (iframe src)</label>
-              <textarea 
-                name="officeMapEmbedUrl"
-                rows={3}
-                value={content.officeMapEmbedUrl || ''}
-                onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                placeholder="https://www.google.com/maps/embed?pb=..."
-              />
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-2">Paste the iframe src from Google Maps (Share &gt; Embed a map) for 100% accuracy.</p>
+          <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+            <h2 className="text-lg font-black uppercase tracking-widest text-primary mb-6 flex items-center gap-2">
+               <Share2 size={18} />
+               Social Links
+            </h2>
+            <div className="grid grid-cols-1 gap-6">
+              <div>
+                <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Facebook URL</label>
+                <input name="socialFacebook" value={content.socialFacebook || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800" />
+              </div>
+              <div>
+                <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Instagram URL</label>
+                <input name="socialInstagram" value={content.socialInstagram || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800" />
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Legal Pages Section */}
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Legal Pages</h2>
-          <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-bold text-gray-500 mb-2">Privacy Policy Content</label>
-              <textarea 
-                name="privacyPolicyContent"
-                rows={6}
-                value={content.privacyPolicyContent || ''}
-                onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-              />
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-2">This content will be shown on the /privacy page.</p>
+        {/* Column 2: Navigation & Portfolios */}
+        <div className="space-y-8">
+          <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+            <h2 className="text-lg font-black uppercase tracking-widest text-primary mb-6 flex items-center gap-2">
+               <Info size={18} />
+               Navigation Column
+            </h2>
+            <div className="space-y-4">
+               <div>
+                  <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Column Title</label>
+                  <input name="footerCol1Title" value={content.footerCol1Title || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold" />
+               </div>
+               <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">Home Label</label>
+                    <input name="navHome" value={content.navHome || ''} onChange={handleChange} className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 text-sm font-bold" />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">Properties Label</label>
+                    <input name="navProperties" value={content.navProperties || ''} onChange={handleChange} className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 text-sm font-bold" />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">About Label</label>
+                    <input name="navAbout" value={content.navAbout || ''} onChange={handleChange} className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 text-sm font-bold" />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">Contact Label</label>
+                    <input name="navContact" value={content.navContact || ''} onChange={handleChange} className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 text-sm font-bold" />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">Join Label</label>
+                    <input name="navJoin" value={content.navJoin || ''} onChange={handleChange} className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 text-sm font-bold" />
+                  </div>
+               </div>
             </div>
-            <div>
-              <label className="block text-sm font-bold text-gray-500 mb-2">Terms of Service Content</label>
-              <textarea 
-                name="termsOfServiceContent"
-                rows={6}
-                value={content.termsOfServiceContent || ''}
-                onChange={handleChange}
-                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-              />
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-2">This content will be shown on the /terms page.</p>
+          </div>
+
+          <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+            <h2 className="text-lg font-black uppercase tracking-widest text-primary mb-6 flex items-center gap-2">
+               <Globe size={18} />
+               Portfolios Column
+            </h2>
+            <div className="space-y-4">
+               <div>
+                  <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Column Title</label>
+                  <input name="footerCol2Title" value={content.footerCol2Title || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold" />
+               </div>
+               <div>
+                  <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Links (Comma-separated)</label>
+                  <textarea name="footerCol2Links" rows={3} value={content.footerCol2Links || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-medium" />
+               </div>
             </div>
           </div>
         </div>
 
-        {/* Extra Services Section */}
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Extra Service Links</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-4">
-              <h3 className="font-bold text-lg text-gray-700 dark:text-gray-300">Service Link 1</h3>
-              <div>
-                <label className="block text-sm font-bold text-gray-500 mb-2">Link Title</label>
-                <input 
-                  name="footerService1"
-                  value={content.footerService1 || ''}
-                  onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                />
+        {/* Column 3: Get In Touch */}
+        <div className="lg:col-span-2 bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+           <h2 className="text-lg font-black uppercase tracking-widest text-primary mb-6 flex items-center gap-2">
+              <Phone size={18} />
+              Get In Touch Column
+           </h2>
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="md:col-span-2">
+                  <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Column Title</label>
+                  <input name="footerCol3Title" value={content.footerCol3Title || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold mb-6" />
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                       <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2 flex items-center gap-2"><MapPin size={10} /> Address</label>
+                       <textarea name="contactAddress" rows={3} value={content.contactAddress || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-medium" />
+                    </div>
+                    <div className="space-y-6">
+                       <div>
+                          <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2 flex items-center gap-2"><Phone size={10} /> Phone Number</label>
+                          <input name="contactPhone" value={content.contactPhone || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold" />
+                       </div>
+                       <div>
+                          <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2 flex items-center gap-2"><Mail size={10} /> Email Address</label>
+                          <input name="contactEmail" value={content.contactEmail || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold" />
+                       </div>
+                    </div>
+                  </div>
               </div>
-              <div>
-                <label className="block text-sm font-bold text-gray-500 mb-2">Page Content</label>
-                <textarea 
-                  name="service1Content"
-                  rows={4}
-                  value={content.service1Content || ''}
-                  onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                />
-                <p className="text-xs text-gray-600 dark:text-gray-400 mt-2">Shown on /interior page.</p>
+              <div className="bg-gray-50 dark:bg-gray-800/30 p-6 rounded-3xl border border-gray-100 dark:border-gray-800">
+                  <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-4 flex items-center gap-2"><FileText size={14} /> Copyright & Legal</label>
+                  <div className="space-y-6">
+                     <div>
+                        <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Standard Copyright</label>
+                        <textarea name="globalFooterCopyright" rows={3} value={content.globalFooterCopyright || ''} onChange={handleChange} className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-xs font-bold" />
+                     </div>
+                  </div>
               </div>
-            </div>
-
-            <div className="space-y-4">
-              <h3 className="font-bold text-lg text-gray-700 dark:text-gray-300">Service Link 2</h3>
-              <div>
-                <label className="block text-sm font-bold text-gray-500 mb-2">Link Title</label>
-                <input 
-                  name="footerService2"
-                  value={content.footerService2 || ''}
-                  onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-gray-500 mb-2">Page Content</label>
-                <textarea 
-                  name="service2Content"
-                  rows={4}
-                  value={content.service2Content || ''}
-                  onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
-                />
-                <p className="text-xs text-gray-600 dark:text-gray-400 mt-2">Shown on /consultation page.</p>
-              </div>
-            </div>
-          </div>
+           </div>
         </div>
 
       </div>

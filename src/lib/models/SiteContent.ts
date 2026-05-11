@@ -241,6 +241,7 @@ const SiteContentSchema = new Schema<ISiteContent>(
     navProperties: { type: String, default: "Properties" },
     navAbout: { type: String, default: "About" },
     navContact: { type: String, default: "Contact" },
+    navJoin: { type: String, default: "Join" },
     btnCall: { type: String, default: "Call" },
     btnCallLink: { type: String, default: "tel:+919666080645" },
     btnEnquire: { type: String, default: "Enquire" },
