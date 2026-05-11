@@ -348,9 +348,9 @@ const PropertyDetails = () => {
                     {detail.isPointed ? (
                       <ul className={`space-y-4 ${isCenter ? 'inline-block text-left' : ''}`}>
                         {detail.content.split('\n').filter((line: string) => line.trim()).map((line: string, i: number) => (
-                          <li key={i} className={`flex gap-3 text-gray-700 dark:text-gray-300 text-lg ${isRight ? 'flex-row-reverse' : ''}`}>
-                            <span className="text-primary font-bold">•</span>
-                            <span className={isRight ? 'text-right' : 'text-left'}>{line.trim()}</span>
+                          <li key={i} className={`flex gap-3 text-gray-700 dark:text-gray-300 text-lg ${isRight ? 'justify-end' : ''}`}>
+                            <span className="text-primary font-bold shrink-0">•</span>
+                            <span className="text-left">{line.trim()}</span>
                           </li>
                         ))}
                       </ul>
