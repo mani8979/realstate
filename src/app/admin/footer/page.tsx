@@ -14,7 +14,11 @@ export default function FooterAdmin() {
     footerAddressSub: 'Visit us for a coffee and a chat.',
     footerCopyright: '© 2026 STAR LANDS DEVELOPERS GROUP',
     privacyPolicyContent: 'Privacy Policy Content goes here...',
-    termsOfServiceContent: 'Terms of Service Content goes here...'
+    termsOfServiceContent: 'Terms of Service Content goes here...',
+    footerCol1Title: 'Navigation',
+    footerCol2Title: 'Portfolios',
+    footerCol3Title: 'Get In Touch',
+    footerCol2Links: 'Premium Lands, Luxury Houses, Modern Apartments, Commercial Hubs'
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -245,7 +249,51 @@ export default function FooterAdmin() {
                 name="globalFooterCopyright"
                 value={content.globalFooterCopyright || ''}
                 onChange={handleChange}
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium mb-4"
+              />
+              
+              <h3 className="font-bold text-lg text-gray-700 dark:text-gray-700 dark:text-gray-300 mb-4 mt-6">Footer Column Customization</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+                <div>
+                  <label className="block text-sm font-bold text-gray-500 mb-2">Column 1 Title</label>
+                  <input 
+                    name="footerCol1Title"
+                    value={content.footerCol1Title || ''}
+                    onChange={handleChange}
+                    className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
+                    placeholder="Navigation"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-500 mb-2">Column 2 Title</label>
+                  <input 
+                    name="footerCol2Title"
+                    value={content.footerCol2Title || ''}
+                    onChange={handleChange}
+                    className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
+                    placeholder="Portfolios"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-500 mb-2">Column 3 Title</label>
+                  <input 
+                    name="footerCol3Title"
+                    value={content.footerCol3Title || ''}
+                    onChange={handleChange}
+                    className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
+                    placeholder="Get In Touch"
+                  />
+                </div>
+              </div>
+              
+              <label className="block text-sm font-bold text-gray-500 mb-2">Column 2 Links (Comma-separated)</label>
+              <textarea 
+                name="footerCol2Links"
+                rows={2}
+                value={content.footerCol2Links || ''}
+                onChange={handleChange}
                 className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
+                placeholder="Premium Lands, Luxury Houses, Modern Apartments, Commercial Hubs"
               />
             </div>
 

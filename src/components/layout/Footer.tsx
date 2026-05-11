@@ -67,14 +67,14 @@ const Footer = async () => {
 
           {/* Quick Links */}
           <div className="text-center md:text-left">
-            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-8">Navigation</h3>
+            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-8">{content.footerCol1Title || 'Navigation'}</h3>
             <ul className="space-y-5">
               {[
                 { name: content.navHome || 'Home', href: '/' },
                 { name: content.navProperties || 'Properties', href: '/properties' },
                 { name: content.navAbout || 'About Us', href: '/about' },
                 { name: content.navContact || 'Contact', href: '/contact' },
-                { name: content.navJoin || 'Join Careers', href: '/join' },
+                { name: content.navJoin || 'Join', href: '/join' },
               ].map((link) => (
                 <li key={link.name}>
                   <Link href={link.href} className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">{link.name}</Link>
@@ -85,11 +85,11 @@ const Footer = async () => {
 
           {/* Collections */}
           <div className="text-center md:text-left">
-            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-8">Portfolios</h3>
+            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-8">{content.footerCol2Title || 'Portfolios'}</h3>
             <ul className="space-y-5">
-              {['Premium Lands', 'Luxury Houses', 'Modern Apartments', 'Commercial Hubs'].map((type) => (
+              {(content.footerCol2Links ? content.footerCol2Links.split(',').map((l: string) => l.trim()) : ['Premium Lands', 'Luxury Houses', 'Modern Apartments', 'Commercial Hubs']).map((type: string) => (
                 <li key={type}>
-                  <Link href={`/properties?type=${type.split(' ')[1]}`} className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">{type}</Link>
+                  <Link href={`/properties?type=${encodeURIComponent(type)}`} className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">{type}</Link>
                 </li>
               ))}
             </ul>
@@ -97,7 +97,7 @@ const Footer = async () => {
 
           {/* Contact Details */}
           <div className="text-center md:text-left">
-            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-8">Get In Touch</h3>
+            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-8">{content.footerCol3Title || 'Get In Touch'}</h3>
             <ul className="space-y-6">
               <li className="flex flex-col md:flex-row items-center md:items-start gap-4">
                 <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary shrink-0">

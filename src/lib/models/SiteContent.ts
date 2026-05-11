@@ -75,6 +75,10 @@ export interface ISiteContent extends Document {
   ctaSectionBtn2: string;
   globalFooterDesc: string;
   globalFooterCopyright: string;
+  footerCol1Title: string;
+  footerCol2Title: string;
+  footerCol3Title: string;
+  footerCol2Links: string;
   headerLogoImage: string;
   footerLogoImage: string;
   globalThreeDModel: string;
@@ -238,6 +242,10 @@ const SiteContentSchema = new Schema<ISiteContent>(
     ctaSectionBtn2: { type: String, default: "+91 91234 56789" },
     globalFooterDesc: { type: String, default: "Find your dream property with our expert real estate services. We specialize in buying, selling, and renting premium properties." },
     globalFooterCopyright: { type: String, default: "© 2026 REAL ESTATE. All rights reserved." },
+    footerCol1Title: { type: String, default: "Navigation" },
+    footerCol2Title: { type: String, default: "Portfolios" },
+    footerCol3Title: { type: String, default: "Get In Touch" },
+    footerCol2Links: { type: String, default: "Premium Lands, Luxury Houses, Modern Apartments, Commercial Hubs" },
     headerLogoImage: { type: String, default: "/branding/header-logo.png" },
     footerLogoImage: { type: String, default: "/branding/footer-logo.png" },
     globalThreeDModel: { type: String, default: "/models/untitled.glb" },
