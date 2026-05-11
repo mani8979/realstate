@@ -5,8 +5,12 @@ import Image from 'next/image';
 import { 
   X, ArrowLeft, Play, Image as ImageIcon, 
   Map as MapIcon, Download, ChevronLeft, ChevronRight,
-  Maximize2, MousePointer2, LayoutGrid
+  Maximize2, MousePointer2, LayoutGrid, Box
 } from 'lucide-react';
+
+// Bypass TypeScript error for custom element
+const ModelViewer = 'model-viewer' as any;
+
 import { openContactDialog } from '@/components/layout/ContactDialog';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
@@ -90,6 +94,7 @@ const MediaPage = () => {
 
   const tabs = [
     { id: 'photos', label: 'Land Gallery', icon: <ImageIcon size={20} />, show: property.landPhotos?.length > 0 },
+    { id: 'three_d', label: '3D Model', icon: <Box size={20} />, show: !!property.threeDElement },
     { id: 'video', label: 'Video Tour', icon: <Play size={20} />, show: !!property.videoUrl },
     { id: 'plot_plan', label: 'Plot Plan', icon: <LayoutGrid size={20} />, show: !!property.layoutImage },
     { id: 'brochure', label: 'Brochure', icon: <Download size={20} />, show: property.landBrochure?.length > 0 },
@@ -124,6 +129,32 @@ const MediaPage = () => {
       {/* Main Viewer Area */}
       <div className="flex-grow relative flex items-center justify-center h-[70vh] md:h-[80vh]">
         <AnimatePresence mode="wait">
+          {activeTab === 'three_d' && (
+            <motion.div 
+              key="three_d"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              className="w-full h-full p-4 md:p-10"
+            >
+              <div className="w-full h-full bg-white/5 rounded-[3rem] overflow-hidden border border-white/10 relative shadow-2xl">
+                <ModelViewer
+                  src={property.threeDElement}
+                  auto-rotate
+                  camera-controls
+                  shadow-intensity="2"
+                  exposure="1.2"
+                  style={{ width: '100%', height: '100%' }}
+                ></ModelViewer>
+                
+                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 text-white/30 text-[10px] font-bold uppercase tracking-widest pointer-events-none">
+                   <MousePointer2 size={12} />
+                   <span>Click & Drag to Rotate</span>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
           {activeTab === 'photos' && (
             <motion.div 
               key="photos"

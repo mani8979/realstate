@@ -11,7 +11,7 @@ import ShareAction from '@/components/main/ShareAction';
 
 // Bypass TypeScript error for custom element
 const ModelViewer = 'model-viewer' as any;
-import { Play, Map as MapIcon, Image as ImageIcon, LayoutGrid } from 'lucide-react';
+import { Play, Map as MapIcon, Image as ImageIcon, LayoutGrid, Box } from 'lucide-react';
 
 const getYouTubeEmbedUrl = (url: string) => {
   if (!url) return '';
@@ -138,6 +138,17 @@ const PropertyDetails = () => {
         
         {/* Quick Media Icons - Floating Over Hero */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center justify-center gap-3.5 md:gap-6 z-30 bg-black/60 backdrop-blur-2xl px-5 md:px-10 py-3.5 md:py-5 rounded-[2.5rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-fit max-w-[95vw]">
+          {property.threeDElement && (
+            <Link 
+              href={`/properties/${property._id}/media?type=three_d`}
+              className="flex flex-col items-center gap-1.5 group transition-all shrink-0"
+            >
+              <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-300">
+                <Box size={20} className="md:size-24" />
+              </div>
+              <span className="text-[7px] md:text-[9px] uppercase font-black tracking-[0.2em] text-white/40 group-hover:text-primary transition-colors">3D View</span>
+            </Link>
+          )}
           {property.landPhotos?.length > 0 && (
             <Link 
               href={`/properties/${property._id}/media?type=photos`}
