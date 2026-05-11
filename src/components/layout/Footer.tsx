@@ -1,8 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
-import { Home, Phone, Mail, MapPin, Globe, Share2, MessageSquare, Info } from 'lucide-react';
+import { Home, Phone, Mail, MapPin } from 'lucide-react';
 import dbConnect from '@/lib/db';
 import SiteContent from '@/lib/models/SiteContent';
+import ShareAction from '@/components/main/ShareAction';
 
 const Footer = async () => {
   let content: any = {};
@@ -48,11 +49,19 @@ const Footer = async () => {
               {content.globalFooterDesc || 'Crafting prestigious living spaces and premium investment opportunities in Vizag since 2006.'}
             </p>
             <div className="flex items-center gap-4">
-              {[Globe, Share2, MessageSquare, Info].map((Icon, i) => (
-                <a key={i} href="#" className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center hover:bg-primary hover:text-white transition-all group">
-                  <Icon size={20} className="group-hover:scale-110 transition-transform" />
-                </a>
-              ))}
+              <a href="https://www.facebook.com/people/star-land-developers/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center hover:bg-[#1877F2] hover:text-white transition-all group" title="Facebook">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:scale-110 transition-transform">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                </svg>
+              </a>
+              <a href="https://www.instagram.com/star_land_developer" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center hover:bg-gradient-to-tr hover:from-[#f9ce34] hover:via-[#ee2a7b] hover:to-[#6228d7] hover:text-white transition-all group" title="Instagram">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:scale-110 transition-transform">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+              </a>
+              <ShareAction variant="footer" />
             </div>
           </div>
 
@@ -108,7 +117,7 @@ const Footer = async () => {
                 <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary shrink-0">
                   <Mail size={18} />
                 </div>
-                <span className="text-sm text-gray-400 font-bold">{content.contactEmail || 'info@starlands.in'}</span>
+                <span className="text-sm text-gray-400 font-bold">{content.contactEmail || 'starlanddevelopers2@gmail.com'}</span>
               </li>
             </ul>
           </div>

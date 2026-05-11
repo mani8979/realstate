@@ -7,6 +7,7 @@ import Link from 'next/link';
 import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
+import ShareAction from '@/components/main/ShareAction';
 
 // Bypass TypeScript error for custom element
 const ModelViewer = 'model-viewer' as any;
@@ -247,15 +248,23 @@ const PropertyDetails = () => {
                 <p className="text-5xl md:text-7xl font-black tracking-tighter text-white">₹{property.price?.toLocaleString('en-IN')}</p>
               </div>
               
-              {property.landBrochure?.length > 0 && (
-                <Link 
-                  href={`/properties/${property._id}/media?type=brochure`}
-                  className="flex items-center gap-2 bg-primary/20 hover:bg-primary text-primary hover:text-black font-black uppercase tracking-widest text-[10px] px-8 py-4 rounded-full border border-primary/30 transition-all group"
-                >
-                  <Download size={16} className="group-hover:translate-y-0.5 transition-transform" />
-                  <span>View Brochure Gallery</span>
-                </Link>
-              )}
+              <div className="flex flex-wrap items-center md:justify-end gap-4">
+                <ShareAction 
+                    variant="button"
+                    title={property.title}
+                    text={`Check out this property: ${property.title} in ${property.location}`}
+                    className="w-full md:w-auto"
+                />
+                {property.landBrochure?.length > 0 && (
+                    <Link 
+                    href={`/properties/${property._id}/media?type=brochure`}
+                    className="flex items-center gap-2 bg-primary/20 hover:bg-primary text-primary hover:text-black font-black uppercase tracking-widest text-[10px] px-8 py-4 rounded-full border border-primary/30 transition-all group w-full md:w-auto text-center justify-center"
+                    >
+                    <Download size={16} className="group-hover:translate-y-0.5 transition-transform" />
+                    <span>View Brochure Gallery</span>
+                    </Link>
+                )}
+              </div>
             </div>
           </div>
         </div>

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { MapPin, Home, BedDouble, Bath, ArrowRight, Star, Heart, MessageSquare, Phone, Sparkles, Zap, Flame } from 'lucide-react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import ShareAction from '@/components/main/ShareAction';
 
 interface PropertyCardProps {
   property: any;
@@ -12,6 +13,8 @@ interface PropertyCardProps {
 
 const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
   const [isLiked, setIsLiked] = useState(false);
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+  const propertyUrl = `${baseUrl}/properties/${property._id}`;
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -64,11 +67,16 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
           >
             <Heart size={20} fill={isLiked ? "currentColor" : "none"} />
           </button>
+          <ShareAction 
+            title={property.title}
+            text={`Check out this property: ${property.title} in ${property.location}`}
+            url={propertyUrl}
+          />
           <button 
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              window.open(`https://wa.me/1234567890?text=Interested in ${property.title}`, '_blank');
+              window.open(`https://wa.me/919666080645?text=Interested in ${property.title}`, '_blank');
             }}
             className="p-3 rounded-full bg-green-500/90 backdrop-blur-md text-white border border-white/20 hover:bg-green-600 transition-all duration-300"
           >
@@ -78,7 +86,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              window.location.href = "tel:+1234567890";
+              window.location.href = "tel:+919666080645";
             }}
             className="p-3 rounded-full bg-primary/90 backdrop-blur-md text-white border border-white/20 hover:bg-primary transition-all duration-300"
           >
