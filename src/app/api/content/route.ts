@@ -28,10 +28,14 @@ export async function PUT(req: Request) {
       content = await SiteContent.create(body);
     }
     
-    // Trigger revalidation for pages
+    // Trigger revalidation for all major pages and layout
+    revalidatePath('/', 'layout');
     revalidatePath('/');
     revalidatePath('/about');
+    revalidatePath('/properties');
     revalidatePath('/gallery');
+    revalidatePath('/join');
+    revalidatePath('/contact');
     
     return NextResponse.json({ success: true, data: content });
   } catch (error) {
