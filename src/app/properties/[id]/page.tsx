@@ -33,6 +33,7 @@ const PropertyDetails = () => {
   });
   const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [showFruitPopup, setShowFruitPopup] = useState(false);
+  const [showThreeDPopup, setShowThreeDPopup] = useState(false);
   const [isReadMore, setIsReadMore] = useState(false);
   const modelViewerRef = useRef<any>(null);
   const [mounted, setMounted] = useState(false);
@@ -139,15 +140,15 @@ const PropertyDetails = () => {
         {/* Quick Media Icons - Floating Over Hero */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center justify-center gap-3.5 md:gap-6 z-30 bg-black/60 backdrop-blur-2xl px-5 md:px-10 py-3.5 md:py-5 rounded-[2.5rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-fit max-w-[95vw]">
           {property.threeDElement && (
-            <Link 
-              href={`/properties/${property._id}/media?type=three_d`}
+            <button 
+              onClick={() => setShowThreeDPopup(true)}
               className="flex flex-col items-center gap-1.5 group transition-all shrink-0"
             >
               <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-300">
                 <Box size={20} className="md:size-24" />
               </div>
               <span className="text-[7px] md:text-[9px] uppercase font-black tracking-[0.2em] text-white/40 group-hover:text-primary transition-colors">3D View</span>
-            </Link>
+            </button>
           )}
           {property.landPhotos?.length > 0 && (
             <Link 
@@ -225,15 +226,27 @@ const PropertyDetails = () => {
                 {property.title}
               </h1>
 
-              {property.fruitImage && property.title.toLowerCase().includes('lendy pink valley') && (
-                <button 
-                  onClick={() => setShowFruitPopup(true)}
-                  className="inline-flex items-center gap-3 bg-[#10b981] hover:bg-white text-black px-6 md:px-10 py-4 rounded-full font-black uppercase tracking-widest text-xs transition-all duration-300 shadow-[0_0_30px_rgba(16,185,129,0.3)] hover:scale-105 group"
-                >
-                  <Leaf size={18} className="group-hover:scale-110 transition-transform" />
-                  <span>View Cultivation Info</span>
-                </button>
-              )}
+              <div className="flex flex-wrap gap-4">
+                {property.fruitImage && property.title.toLowerCase().includes('lendy pink valley') && (
+                  <button 
+                    onClick={() => setShowFruitPopup(true)}
+                    className="inline-flex items-center gap-3 bg-[#10b981] hover:bg-white text-black px-6 md:px-10 py-4 rounded-full font-black uppercase tracking-widest text-xs transition-all duration-300 shadow-[0_0_30px_rgba(16,185,129,0.3)] hover:scale-105 group"
+                  >
+                    <Leaf size={18} className="group-hover:scale-110 transition-transform" />
+                    <span>View Cultivation Info</span>
+                  </button>
+                )}
+
+                {property.threeDElement && (
+                  <button 
+                    onClick={() => setShowThreeDPopup(true)}
+                    className="inline-flex items-center gap-3 bg-primary hover:bg-white text-black px-6 md:px-10 py-4 rounded-full font-black uppercase tracking-widest text-xs transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:scale-105 group"
+                  >
+                    <Box size={18} className="group-hover:rotate-12 transition-transform" />
+                    <span>View 3D Model</span>
+                  </button>
+                )}
+              </div>
 
               {/* Description */}
               {property.description && (
@@ -537,6 +550,88 @@ const PropertyDetails = () => {
               )}
               
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none"></div>
+            </div>
+          </div>
+        </div>
+      )}
+        {/* 3D Model Popup (Works like Dragon Fruit) */}
+      {showThreeDPopup && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-10 bg-black/95 backdrop-blur-3xl" onClick={() => setShowThreeDPopup(false)}>
+          <div 
+            className="relative w-full max-w-6xl bg-[#0a0a0a] border-2 border-white/10 rounded-[3rem] overflow-hidden flex flex-col md:flex-row shadow-[0_0_100px_rgba(255,255,255,0.1)] h-auto md:h-[85vh] max-h-[95vh]"
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button 
+              onClick={() => setShowThreeDPopup(false)}
+              className="absolute top-8 right-8 z-[210] bg-white/10 hover:bg-red-500 text-white p-3 rounded-full transition-all"
+            >
+              <X size={24} />
+            </button>
+
+            {/* Content Side */}
+            <div data-lenis-prevent className="w-full md:w-1/2 p-8 md:p-16 overflow-y-auto custom-scrollbar flex flex-col text-left">
+              <div className="bg-primary/20 p-5 rounded-2xl mb-10 border border-primary/20 flex-shrink-0 w-fit">
+                <Box className="text-primary" size={40} />
+              </div>
+              
+              <h3 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-8 leading-none">
+                Interactive <br/> <span className="text-primary">3D Experience</span>
+              </h3>
+              
+              <div className="space-y-10 text-gray-300">
+                <p className="text-xl leading-relaxed font-medium">
+                  Explore every detail of this property in our immersive 3D environment. Rotate, zoom, and visualize your future investment.
+                </p>
+
+                <div className="space-y-6">
+                  <p className="text-primary font-black uppercase tracking-[0.2em] text-xs">Navigation Guide</p>
+                  <div className="grid grid-cols-1 gap-4">
+                    <div className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">1</div>
+                      <p className="text-sm font-bold uppercase tracking-widest text-white/70">Left Click & Drag to Rotate</p>
+                    </div>
+                    <div className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">2</div>
+                      <p className="text-sm font-bold uppercase tracking-widest text-white/70">Scroll to Zoom In/Out</p>
+                    </div>
+                    <div className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">3</div>
+                      <p className="text-sm font-bold uppercase tracking-widest text-white/70">Right Click & Drag to Pan</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-8 bg-white/5 rounded-3xl border border-white/10 space-y-4">
+                   <p className="text-primary font-black uppercase tracking-[0.2em] text-[10px] text-center">Project Visualization</p>
+                   <p className="text-center text-white font-bold italic">Experience the spatial layout and premium architecture of {property.title} before you even visit.</p>
+                </div>
+              </div>
+
+              <button 
+                onClick={() => setShowThreeDPopup(false)}
+                className="mt-16 bg-primary text-black font-black uppercase tracking-widest py-6 rounded-2xl hover:bg-white transition-all shadow-2xl shadow-primary/30"
+              >
+                Return to Details
+              </button>
+            </div>
+
+            {/* Media Preview Side (Model Viewer) */}
+            <div className="w-full md:w-1/2 h-64 md:h-full bg-black relative border-l border-white/5">
+              <ModelViewer
+                src={property.threeDElement}
+                auto-rotate
+                camera-controls
+                shadow-intensity="2"
+                exposure="1.2"
+                style={{ width: '100%', height: '100%' }}
+              ></ModelViewer>
+              
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none"></div>
+              
+              <div className="absolute bottom-10 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md px-6 py-3 rounded-full border border-white/20">
+                <p className="text-[10px] font-black uppercase tracking-widest text-white/70">3D Interactive Model</p>
+              </div>
             </div>
           </div>
         </div>
