@@ -78,7 +78,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
         videoUrl: initialData.videoUrl || '',
         mapUrl: initialData.mapUrl || '',
         landBrochure: Array.isArray(initialData.landBrochure) ? initialData.landBrochure.filter(Boolean) : [],
-        details: Array.isArray(initialData.details) ? initialData.details.filter(d => d !== null).map((d: any) => ({
+        details: Array.isArray(initialData.details) ? initialData.details.filter((d: any) => d !== null).map((d: any) => ({
           heading: d?.heading || '',
           content: d?.content || '',
           sideHeading: d?.sideHeading || '',
@@ -86,7 +86,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           isPointed: !!d?.isPointed,
           alignment: d?.alignment || 'left'
         })) : [],
-        plots: Array.isArray(initialData.plots) ? initialData.plots.filter(p => p !== null).map((p: any) => ({
+        plots: Array.isArray(initialData.plots) ? initialData.plots.filter((p: any) => p !== null).map((p: any) => ({
           ...p,
           x: p.x ?? 0,
           y: p.y ?? 0,
