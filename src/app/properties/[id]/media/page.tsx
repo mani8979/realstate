@@ -178,7 +178,7 @@ const MediaPage = () => {
               <div className="absolute inset-x-0 bottom-32 flex items-center justify-center gap-8">
                 <button 
                   onClick={() => setPhotoIndex((prev) => (prev - 1 + property.landPhotos.length) % property.landPhotos.length)}
-                  className="w-14 h-14 rounded-full bg-black/5 dark:bg-white/5 hover:bg-primary hover:text-black border border-black/10 dark:border-white/10 flex items-center justify-center transition-all"
+                  className="w-14 h-14 rounded-full bg-primary text-black border border-primary shadow-[0_0_30px_rgba(16,185,129,0.3)] flex items-center justify-center transition-all hover:scale-110 active:scale-95"
                 >
                   <ChevronLeft size={24} />
                 </button>
@@ -192,7 +192,7 @@ const MediaPage = () => {
                 </div>
                 <button 
                   onClick={() => setPhotoIndex((prev) => (prev + 1) % property.landPhotos.length)}
-                  className="w-14 h-14 rounded-full bg-black/5 dark:bg-white/5 hover:bg-primary hover:text-black border border-black/10 dark:border-white/10 flex items-center justify-center transition-all"
+                  className="w-14 h-14 rounded-full bg-primary text-black border border-primary shadow-[0_0_30px_rgba(16,185,129,0.3)] flex items-center justify-center transition-all hover:scale-110 active:scale-95"
                 >
                   <ChevronRight size={24} />
                 </button>
