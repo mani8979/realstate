@@ -25,9 +25,7 @@ export default function FounderAdmin() {
   const [uploading, setUploading] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/api/content')
-      .then(res => res.json())
-      .then(data => {
+    fetch('/api/content').then(res => res.ok ? res.json() : {success: false}).then(data => {
         if (data.success && data.data) {
           setContent((prev: any) => ({ ...prev, ...data.data }));
         }
@@ -87,7 +85,7 @@ export default function FounderAdmin() {
     <div className="max-w-4xl pb-20">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-black uppercase text-gray-900 dark:text-black dark:text-white">Leadership (Founders)</h1>
+          <h1 className="text-3xl font-black uppercase text-gray-900 dark:text-white">Leadership (Founders)</h1>
           <p className="text-gray-500">Manage founder profiles, photos, and direct contact numbers.</p>
         </div>
         <button 
@@ -102,8 +100,8 @@ export default function FounderAdmin() {
 
       <div className="space-y-12">
         {/* Main Founder Section */}
-        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-2xl font-black mb-8 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4 flex items-center gap-3">
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+          <h2 className="text-2xl font-black mb-8 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4 flex items-center gap-3">
              <div className="w-2 h-8 bg-primary rounded-full" />
              Main Founder Settings
           </h2>
@@ -139,7 +137,7 @@ export default function FounderAdmin() {
                   value={content.mainFounderPhone || ''}
                   onChange={handleChange}
                   placeholder="919666080645"
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
                 />
               </div>
             </div>
@@ -151,7 +149,7 @@ export default function FounderAdmin() {
                   name="mainFounderName"
                   value={content.mainFounderName || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
                 />
               </div>
               <div>
@@ -160,7 +158,7 @@ export default function FounderAdmin() {
                   name="mainFounderRole"
                   value={content.mainFounderRole || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
                 />
               </div>
               <div>
@@ -170,7 +168,7 @@ export default function FounderAdmin() {
                   rows={3}
                   value={content.mainFounderVision || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
                 />
               </div>
               <div>
@@ -180,7 +178,7 @@ export default function FounderAdmin() {
                   rows={4}
                   value={content.mainFounderBio || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
                 />
               </div>
               <div>
@@ -190,7 +188,7 @@ export default function FounderAdmin() {
                   rows={5}
                   value={content.mainFounderExp || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
                 />
               </div>
             </div>
@@ -198,8 +196,8 @@ export default function FounderAdmin() {
         </div>
 
         {/* Co-Founder Section */}
-        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-2xl font-black mb-8 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4 flex items-center gap-3">
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+          <h2 className="text-2xl font-black mb-8 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4 flex items-center gap-3">
              <div className="w-2 h-8 bg-primary rounded-full" />
              Co-Founder Settings
           </h2>
@@ -235,7 +233,7 @@ export default function FounderAdmin() {
                   value={content.cofounderPhone || ''}
                   onChange={handleChange}
                   placeholder="919573785434"
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
                 />
               </div>
             </div>
@@ -247,7 +245,7 @@ export default function FounderAdmin() {
                   name="cofounderName"
                   value={content.cofounderName || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
                 />
               </div>
               <div>
@@ -256,7 +254,7 @@ export default function FounderAdmin() {
                   name="cofounderRole"
                   value={content.cofounderRole || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
                 />
               </div>
               <div>
@@ -266,7 +264,7 @@ export default function FounderAdmin() {
                   rows={3}
                   value={content.cofounderVision || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
                 />
               </div>
               <div>
@@ -276,7 +274,7 @@ export default function FounderAdmin() {
                   rows={4}
                   value={content.cofounderBio || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
                 />
               </div>
               <div>
@@ -286,7 +284,7 @@ export default function FounderAdmin() {
                   rows={5}
                   value={content.cofounderExp || ''}
                   onChange={handleChange}
-                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
+                  className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
                 />
               </div>
             </div>

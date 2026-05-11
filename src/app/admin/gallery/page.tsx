@@ -13,9 +13,7 @@ export default function GalleryAdmin() {
   const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
-    fetch('/api/content')
-      .then(res => res.json())
-      .then(data => {
+    fetch('/api/content').then(res => res.ok ? res.json() : {success: false}).then(data => {
         if (data.success && data.data) {
           setContent((prev: any) => ({ ...prev, ...data.data }));
         }
@@ -117,7 +115,7 @@ export default function GalleryAdmin() {
     <div id="premium-gallery" className="max-w-6xl pb-20">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12">
         <div>
-          <h1 className="text-4xl font-black uppercase text-gray-900 dark:text-black dark:text-white tracking-tight">About Page Gallery</h1>
+          <h1 className="text-4xl font-black uppercase text-gray-900 dark:text-white tracking-tight">About Page Gallery</h1>
           <p className="text-gray-500 mt-2 font-medium">Manage the cinematic photo collection for your About Us section.</p>
         </div>
         <button 
@@ -188,7 +186,7 @@ export default function GalleryAdmin() {
               placeholder="Add caption..."
               value={img.caption || ''}
               onChange={(e) => handleCaptionChange(index, e.target.value)}
-              className="w-full p-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-50 dark:bg-gray-900 text-sm font-medium focus:ring-2 focus:ring-primary/20 outline-none transition-all shadow-sm"
+              className="w-full p-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-sm font-medium focus:ring-2 focus:ring-primary/20 outline-none transition-all shadow-sm"
             />
           </div>
         ))}

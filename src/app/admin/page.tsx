@@ -21,12 +21,13 @@ const AdminDashboard = () => {
           axios.get('/api/enquiries')
         ]);
         setStats({
-          totalProperties: propsRes.data.length,
-          totalEnquiries: enquiriesRes.data.length,
-          recentEnquiries: enquiriesRes.data.slice(0, 5)
+          totalProperties: Array.isArray(propsRes.data) ? propsRes.data.length : 0,
+          totalEnquiries: Array.isArray(enquiriesRes.data) ? enquiriesRes.data.length : 0,
+          recentEnquiries: Array.isArray(enquiriesRes.data) ? enquiriesRes.data.slice(0, 5) : []
         });
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
+        setStats({ totalProperties: 0, totalEnquiries: 0, recentEnquiries: [] });
       } finally {
         setLoading(false);
       }
@@ -52,7 +53,7 @@ const AdminDashboard = () => {
     <div className="space-y-10">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-black dark:text-white">Dashboard Overview</h1>
+          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">Dashboard Overview</h1>
           <p className="text-gray-500">Welcome back, Admin. Here's what's happening today.</p>
         </div>
         <Link 
@@ -68,7 +69,7 @@ const AdminDashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {cards.map((card) => (
           <Link key={card.title} href={card.href} className="group">
-            <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-[2rem] shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-xl hover:-translate-y-1 transition-all">
+            <div className="bg-white dark:bg-gray-900 p-8 rounded-[2rem] shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-xl hover:-translate-y-1 transition-all">
               <div className="flex items-center justify-between mb-4">
                 <div className={`${card.color} p-4 rounded-2xl text-black dark:text-white shadow-lg`}>
                   <card.icon size={24} />
@@ -76,16 +77,16 @@ const AdminDashboard = () => {
                 <ArrowUpRight size={20} className="text-gray-700 dark:text-gray-300 group-hover:text-primary transition-colors" />
               </div>
               <p className="text-sm font-bold text-gray-600 dark:text-gray-400 uppercase tracking-widest">{card.title}</p>
-              <h3 className="text-4xl font-extrabold text-gray-900 dark:text-black dark:text-white mt-1">{card.value}</h3>
+              <h3 className="text-4xl font-extrabold text-gray-900 dark:text-white mt-1">{card.value}</h3>
             </div>
           </Link>
         ))}
       </div>
 
       {/* Recent Enquiries Table */}
-      <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+      <div className="bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
         <div className="p-8 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
-          <h3 className="text-xl font-extrabold text-gray-900 dark:text-black dark:text-white">Recent Enquiries</h3>
+          <h3 className="text-xl font-extrabold text-gray-900 dark:text-white">Recent Enquiries</h3>
           <Link href="/admin/enquiries" className="text-primary font-bold hover:underline">View All</Link>
         </div>
         <div className="overflow-x-auto">
@@ -101,16 +102,16 @@ const AdminDashboard = () => {
             <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
               {stats.recentEnquiries.length > 0 ? (
                 stats.recentEnquiries.map((enquiry: any) => (
-                  <tr key={enquiry._id} className="hover:bg-gray-50/50 dark:hover:bg-gray-800/20 transition-colors">
-                    <td className="px-8 py-6 font-bold text-gray-900 dark:text-black dark:text-white">{enquiry.name}</td>
-                    <td className="px-8 py-6 text-gray-600 dark:text-gray-600 dark:text-gray-400">{enquiry.phone}</td>
+                  <tr key={enquiry?._id} className="hover:bg-gray-50/50 dark:hover:bg-gray-800/20 transition-colors">
+                    <td className="px-8 py-6 font-bold text-gray-900 dark:text-white">{enquiry?.name || 'Anonymous'}</td>
+                    <td className="px-8 py-6 text-gray-600 dark:text-gray-400">{enquiry?.phone || 'No Phone'}</td>
                     <td className="px-8 py-6">
                       <span className="bg-primary/10 text-primary font-bold px-3 py-1 rounded-lg text-xs">
-                        {enquiry.propertyTitle || 'General'}
+                        {enquiry?.propertyTitle || 'General'}
                       </span>
                     </td>
                     <td className="px-8 py-6 text-right text-gray-500 text-sm">
-                      {new Date(enquiry.createdAt).toLocaleDateString()}
+                      {enquiry?.createdAt ? new Date(enquiry.createdAt).toLocaleDateString() : 'Unknown Date'}
                     </td>
                   </tr>
                 ))

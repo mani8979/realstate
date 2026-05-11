@@ -70,7 +70,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Building size={24} />
             </div>
             {isSidebarOpen && (
-              <span className="text-xl font-bold tracking-tight dark:text-black dark:text-white whitespace-nowrap">
+              <span className="text-xl font-bold tracking-tight dark:text-white whitespace-nowrap">
                 ADMIN<span className="text-primary">PANEL</span>
               </span>
             )}
@@ -112,7 +112,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <div className="bg-primary p-2 rounded-lg text-black dark:text-white">
               <Building size={20} />
             </div>
-            <span className="text-lg font-bold tracking-tight dark:text-black dark:text-white">
+            <span className="text-lg font-bold tracking-tight dark:text-white">
               ADMIN<span className="text-primary">PANEL</span>
             </span>
           </Link>

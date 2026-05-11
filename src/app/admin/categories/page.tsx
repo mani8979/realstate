@@ -32,9 +32,7 @@ export default function CategoriesAdmin() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetch('/api/content')
-      .then(res => res.json())
-      .then(data => {
+    fetch('/api/content').then(res => res.ok ? res.json() : {success: false}).then(data => {
         if (data.success && data.data) {
           setContent((prev: any) => ({ ...prev, ...data.data }));
         }
@@ -98,7 +96,7 @@ export default function CategoriesAdmin() {
     <div className="max-w-6xl pb-20">
       <div className="flex justify-between items-center mb-12">
         <div>
-          <h1 className="text-4xl font-black uppercase text-gray-900 dark:text-black dark:text-white tracking-tight">Property Categories</h1>
+          <h1 className="text-4xl font-black uppercase text-gray-900 dark:text-white tracking-tight">Property Categories</h1>
           <p className="text-gray-500 mt-2 font-medium">Manage the categories shown on the homepage and filters.</p>
         </div>
         <button 
@@ -115,7 +113,7 @@ export default function CategoriesAdmin() {
         {content.propertyCategories?.map((cat: any, index: number) => {
           const Icon = ICON_OPTIONS[cat.icon] || Home;
           return (
-            <div key={index} className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 relative group">
+            <div key={index} className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 relative group">
               <button 
                 onClick={() => handleRemove(index)}
                 className="absolute top-6 right-6 bg-red-50 text-red-500 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-black dark:text-white"
@@ -134,7 +132,7 @@ export default function CategoriesAdmin() {
                     <input 
                       value={cat.name}
                       onChange={(e) => handleChange(index, 'name', e.target.value)}
-                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-3 rounded-xl font-bold text-gray-900 dark:text-black dark:text-white"
+                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-3 rounded-xl font-bold text-gray-900 dark:text-white"
                     />
                   </div>
 
@@ -144,7 +142,7 @@ export default function CategoriesAdmin() {
                       <select 
                         value={cat.icon}
                         onChange={(e) => handleChange(index, 'icon', e.target.value)}
-                        className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-3 rounded-xl font-bold text-gray-900 dark:text-black dark:text-white"
+                        className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-3 rounded-xl font-bold text-gray-900 dark:text-white"
                       >
                         {Object.keys(ICON_OPTIONS).map(icon => (
                           <option key={icon} value={icon}>{icon}</option>
@@ -156,7 +154,7 @@ export default function CategoriesAdmin() {
                       <select 
                         value={cat.color}
                         onChange={(e) => handleChange(index, 'color', e.target.value)}
-                        className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-3 rounded-xl font-bold text-gray-900 dark:text-black dark:text-white"
+                        className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-3 rounded-xl font-bold text-gray-900 dark:text-white"
                       >
                         {COLOR_OPTIONS.map(opt => (
                           <option key={opt.value} value={opt.value}>{opt.name}</option>

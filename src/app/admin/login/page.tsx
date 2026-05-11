@@ -35,20 +35,20 @@ const AdminLogin = () => {
           <div className="bg-primary p-4 rounded-2xl text-black dark:text-white inline-block mb-4 shadow-xl shadow-primary/20">
             <Building size={40} />
           </div>
-          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-black dark:text-white">Admin Access</h1>
+          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">Admin Access</h1>
           <p className="text-gray-500 mt-2">Please login to manage your properties.</p>
         </div>
 
-        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-2xl border border-gray-100 dark:border-gray-800">
+        <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-2xl border border-gray-100 dark:border-gray-800">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-700 dark:text-gray-700 dark:text-gray-300">Username</label>
+              <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Username</label>
               <div className="relative">
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" size={20} />
                 <input
                   type="text"
                   required
-                  className="w-full pl-12 pr-4 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white rounded-2xl focus:ring-2 focus:ring-primary/50 border-none transition-all"
+                  className="w-full pl-12 pr-4 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl focus:ring-2 focus:ring-primary/50 border-none transition-all"
                   placeholder="Enter username"
                   value={formData.username}
                   onChange={(e) => setFormData({ ...formData, username: e.target.value })}
@@ -57,13 +57,13 @@ const AdminLogin = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-700 dark:text-gray-700 dark:text-gray-300">Password</label>
+              <label className="text-sm font-bold text-gray-700 dark:text-gray-300">Password</label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" size={20} />
                 <input
                   type="password"
                   required
-                  className="w-full pl-12 pr-4 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white rounded-2xl focus:ring-2 focus:ring-primary/50 border-none transition-all"
+                  className="w-full pl-12 pr-4 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl focus:ring-2 focus:ring-primary/50 border-none transition-all"
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}

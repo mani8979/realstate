@@ -30,9 +30,7 @@ export default function JoinAdmin() {
   const [uploading, setUploading] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/api/content')
-      .then(res => res.json())
-      .then(data => {
+    fetch('/api/content').then(res => res.ok ? res.json() : {success: false}).then(data => {
         if (data.success && data.data) {
           setContent((prev: any) => ({ ...prev, ...data.data }));
         }
@@ -116,7 +114,7 @@ export default function JoinAdmin() {
     <div className="max-w-4xl pb-20">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-black uppercase text-gray-900 dark:text-black dark:text-white">Join Page Settings</h1>
+          <h1 className="text-3xl font-black uppercase text-gray-900 dark:text-white">Join Page Settings</h1>
           <p className="text-gray-500">Manage recruitment info, rules, and team collaboration links.</p>
         </div>
         <button 
@@ -131,8 +129,8 @@ export default function JoinAdmin() {
 
       <div className="space-y-8">
         {/* Hero Background */}
-        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Hero Background</h2>
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Hero Background</h2>
           <div className="space-y-4">
             <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Background Image</label>
             {content.joinBgImage ? (
@@ -160,92 +158,92 @@ export default function JoinAdmin() {
         </div>
 
         {/* Main Content */}
-        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Main Page Content</h2>
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Main Page Content</h2>
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Nav Link Name</label>
-                <input name="navJoin" value={content.navJoin || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
+                <input name="navJoin" value={content.navJoin || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
               </div>
               <div>
                 <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Top Badge Text</label>
-                <input name="joinBadge" value={content.joinBadge || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
+                <input name="joinBadge" value={content.joinBadge || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
               </div>
             </div>
             <div>
               <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Page Title</label>
-              <input name="joinTitle" value={content.joinTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
+              <input name="joinTitle" value={content.joinTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
             </div>
             <div>
               <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Description</label>
-              <textarea name="joinDesc" rows={3} value={content.joinDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
+              <textarea name="joinDesc" rows={3} value={content.joinDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
             </div>
             <div>
               <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Floating Chat Label</label>
-              <input name="chatWithUsText" value={content.chatWithUsText || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" placeholder="e.g. Chat With Us" />
+              <input name="chatWithUsText" value={content.chatWithUsText || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" placeholder="e.g. Chat With Us" />
             </div>
           </div>
         </div>
 
         {/* Workspace & Path Details */}
-        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Workspace & Path Details</h2>
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Workspace & Path Details</h2>
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Workspace Title</label>
-                <input name="joinWorkspaceTitle" value={content.joinWorkspaceTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
+                <input name="joinWorkspaceTitle" value={content.joinWorkspaceTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
               </div>
               <div>
                 <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Workspace Description</label>
-                <textarea name="joinWorkspaceDesc" rows={2} value={content.joinWorkspaceDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
+                <textarea name="joinWorkspaceDesc" rows={2} value={content.joinWorkspaceDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-gray-100 dark:border-gray-800 pt-6">
               <div>
                 <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Individual Path Title</label>
-                <input name="joinIndividualTitle" value={content.joinIndividualTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
+                <input name="joinIndividualTitle" value={content.joinIndividualTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
               </div>
               <div>
                 <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Individual Path Description</label>
-                <textarea name="joinIndividualDesc" rows={2} value={content.joinIndividualDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
+                <textarea name="joinIndividualDesc" rows={2} value={content.joinIndividualDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-gray-100 dark:border-gray-800 pt-6">
               <div>
                 <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Team Path Title</label>
-                <input name="joinTeamTitle" value={content.joinTeamTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
+                <input name="joinTeamTitle" value={content.joinTeamTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
               </div>
               <div>
                 <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Team Path Description</label>
-                <textarea name="joinTeamDesc" rows={2} value={content.joinTeamDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
+                <textarea name="joinTeamDesc" rows={2} value={content.joinTeamDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
               </div>
             </div>
           </div>
         </div>
 
         {/* Office & Rules */}
-        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Office & Requirements</h2>
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Office & Requirements</h2>
           <div className="space-y-6">
             <div>
               <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Rules & Regulations (One per line)</label>
-              <textarea name="joinRules" rows={4} value={content.joinRules || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
+              <textarea name="joinRules" rows={4} value={content.joinRules || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
             </div>
             <div>
               <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Qualifications (One per line)</label>
-              <textarea name="joinQualifications" rows={4} value={content.joinQualifications || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium" />
+              <textarea name="joinQualifications" rows={4} value={content.joinQualifications || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
             </div>
           </div>
         </div>
 
         {/* Dynamic Team Leads */}
-        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex justify-between items-center mb-8 border-b border-gray-100 dark:border-gray-800 pb-4">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white flex items-center gap-3">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
                <Users size={24} className="text-primary" />
                Team Leaders (Popup)
             </h2>
@@ -292,7 +290,7 @@ export default function JoinAdmin() {
                       <input 
                         value={lead.name || ''} 
                         onChange={(e) => handleLeadChange(index, 'name', e.target.value)} 
-                        className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-black dark:text-white font-medium text-sm" 
+                        className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-medium text-sm" 
                         placeholder="Lead Name"
                       />
                     </div>
@@ -301,7 +299,7 @@ export default function JoinAdmin() {
                       <input 
                         value={lead.phone || ''} 
                         onChange={(e) => handleLeadChange(index, 'phone', e.target.value)} 
-                        className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-black dark:text-white font-medium text-sm" 
+                        className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-medium text-sm" 
                         placeholder="91 00000 00000"
                       />
                     </div>
@@ -321,8 +319,8 @@ export default function JoinAdmin() {
         </div>
 
         {/* Office Gallery */}
-        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Office Gallery Photos</h2>
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Office Gallery Photos</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-4">
               <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Office Photo 1</label>

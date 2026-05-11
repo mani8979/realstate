@@ -14,9 +14,10 @@ const AdminProperties = () => {
   const fetchProperties = async () => {
     try {
       const res = await axios.get('/api/properties');
-      setProperties(res.data);
+      setProperties(Array.isArray(res.data) ? res.data : []);
     } catch (error) {
       console.error('Error fetching properties:', error);
+      setProperties([]);
     } finally {
       setLoading(false);
     }
@@ -47,7 +48,7 @@ const AdminProperties = () => {
     <div className="space-y-10">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-black dark:text-white">Property Management</h1>
+          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">Property Management</h1>
           <p className="text-gray-500">Manage your listings, prices, and availability.</p>
         </div>
         
@@ -60,7 +61,7 @@ const AdminProperties = () => {
         </Link>
       </div>
 
-      <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+      <div className="bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
         <div className="p-8 border-b border-gray-100 dark:border-gray-800">
           <div className="relative w-full">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 dark:text-gray-400" size={20} />
@@ -88,28 +89,28 @@ const AdminProperties = () => {
             <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
               {filteredProperties.length > 0 ? (
                 filteredProperties.map((p: any) => (
-                  <tr key={p._id} className="hover:bg-gray-50/50 dark:hover:bg-gray-800/20 transition-colors">
+                  <tr key={p?._id} className="hover:bg-gray-50/50 dark:hover:bg-gray-800/20 transition-colors">
                     <td className="px-8 py-6">
                       <div className="flex items-center gap-4">
                         <div className="relative w-16 h-16 rounded-xl overflow-hidden shadow-sm">
-                          <Image src={p.images?.[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=1000'} alt={p.title || 'Property'} fill className="object-cover" />
+                          <Image src={p?.images?.[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=1000'} alt={p?.title || 'Property'} fill className="object-cover" />
                         </div>
-                        <span className="font-bold text-gray-900 dark:text-black dark:text-white line-clamp-1">{p.title}</span>
+                        <span className="font-bold text-gray-900 dark:text-white line-clamp-1">{p?.title || 'Untitled'}</span>
                       </div>
                     </td>
                     <td className="px-8 py-6 text-gray-500 text-sm">
                       <div className="flex items-center gap-1.5">
                         <MapPin size={14} className="text-primary" />
-                        <span>{p.location}</span>
+                        <span>{p?.location || 'Unknown'}</span>
                       </div>
                     </td>
                     <td className="px-8 py-6">
                       <span className="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-600 dark:text-gray-400 font-bold px-3 py-1 rounded-lg text-xs">
-                        {p.type}
+                        {p?.type || 'Other'}
                       </span>
                     </td>
                     <td className="px-8 py-6 font-bold text-primary">
-                      ₹{p.price?.toLocaleString('en-IN')}
+                      ₹{p?.price ? p.price.toLocaleString('en-IN') : 'N/A'}
                     </td>
                     <td className="px-8 py-6 text-right">
                       <div className="flex items-center justify-end gap-2">
