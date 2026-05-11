@@ -53,11 +53,14 @@ const Header = () => {
 
   const isAdmin = pathname.startsWith('/admin') || pathname.startsWith('/studio') || pathname.includes('/media');
 
+  const isHomePage = pathname === '/';
+  const shouldBeSolid = isScrolled || !isHomePage;
+
   return (
     <header
       className={cn(
         'fixed top-0 left-0 right-0 z-[60] transition-all duration-500',
-        isAdmin ? 'hidden pointer-events-none' : (isScrolled ? 'py-4 bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-gray-100 dark:border-white/10 shadow-lg shadow-black/5' : 'py-8 bg-transparent')
+        isAdmin ? 'hidden pointer-events-none' : (shouldBeSolid ? 'py-4 bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-gray-100 dark:border-white/10 shadow-lg shadow-black/5' : 'py-8 bg-transparent')
       )}
     >
       {!isAdmin && (
@@ -72,7 +75,7 @@ const Header = () => {
                     alt={content.logoTitle || "Logo"} 
                     className={cn(
                       "h-full w-auto object-contain transition-all duration-500",
-                      !isScrolled && "brightness-0 invert" 
+                      !shouldBeSolid && "brightness-0 invert" 
                     )} 
                   />
                 </div>
@@ -80,13 +83,13 @@ const Header = () => {
                 <div className="flex flex-col">
                   <span className={cn(
                     "text-2xl md:text-3xl font-black tracking-tighter leading-none transition-colors duration-500",
-                    isScrolled ? "text-black dark:text-white" : "text-white"
+                    shouldBeSolid ? "text-black dark:text-white" : "text-white"
                   )}>
                     {content.logoTitle || 'STAR LANDS'}
                   </span>
                   <span className={cn(
                     "text-[10px] md:text-xs font-bold tracking-[0.3em] leading-none mt-1 transition-all duration-500",
-                    isScrolled ? "text-primary" : "text-primary/90"
+                    shouldBeSolid ? "text-primary" : "text-primary/90"
                   )}>
                     {content.logoSubtitle || 'DEVELOPERS'}
                   </span>
@@ -98,7 +101,7 @@ const Header = () => {
             <div className="hidden lg:flex items-center gap-2">
               <div className={cn(
                 "flex items-center p-1 rounded-full border transition-all duration-500",
-                isScrolled ? "bg-gray-100/50 dark:bg-white/5 border-gray-200 dark:border-white/10" : "bg-white/10 border-white/20 backdrop-blur-md"
+                shouldBeSolid ? "bg-gray-100/50 dark:bg-white/5 border-gray-200 dark:border-white/10" : "bg-white/10 border-white/20 backdrop-blur-md"
               )}>
                 {navLinks.map((link) => {
                   const isActive = pathname === link.href;
@@ -110,7 +113,7 @@ const Header = () => {
                         'px-6 py-2 rounded-full text-sm font-bold uppercase tracking-widest transition-all duration-300 relative group',
                         isActive 
                           ? 'bg-primary text-black dark:text-white shadow-lg shadow-primary/20' 
-                          : cn(isScrolled ? "text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white" : "text-white/80 hover:text-white")
+                          : cn(shouldBeSolid ? "text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white" : "text-white/80 hover:text-white")
                       )}
                     >
                       <span className="relative z-10">{link.name}</span>
@@ -131,7 +134,7 @@ const Header = () => {
                   onClick={() => openContactDialog('call')}
                   className={cn(
                     "px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-500 flex items-center gap-2",
-                    isScrolled 
+                    shouldBeSolid 
                       ? "bg-gray-100 dark:bg-white/5 text-gray-900 dark:text-white hover:bg-primary hover:text-black dark:hover:text-white" 
                       : "bg-white/10 text-white hover:bg-white hover:text-black backdrop-blur-md"
                   )}
@@ -153,7 +156,7 @@ const Header = () => {
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className={cn(
                   "lg:hidden p-3 rounded-xl transition-all duration-500",
-                  isScrolled ? "bg-gray-100 dark:bg-white/5 text-black dark:text-white" : "bg-white/10 text-white backdrop-blur-md"
+                  shouldBeSolid ? "bg-gray-100 dark:bg-white/5 text-black dark:text-white" : "bg-white/10 text-white backdrop-blur-md"
                 )}
               >
                 {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
