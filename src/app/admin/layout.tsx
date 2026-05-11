@@ -53,30 +53,76 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'Enquiries', href: '/admin/enquiries', icon: MessageSquare },
   ];
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
   return (
-    <div className="flex flex-col min-h-screen bg-white dark:bg-black">
-      {/* Top Header */}
-      <header className="bg-white dark:bg-black border-b border-gray-100 dark:border-gray-900 sticky top-0 z-50">
-        <div className="flex items-center justify-between p-4 px-6 border-b border-gray-100 dark:border-gray-900">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="bg-primary p-2 rounded-lg text-black dark:text-white">
+    <div className="flex min-h-screen bg-white dark:bg-black">
+      {/* Sidebar */}
+      <aside className={`
+        ${isSidebarOpen ? 'w-72' : 'w-20'} 
+        bg-white dark:bg-black border-r border-gray-100 dark:border-gray-900 
+        transition-all duration-300 flex flex-col sticky top-0 h-screen z-50
+        hidden lg:flex
+      `}>
+        <div className="p-6 border-b border-gray-100 dark:border-gray-900 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 overflow-hidden">
+            <div className="bg-primary p-2 rounded-lg text-black dark:text-white shrink-0">
               <Building size={24} />
             </div>
-            <span className="text-xl font-bold tracking-tight dark:text-black dark:text-white hidden sm:block">
+            {isSidebarOpen && (
+              <span className="text-xl font-bold tracking-tight dark:text-black dark:text-white whitespace-nowrap">
+                ADMIN<span className="text-primary">PANEL</span>
+              </span>
+            )}
+          </Link>
+        </div>
+
+        <nav className="flex-grow py-6 overflow-y-auto scrollbar-hide px-3 space-y-1">
+          {navItems.map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all whitespace-nowrap ${
+                pathname === item.href 
+                  ? 'bg-primary text-black dark:text-white shadow-lg shadow-primary/20' 
+                  : 'text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-900'
+              }`}
+            >
+              <item.icon size={20} className="shrink-0" />
+              {isSidebarOpen && <span className="text-sm">{item.name}</span>}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="p-4 border-t border-gray-100 dark:border-gray-900">
+          <button
+            onClick={handleLogout}
+            className={`flex items-center gap-3 text-red-500 font-bold hover:bg-red-50 dark:hover:bg-red-900/10 px-4 py-3 rounded-xl transition-all w-full ${!isSidebarOpen && 'justify-center'}`}
+          >
+            <LogOut size={20} />
+            {isSidebarOpen && <span>Logout</span>}
+          </button>
+        </div>
+      </aside>
+
+      {/* Mobile Top Header */}
+      <div className="flex flex-col flex-grow w-full">
+        <header className="lg:hidden bg-white dark:bg-black border-b border-gray-100 dark:border-gray-900 sticky top-0 z-[60] p-4 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="bg-primary p-2 rounded-lg text-black dark:text-white">
+              <Building size={20} />
+            </div>
+            <span className="text-lg font-bold tracking-tight dark:text-black dark:text-white">
               ADMIN<span className="text-primary">PANEL</span>
             </span>
           </Link>
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 text-red-500 font-bold hover:bg-red-50 dark:hover:bg-red-900/20 px-4 py-2 rounded-xl transition-all"
-          >
-            <LogOut size={20} />
-            <span className="hidden sm:block">Logout</span>
-          </button>
-        </div>
+          <div className="flex items-center gap-4">
+             <button onClick={handleLogout} className="text-red-500 p-2"><LogOut size={20} /></button>
+          </div>
+        </header>
 
-        {/* Horizontal Navigation */}
-        <div className="w-full overflow-x-auto scrollbar-hide border-b border-gray-100 dark:border-gray-900">
+        {/* Mobile Nav (Horizontal Scroll) */}
+        <div className="lg:hidden w-full overflow-x-auto scrollbar-hide border-b border-gray-100 dark:border-gray-900 bg-white dark:bg-black sticky top-[65px] z-50">
           <nav className="flex items-center gap-2 p-3 px-6 min-w-max">
             {navItems.map((item) => (
               <Link
@@ -89,17 +135,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 }`}
               >
                 <item.icon size={16} />
-                <span className="text-sm">{item.name}</span>
+                <span className="text-xs">{item.name}</span>
               </Link>
             ))}
           </nav>
         </div>
-      </header>
 
-      {/* Main Content */}
-      <main className="flex-grow p-6 md:p-10 w-full max-w-7xl mx-auto">
-        {children}
-      </main>
+        {/* Main Content */}
+        <main className="flex-grow p-6 md:p-10 w-full overflow-x-hidden">
+          <div className="max-w-7xl mx-auto">
+             {children}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
