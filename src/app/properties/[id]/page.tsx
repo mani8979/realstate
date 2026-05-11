@@ -311,49 +311,56 @@ const PropertyDetails = () => {
           <div className={`w-full max-w-7xl mx-auto pb-32 ${property.details?.length > 0 ? 'space-y-64' : ''}`} id="content-anchor">
 
             {/* Dynamic Structured Details — ONLY what admin adds */}
-            {property.details?.map((detail: any, idx: number) => (
-              <motion.div 
-                key={idx}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className={`flex ${
-                  (detail.alignment || property.alignment) === 'center' ? 'justify-center' : 
-                  (detail.alignment || property.alignment) === 'right' ? 'justify-end' : 
-                  (idx % 2 === 0 ? 'justify-start' : 'justify-end')
-                }`}
-              >
-                <div className={`md:w-1/2 w-full glass-card p-8 md:p-16 ${
-                  (detail.alignment || property.alignment) === 'center' ? 'text-center border-b-4 border-primary' : 
-                  (detail.alignment || property.alignment) === 'right' ? 'text-right border-r-4 border-primary' : 
-                  (idx % 2 !== 0 ? 'border-r-4 border-primary text-left' : 'text-left')
-                }`}>
-                  <div className={`flex items-center gap-4 mb-8 ${
-                    (detail.alignment || property.alignment) === 'center' ? 'justify-center' : 
-                    (detail.alignment || property.alignment) === 'right' ? 'justify-end' : 
+            {property.details?.map((detail: any, idx: number) => {
+              const align = detail.alignment || property.alignment || 'left';
+              const isCenter = align === 'center';
+              const isRight = align === 'right';
+              const isLeft = align === 'left';
+
+              return (
+                <motion.div 
+                  key={idx}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className={`flex ${
+                    isCenter ? 'justify-center' : 
+                    isRight ? 'justify-end' : 
                     'justify-start'
+                  }`}
+                >
+                  <div className={`md:w-1/2 w-full glass-card p-8 md:p-16 ${
+                    isCenter ? 'text-center border-b-4 border-primary' : 
+                    isRight ? 'text-right border-r-4 border-primary' : 
+                    'text-left border-l-4 border-primary'
                   }`}>
-                    {detail.showArrow && <span className="text-primary font-bold text-2xl">→</span>}
-                    <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-black dark:text-white">{detail.heading}</h2>
+                    <div className={`flex items-center gap-4 mb-8 ${
+                      isCenter ? 'justify-center' : 
+                      isRight ? 'justify-end' : 
+                      'justify-start'
+                    }`}>
+                      {detail.showArrow && <span className="text-primary font-bold text-2xl">→</span>}
+                      <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-black dark:text-white">{detail.heading}</h2>
+                    </div>
+                    {detail.sideHeading && (
+                      <h3 className="text-primary font-black uppercase tracking-widest text-xs mb-6">{detail.sideHeading}</h3>
+                    )}
+                    {detail.isPointed ? (
+                      <ul className={`space-y-4 ${isCenter ? 'inline-block text-left' : ''}`}>
+                        {detail.content.split('\n').filter((line: string) => line.trim()).map((line: string, i: number) => (
+                          <li key={i} className={`flex gap-3 text-gray-700 dark:text-gray-300 text-lg ${isRight ? 'flex-row-reverse' : ''}`}>
+                            <span className="text-primary font-bold">•</span>
+                            <span className={isRight ? 'text-right' : 'text-left'}>{line.trim()}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed whitespace-pre-line">{detail.content}</p>
+                    )}
                   </div>
-                  {detail.sideHeading && (
-                    <h3 className="text-primary font-black uppercase tracking-widest text-xs mb-6">{detail.sideHeading}</h3>
-                  )}
-                  {detail.isPointed ? (
-                    <ul className="space-y-4">
-                      {detail.content.split('\n').filter((line: string) => line.trim()).map((line: string, i: number) => (
-                        <li key={i} className="flex gap-3 text-gray-700 dark:text-gray-300 text-lg">
-                          <span className="text-primary font-bold">•</span>
-                          {line.trim()}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">{detail.content}</p>
-                  )}
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
 
           </div>
 
