@@ -27,7 +27,7 @@ interface PremiumHomeProps {
 
 const PremiumAbout = ({ content }: { content?: any }) => {
   return (
-    <section className="py-16 md:py-32 w-full bg-[#0a0a0a] text-black dark:text-white font-sans px-6 md:px-12 lg:px-16 overflow-hidden relative border-t border-white/5">
+    <section className="py-16 md:py-32 w-full bg-zinc-50 dark:bg-[#0a0a0a] text-black dark:text-white font-sans px-6 md:px-12 lg:px-16 overflow-hidden relative border-t border-white/5">
       
       {/* Decorative background elements */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
@@ -302,7 +302,7 @@ const PremiumHome = ({ properties, content }: PremiumHomeProps) => {
 
 
       {/* Footer Reveal Section */}
-      <div ref={footerContainerRef} className="relative z-0 min-h-screen py-24 md:py-0 md:h-screen w-full overflow-hidden bg-[#050505] text-black dark:text-white flex flex-col items-center justify-center">
+      <div ref={footerContainerRef} className="relative z-0 min-h-screen py-24 md:py-0 md:h-screen w-full overflow-hidden bg-zinc-50 dark:bg-[#050505] text-black dark:text-white flex flex-col items-center justify-center">
         <motion.div style={{ y: isMobile ? 0 : footerY }} className="text-center px-6 w-full max-w-6xl">
            <p className="text-[#10b981] uppercase text-[10px] font-black tracking-[0.5em] mb-8">Ready to Invest?</p>
            <h2 className="text-5xl md:text-9xl font-black uppercase tracking-tighter mb-16 md:mb-24">{content?.footerTitle || 'GET IN TOUCH'}</h2>

@@ -71,15 +71,15 @@ const BrandValues = ({ content: propContent }: { content?: any }) => {
               {content.brandBadge}
             </motion.p>
             
-            <h3 className="text-4xl md:text-7xl lg:text-[8rem] font-black text-black dark:text-white uppercase tracking-tighter leading-[0.9] md:leading-[0.8]">
+            <h3 className="text-4xl md:text-7xl lg:text-[8rem] font-black text-white uppercase tracking-tighter leading-[0.9] md:leading-[0.8]">
               {content.brandTitle1} <span className="text-primary block italic mt-2 md:mt-4 lowercase">{content.brandTitle2}</span>
             </h3>
           </div>
           
           <div className="hidden lg:block text-right">
-             <div className="bg-black/5 dark:bg-white/5 backdrop-blur-md p-10 rounded-[3rem] border border-black/10 dark:border-white/10">
+             <div className="bg-white/5 backdrop-blur-md p-10 rounded-[3rem] border border-white/10">
                 <Leaf className="text-primary mb-6" size={48} />
-                <p className="text-black dark:text-white/60 font-medium max-w-[200px] text-sm">Dedicated to creating sustainable and premium living environments.</p>
+                <p className="text-white/60 font-medium max-w-[200px] text-sm">Dedicated to creating sustainable and premium living environments.</p>
              </div>
           </div>
         </div>
@@ -95,26 +95,26 @@ const BrandValues = ({ content: propContent }: { content?: any }) => {
               transition={{ duration: 0.8, delay: i * 0.15, ease: [0.22, 1, 0.36, 1] }}
               className={`group ${i === 2 ? 'col-span-2 md:col-span-1' : 'col-span-1'}`}
             >
-              <div className="h-full p-4 md:p-12 rounded-2xl md:rounded-[4rem] bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 backdrop-blur-lg transition-all duration-700 hover:bg-white hover:border-white hover:-translate-y-4 md:hover:-translate-y-8 overflow-hidden relative">
+              <div className="h-full p-4 md:p-12 rounded-2xl md:rounded-[4rem] bg-white/5 border border-white/10 backdrop-blur-lg transition-all duration-700 hover:bg-white hover:border-white hover:-translate-y-4 md:hover:-translate-y-8 overflow-hidden relative">
                 {/* Massive background number */}
-                <div className="absolute -bottom-4 -right-4 md:-bottom-10 md:-right-10 text-6xl md:text-[15rem] font-black text-black dark:text-white/[0.03] group-hover:text-primary/10 transition-colors">
+                <div className="absolute -bottom-4 -right-4 md:-bottom-10 md:-right-10 text-6xl md:text-[15rem] font-black text-white/[0.03] group-hover:text-primary/10 transition-colors">
                   {i + 1}
                 </div>
 
                 <div className="relative z-10">
-                  <div className="w-10 h-10 md:w-20 md:h-20 bg-[#10b981] group-hover:bg-primary text-black dark:text-white rounded-xl md:rounded-[2rem] flex items-center justify-center mb-4 md:mb-12 shadow-2xl shadow-black/40 transition-all duration-500 group-hover:rotate-[360deg]">
+                  <div className="w-10 h-10 md:w-20 md:h-20 bg-[#10b981] group-hover:bg-primary text-white rounded-xl md:rounded-[2rem] flex items-center justify-center mb-4 md:mb-12 shadow-2xl shadow-black/40 transition-all duration-500 group-hover:rotate-[360deg]">
                     <Sparkles className="w-5 h-5 md:w-8 md:h-8" />
                   </div>
                   
-                  <h4 className="text-sm md:text-4xl font-black text-black dark:text-white group-hover:text-slate-900 mb-2 md:mb-8 uppercase tracking-tighter leading-tight transition-colors">
+                  <h4 className="text-sm md:text-4xl font-black text-white group-hover:text-slate-900 mb-2 md:mb-8 uppercase tracking-tighter leading-tight transition-colors">
                     {item.title}
                   </h4>
                   
-                  <p className="text-black dark:text-white/60 group-hover:text-slate-600 leading-relaxed font-medium text-[10px] md:text-lg transition-colors line-clamp-3 md:line-clamp-none">
+                  <p className="text-white/60 group-hover:text-slate-600 leading-relaxed font-medium text-[10px] md:text-lg transition-colors line-clamp-3 md:line-clamp-none">
                     {item.desc}
                   </p>
                   
-                  <div className="mt-4 md:mt-16 inline-flex items-center gap-2 md:gap-4 text-[#10b981] font-black uppercase tracking-[0.4em] text-[7px] md:text-[10px] py-1.5 md:py-3 px-3 md:px-6 bg-black/5 dark:bg-white/5 rounded-full group-hover:bg-primary/10 transition-colors">
+                  <div className="mt-4 md:mt-16 inline-flex items-center gap-2 md:gap-4 text-[#10b981] font-black uppercase tracking-[0.4em] text-[7px] md:text-[10px] py-1.5 md:py-3 px-3 md:px-6 bg-white/5 rounded-full group-hover:bg-primary/10 transition-colors">
                     <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-[#10b981]" />
                     {item.sideHeading}
                   </div>

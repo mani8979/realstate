@@ -111,20 +111,20 @@ const PropertyDetails = () => {
   // --- EARLY RETURNS (MUST BE AFTER ALL HOOKS) ---
   
   if (loading) return (
-    <div className="min-h-screen bg-[#050505] flex items-center justify-center">
+    <div className="min-h-screen bg-white dark:bg-[#050505] flex items-center justify-center">
       <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
     </div>
   );
 
   if (!property || !mounted) return (
-    <div className="min-h-screen bg-[#050505] text-black dark:text-black dark:text-white flex flex-col items-center justify-center">
+    <div className="min-h-screen bg-white dark:bg-[#050505] text-black dark:text-white flex flex-col items-center justify-center">
       <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6">Property Not Found</h2>
-      <Link href="/properties" className="text-primary hover:text-black dark:text-black dark:text-white transition-colors font-bold uppercase tracking-widest text-sm underline">Return to Properties</Link>
+      <Link href="/properties" className="text-primary hover:text-black dark:text-white transition-colors font-bold uppercase tracking-widest text-sm underline">Return to Properties</Link>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-black dark:text-black dark:text-white font-sans selection:bg-primary selection:text-black">
+    <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-black dark:text-white font-sans selection:bg-primary selection:text-black">
       {/* Floating 3D Model - Standardized for all properties with 3D */}
       {property.threeDElement && mounted && (
         <motion.div 
@@ -160,16 +160,16 @@ const PropertyDetails = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/20"></div>
         
         {/* Quick Media Icons - Floating Over Hero */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center justify-center gap-3.5 md:gap-6 z-30 bg-white dark:bg-white dark:bg-black/60 backdrop-blur-2xl px-5 md:px-10 py-3.5 md:py-5 rounded-[2.5rem] border border-black/10 dark:border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-fit max-w-[95vw]">
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center justify-center gap-3.5 md:gap-6 z-30 bg-white dark:bg-black/60 backdrop-blur-2xl px-5 md:px-10 py-3.5 md:py-5 rounded-[2.5rem] border border-black/10 dark:border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-fit max-w-[95vw]">
           {property.landPhotos?.length > 0 && (
             <Link 
               href={`/properties/${property._id}/media?type=photos`}
               className="flex flex-col items-center gap-1.5 group transition-all shrink-0"
             >
-              <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center text-black dark:text-black dark:text-white group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-300">
+              <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center text-black dark:text-white group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-300">
                 <ImageIcon size={20} className="md:size-24" />
               </div>
-              <span className="text-[7px] md:text-[9px] uppercase font-black tracking-[0.2em] text-black dark:text-black dark:text-white/40 group-hover:text-primary transition-colors">Photos</span>
+              <span className="text-[7px] md:text-[9px] uppercase font-black tracking-[0.2em] text-black dark:text-white/40 group-hover:text-primary transition-colors">Photos</span>
             </Link>
           )}
           {property.videoUrl && (
@@ -177,10 +177,10 @@ const PropertyDetails = () => {
               href={`/properties/${property._id}/media?type=video`}
               className="flex flex-col items-center gap-1.5 group transition-all shrink-0"
             >
-              <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center text-black dark:text-black dark:text-white group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-300">
+              <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center text-black dark:text-white group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-300">
                 <Play size={20} className="md:size-24" />
               </div>
-              <span className="text-[7px] md:text-[9px] uppercase font-black tracking-[0.2em] text-black dark:text-black dark:text-white/40 group-hover:text-primary transition-colors">Video</span>
+              <span className="text-[7px] md:text-[9px] uppercase font-black tracking-[0.2em] text-black dark:text-white/40 group-hover:text-primary transition-colors">Video</span>
             </Link>
           )}
           {property.landBrochure?.length > 0 && (
@@ -188,10 +188,10 @@ const PropertyDetails = () => {
               href={`/properties/${property._id}/media?type=brochure`}
               className="flex flex-col items-center gap-1.5 group transition-all shrink-0"
             >
-              <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center text-black dark:text-black dark:text-white group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-300">
+              <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center text-black dark:text-white group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-300">
                 <Download size={20} className="md:size-24" />
               </div>
-              <span className="text-[7px] md:text-[9px] uppercase font-black tracking-[0.2em] text-black dark:text-black dark:text-white/40 group-hover:text-primary transition-colors">Brochure</span>
+              <span className="text-[7px] md:text-[9px] uppercase font-black tracking-[0.2em] text-black dark:text-white/40 group-hover:text-primary transition-colors">Brochure</span>
             </Link>
           )}
           {property.layoutImage && (
@@ -199,10 +199,10 @@ const PropertyDetails = () => {
               href={`/properties/${property._id}/media?type=plot_plan`}
               className="flex flex-col items-center gap-1.5 group transition-all shrink-0"
             >
-              <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center text-black dark:text-black dark:text-white group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-300">
+              <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center text-black dark:text-white group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-300">
                 <LayoutGrid size={20} className="md:size-24" />
               </div>
-              <span className="text-[7px] md:text-[9px] uppercase font-black tracking-[0.2em] text-black dark:text-black dark:text-white/40 group-hover:text-primary transition-colors">Plots</span>
+              <span className="text-[7px] md:text-[9px] uppercase font-black tracking-[0.2em] text-black dark:text-white/40 group-hover:text-primary transition-colors">Plots</span>
             </Link>
           )}
           {property.mapUrl && (
@@ -210,17 +210,17 @@ const PropertyDetails = () => {
               href={`/properties/${property._id}/media?type=map`}
               className="flex flex-col items-center gap-1.5 group transition-all shrink-0"
             >
-              <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center text-black dark:text-black dark:text-white group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-300">
+              <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center text-black dark:text-white group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all duration-300">
                 <MapIcon size={20} className="md:size-24" />
               </div>
-              <span className="text-[7px] md:text-[9px] uppercase font-black tracking-[0.2em] text-black dark:text-black dark:text-white/40 group-hover:text-primary transition-colors">Map</span>
+              <span className="text-[7px] md:text-[9px] uppercase font-black tracking-[0.2em] text-black dark:text-white/40 group-hover:text-primary transition-colors">Map</span>
             </Link>
           )}
         </div>
       </div>
 
       {/* Property Information Section - Below Image */}
-      <div className="bg-white dark:bg-white dark:bg-black border-b border-white/5 relative z-10">
+      <div className="bg-white dark:bg-black border-b border-white/5 relative z-10">
         <div className="container mx-auto px-6 md:px-16 py-12 md:py-20">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10">
             <div className="max-w-4xl space-y-6">
@@ -233,7 +233,7 @@ const PropertyDetails = () => {
                 </span>
               </div>
               
-              <h1 className="text-5xl md:text-8xl font-black uppercase tracking-tighter leading-[0.9] text-black dark:text-black dark:text-white">
+              <h1 className="text-5xl md:text-8xl font-black uppercase tracking-tighter leading-[0.9] text-black dark:text-white">
                 {property.title}
               </h1>
 
@@ -252,13 +252,13 @@ const PropertyDetails = () => {
               {/* Description */}
               {property.description && (
                 <div className="mt-2">
-                  <p className={`text-gray-600 dark:text-gray-600 dark:text-gray-400 text-base md:text-lg leading-relaxed ${!isReadMore ? 'line-clamp-4' : ''}`}>
+                  <p className={`text-gray-600 dark:text-gray-400 text-base md:text-lg leading-relaxed ${!isReadMore ? 'line-clamp-4' : ''}`}>
                     {property.description}
                   </p>
                   {property.description.length > 300 && (
                     <button
                       onClick={() => setIsReadMore(!isReadMore)}
-                      className="mt-3 text-primary font-bold uppercase tracking-widest text-xs hover:text-black dark:text-black dark:text-white transition-colors"
+                      className="mt-3 text-primary font-bold uppercase tracking-widest text-xs hover:text-black dark:text-white transition-colors"
                     >
                       {isReadMore ? '↑ Show Less' : '↓ Read More'}
                     </button>
@@ -270,7 +270,7 @@ const PropertyDetails = () => {
             <div className="flex flex-col items-center md:items-end gap-4">
               <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl border border-black/10 dark:border-white/10 p-8 md:p-12 rounded-[2.5rem] flex flex-col items-center md:items-start min-w-[300px]">
                 <p className="text-primary font-black uppercase tracking-[0.2em] text-[10px] mb-2">Asking Price</p>
-                <p className="text-5xl md:text-7xl font-black tracking-tighter text-black dark:text-black dark:text-white">₹{property.price?.toLocaleString('en-IN')}</p>
+                <p className="text-5xl md:text-7xl font-black tracking-tighter text-black dark:text-white">₹{property.price?.toLocaleString('en-IN')}</p>
               </div>
               
               <div className="flex flex-wrap items-center md:justify-end gap-4">
@@ -310,7 +310,7 @@ const PropertyDetails = () => {
                 <div className={`md:w-1/2 w-full glass-card p-8 md:p-16 ${idx % 2 !== 0 ? 'border-r-4 border-primary' : ''}`}>
                   <div className="flex items-center gap-4 mb-8">
                     {detail.showArrow && <span className="text-primary font-bold text-2xl">→</span>}
-                    <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-black dark:text-black dark:text-white">{detail.heading}</h2>
+                    <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-black dark:text-white">{detail.heading}</h2>
                   </div>
                   {detail.sideHeading && (
                     <h3 className="text-primary font-black uppercase tracking-widest text-xs mb-6">{detail.sideHeading}</h3>
@@ -318,14 +318,14 @@ const PropertyDetails = () => {
                   {detail.isPointed ? (
                     <ul className="space-y-4">
                       {detail.content.split('\n').filter((line: string) => line.trim()).map((line: string, i: number) => (
-                        <li key={i} className="flex gap-3 text-gray-700 dark:text-gray-700 dark:text-gray-300 text-lg">
+                        <li key={i} className="flex gap-3 text-gray-700 dark:text-gray-300 text-lg">
                           <span className="text-primary font-bold">•</span>
                           {line.trim()}
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-gray-600 dark:text-gray-600 dark:text-gray-400 text-lg leading-relaxed">{detail.content}</p>
+                    <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">{detail.content}</p>
                   )}
                 </div>
               </motion.div>
@@ -341,29 +341,29 @@ const PropertyDetails = () => {
               className="relative z-10 p-10 md:p-16 mt-20 bg-black/5 dark:bg-white/5 rounded-[4rem] border border-black/10 dark:border-white/10"
             >
                  <div className="max-w-2xl mx-auto text-center mb-12">
-                    <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-black dark:text-black dark:text-white mb-4">Start Your Journey</h2>
+                    <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-black dark:text-white mb-4">Start Your Journey</h2>
                     <p className="text-gray-500 dark:text-gray-500 font-medium uppercase tracking-widest text-xs">Fill out the form below to get detailed information</p>
                  </div>
                  
                  <form onSubmit={handleEnquiry} className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-4">
                         <div>
-                          <label className="text-[10px] text-black dark:text-black dark:text-white/50 font-black uppercase tracking-[0.2em] mb-2 block px-2">Full Name</label>
+                          <label className="text-[10px] text-black dark:text-white/50 font-black uppercase tracking-[0.2em] mb-2 block px-2">Full Name</label>
                           <input
                             type="text"
                             required
-                            className="w-full px-8 py-5 bg-white dark:bg-white dark:bg-black/50 text-black dark:text-black dark:text-white rounded-[2rem] focus:ring-2 focus:ring-primary/50 border border-black/10 dark:border-white/10 transition-all placeholder:text-black dark:text-black dark:text-white/10"
+                            className="w-full px-8 py-5 bg-white dark:bg-black/50 text-black dark:text-white rounded-[2rem] focus:ring-2 focus:ring-primary/50 border border-black/10 dark:border-white/10 transition-all placeholder:text-black dark:text-white/10"
                             placeholder="John Doe"
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                           />
                         </div>
                         <div>
-                          <label className="text-[10px] text-black dark:text-black dark:text-white/50 font-black uppercase tracking-[0.2em] mb-2 block px-2">Phone Number</label>
+                          <label className="text-[10px] text-black dark:text-white/50 font-black uppercase tracking-[0.2em] mb-2 block px-2">Phone Number</label>
                           <input
                             type="tel"
                             required
-                            className="w-full px-8 py-5 bg-white dark:bg-white dark:bg-black/50 text-black dark:text-black dark:text-white rounded-[2rem] focus:ring-2 focus:ring-primary/50 border border-black/10 dark:border-white/10 transition-all placeholder:text-black dark:text-black dark:text-white/10"
+                            className="w-full px-8 py-5 bg-white dark:bg-black/50 text-black dark:text-white rounded-[2rem] focus:ring-2 focus:ring-primary/50 border border-black/10 dark:border-white/10 transition-all placeholder:text-black dark:text-white/10"
                             placeholder="+91 00000 00000"
                             value={formData.phone}
                             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -372,11 +372,11 @@ const PropertyDetails = () => {
                     </div>
                     <div className="space-y-6">
                         <div>
-                          <label className="text-[10px] text-black dark:text-black dark:text-white/50 font-black uppercase tracking-[0.2em] mb-2 block px-2">Message</label>
+                          <label className="text-[10px] text-black dark:text-white/50 font-black uppercase tracking-[0.2em] mb-2 block px-2">Message</label>
                           <textarea
                             required
                             rows={5}
-                            className="w-full px-8 py-5 bg-white dark:bg-white dark:bg-black/50 text-black dark:text-black dark:text-white rounded-[2rem] focus:ring-2 focus:ring-primary/50 border border-black/10 dark:border-white/10 transition-all resize-none placeholder:text-black dark:text-black dark:text-white/10"
+                            className="w-full px-8 py-5 bg-white dark:bg-black/50 text-black dark:text-white rounded-[2rem] focus:ring-2 focus:ring-primary/50 border border-black/10 dark:border-white/10 transition-all resize-none placeholder:text-black dark:text-white/10"
                             value={formData.message}
                             onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                           ></textarea>
@@ -415,7 +415,7 @@ const PropertyDetails = () => {
               <div className="grid grid-cols-2 gap-4 md:col-span-1">
                 <a
                   href={`tel:+919666080645`}
-                  className="bg-black/5 dark:bg-white/5 hover:bg-primary border border-black/10 dark:border-white/10 hover:border-primary text-black dark:text-black dark:text-white hover:text-black font-bold p-6 rounded-3xl flex flex-col items-center justify-center gap-3 transition-all group"
+                  className="bg-black/5 dark:bg-white/5 hover:bg-primary border border-black/10 dark:border-white/10 hover:border-primary text-black dark:text-white hover:text-black font-bold p-6 rounded-3xl flex flex-col items-center justify-center gap-3 transition-all group"
                 >
                   <Phone size={28} className="group-hover:scale-110 transition-transform" />
                   <span className="text-[10px] uppercase tracking-[0.2em]">Call Now</span>
@@ -424,7 +424,7 @@ const PropertyDetails = () => {
                   href={`https://wa.me/919666080645?text=Hi, I'm interested in ${property.title}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-[#25D366]/10 hover:bg-[#25D366] border border-[#25D366]/30 hover:border-[#25D366] text-[#25D366] hover:text-black dark:text-black dark:text-white font-bold p-6 rounded-3xl flex flex-col items-center justify-center gap-3 transition-all group"
+                  className="bg-[#25D366]/10 hover:bg-[#25D366] border border-[#25D366]/30 hover:border-[#25D366] text-[#25D366] hover:text-black dark:text-white font-bold p-6 rounded-3xl flex flex-col items-center justify-center gap-3 transition-all group"
                 >
                   <MessageSquare size={28} className="group-hover:scale-110 transition-transform" />
                   <span className="text-[10px] uppercase tracking-[0.2em]">WhatsApp</span>
@@ -435,15 +435,15 @@ const PropertyDetails = () => {
         </div>
         {/* Cultivation Info Popup */}
       {showFruitPopup && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-10 bg-white dark:bg-white dark:bg-black/95 backdrop-blur-3xl" onClick={() => setShowFruitPopup(false)}>
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-10 bg-white dark:bg-black/95 backdrop-blur-3xl" onClick={() => setShowFruitPopup(false)}>
           <div 
-            className="relative w-full max-w-6xl bg-[#0a0a0a] border-2 border-primary/30 rounded-[3rem] overflow-hidden flex flex-col md:flex-row shadow-[0_0_100px_rgba(16,185,129,0.2)] h-auto md:h-[85vh] max-h-[95vh]"
+            className="relative w-full max-w-6xl bg-white dark:bg-[#0a0a0a] border-2 border-primary/30 rounded-[3rem] overflow-hidden flex flex-col md:flex-row shadow-[0_0_100px_rgba(16,185,129,0.2)] h-auto md:h-[85vh] max-h-[95vh]"
             onClick={e => e.stopPropagation()}
           >
             {/* Close Button */}
             <button 
               onClick={() => setShowFruitPopup(false)}
-              className="absolute top-8 right-8 z-[210] bg-black/10 dark:bg-white/10 hover:bg-red-500 text-black dark:text-black dark:text-white p-3 rounded-full transition-all"
+              className="absolute top-8 right-8 z-[210] bg-black/10 dark:bg-white/10 hover:bg-red-500 text-black dark:text-white p-3 rounded-full transition-all"
             >
               <X size={24} />
             </button>
@@ -455,10 +455,10 @@ const PropertyDetails = () => {
               </div>
               
               <h3 className="text-4xl md:text-6xl font-black text-primary uppercase tracking-tighter mb-8 leading-none">
-                Cultivation <br/> <span className="text-black dark:text-black dark:text-white">Model</span>
+                Cultivation <br/> <span className="text-black dark:text-white">Model</span>
               </h3>
               
-              <div className="space-y-10 text-gray-700 dark:text-gray-700 dark:text-gray-300">
+              <div className="space-y-10 text-gray-700 dark:text-gray-300">
                 <p className="text-xl leading-relaxed font-medium">
                   Dragon fruit cultivation is a high-demand and profitable farming option with long-term benefits.
                 </p>
@@ -481,11 +481,11 @@ const PropertyDetails = () => {
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <p className="text-primary font-black uppercase tracking-[0.2em] text-[10px]">Plantation Period</p>
-                    <p className="text-black dark:text-black dark:text-white font-bold italic text-lg">May to November</p>
+                    <p className="text-black dark:text-white font-bold italic text-lg">May to November</p>
                   </div>
                   <div className="space-y-2">
                     <p className="text-primary font-black uppercase tracking-[0.2em] text-[10px]">Yield Duration</p>
-                    <p className="text-black dark:text-black dark:text-white font-bold italic text-lg">Up to 30 Years</p>
+                    <p className="text-black dark:text-white font-bold italic text-lg">Up to 30 Years</p>
                   </div>
                 </div>
 
@@ -493,13 +493,13 @@ const PropertyDetails = () => {
                   <p className="text-primary font-black uppercase tracking-[0.2em] text-xs text-center">Profit Sharing</p>
                   <div className="flex items-center justify-center gap-10">
                     <div className="text-center">
-                      <p className="text-4xl font-black text-black dark:text-black dark:text-white">50%</p>
-                      <p className="text-[10px] uppercase font-bold text-gray-600 dark:text-gray-600 dark:text-gray-400">Company</p>
+                      <p className="text-4xl font-black text-black dark:text-white">50%</p>
+                      <p className="text-[10px] uppercase font-bold text-gray-600 dark:text-gray-400">Company</p>
                     </div>
                     <div className="h-10 w-[1px] bg-primary/30"></div>
                     <div className="text-center">
                       <p className="text-4xl font-black text-primary">50%</p>
-                      <p className="text-[10px] uppercase font-bold text-gray-600 dark:text-gray-600 dark:text-gray-400">Client</p>
+                      <p className="text-[10px] uppercase font-bold text-gray-600 dark:text-gray-400">Client</p>
                     </div>
                   </div>
                 </div>
@@ -527,7 +527,7 @@ const PropertyDetails = () => {
             </div>
 
             {/* Media Preview Side */}
-            <div className="w-full md:w-1/2 h-64 md:h-full bg-white dark:bg-white dark:bg-black/40 relative border-l border-white/5">
+            <div className="w-full md:w-1/2 h-64 md:h-full bg-white dark:bg-black/40 relative border-l border-white/5">
               {property.threeDElement ? (
                 <ModelViewer
                   src={property.threeDElement}
