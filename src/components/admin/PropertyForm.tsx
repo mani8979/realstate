@@ -32,6 +32,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
       mapUrl: '',
       landBrochure: [],
       details: [],
+      fruitDetails: [],
       layoutImage: '',
       plots: [],
       alignment: 'left'
@@ -85,6 +86,12 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           showArrow: !!d?.showArrow,
           isPointed: !!d?.isPointed,
           alignment: d?.alignment || 'left'
+        })) : [],
+        fruitDetails: Array.isArray(initialData.fruitDetails) ? initialData.fruitDetails.filter((d: any) => d !== null).map((d: any) => ({
+          heading: d?.heading || '',
+          content: d?.content || '',
+          showArrow: !!d?.showArrow,
+          isPointed: !!d?.isPointed
         })) : [],
         plots: Array.isArray(initialData.plots) ? initialData.plots.filter((p: any) => p !== null).map((p: any) => ({
           ...p,
@@ -1008,6 +1015,86 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                   value={formData.fruitInfo || ''}
                   onChange={(e) => setFormData({ ...formData, fruitInfo: e.target.value })}
                 ></textarea>
+              </div>
+
+              {/* Structured Plantation Details */}
+              <div className="space-y-4 pt-4 border-t border-gray-100 dark:border-gray-800">
+                <div className="flex items-center justify-between">
+                   <label className="text-xs font-black uppercase tracking-widest text-primary">Structured Plantation Info</label>
+                   <button
+                     type="button"
+                     onClick={() => setFormData({ ...formData, fruitDetails: [...(formData.fruitDetails || []), { heading: '', content: '', showArrow: false, isPointed: false }] })}
+                     className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:underline"
+                   >
+                     <Plus size={14} /> Add Point
+                   </button>
+                </div>
+
+                <div className="space-y-4">
+                   {formData.fruitDetails?.map((detail: any, idx: number) => (
+                     <div key={idx} className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-800 relative group">
+                        <button
+                          type="button"
+                          onClick={() => setFormData({ ...formData, fruitDetails: formData.fruitDetails.filter((_: any, i: number) => i !== idx) })}
+                          className="absolute top-2 right-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                        >
+                          <X size={16} />
+                        </button>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                           <input
+                             type="text"
+                             placeholder="Heading (e.g. Yield Duration)"
+                             className="w-full px-4 py-2 bg-white dark:bg-gray-800 rounded-xl text-xs font-bold"
+                             value={detail.heading}
+                             onChange={(e) => {
+                               const newDetails = [...formData.fruitDetails];
+                               newDetails[idx].heading = e.target.value;
+                               setFormData({ ...formData, fruitDetails: newDetails });
+                             }}
+                           />
+                           <div className="flex gap-4 items-center">
+                              <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={detail.showArrow}
+                                  onChange={(e) => {
+                                    const newDetails = [...formData.fruitDetails];
+                                    newDetails[idx].showArrow = e.target.checked;
+                                    setFormData({ ...formData, fruitDetails: newDetails });
+                                  }}
+                                  className="w-3 h-3 accent-primary"
+                                />
+                                <span className="text-[9px] font-bold uppercase tracking-widest text-gray-500">Arrow</span>
+                              </label>
+                              <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={detail.isPointed}
+                                  onChange={(e) => {
+                                    const newDetails = [...formData.fruitDetails];
+                                    newDetails[idx].isPointed = e.target.checked;
+                                    setFormData({ ...formData, fruitDetails: newDetails });
+                                  }}
+                                  className="w-3 h-3 accent-primary"
+                                />
+                                <span className="text-[9px] font-bold uppercase tracking-widest text-gray-500">Dots</span>
+                              </label>
+                           </div>
+                        </div>
+                        <textarea
+                          placeholder="Content... (New lines for dots if enabled)"
+                          rows={2}
+                          className="w-full mt-3 px-4 py-2 bg-white dark:bg-gray-800 rounded-xl text-xs font-medium resize-none"
+                          value={detail.content}
+                          onChange={(e) => {
+                            const newDetails = [...formData.fruitDetails];
+                            newDetails[idx].content = e.target.value;
+                            setFormData({ ...formData, fruitDetails: newDetails });
+                          }}
+                        />
+                     </div>
+                   ))}
+                </div>
               </div>
             </div>
           </div>

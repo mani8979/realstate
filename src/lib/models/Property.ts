@@ -24,6 +24,7 @@ export interface IProperty extends Document {
   createdAt: Date;
   fruitImage?: string;
   fruitInfo?: string;
+  fruitDetails?: { heading: string; content: string; showArrow?: boolean; isPointed?: boolean }[];
   landPhotos?: string[];
   details?: IPropertyDetail[];
   threeDElement?: string;
@@ -54,6 +55,12 @@ const PropertySchema = new Schema<IProperty>(
     featured: { type: Boolean, default: false },
     fruitImage: { type: String },
     fruitInfo: { type: String },
+    fruitDetails: [{
+      heading: String,
+      content: String,
+      showArrow: { type: Boolean, default: false },
+      isPointed: { type: Boolean, default: false },
+    }],
     landPhotos: { type: [String] },
     details: [{
       heading: String,

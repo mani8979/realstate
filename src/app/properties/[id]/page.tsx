@@ -494,6 +494,31 @@ const PropertyDetails = () => {
                   <div className="text-xl leading-relaxed font-medium whitespace-pre-line prose dark:prose-invert max-w-none">
                     {property.fruitInfo}
                   </div>
+                ) : property.fruitDetails?.length > 0 ? (
+                  <div className="space-y-12">
+                    {property.fruitDetails.map((detail: any, i: number) => (
+                      <div key={i} className="space-y-6">
+                        <div className="flex items-center gap-4">
+                          {detail.showArrow && <span className="text-primary font-bold text-2xl">→</span>}
+                          <p className="text-primary font-black uppercase tracking-[0.2em] text-sm">{detail.heading}</p>
+                        </div>
+                        {detail.isPointed ? (
+                          <ul className="grid grid-cols-1 gap-4">
+                            {detail.content.split('\n').filter((l: string) => l.trim()).map((line: string, j: number) => (
+                              <li key={j} className="flex gap-4 items-start bg-black/5 dark:bg-white/5 p-5 rounded-2xl border border-white/5 group hover:border-primary/30 transition-all">
+                                <div className="w-2 h-2 rounded-full bg-primary mt-2.5 flex-shrink-0 group-hover:scale-125 transition-transform"></div>
+                                <span className="text-lg font-medium text-gray-800 dark:text-gray-200">{line.trim()}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="text-xl leading-relaxed font-medium bg-black/5 dark:bg-white/5 p-6 rounded-2xl border border-white/5 italic">
+                            {detail.content}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 ) : (
                   <>
                     <p className="text-xl leading-relaxed font-medium">
