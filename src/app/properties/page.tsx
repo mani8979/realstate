@@ -16,14 +16,14 @@ const PropertiesPage = () => {
     subType: searchParams.get('subType') || '',
     budget: searchParams.get('budget') || '',
   });
-  const [categories, setCategories] = useState<string[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
 
   useEffect(() => {
     fetch('/api/content')
       .then(res => res.json())
       .then(data => {
         if (data.success && data.data?.propertyCategories) {
-          setCategories(data.data.propertyCategories.map((c: any) => c.name));
+          setCategories(data.data.propertyCategories);
         }
       });
   }, []);
@@ -81,17 +81,36 @@ const PropertiesPage = () => {
               <div className="relative">
                 <Home className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" size={18} />
                 <select
-                  className="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-900 rounded-xl focus:ring-2 focus:ring-primary/50 transition-all border-none appearance-none cursor-pointer"
+                  className="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-900 rounded-xl focus:ring-2 focus:ring-primary/50 transition-all border-none appearance-none cursor-pointer font-bold"
                   value={filters.type}
                   onChange={(e) => setFilters({ ...filters, type: e.target.value, subType: '' })}
                 >
                   <option value="">All Types</option>
                   {categories.map(cat => (
-                    <option key={cat} value={cat}>{cat}</option>
+                    <option key={cat.name} value={cat.name}>{cat.name}</option>
                   ))}
                 </select>
               </div>
             </div>
+
+            {filters.type && categories.find(c => c.name === filters.type)?.subCategories?.length > 0 && (
+              <div className="space-y-2 animate-in slide-in-from-left duration-300">
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-wider px-1">Sub-Division</label>
+                <div className="relative">
+                  <Star className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" size={18} />
+                  <select
+                    className="w-full pl-11 pr-4 py-3 bg-primary/5 dark:bg-primary/10 text-primary font-bold rounded-xl focus:ring-2 focus:ring-primary/50 transition-all border-2 border-primary/20 appearance-none cursor-pointer"
+                    value={filters.subType}
+                    onChange={(e) => setFilters({ ...filters, subType: e.target.value })}
+                  >
+                    <option value="">All Sub-Types</option>
+                    {categories.find(c => c.name === filters.type).subCategories.map((sub: string) => (
+                      <option key={sub} value={sub}>{sub}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
 
             <div className="space-y-2">
               <label className="text-xs font-bold text-gray-400 uppercase tracking-wider px-1">Max Price</label>

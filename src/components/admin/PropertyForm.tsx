@@ -62,14 +62,14 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     }
   }, [initialData]);
   const [uploading, setUploading] = useState(false);
-  const [categories, setCategories] = useState<string[]>(['House', 'Apartment', 'Plot', 'Land', 'Commercial']);
+  const [categories, setCategories] = useState<any[]>([]);
 
   useEffect(() => {
     fetch('/api/content')
       .then(res => res.json())
       .then(data => {
         if (data.success && data.data?.propertyCategories) {
-          setCategories(data.data.propertyCategories.map((c: any) => c.name));
+          setCategories(data.data.propertyCategories);
         }
       });
   }, []);
@@ -505,13 +505,30 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
               <select
                 className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all cursor-pointer"
                 value={formData.type}
-                onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, type: e.target.value, subType: '' })}
               >
+                <option value="">Select Type</option>
                 {categories.map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
+                  <option key={cat.name} value={cat.name}>{cat.name}</option>
                 ))}
               </select>
             </div>
+
+            {formData.type && categories.find(c => c.name === formData.type)?.subCategories?.length > 0 && (
+              <div className="space-y-2 animate-in fade-in duration-300">
+                <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1">Sub-Division / Category</label>
+                <select
+                  className="w-full px-6 py-4 bg-primary/5 dark:bg-primary/10 text-primary font-bold rounded-2xl border-2 border-primary/20 focus:ring-2 focus:ring-primary/50 transition-all cursor-pointer"
+                  value={formData.subType}
+                  onChange={(e) => setFormData({ ...formData, subType: e.target.value })}
+                >
+                  <option value="">Select Sub-Type</option>
+                  {categories.find(c => c.name === formData.type).subCategories.map((sub: string) => (
+                    <option key={sub} value={sub}>{sub}</option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">

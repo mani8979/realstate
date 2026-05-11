@@ -165,6 +165,43 @@ export default function CategoriesAdmin() {
                   </div>
 
                   <div>
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 text-primary">Sub-Divisions (Types)</label>
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {cat.subCategories?.map((sub: string, sIndex: number) => (
+                        <div key={sIndex} className="bg-primary/10 text-primary px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-2">
+                          {sub}
+                          <button 
+                            onClick={() => {
+                              const newSubs = [...cat.subCategories];
+                              newSubs.splice(sIndex, 1);
+                              handleChange(index, 'subCategories', newSubs as any);
+                            }}
+                            className="hover:text-red-500"
+                          >
+                            <X size={12} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex gap-2">
+                      <input 
+                        placeholder="Add sub-type..."
+                        className="flex-grow bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-2 rounded-xl text-xs font-medium"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            const val = (e.target as HTMLInputElement).value.trim();
+                            if (val) {
+                              handleChange(index, 'subCategories', [...(cat.subCategories || []), val] as any);
+                              (e.target as HTMLInputElement).value = '';
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
                     <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Filter Link (Href)</label>
                     <input 
                       value={cat.href}

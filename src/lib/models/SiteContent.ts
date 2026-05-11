@@ -156,6 +156,7 @@ export interface ISiteContent extends Document {
     icon: string;
     color: string;
     href: string;
+    subCategories: string[];
   }[];
 }
 
@@ -332,14 +333,15 @@ const SiteContentSchema = new Schema<ISiteContent>(
         name: String,
         icon: String,
         color: String,
-        href: String
+        href: String,
+        subCategories: [String]
       }],
       default: [
-        { name: 'Houses', icon: 'Home', color: 'bg-blue-50 text-blue-600', href: '/properties?type=House' },
-        { name: 'Apartments', icon: 'Building2', color: 'bg-emerald-50 text-emerald-600', href: '/properties?type=Apartment' },
-        { name: 'Plots', icon: 'Landmark', color: 'bg-amber-50 text-amber-600', href: '/properties?type=Plot' },
-        { name: 'Farm Lands', icon: 'Warehouse', color: 'bg-green-50 text-green-600', href: '/properties?type=Plot&subType=Farm Land' },
-        { name: 'Commercial', icon: 'Building2', color: 'bg-indigo-50 text-indigo-600', href: '/properties?type=Commercial' },
+        { name: 'Houses', icon: 'Home', color: 'bg-blue-50 text-blue-600', href: '/properties?type=House', subCategories: [] },
+        { name: 'Apartments', icon: 'Building2', color: 'bg-emerald-50 text-emerald-600', href: '/properties?type=Apartment', subCategories: [] },
+        { name: 'Plots', icon: 'Landmark', color: 'bg-amber-50 text-amber-600', href: '/properties?type=Plot', subCategories: ['Residential', 'Commercial', 'Open Plots'] },
+        { name: 'Farm Lands', icon: 'Warehouse', color: 'bg-green-50 text-green-600', href: '/properties?type=Plot&subType=Farm Land', subCategories: ['Cultivated', 'Organic', 'Mixed'] },
+        { name: 'Commercial', icon: 'Building2', color: 'bg-indigo-50 text-indigo-600', href: '/properties?type=Commercial', subCategories: ['Shops', 'Showrooms', 'Offices'] },
       ]
     }
   },
