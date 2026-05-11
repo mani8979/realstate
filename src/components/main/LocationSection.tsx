@@ -9,6 +9,9 @@ interface LocationSectionProps {
     officeDescription?: string;
     officeMapUrl?: string;
     officeMapEmbedUrl?: string;
+    locationBadge?: string;
+    locationTitle1?: string;
+    locationTitle2?: string;
     officeShopNo?: string;
     officeFloor?: string;
   };
