@@ -7,24 +7,24 @@ import { LayoutDashboard, Home, MessageSquare, LogOut, PlusCircle, Building, Men
 
 const navItems = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-  { name: 'Header', href: '/admin/navigation', icon: Menu },
+  { name: 'Manage Properties', href: '/admin/properties', icon: Building },
+  { name: 'Add New Property', href: '/admin/properties/add', icon: PlusCircle },
+  { name: 'Enquiries / Leads', href: '/admin/enquiries', icon: MessageSquare },
+  { name: 'Header Settings', href: '/admin/navigation', icon: Menu },
   { name: 'Hero Section', href: '/admin/hero', icon: Sparkles },
   { name: 'Leader Profile', href: '/admin/founder', icon: Users },
   { name: 'Collection', href: '/admin/featured', icon: Star },
   { name: 'Why Choose Us', href: '/admin/brand#why-choose-us', icon: ShieldCheck },
   { name: 'Premium Gallery', href: '/admin/gallery', icon: Image },
-  { name: 'Vision & Legacy', href: '/admin/brand#vision', icon: LayoutDashboard },
+  { name: 'Vision & Legacy', href: '/admin/brand#vision', icon: ShieldCheck },
   { name: 'Featured Lands', href: '/admin/brand#featured-lands', icon: Star },
   { name: 'Get In Touch', href: '/admin/footer#get-in-touch', icon: Phone },
-  { name: 'Ready To Claim', href: '/admin/brand#ready-to-claim', icon: LayoutDashboard },
+  { name: 'Ready To Claim', href: '/admin/brand#ready-to-claim', icon: Star },
   { name: 'Location', href: '/admin/footer#location', icon: MapPin },
   { name: 'About Star Lands', href: '/admin/content#about-star-lands', icon: Image },
   { name: 'Contact Info', href: '/admin/content#contact-info', icon: Phone },
-  { name: 'Join Team', href: '/admin/join', icon: Users },
-  { name: 'Categories', href: '/admin/categories', icon: List },
-  { name: 'Properties', href: '/admin/properties', icon: Building },
-  { name: 'Add Property', href: '/admin/properties/add', icon: PlusCircle },
-  { name: 'Enquiries', href: '/admin/enquiries', icon: MessageSquare },
+  { name: 'Join Team Leads', href: '/admin/join', icon: Users },
+  { name: 'Property Categories', href: '/admin/categories', icon: List },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
