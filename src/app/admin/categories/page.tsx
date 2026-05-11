@@ -47,7 +47,8 @@ export default function CategoriesAdmin() {
       name: 'New Category',
       icon: 'Home',
       color: 'bg-blue-50 text-blue-600',
-      href: '/properties?type=New'
+      href: '/properties?type=New',
+      subCategories: []
     };
     setContent({
       ...content,
@@ -185,19 +186,35 @@ export default function CategoriesAdmin() {
                     </div>
                     <div className="flex gap-2">
                       <input 
-                        placeholder="Add sub-type..."
+                        id={`sub-input-${index}`}
+                        placeholder="Add sub-type (e.g. Farm Land)..."
                         className="flex-grow bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-2 rounded-xl text-xs font-medium"
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
                             e.preventDefault();
-                            const val = (e.target as HTMLInputElement).value.trim();
+                            const input = e.target as HTMLInputElement;
+                            const val = input.value.trim();
                             if (val) {
                               handleChange(index, 'subCategories', [...(cat.subCategories || []), val] as any);
-                              (e.target as HTMLInputElement).value = '';
+                              input.value = '';
                             }
                           }
                         }}
                       />
+                      <button 
+                        type="button"
+                        onClick={() => {
+                          const input = document.getElementById(`sub-input-${index}`) as HTMLInputElement;
+                          const val = input.value.trim();
+                          if (val) {
+                            handleChange(index, 'subCategories', [...(cat.subCategories || []), val] as any);
+                            input.value = '';
+                          }
+                        }}
+                        className="bg-primary/10 text-primary px-3 rounded-xl hover:bg-primary hover:text-white transition-colors"
+                      >
+                        <Plus size={16} />
+                      </button>
                     </div>
                   </div>
 
