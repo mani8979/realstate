@@ -47,7 +47,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
       setFormData((prev: any) => ({
         ...prev,
         ...initialData,
-        // Ensure arrays are handled correctly
+        subType: initialData.subType || '',
         landPhotos: initialData.landPhotos || [],
         landBrochure: initialData.landBrochure || [],
         details: initialData.details || [],
@@ -61,6 +61,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
       }));
     }
   }, [initialData]);
+
   const [uploading, setUploading] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
 
@@ -69,7 +70,12 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
       .then(res => res.json())
       .then(data => {
         if (data.success && data.data?.propertyCategories) {
-          setCategories(data.data.propertyCategories);
+          // Ensure every category has a subCategories array
+          const sanitized = data.data.propertyCategories.map((c: any) => ({
+            ...c,
+            subCategories: Array.isArray(c.subCategories) ? c.subCategories : []
+          }));
+          setCategories(sanitized);
         }
       });
   }, []);
@@ -503,7 +509,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1">Property Type</label>
               <select
-                className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all cursor-pointer"
+                className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all cursor-pointer font-bold"
                 value={formData.type}
                 onChange={(e) => setFormData({ ...formData, type: e.target.value, subType: '' })}
               >
@@ -514,19 +520,35 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
               </select>
             </div>
 
-            {formData.type && categories.find(c => c.name === formData.type)?.subCategories?.length > 0 && (
-              <div className="space-y-2 animate-in fade-in duration-300">
-                <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1">Sub-Division / Category</label>
-                <select
-                  className="w-full px-6 py-4 bg-primary/5 dark:bg-primary/10 text-primary font-bold rounded-2xl border-2 border-primary/20 focus:ring-2 focus:ring-primary/50 transition-all cursor-pointer"
-                  value={formData.subType}
-                  onChange={(e) => setFormData({ ...formData, subType: e.target.value })}
-                >
-                  <option value="">Select Sub-Type</option>
-                  {categories.find(c => c.name === formData.type).subCategories.map((sub: string) => (
-                    <option key={sub} value={sub}>{sub}</option>
-                  ))}
-                </select>
+            {formData.type && (
+              <div className="space-y-4 animate-in fade-in slide-in-from-top duration-500">
+                 {categories.find(c => c.name === formData.type)?.subCategories?.length > 0 ? (
+                   <div className="space-y-2">
+                    <label className="text-sm font-bold text-primary uppercase tracking-widest px-1 flex items-center gap-2">
+                      <List size={14} />
+                      Sub-Division / Category
+                    </label>
+                    <select
+                      className="w-full px-6 py-4 bg-primary/5 dark:bg-primary/10 text-primary font-black rounded-2xl border-2 border-primary/20 focus:ring-2 focus:ring-primary/50 transition-all cursor-pointer"
+                      value={formData.subType}
+                      onChange={(e) => setFormData({ ...formData, subType: e.target.value })}
+                    >
+                      <option value="">All {formData.type}</option>
+                      {categories.find(c => c.name === formData.type).subCategories.map((sub: string) => (
+                        <option key={sub} value={sub}>{sub}</option>
+                      ))}
+                    </select>
+                    <p className="text-[10px] text-primary/60 font-bold px-2 uppercase tracking-tight italic">
+                      Select the specific division for this {formData.type.toLowerCase()}
+                    </p>
+                   </div>
+                 ) : (
+                   <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-dashed border-gray-200 dark:border-gray-700">
+                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest text-center">
+                       No sub-divisions defined for {formData.type}
+                     </p>
+                   </div>
+                 )}
               </div>
             )}
           </div>
