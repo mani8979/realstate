@@ -60,18 +60,42 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
       setFormData((prev: any) => ({
         ...prev,
         ...initialData,
+        title: initialData.title || '',
+        price: initialData.price || '',
+        location: initialData.location || '',
+        type: initialData.type || 'House',
         subType: initialData.subType || '',
-        landPhotos: Array.isArray(initialData.landPhotos) ? initialData.landPhotos : [],
-        landBrochure: Array.isArray(initialData.landBrochure) ? initialData.landBrochure : [],
-        details: Array.isArray(initialData.details) ? initialData.details : [],
-        plots: Array.isArray(initialData.plots) ? initialData.plots.map((p: any) => ({
+        description: initialData.description || '',
+        images: Array.isArray(initialData.images) ? initialData.images.filter(Boolean) : [],
+        bedrooms: initialData.bedrooms || '',
+        bathrooms: initialData.bathrooms || '',
+        area: initialData.area || '',
+        featured: !!initialData.featured,
+        fruitImage: initialData.fruitImage || '',
+        fruitInfo: initialData.fruitInfo || '',
+        landPhotos: Array.isArray(initialData.landPhotos) ? initialData.landPhotos.filter(Boolean) : [],
+        threeDElement: initialData.threeDElement || '',
+        videoUrl: initialData.videoUrl || '',
+        mapUrl: initialData.mapUrl || '',
+        landBrochure: Array.isArray(initialData.landBrochure) ? initialData.landBrochure.filter(Boolean) : [],
+        details: Array.isArray(initialData.details) ? initialData.details.filter(d => d !== null).map((d: any) => ({
+          heading: d?.heading || '',
+          content: d?.content || '',
+          sideHeading: d?.sideHeading || '',
+          showArrow: !!d?.showArrow,
+          isPointed: !!d?.isPointed,
+          alignment: d?.alignment || 'left'
+        })) : [],
+        plots: Array.isArray(initialData.plots) ? initialData.plots.filter(p => p !== null).map((p: any) => ({
           ...p,
           x: p.x ?? 0,
           y: p.y ?? 0,
           width: p.width ?? 5,
-          height: p.height ?? 3
+          height: p.height ?? 3,
+          status: p.status || 'available'
         })) : [],
-        alignment: initialData.alignment || 'left'
+        alignment: initialData.alignment || 'left',
+        layoutImage: initialData.layoutImage || ''
       }));
     }
   }, [initialData]);
@@ -80,9 +104,11 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
   const [categories, setCategories] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch('/api/content')
-      .then(res => res.json())
-      .then(data => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch('/api/content');
+        if (!res.ok) return;
+        const data = await res.json();
         if (data.success && data.data?.propertyCategories) {
           // Ensure every category has a subCategories array
           const sanitized = data.data.propertyCategories.map((c: any) => ({
@@ -91,7 +117,11 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           }));
           setCategories(sanitized);
         }
-      });
+      } catch (err) {
+        console.error('Error fetching categories:', err);
+      }
+    };
+    fetchCategories();
   }, []);
   const [uploadingFruit, setUploadingFruit] = useState(false);
   const [showLayoutEditor, setShowLayoutEditor] = useState(false);
@@ -548,7 +578,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                       onChange={(e) => setFormData({ ...formData, subType: e.target.value })}
                     >
                       <option value="">All {formData.type}</option>
-                      {categories.find(c => c.name === formData.type).subCategories.map((sub: string) => (
+                      {categories.find(c => c.name === formData.type)?.subCategories?.map((sub: string) => (
                         <option key={sub} value={sub}>{sub}</option>
                       ))}
                     </select>
@@ -576,7 +606,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                   <button
                     key={align}
                     type="button"
-                    onClick={() => setFormData({ ...formData, alignment: align })}
+                    onClick={() => setFormData((prev: any) => ({ ...prev, alignment: align }))}
                     className={`flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
                       formData.alignment === align 
                         ? 'bg-primary text-black dark:text-white shadow-lg' 
@@ -659,7 +689,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
             <div className="grid grid-cols-3 gap-4 mb-6">
               {formData.images.map((img: string, i: number) => (
                 <div key={i} className="relative aspect-square rounded-2xl overflow-hidden border-2 border-gray-100 dark:border-gray-800 group">
-                  <Image src={img} alt="Property" fill className="object-cover" />
+                  {img && <Image src={img} alt="Property" fill className="object-cover" />}
                   <button
                     type="button"
                     onClick={() => removeImage(img)}
@@ -846,8 +876,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                           key={align}
                           type="button"
                           onClick={() => {
-                            const newDetails = [...formData.details];
-                            newDetails[idx].alignment = align;
+                            const newDetails = formData.details.map((d: any, i: number) => 
+                              i === idx ? { ...d, alignment: align } : d
+                            );
                             setFormData({ ...formData, details: newDetails });
                           }}
                           className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-tighter transition-all ${
@@ -886,7 +917,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                       <Save size={20} />
                     </div>
                     <div className="flex-grow min-w-0">
-                      <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{formData.threeDElement.split('/').pop()}</p>
+                      <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{formData.threeDElement?.split('/').pop() || '3D Model'}</p>
                       <p className="text-xs text-gray-500">3D Model Loaded</p>
                     </div>
                     <button
@@ -935,7 +966,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                 <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1 mb-2 block">Crop/Fruit Image</label>
                 {formData.fruitImage ? (
                   <div className="relative w-32 h-32 rounded-2xl overflow-hidden border-2 border-gray-100 dark:border-gray-800 group">
-                    <Image src={formData.fruitImage} alt="Fruit" fill className="object-cover" />
+                    {formData.fruitImage && <Image src={formData.fruitImage} alt="Fruit" fill className="object-cover" />}
                     <button
                       type="button"
                       onClick={removeFruitImage}
@@ -988,7 +1019,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
             <div className="grid grid-cols-3 gap-4 mb-4">
               {formData.landPhotos?.map((img: string, i: number) => (
                 <div key={i} className="relative aspect-square rounded-2xl overflow-hidden border-2 border-gray-100 dark:border-gray-800 group">
-                  <Image src={img} alt="Land Photo" fill className="object-cover" />
+                  {img && <Image src={img} alt="Land Photo" fill className="object-cover" />}
                   <button
                     type="button"
                     onClick={() => removeLandPhoto(img)}
@@ -1052,7 +1083,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                       <Play size={20} />
                     </div>
                     <div className="flex-grow min-w-0">
-                      <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{formData.videoUrl.split('/').pop()}</p>
+                      <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{formData.videoUrl?.split('/').pop() || 'Video File'}</p>
                       <p className="text-xs text-gray-500">Video Uploaded</p>
                     </div>
                     <button
@@ -1112,7 +1143,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
             <div className="space-y-4">
               {formData.layoutImage ? (
                 <div className="relative aspect-video rounded-3xl overflow-hidden border-2 border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 group">
-                  <Image src={formData.layoutImage} alt="Layout Thumbnail" fill className="object-contain opacity-50" />
+                  {formData.layoutImage && <Image src={formData.layoutImage} alt="Layout Thumbnail" fill className="object-contain opacity-50" />}
                   <div className="absolute inset-0 flex items-center justify-center">
                     <button
                       type="button"
@@ -1216,7 +1247,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                         />
                         
                         {/* Plot Markers — pointer-event drag */}
-                        {formData.plots?.filter((p: any) => p.x > 0 && p.y > 0).map((plot: any, idx: number) => {
+                        {Array.isArray(formData.plots) && formData.plots.filter((p: any) => p && p.x > 0 && p.y > 0).map((plot: any, idx: number) => {
                           const originalIdx = formData.plots.indexOf(plot);
                           return (
                             <div
@@ -1307,7 +1338,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                       </div>
                       
                       <div className="flex flex-wrap gap-3">
-                        {formData.plots?.filter((p: any) => !p.x || !p.y || (p.x === 0 && p.y === 0)).map((plot: any, idx: number) => {
+                        {Array.isArray(formData.plots) && formData.plots.filter((p: any) => p && (!p.x || !p.y || (p.x === 0 && p.y === 0))).map((plot: any, idx: number) => {
                           const originalIdx = formData.plots.indexOf(plot);
                           return (
                             <div 
@@ -1433,7 +1464,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                         {(!formData.plots || formData.plots.length === 0) && (
                           <p className="text-[10px] text-gray-600 text-center py-4">No plots yet. Click map or use Quick Add.</p>
                         )}
-                        {formData.plots?.map((plot: any, idx: number) => (
+                        {Array.isArray(formData.plots) && formData.plots.map((plot: any, idx: number) => (
                           <div
                             key={idx}
                             onClick={() => setSelectedPlotIndex(idx)}
