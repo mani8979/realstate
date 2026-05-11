@@ -51,6 +51,7 @@ export interface ISiteContent extends Document {
   navProperties: string;
   navAbout: string;
   navContact: string;
+  navJoin: string;
   btnCall: string;
   btnCallLink: string;
   btnEnquire: string;
@@ -136,7 +137,6 @@ export interface ISiteContent extends Document {
   joinTeamTitle: string;
   joinTeamMembers: string; 
   chatWithUsText: string;
-  navJoin: string;
   joinOfficeImage1: string;
   joinOfficeImage2: string;
   joinBgImage: string;
@@ -164,6 +164,24 @@ export interface ISiteContent extends Document {
     href: string;
     subCategories: string[];
   }[];
+
+  // About Section
+  aboutTitle: string;
+  aboutDesc: string;
+  aboutExpertTitle: string;
+  aboutExpertDesc: string;
+  aboutLegalTitle: string;
+  aboutLegalDesc: string;
+  aboutZeroTitle: string;
+  aboutZeroDesc: string;
+  aboutTeamTitle: string;
+  aboutTeamDesc: string;
+  aboutYearTitle: string;
+  aboutYearDesc: string;
+  aboutMissionTitle: string;
+  aboutMissionDesc: string;
+  aboutVisionTitle: string;
+  aboutVisionDesc: string;
 }
 
 const SiteContentSchema = new Schema<ISiteContent>(
@@ -296,7 +314,6 @@ const SiteContentSchema = new Schema<ISiteContent>(
     joinTeamTitle: { type: String, default: "Join as a Team" },
     joinTeamMembers: { type: String, default: "Shariff - 919666080645\nMohammed - 919573785434" },
     chatWithUsText: { type: String, default: "Chat With Us" },
-    navJoin: { type: String, default: "Join" },
     joinOfficeImage1: { type: String, default: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000" },
     joinOfficeImage2: { type: String, default: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=1000" },
     joinBgImage: { type: String, default: "https://images.unsplash.com/photo-1582408921715-18e7806365c1?q=80&w=2000" },
@@ -351,7 +368,24 @@ const SiteContentSchema = new Schema<ISiteContent>(
         { name: 'Farm Lands', icon: 'Warehouse', color: 'bg-green-50 text-green-600', href: '/properties?type=Plot&subType=Farm Land', subCategories: ['Cultivated', 'Organic', 'Mixed'] },
         { name: 'Commercial', icon: 'Building2', color: 'bg-indigo-50 text-indigo-600', href: '/properties?type=Commercial', subCategories: ['Shops', 'Showrooms', 'Offices'] },
       ]
-    }
+    },
+    // About Section
+    aboutTitle: { type: String, default: 'About Star Lands' },
+    aboutDesc: { type: String, default: 'We are a team of dedicated professionals committed to providing the best real estate solutions.' },
+    aboutExpertTitle: { type: String, default: 'Expert Verification' },
+    aboutExpertDesc: { type: String, default: 'Every listing is manually verified by our team.' },
+    aboutLegalTitle: { type: String, default: '100% Legal Clarity' },
+    aboutLegalDesc: { type: String, default: 'Secure your future with confidence and peace of mind.' },
+    aboutZeroTitle: { type: String, default: 'Zero Hidden Costs' },
+    aboutZeroDesc: { type: String, default: 'Transparent pricing with no surprises during registration.' },
+    aboutTeamTitle: { type: String, default: 'Real Estate Team Excellence' },
+    aboutTeamDesc: { type: String, default: 'Collaborative professionals working for your success.' },
+    aboutYearTitle: { type: String, default: '15+ Years of Service' },
+    aboutYearDesc: { type: String, default: 'A legacy built on results and trust since 2007.' },
+    aboutMissionTitle: { type: String, default: 'Our Mission' },
+    aboutMissionDesc: { type: String, default: "Transforming Vizag's Landscape" },
+    aboutVisionTitle: { type: String, default: 'Our Vision' },
+    aboutVisionDesc: { type: String, default: 'Architectural Innovation & Smart Community Living' },
   },
   { timestamps: true }
 );

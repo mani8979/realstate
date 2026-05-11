@@ -508,7 +508,7 @@ export default function BrandAdmin() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+        <div id="why-choose-us" className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Pillar 1</h2>
           <div className="grid grid-cols-1 gap-4">
             <div>
@@ -610,7 +610,7 @@ export default function BrandAdmin() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+        <div id="featured-lands" className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 mt-8">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Cinematic Showcase (Gallery)</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -653,7 +653,7 @@ export default function BrandAdmin() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+        <div id="vision" className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 mt-8">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Legacy & Values Section</h2>
           <div className="grid grid-cols-1 gap-4">
             <div>
@@ -897,7 +897,7 @@ export default function BrandAdmin() {
         </div>
 
         {/* Final CTA Section */}
-        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+        <div id="ready-to-claim" className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Final Call to Action</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="md:col-span-2">

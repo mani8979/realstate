@@ -114,7 +114,7 @@ export default function GalleryAdmin() {
   );
 
   return (
-    <div className="max-w-6xl pb-20">
+    <div id="premium-gallery" className="max-w-6xl pb-20">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12">
         <div>
           <h1 className="text-4xl font-black uppercase text-gray-900 dark:text-black dark:text-white tracking-tight">About Page Gallery</h1>

@@ -73,7 +73,7 @@ export default function SiteContentAdmin() {
 
       <div className="space-y-8">
         {/* Hero Section */}
-        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+        <div id="hero" className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Hero Section</h2>
           
           <div className="space-y-4">
@@ -235,7 +235,7 @@ export default function SiteContentAdmin() {
         </div>
 
         {/* Contact Information */}
-        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+        <div id="contact-info" className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 mt-8">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Contact Details</h2>
           
           <div className="space-y-4">
@@ -349,7 +349,7 @@ export default function SiteContentAdmin() {
           </div>
         </div>
         {/* Join Page Content */}
-        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+        <div id="join" className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 mt-8">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Join Page Specifics</h2>
           
           <div className="space-y-4">
@@ -448,6 +448,81 @@ export default function SiteContentAdmin() {
           </div>
         </div>
 
+        {/* About Star Lands Section */}
+        <div id="about-star-lands" className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 mt-8">
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">About Star Lands</h2>
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-bold text-gray-500 mb-2">About Page Title</label>
+              <input name="aboutTitle" value={content.aboutTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-500 mb-2">About Page Description</label>
+              <textarea name="aboutDesc" rows={3} value={content.aboutDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-gray-100 dark:border-gray-800 pt-6">
+              <div>
+                <h3 className="font-bold text-gray-700 dark:text-gray-300 mb-4">Expert Verification</h3>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Title</label>
+                <input name="aboutExpertTitle" value={content.aboutExpertTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 mb-4" />
+                <label className="block text-sm font-bold text-gray-500 mb-2">Description</label>
+                <textarea name="aboutExpertDesc" rows={2} value={content.aboutExpertDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-700 dark:text-gray-300 mb-4">100% Legal Clarity</h3>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Title</label>
+                <input name="aboutLegalTitle" value={content.aboutLegalTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 mb-4" />
+                <label className="block text-sm font-bold text-gray-500 mb-2">Description</label>
+                <textarea name="aboutLegalDesc" rows={2} value={content.aboutLegalDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-gray-100 dark:border-gray-800 pt-6">
+              <div>
+                <h3 className="font-bold text-gray-700 dark:text-gray-300 mb-4">Zero Hidden Costs</h3>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Title</label>
+                <input name="aboutZeroTitle" value={content.aboutZeroTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 mb-4" />
+                <label className="block text-sm font-bold text-gray-500 mb-2">Description</label>
+                <textarea name="aboutZeroDesc" rows={2} value={content.aboutZeroDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-700 dark:text-gray-300 mb-4">Real Estate Team Excellence</h3>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Title</label>
+                <input name="aboutTeamTitle" value={content.aboutTeamTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 mb-4" />
+                <label className="block text-sm font-bold text-gray-500 mb-2">Description</label>
+                <textarea name="aboutTeamDesc" rows={2} value={content.aboutTeamDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-gray-100 dark:border-gray-800 pt-6">
+              <div>
+                <h3 className="font-bold text-gray-700 dark:text-gray-300 mb-4">15+ Years of Service</h3>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Title</label>
+                <input name="aboutYearTitle" value={content.aboutYearTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 mb-4" />
+                <label className="block text-sm font-bold text-gray-500 mb-2">Description</label>
+                <textarea name="aboutYearDesc" rows={2} value={content.aboutYearDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-gray-100 dark:border-gray-800 pt-6">
+              <div>
+                <h3 className="font-bold text-gray-700 dark:text-gray-300 mb-4">Our Mission</h3>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Title</label>
+                <input name="aboutMissionTitle" value={content.aboutMissionTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 mb-4" />
+                <label className="block text-sm font-bold text-gray-500 mb-2">Description</label>
+                <textarea name="aboutMissionDesc" rows={2} value={content.aboutMissionDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-700 dark:text-gray-300 mb-4">Our Vision</h3>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Title</label>
+                <input name="aboutVisionTitle" value={content.aboutVisionTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 mb-4" />
+                <label className="block text-sm font-bold text-gray-500 mb-2">Description</label>
+                <textarea name="aboutVisionDesc" rows={2} value={content.aboutVisionDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800" />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

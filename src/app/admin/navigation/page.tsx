@@ -111,6 +111,15 @@ export default function NavigationAdmin() {
                 className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
               />
             </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-500 mb-2">Nav Link 5 (Join)</label>
+              <input 
+                name="navJoin"
+                value={content.navJoin || ''}
+                onChange={handleChange}
+                className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
+              />
+            </div>
           </div>
         </div>
 
