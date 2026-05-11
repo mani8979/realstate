@@ -148,11 +148,7 @@ const FloatingDragon = () => {
               </h3>
               
               <div className="space-y-10 text-gray-700 dark:text-gray-300">
-                {currentProperty?.fruitInfo ? (
-                  <div className="text-xl leading-relaxed font-medium whitespace-pre-line prose dark:prose-invert max-w-none">
-                    {currentProperty.fruitInfo}
-                  </div>
-                ) : currentProperty?.fruitDetails?.length > 0 ? (
+                {currentProperty?.fruitDetails?.length > 0 ? (
                   <div className="space-y-12">
                     {currentProperty.fruitDetails.map((detail: any, i: number) => (
                       <div key={i} className="space-y-6">
@@ -170,12 +166,16 @@ const FloatingDragon = () => {
                             ))}
                           </ul>
                         ) : (
-                          <p className="text-xl leading-relaxed font-medium bg-black/5 dark:bg-white/5 p-6 rounded-2xl border border-white/5 italic">
+                          <p className="text-xl leading-relaxed font-medium bg-black/5 dark:bg-white/5 p-6 rounded-2xl border border-white/5 italic whitespace-pre-line">
                             {detail.content}
                           </p>
                         )}
                       </div>
                     ))}
+                  </div>
+                ) : currentProperty?.fruitInfo ? (
+                  <div className="text-xl leading-relaxed font-medium whitespace-pre-line prose dark:prose-invert max-w-none">
+                    {currentProperty.fruitInfo}
                   </div>
                 ) : (
                   <>

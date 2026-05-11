@@ -490,11 +490,7 @@ const PropertyDetails = () => {
               </h3>
               
               <div className="space-y-10 text-gray-700 dark:text-gray-300">
-                {property.fruitInfo ? (
-                  <div className="text-xl leading-relaxed font-medium whitespace-pre-line prose dark:prose-invert max-w-none">
-                    {property.fruitInfo}
-                  </div>
-                ) : property.fruitDetails?.length > 0 ? (
+                {property.fruitDetails?.length > 0 ? (
                   <div className="space-y-12">
                     {property.fruitDetails.map((detail: any, i: number) => (
                       <div key={i} className="space-y-6">
@@ -512,12 +508,16 @@ const PropertyDetails = () => {
                             ))}
                           </ul>
                         ) : (
-                          <p className="text-xl leading-relaxed font-medium bg-black/5 dark:bg-white/5 p-6 rounded-2xl border border-white/5 italic">
+                          <p className="text-xl leading-relaxed font-medium bg-black/5 dark:bg-white/5 p-6 rounded-2xl border border-white/5 italic whitespace-pre-line">
                             {detail.content}
                           </p>
                         )}
                       </div>
                     ))}
+                  </div>
+                ) : property.fruitInfo ? (
+                  <div className="text-xl leading-relaxed font-medium whitespace-pre-line prose dark:prose-invert max-w-none">
+                    {property.fruitInfo}
                   </div>
                 ) : (
                   <>
