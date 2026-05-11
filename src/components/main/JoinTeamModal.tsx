@@ -85,7 +85,7 @@ const JoinTeamModal = ({ isOpen, onClose, members, chatLabel }: JoinTeamModalPro
               </button>
             </div>
 
-            <div className="p-8 flex-grow">
+            <div className="p-8 flex-grow overflow-y-auto" data-lenis-prevent>
               {step === 0 ? (
                 <div className="grid grid-cols-1 gap-6">
                   {/* Join with a team (No Experience) */}
@@ -109,7 +109,7 @@ const JoinTeamModal = ({ isOpen, onClose, members, chatLabel }: JoinTeamModalPro
                   <button
                     onClick={() => {
                       setJoinType('own');
-                      setStep(1);
+                      setStep(2);
                     }}
                     className="group flex items-center gap-6 p-8 rounded-[2.5rem] bg-white/5 border border-white/5 hover:border-primary/50 hover:bg-primary/5 transition-all text-left"
                   >
@@ -122,8 +122,52 @@ const JoinTeamModal = ({ isOpen, onClose, members, chatLabel }: JoinTeamModalPro
                     </div>
                   </button>
                 </div>
+              ) : step === 1 ? (
+                /* Step 1: Team Leaders List (For Existing Team) */
+                <div className="space-y-6">
+                  <button 
+                    onClick={() => setStep(0)}
+                    className="text-xs font-black uppercase tracking-widest text-primary hover:underline mb-2 flex items-center gap-2"
+                  >
+                    ← Back to Choice
+                  </button>
+                  {members.map((member, i) => (
+                    <div 
+                      key={i}
+                      className="flex flex-col md:flex-row items-center gap-6 p-6 rounded-[2rem] bg-white/5 border border-white/5 hover:border-primary/30 transition-all group"
+                    >
+                      <div className="w-20 h-20 rounded-2xl overflow-hidden flex-shrink-0 border-2 border-white/10 group-hover:border-primary transition-all">
+                        <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
+                      </div>
+                      
+                      <div className="flex-grow text-center md:text-left space-y-1">
+                        <h3 className="text-lg font-black uppercase tracking-tight text-white">{member.name}</h3>
+                        <p className="text-gray-500 font-bold tracking-widest text-xs uppercase">{member.phone}</p>
+                      </div>
+
+                      <a 
+                        href={`https://wa.me/${member.phone.replace(/\D/g, '')}?text=${encodeURIComponent(`Hi ${member.name}, I want to join with a team (I don't have experience).`)}`}
+                        target="_blank"
+                        className="flex items-center gap-3 bg-primary text-white px-6 py-3 rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-primary-dark transition-all transform hover:scale-105 active:scale-95 shadow-xl shadow-primary/20"
+                      >
+                        <MessageSquare size={14} />
+                        {chatLabel || 'Chat With Us'}
+                      </a>
+                    </div>
+                  ))}
+                </div>
               ) : (
+                /* Step 2: Form (For Own Team) */
                 <form onSubmit={handleJoin} className="space-y-6">
+                  <div className="mb-8">
+                    <button 
+                      type="button"
+                      onClick={() => setStep(0)}
+                      className="text-xs font-black uppercase tracking-widest text-primary hover:underline flex items-center gap-2"
+                    >
+                      ← Back to Choice
+                    </button>
+                  </div>
                   <div>
                     <label className="block text-xs font-black uppercase tracking-[0.2em] text-gray-500 mb-3 ml-2">Team Leader Name</label>
                     <input 
@@ -149,15 +193,8 @@ const JoinTeamModal = ({ isOpen, onClose, members, chatLabel }: JoinTeamModalPro
 
                   <div className="flex gap-4 pt-4">
                     <button
-                      type="button"
-                      onClick={() => setStep(0)}
-                      className="flex-1 bg-white/5 text-gray-400 px-8 py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-white/10 transition-all"
-                    >
-                      Back
-                    </button>
-                    <button
                       type="submit"
-                      className="flex-[2] bg-primary text-white px-8 py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-primary-dark transition-all transform hover:scale-[1.02] shadow-2xl shadow-primary/20 flex items-center justify-center gap-3"
+                      className="w-full bg-primary text-white px-8 py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-primary-dark transition-all transform hover:scale-[1.02] shadow-2xl shadow-primary/20 flex items-center justify-center gap-3"
                     >
                       <MessageSquare size={18} />
                       Join Now
