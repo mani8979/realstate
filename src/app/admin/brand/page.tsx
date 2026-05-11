@@ -69,24 +69,28 @@ export default function BrandAdmin() {
     setSaving(false);
   };
 
-  if (loading) return <div>Loading...</div>;
-
   return (
     <div className="max-w-4xl">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-black uppercase text-gray-900 dark:text-white">Home Extra Settings</h1>
-        <button 
-          onClick={handleSave}
-          disabled={saving}
-          className="bg-primary text-black dark:text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-primary/90 transition-all"
-        >
-          <Save size={20} />
-          {saving ? 'Saving...' : 'Save Changes'}
-        </button>
-      </div>
+      {loading ? (
+        <div className="h-64 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      ) : (
+        <>
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-3xl font-black uppercase text-gray-900 dark:text-white">Home Extra Settings</h1>
+            <button 
+              onClick={handleSave}
+              disabled={saving}
+              className="bg-primary text-black dark:text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-primary/90 transition-all"
+            >
+              <Save size={20} />
+              {saving ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
 
-      <div className="space-y-8">
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+          <div className="space-y-8">
+            <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">Global Brand Assets</h2>
           <p className="text-xs text-gray-500 mb-6 border-b border-gray-100 dark:border-gray-800 pb-4">Manage your logos and site icons in one place to update the entire platform.</p>
           
@@ -1079,7 +1083,9 @@ export default function BrandAdmin() {
           </div>
         </div>
 
-      </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

@@ -4,14 +4,18 @@ import React from 'react';
 import { Phone, MessageSquare, Calendar, Home } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+import { usePathname } from 'next/navigation';
 import { openContactDialog } from './ContactDialog';
 
 const MobileStickyBar = () => {
+  const pathname = usePathname();
+  const isAdmin = pathname.startsWith('/admin') || pathname.startsWith('/studio') || pathname.includes('/media');
+
   return (
     <motion.div 
       initial={{ y: 100 }}
-      animate={{ y: 0 }}
-      className="fixed bottom-0 left-0 right-0 z-[100] md:hidden"
+      animate={{ y: isAdmin ? 100 : 0 }}
+      className={`fixed bottom-0 left-0 right-0 z-[100] md:hidden ${isAdmin ? 'hidden' : ''}`}
     >
       <div className="mx-4 mb-6">
         <div className="bg-white dark:bg-black/80 backdrop-blur-2xl border border-black/20 dark:border-white/20 rounded-[2rem] p-2 flex items-center justify-between shadow-[0_-10px_40px_rgba(0,0,0,0.5)] ring-1 ring-white/10">

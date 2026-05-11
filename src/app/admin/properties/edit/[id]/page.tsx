@@ -37,16 +37,25 @@ const EditProperty = () => {
     }
   };
 
-  if (!property) return <div>Loading property data...</div>;
-
   return (
     <div className="space-y-10 pb-20">
-      <div>
-        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">Edit Property</h1>
-        <p className="text-gray-500">Update the details for "{property?.title}".</p>
-      </div>
+      {!property ? (
+        <div className="h-64 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-4">
+             <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+             <p className="text-sm font-bold text-gray-500 uppercase tracking-widest">Loading Property Data...</p>
+          </div>
+        </div>
+      ) : (
+        <>
+          <div>
+            <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">Edit Property</h1>
+            <p className="text-gray-500">Update the details for "{property?.title}".</p>
+          </div>
 
-      <PropertyForm initialData={property} onSubmit={handleSubmit} loading={loading} />
+          <PropertyForm initialData={property} onSubmit={handleSubmit} loading={loading} />
+        </>
+      )}
     </div>
   );
 };
