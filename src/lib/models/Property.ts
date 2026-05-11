@@ -6,6 +6,7 @@ export interface IPropertyDetail {
   sideHeading?: string;
   showArrow?: boolean;
   isPointed?: boolean;
+  alignment?: 'left' | 'center' | 'right';
 }
 
 export interface IProperty extends Document {
@@ -60,6 +61,7 @@ const PropertySchema = new Schema<IProperty>(
       sideHeading: String,
       showArrow: { type: Boolean, default: false },
       isPointed: { type: Boolean, default: false },
+      alignment: { type: String, enum: ['left', 'center', 'right'], default: 'left' },
     }],
     threeDElement: { type: String },
     videoUrl: { type: String },

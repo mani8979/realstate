@@ -318,19 +318,19 @@ const PropertyDetails = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 className={`flex ${
-                  property.alignment === 'center' ? 'justify-center' : 
-                  property.alignment === 'right' ? 'justify-end' : 
+                  (detail.alignment || property.alignment) === 'center' ? 'justify-center' : 
+                  (detail.alignment || property.alignment) === 'right' ? 'justify-end' : 
                   (idx % 2 === 0 ? 'justify-start' : 'justify-end')
                 }`}
               >
                 <div className={`md:w-1/2 w-full glass-card p-8 md:p-16 ${
-                  property.alignment === 'center' ? 'text-center border-b-4 border-primary' : 
-                  property.alignment === 'right' ? 'text-right border-r-4 border-primary' : 
+                  (detail.alignment || property.alignment) === 'center' ? 'text-center border-b-4 border-primary' : 
+                  (detail.alignment || property.alignment) === 'right' ? 'text-right border-r-4 border-primary' : 
                   (idx % 2 !== 0 ? 'border-r-4 border-primary text-left' : 'text-left')
                 }`}>
                   <div className={`flex items-center gap-4 mb-8 ${
-                    property.alignment === 'center' ? 'justify-center' : 
-                    property.alignment === 'right' ? 'justify-end' : 
+                    (detail.alignment || property.alignment) === 'center' ? 'justify-center' : 
+                    (detail.alignment || property.alignment) === 'right' ? 'justify-end' : 
                     'justify-start'
                   }`}>
                     {detail.showArrow && <span className="text-primary font-bold text-2xl">→</span>}

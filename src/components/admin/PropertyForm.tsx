@@ -703,7 +703,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
               <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white">Structured Property Details</h3>
               <button
                 type="button"
-                onClick={() => setFormData({ ...formData, details: [...formData.details, { heading: '', content: '', sideHeading: '', showArrow: false, isPointed: false }] })}
+                onClick={() => setFormData({ ...formData, details: [...formData.details, { heading: '', content: '', sideHeading: '', showArrow: false, isPointed: false, alignment: 'left' }] })}
                 className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest hover:underline"
               >
                 <Plus size={16} />
@@ -827,6 +827,27 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                       />
                       <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-hover:text-primary transition-colors">Use Dots for Points</span>
                     </label>
+
+                    <div className="flex items-center gap-2 bg-white dark:bg-gray-900 p-1 rounded-xl border border-gray-100 dark:border-gray-700 ml-auto">
+                      {['left', 'center', 'right'].map((align) => (
+                        <button
+                          key={align}
+                          type="button"
+                          onClick={() => {
+                            const newDetails = [...formData.details];
+                            newDetails[idx].alignment = align;
+                            setFormData({ ...formData, details: newDetails });
+                          }}
+                          className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-tighter transition-all ${
+                            detail.alignment === align 
+                              ? 'bg-primary text-black dark:text-white shadow-sm' 
+                              : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
+                          }`}
+                        >
+                          {align}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}
