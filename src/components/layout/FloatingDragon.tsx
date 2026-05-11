@@ -225,6 +225,7 @@ const FloatingDragon = () => {
                     </div>
                   </>
                 )}
+              </div>
 
               <button 
                 onClick={() => setShowPopup(false)}
