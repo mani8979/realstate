@@ -6,7 +6,11 @@ import Link from 'next/link';
 import axios from 'axios';
 
 const AdminDashboard = () => {
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<{
+    totalProperties: number;
+    totalEnquiries: number;
+    recentEnquiries: any[];
+  }>({
     totalProperties: 0,
     totalEnquiries: 0,
     recentEnquiries: []
