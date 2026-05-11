@@ -38,7 +38,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
       y: p.y ?? 0,
       width: p.width ?? 5,
       height: p.height ?? 3
-    })) || []
+    })) || [],
+    alignment: 'left'
   });
 
   // Sync state with initialData when it updates (e.g. after save)
@@ -57,7 +58,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           y: p.y ?? 0,
           width: p.width ?? 5,
           height: p.height ?? 3
-        })) || []
+        })) || [],
+        alignment: initialData.alignment || 'left'
       }));
     }
   }, [initialData]);
@@ -551,6 +553,32 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                  )}
               </div>
             )}
+
+            <div className="space-y-2 col-span-2">
+              <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1 flex items-center gap-2">
+                <Sliders size={14} className="text-primary" />
+                Content Alignment
+              </label>
+              <div className="flex gap-2 p-1 bg-gray-50 dark:bg-gray-800 rounded-2xl">
+                {['left', 'center', 'right'].map((align) => (
+                  <button
+                    key={align}
+                    type="button"
+                    onClick={() => setFormData({ ...formData, alignment: align })}
+                    className={`flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+                      formData.alignment === align 
+                        ? 'bg-primary text-black dark:text-white shadow-lg' 
+                        : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
+                    }`}
+                  >
+                    {align}
+                  </button>
+                ))}
+              </div>
+              <p className="text-[10px] text-gray-500 font-medium px-2 italic">
+                Choose how text and headings align on the property details page.
+              </p>
+            </div>
           </div>
 
           <div className="space-y-2">

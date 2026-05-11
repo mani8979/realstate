@@ -223,8 +223,16 @@ const PropertyDetails = () => {
       <div className="bg-white dark:bg-black border-b border-white/5 relative z-10">
         <div className="container mx-auto px-6 md:px-16 py-12 md:py-20">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10">
-            <div className="max-w-4xl space-y-6">
-              <div className="flex items-center gap-4">
+            <div className={`max-w-4xl space-y-6 ${
+              property.alignment === 'center' ? 'text-center mx-auto' : 
+              property.alignment === 'right' ? 'text-right ml-auto' : 
+              'text-left'
+            }`}>
+              <div className={`flex items-center gap-4 ${
+                property.alignment === 'center' ? 'justify-center' : 
+                property.alignment === 'right' ? 'justify-end' : 
+                'justify-start'
+              }`}>
                 <span className="bg-primary text-black font-black uppercase tracking-[0.2em] px-4 py-2 text-[10px] rounded-none">
                   {property.type}
                 </span>
@@ -237,7 +245,11 @@ const PropertyDetails = () => {
                 {property.title}
               </h1>
 
-              <div className="flex flex-wrap gap-4">
+              <div className={`flex flex-wrap gap-4 ${
+                property.alignment === 'center' ? 'justify-center' : 
+                property.alignment === 'right' ? 'justify-end' : 
+                'justify-start'
+              }`}>
                 {property.fruitImage && property.title.toLowerCase().includes('lendy pink valley') && (
                   <button 
                     onClick={() => setShowFruitPopup(true)}
@@ -305,10 +317,22 @@ const PropertyDetails = () => {
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className={`flex ${idx % 2 === 0 ? 'justify-start' : 'justify-end'}`}
+                className={`flex ${
+                  property.alignment === 'center' ? 'justify-center' : 
+                  property.alignment === 'right' ? 'justify-end' : 
+                  (idx % 2 === 0 ? 'justify-start' : 'justify-end')
+                }`}
               >
-                <div className={`md:w-1/2 w-full glass-card p-8 md:p-16 ${idx % 2 !== 0 ? 'border-r-4 border-primary' : ''}`}>
-                  <div className="flex items-center gap-4 mb-8">
+                <div className={`md:w-1/2 w-full glass-card p-8 md:p-16 ${
+                  property.alignment === 'center' ? 'text-center border-b-4 border-primary' : 
+                  property.alignment === 'right' ? 'text-right border-r-4 border-primary' : 
+                  (idx % 2 !== 0 ? 'border-r-4 border-primary text-left' : 'text-left')
+                }`}>
+                  <div className={`flex items-center gap-4 mb-8 ${
+                    property.alignment === 'center' ? 'justify-center' : 
+                    property.alignment === 'right' ? 'justify-end' : 
+                    'justify-start'
+                  }`}>
                     {detail.showArrow && <span className="text-primary font-bold text-2xl">→</span>}
                     <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-black dark:text-white">{detail.heading}</h2>
                   </div>

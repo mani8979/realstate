@@ -32,6 +32,7 @@ export interface IProperty extends Document {
   layoutImage?: string;
   plots?: { number: string; status: 'available' | 'booked' | 'sold'; x: number; y: number; width: number; height: number }[];
   status: 'active' | 'sold' | 'draft';
+  alignment?: 'left' | 'center' | 'right';
 }
 
 const PropertySchema = new Schema<IProperty>(
@@ -74,6 +75,7 @@ const PropertySchema = new Schema<IProperty>(
       height: { type: Number, default: 3 }
     }],
     status: { type: String, enum: ['active', 'sold', 'draft'], default: 'active' },
+    alignment: { type: String, enum: ['left', 'center', 'right'], default: 'left' },
   },
   { 
     timestamps: true,
