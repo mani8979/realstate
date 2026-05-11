@@ -115,7 +115,7 @@ const JoinPageClient = ({ serializedContent, rules, qualifications }: JoinPageCl
         </section>
 
         {/* Join Options */}
-        <section className="py-32 bg-zinc-950 relative overflow-hidden">
+        <section className="py-32 bg-zinc-50 dark:bg-zinc-950 relative overflow-hidden">
           <div className="container mx-auto px-6 relative z-10">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
               <div className="space-y-10">

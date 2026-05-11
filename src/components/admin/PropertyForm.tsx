@@ -479,7 +479,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     <form onSubmit={handleSubmit} className="space-y-10">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
         {/* Basic Info */}
-        <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
           <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white mb-4">Basic Information</h3>
           
           <div className="space-y-2">
@@ -613,7 +613,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
         {/* Media & Description */}
         <div className="space-y-10">
           {/* Images */}
-          <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+          <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
             <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white mb-6">Property Images</h3>
             
             <div className="grid grid-cols-3 gap-4 mb-6">
@@ -657,7 +657,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           </div>
 
           {/* Description */}
-          <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+          <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
             <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white mb-4">Description</h3>
             <textarea
               required
@@ -670,7 +670,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           </div>
 
           {/* Structured Details */}
-          <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+          <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
             <div className="flex items-center justify-between">
               <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white">Structured Property Details</h3>
               <button
@@ -731,7 +731,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                       <label className="text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 px-1">Section Heading</label>
                       <input
                         type="text"
-                        className="w-full px-4 py-3 bg-white dark:bg-gray-900 rounded-xl border-none focus:ring-2 focus:ring-primary/50 text-sm"
+                        className="w-full px-4 py-3 bg-white dark:bg-gray-50 dark:bg-gray-900 rounded-xl border-none focus:ring-2 focus:ring-primary/50 text-sm"
                         placeholder="e.g. Location Advantages"
                         value={detail.heading}
                         onChange={(e) => {
@@ -745,7 +745,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                       <label className="text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 px-1">Side Heading (Optional)</label>
                       <input
                         type="text"
-                        className="w-full px-4 py-3 bg-white dark:bg-gray-900 rounded-xl border-none focus:ring-2 focus:ring-primary/50 text-sm"
+                        className="w-full px-4 py-3 bg-white dark:bg-gray-50 dark:bg-gray-900 rounded-xl border-none focus:ring-2 focus:ring-primary/50 text-sm"
                         placeholder="e.g. Prime Location"
                         value={detail.sideHeading}
                         onChange={(e) => {
@@ -761,7 +761,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                     <label className="text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 px-1">Content</label>
                     <textarea
                       rows={4}
-                      className="w-full px-4 py-3 bg-white dark:bg-gray-900 rounded-xl border-none focus:ring-2 focus:ring-primary/50 text-sm resize-none"
+                      className="w-full px-4 py-3 bg-white dark:bg-gray-50 dark:bg-gray-900 rounded-xl border-none focus:ring-2 focus:ring-primary/50 text-sm resize-none"
                       placeholder="Write the section content here... (New lines will be used for dots if 'Use Dots' is enabled)"
                       value={detail.content}
                       onChange={(e) => {
@@ -812,7 +812,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           </div>
 
           {/* 3D Model Details */}
-          <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+          <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
             <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white mb-4">3D Model (GLB/GLTF)</h3>
             <p className="text-sm text-gray-500 mb-6">Upload a 3D model that will scroll through the page. Supports .glb or .gltf files.</p>
             
@@ -865,7 +865,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           </div>
 
           {/* Farm/Fruit Details */}
-          <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+          <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
             <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white mb-4">Farm/Fruit Details (Optional)</h3>
             <p className="text-sm text-gray-500 mb-6">If this is a farm land with active cultivation, you can add a picture of the fruit/crop and some details. Users can click the image to view the details in a popup.</p>
             
@@ -920,7 +920,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
             </div>
           </div>
           {/* Land Photos Section */}
-          <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+          <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
             <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white mb-4">Land Photos (Optional)</h3>
             <p className="text-sm text-gray-500 mb-6">Specific gallery for land or plot images.</p>
             
@@ -961,7 +961,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           </div>
 
           {/* Land Video Section */}
-          <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+          <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
             <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white mb-4">Land Video (Optional)</h3>
             <p className="text-sm text-gray-500 mb-6">Upload a video directly or provide a YouTube link.</p>
             
@@ -1031,7 +1031,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           </div>
 
           {/* Plot Layout Section - Trigger Button */}
-          <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+          <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white mb-1">Interactive Plot Layout</h3>
@@ -1056,7 +1056,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                     <button
                       type="button"
                       onClick={() => setShowLayoutEditor(true)}
-                      className="bg-white dark:bg-gray-900 text-gray-900 dark:text-black dark:text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-all border border-black/10 dark:border-white/10"
+                      className="bg-white dark:bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-black dark:text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-all border border-black/10 dark:border-white/10"
                     >
                       <Settings size={32} />
                     </button>
@@ -1440,7 +1440,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                       <motion.div 
                         initial={{ scale: 0.9, y: 30 }}
                         animate={{ scale: 1, y: 0 }}
-                        className="bg-white dark:bg-gray-900 rounded-[3rem] p-10 w-full max-w-2xl shadow-2xl space-y-10 border border-black/10 dark:border-white/10"
+                        className="bg-white dark:bg-gray-50 dark:bg-gray-900 rounded-[3rem] p-10 w-full max-w-2xl shadow-2xl space-y-10 border border-black/10 dark:border-white/10"
                       >
                         <div className="flex items-center justify-between">
                           <div className="space-y-1">
@@ -1573,7 +1573,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
             )}
           </AnimatePresence>
           {/* Land Brochure Section */}
-          <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+          <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
             <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white mb-4">Land Brochure (Optional)</h3>
             <p className="text-sm text-gray-500 mb-6">Upload multiple PDF or image brochures for the land.</p>
             
@@ -1623,7 +1623,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           </div>
 
           {/* Map View Section */}
-          <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+          <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
             <h3 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white mb-4">Location Map (Optional)</h3>
             <p className="text-sm text-gray-500 mb-6">Add a Google Maps embed URL.</p>
             

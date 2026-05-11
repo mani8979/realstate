@@ -57,7 +57,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="group bg-white dark:bg-slate-900 rounded-[2.5rem] overflow-hidden shadow-2xl hover:shadow-primary/20 flex flex-col border border-gray-100 dark:border-white/5 h-full relative"
+          className="group bg-white dark:bg-slate-50 dark:bg-slate-900 rounded-[2.5rem] overflow-hidden shadow-2xl hover:shadow-primary/20 flex flex-col border border-gray-100 dark:border-white/5 h-full relative"
         >
         {/* Quick Actions Overlay - Stop propagation to avoid triggering the Link */}
         <div className="absolute top-6 right-6 z-30 flex flex-col gap-3 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0">
@@ -136,7 +136,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
 
           {/* Price Badge */}
           <div className="absolute bottom-6 left-6 z-20">
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-2xl border border-gray-100 dark:border-black/10 dark:border-white/10 group-hover:border-primary/30 transition-colors">
+            <div className="bg-white dark:bg-slate-50 dark:bg-slate-900 rounded-2xl p-4 shadow-2xl border border-gray-100 dark:border-black/10 dark:border-white/10 group-hover:border-primary/30 transition-colors">
               <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-1">Starting From</p>
               <p className="text-3xl font-black text-primary tracking-tighter">
                 ₹{property.price?.toLocaleString('en-IN')}

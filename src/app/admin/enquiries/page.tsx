@@ -45,7 +45,7 @@ const AdminEnquiries = () => {
           <input
             type="text"
             placeholder="Search leads..."
-            className="w-full pl-12 pr-4 py-3 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm focus:ring-2 focus:ring-primary/50 transition-all"
+            className="w-full pl-12 pr-4 py-3 bg-white dark:bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm focus:ring-2 focus:ring-primary/50 transition-all"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -55,7 +55,7 @@ const AdminEnquiries = () => {
       <div className="grid grid-cols-1 gap-6">
         {filteredEnquiries.length > 0 ? (
           filteredEnquiries.map((enquiry: any) => (
-            <div key={enquiry._id} className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md transition-all">
+            <div key={enquiry._id} className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md transition-all">
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
                 <div className="space-y-4 flex-grow">
                   <div className="flex items-center gap-4">
@@ -107,7 +107,7 @@ const AdminEnquiries = () => {
             </div>
           ))
         ) : (
-          <div className="text-center py-24 bg-white dark:bg-gray-900 rounded-[3rem] border border-dashed border-gray-200 dark:border-gray-800">
+          <div className="text-center py-24 bg-white dark:bg-gray-50 dark:bg-gray-900 rounded-[3rem] border border-dashed border-gray-200 dark:border-gray-800">
             <p className="text-gray-500 font-bold">No enquiries found.</p>
           </div>
         )}

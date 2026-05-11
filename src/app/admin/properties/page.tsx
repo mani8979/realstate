@@ -60,7 +60,7 @@ const AdminProperties = () => {
         </Link>
       </div>
 
-      <div className="bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+      <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
         <div className="p-8 border-b border-gray-100 dark:border-gray-800">
           <div className="relative w-full">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 dark:text-gray-400" size={20} />

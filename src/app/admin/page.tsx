@@ -68,7 +68,7 @@ const AdminDashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {cards.map((card) => (
           <Link key={card.title} href={card.href} className="group">
-            <div className="bg-white dark:bg-gray-900 p-8 rounded-[2rem] shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-xl hover:-translate-y-1 transition-all">
+            <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-[2rem] shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-xl hover:-translate-y-1 transition-all">
               <div className="flex items-center justify-between mb-4">
                 <div className={`${card.color} p-4 rounded-2xl text-black dark:text-white shadow-lg`}>
                   <card.icon size={24} />
@@ -83,7 +83,7 @@ const AdminDashboard = () => {
       </div>
 
       {/* Recent Enquiries Table */}
-      <div className="bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+      <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
         <div className="p-8 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
           <h3 className="text-xl font-extrabold text-gray-900 dark:text-black dark:text-white">Recent Enquiries</h3>
           <Link href="/admin/enquiries" className="text-primary font-bold hover:underline">View All</Link>

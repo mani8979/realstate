@@ -73,7 +73,7 @@ export default function SiteContentAdmin() {
 
       <div className="space-y-8">
         {/* Hero Section */}
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Hero Section</h2>
           
           <div className="space-y-4">
@@ -164,7 +164,7 @@ export default function SiteContentAdmin() {
         </div>
 
         {/* Global 3D Experience */}
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Global 3D Experience</h2>
           
           <div className="space-y-4">
@@ -178,7 +178,7 @@ export default function SiteContentAdmin() {
                   className="flex-grow p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-black dark:text-white font-medium"
                   placeholder="e.g. /models/untitled.glb or https://..."
                 />
-                <label className="bg-gray-900 dark:bg-white text-black dark:text-white dark:text-black px-6 py-4 rounded-xl font-bold cursor-pointer hover:opacity-80 transition-all flex-shrink-0">
+                <label className="bg-gray-50 dark:bg-gray-900 dark:bg-white text-black dark:text-white dark:text-black px-6 py-4 rounded-xl font-bold cursor-pointer hover:opacity-80 transition-all flex-shrink-0">
                   Upload GLB
                   <input 
                     type="file"
@@ -235,7 +235,7 @@ export default function SiteContentAdmin() {
         </div>
 
         {/* Contact Information */}
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Contact Details</h2>
           
           <div className="space-y-4">
@@ -272,7 +272,7 @@ export default function SiteContentAdmin() {
         </div>
 
         {/* Contact Page Content */}
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Contact Page Specifics</h2>
           
           <div className="space-y-4">
@@ -349,7 +349,7 @@ export default function SiteContentAdmin() {
           </div>
         </div>
         {/* Join Page Content */}
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Join Page Specifics</h2>
           
           <div className="space-y-4">

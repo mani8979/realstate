@@ -72,7 +72,7 @@ export default function FooterAdmin() {
       <div className="space-y-8">
         
         {/* Footer Info Section */}
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Footer Contact Info</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
@@ -253,7 +253,7 @@ export default function FooterAdmin() {
         </div>
 
         {/* Office Location Section (Home Page) */}
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Home Office Location (Map Section)</h2>
           <div className="space-y-6">
             <div>
@@ -302,7 +302,7 @@ export default function FooterAdmin() {
         </div>
 
         {/* Legal Pages Section */}
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Legal Pages</h2>
           <div className="space-y-6">
             <div>
@@ -331,7 +331,7 @@ export default function FooterAdmin() {
         </div>
 
         {/* Extra Services Section */}
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Extra Service Links</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-4">

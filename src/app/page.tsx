@@ -80,7 +80,7 @@ export default async function Home() {
         <BrandValues content={serializedContent} />
       </div>
 
-      <div className="relative z-10 py-20 bg-slate-950">
+      <div className="relative z-10 py-20 bg-slate-50 dark:bg-slate-950">
          <div className="container mx-auto px-6 mb-12 md:mb-16 text-center">
             <h2 className="text-primary font-black uppercase tracking-[0.3em] md:tracking-[0.4em] text-[8px] md:text-[10px] mb-4">{serializedContent.galleryBadge || 'Cinematic Showcase'}</h2>
             <h3 className="text-3xl md:text-6xl font-black text-black dark:text-white uppercase tracking-tighter leading-none">{serializedContent.galleryTitle || 'Premium Land Gallery'}</h3>

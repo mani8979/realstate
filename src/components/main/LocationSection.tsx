@@ -86,7 +86,7 @@ const LocationSection = ({ content }: LocationSectionProps) => {
             <div className="relative group">
               <div className="absolute -inset-4 bg-gradient-to-tr from-primary/20 to-gold/20 blur-2xl opacity-50"></div>
               
-              <div className="relative aspect-square md:aspect-[4/5] rounded-[3rem] overflow-hidden border border-black/10 dark:border-white/10 shadow-2xl bg-slate-900">
+              <div className="relative aspect-square md:aspect-[4/5] rounded-[3rem] overflow-hidden border border-black/10 dark:border-white/10 shadow-2xl bg-slate-50 dark:bg-slate-900">
                 <iframe 
                   src={embedUrl}
                   width="100%" 

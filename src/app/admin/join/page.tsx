@@ -131,7 +131,7 @@ export default function JoinAdmin() {
 
       <div className="space-y-8">
         {/* Hero Background */}
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Hero Background</h2>
           <div className="space-y-4">
             <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Background Image</label>
@@ -160,7 +160,7 @@ export default function JoinAdmin() {
         </div>
 
         {/* Main Content */}
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Main Page Content</h2>
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -189,7 +189,7 @@ export default function JoinAdmin() {
         </div>
 
         {/* Workspace & Path Details */}
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Workspace & Path Details</h2>
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -228,7 +228,7 @@ export default function JoinAdmin() {
         </div>
 
         {/* Office & Rules */}
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Office & Requirements</h2>
           <div className="space-y-6">
             <div>
@@ -243,7 +243,7 @@ export default function JoinAdmin() {
         </div>
 
         {/* Dynamic Team Leads */}
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex justify-between items-center mb-8 border-b border-gray-100 dark:border-gray-800 pb-4">
             <h2 className="text-xl font-bold text-gray-900 dark:text-black dark:text-white flex items-center gap-3">
                <Users size={24} className="text-primary" />
@@ -292,7 +292,7 @@ export default function JoinAdmin() {
                       <input 
                         value={lead.name || ''} 
                         onChange={(e) => handleLeadChange(index, 'name', e.target.value)} 
-                        className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-black dark:text-white font-medium text-sm" 
+                        className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-black dark:text-white font-medium text-sm" 
                         placeholder="Lead Name"
                       />
                     </div>
@@ -301,7 +301,7 @@ export default function JoinAdmin() {
                       <input 
                         value={lead.phone || ''} 
                         onChange={(e) => handleLeadChange(index, 'phone', e.target.value)} 
-                        className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-black dark:text-white font-medium text-sm" 
+                        className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-black dark:text-white font-medium text-sm" 
                         placeholder="91 00000 00000"
                       />
                     </div>
@@ -321,7 +321,7 @@ export default function JoinAdmin() {
         </div>
 
         {/* Office Gallery */}
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Office Gallery Photos</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-4">

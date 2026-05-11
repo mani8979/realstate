@@ -188,7 +188,7 @@ export default function GalleryAdmin() {
               placeholder="Add caption..."
               value={img.caption || ''}
               onChange={(e) => handleCaptionChange(index, e.target.value)}
-              className="w-full p-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-sm font-medium focus:ring-2 focus:ring-primary/20 outline-none transition-all shadow-sm"
+              className="w-full p-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-50 dark:bg-gray-900 text-sm font-medium focus:ring-2 focus:ring-primary/20 outline-none transition-all shadow-sm"
             />
           </div>
         ))}

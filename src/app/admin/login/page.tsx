@@ -39,7 +39,7 @@ const AdminLogin = () => {
           <p className="text-gray-500 mt-2">Please login to manage your properties.</p>
         </div>
 
-        <div className="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-2xl border border-gray-100 dark:border-gray-800">
+        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-2xl border border-gray-100 dark:border-gray-800">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-700 dark:text-gray-700 dark:text-gray-300">Username</label>

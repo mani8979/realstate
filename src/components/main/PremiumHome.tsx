@@ -128,7 +128,7 @@ const ScrollStackCard = ({ property, index, content }: { property: Property; ind
       <div className="content-grid">
         <Link 
           href={`/properties/${property._id}`}
-          className="main-image-container overflow-hidden rounded-[40px] bg-zinc-900 group/img block"
+          className="main-image-container overflow-hidden rounded-[40px] bg-zinc-50 dark:bg-zinc-900 group/img block"
         >
           <img
             src={property.images[0]}

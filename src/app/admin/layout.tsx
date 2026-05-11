@@ -52,7 +52,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
       {/* Sidebar */}
-      <aside className="w-72 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 flex flex-col">
+      <aside className="w-72 bg-white dark:bg-gray-50 dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 flex flex-col">
         <div className="p-8 border-b border-gray-100 dark:border-gray-800">
           <Link href="/" className="flex items-center gap-2">
             <div className="bg-primary p-2 rounded-lg text-black dark:text-white">

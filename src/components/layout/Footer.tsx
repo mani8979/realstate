@@ -16,7 +16,7 @@ const Footer = async () => {
   }
 
   return (
-    <footer className="bg-zinc-950 text-gray-700 dark:text-gray-300 pt-24 pb-12 border-t border-white/5 relative overflow-hidden">
+    <footer className="bg-zinc-50 dark:bg-zinc-950 text-gray-700 dark:text-gray-300 pt-24 pb-12 border-t border-white/5 relative overflow-hidden">
       {/* Decorative Glow */}
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] translate-y-1/2 translate-x-1/2 pointer-events-none" />
 

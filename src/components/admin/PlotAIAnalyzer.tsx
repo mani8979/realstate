@@ -220,7 +220,7 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
                     <span className="text-black dark:text-white font-bold text-sm">Current Layout Image Detected</span>
                     <span className="ml-auto text-[10px] text-green-400 bg-green-500/10 px-3 py-1 rounded-full font-bold uppercase tracking-widest">Ready to Analyze</span>
                   </div>
-                  <div className="relative aspect-video rounded-2xl overflow-hidden bg-gray-900">
+                  <div className="relative aspect-video rounded-2xl overflow-hidden bg-gray-50 dark:bg-gray-900">
                     <Image src={layoutImageUrl} alt="Layout" fill className="object-contain" />
                   </div>
                 </div>
@@ -413,7 +413,7 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
               {displayImage && editedPlots.length > 0 && (
                 <div className="space-y-3">
                   <label className="text-xs font-black text-gray-600 dark:text-gray-400 uppercase tracking-widest">Visual Preview — Detected Plots</label>
-                  <div className="relative rounded-3xl overflow-hidden border border-black/10 dark:border-white/10 bg-gray-900">
+                  <div className="relative rounded-3xl overflow-hidden border border-black/10 dark:border-white/10 bg-gray-50 dark:bg-gray-900">
                     <div className="relative" style={{ paddingBottom: '60%' }}>
                       <Image src={displayImage} alt="Layout" fill className="object-contain" />
                       {/* Overlay detected plots */}

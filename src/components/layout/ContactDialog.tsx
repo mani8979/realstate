@@ -121,7 +121,7 @@ export const ContactDialog = () => {
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            className="relative w-full max-w-md bg-zinc-900 border border-black/10 dark:border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl"
+            className="relative w-full max-w-md bg-zinc-50 dark:bg-zinc-900 border border-black/10 dark:border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl"
           >
             {/* Header */}
             <div className="relative p-8 pb-4">

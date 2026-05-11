@@ -65,7 +65,7 @@ export default function FeaturedAdmin() {
       </div>
 
       <div className="space-y-8">
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Header Configuration</h2>
           
           <div className="grid grid-cols-1 gap-6">
@@ -112,7 +112,7 @@ export default function FeaturedAdmin() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">Urgency Banner</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

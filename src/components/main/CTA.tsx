@@ -12,7 +12,7 @@ const CTA = ({ content }: { content?: any }) => {
   return (
     <section className="py-24 md:py-32 relative overflow-x-hidden">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="relative rounded-[2.5rem] md:rounded-[4rem] overflow-hidden bg-slate-900 p-8 md:p-32 text-center border border-black/10 dark:border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.5)]">
+        <div className="relative rounded-[2.5rem] md:rounded-[4rem] overflow-hidden bg-slate-50 dark:bg-slate-900 p-8 md:p-32 text-center border border-black/10 dark:border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.5)]">
           {/* Background Image with Overlay */}
           <div className="absolute inset-0 z-0">
              <Image 

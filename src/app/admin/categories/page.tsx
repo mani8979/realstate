@@ -115,7 +115,7 @@ export default function CategoriesAdmin() {
         {content.propertyCategories?.map((cat: any, index: number) => {
           const Icon = ICON_OPTIONS[cat.icon] || Home;
           return (
-            <div key={index} className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 relative group">
+            <div key={index} className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 relative group">
               <button 
                 onClick={() => handleRemove(index)}
                 className="absolute top-6 right-6 bg-red-50 text-red-500 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-black dark:text-white"

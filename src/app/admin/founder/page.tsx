@@ -102,7 +102,7 @@ export default function FounderAdmin() {
 
       <div className="space-y-12">
         {/* Main Founder Section */}
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-2xl font-black mb-8 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4 flex items-center gap-3">
              <div className="w-2 h-8 bg-primary rounded-full" />
              Main Founder Settings
@@ -198,7 +198,7 @@ export default function FounderAdmin() {
         </div>
 
         {/* Co-Founder Section */}
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="bg-white dark:bg-gray-50 dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-2xl font-black mb-8 text-gray-900 dark:text-black dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4 flex items-center gap-3">
              <div className="w-2 h-8 bg-primary rounded-full" />
              Co-Founder Settings
