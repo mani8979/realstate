@@ -314,55 +314,51 @@ const PropertyDetails = () => {
             {property.details?.map((detail: any, idx: number) => {
               const align = detail.alignment || property.alignment || 'left';
               const isCenter = align === 'center';
-              const isRight = align === 'right';
-              const isLeft = !isCenter && !isRight;
-
+              
               return (
                 <motion.div 
                   key={idx}
                   initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className={`flex ${
-                    isCenter ? 'justify-center' : 
-                    isRight ? 'justify-end' : 
-                    'justify-start'
-                  }`}
+                  className={`flex ${isCenter ? 'justify-center' : 'justify-start'}`}
                 >
-                  <div className={`md:w-1/2 w-full glass-card p-8 md:py-16 ${
-                    isCenter ? 'text-center border-b-4 border-primary md:px-16' : 
-                    isRight ? 'text-right border-r-4 border-primary md:pr-0 md:pl-16' : 
-                    'text-left border-l-4 border-primary md:pl-0 md:pr-16'
+                  <div className={`md:w-1/2 w-full glass-card p-8 md:py-16 md:pl-0 md:pr-16 ${
+                    isCenter ? 'text-center border-b-4 border-primary px-16' : 
+                    'text-left border-l-4 border-primary'
                   }`}>
-                    <div className={`flex items-start gap-4 mb-8 ${
-                      isCenter ? 'justify-center' : 
-                      isRight ? 'justify-end' : 
-                      'justify-start'
-                    }`}>
-                      {detail.showArrow && (
-                        <span className="text-primary font-bold text-2xl w-8 shrink-0 flex justify-center">→</span>
+                    <div className={`flex items-start gap-5 ${isCenter ? 'justify-center' : 'justify-start'}`}>
+                      {detail.showArrow && !isCenter && (
+                        <span className="text-primary font-bold text-2xl w-8 shrink-0 flex justify-center mt-1">→</span>
                       )}
-                      <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-black dark:text-white leading-[0.9]">
-                        {detail.heading}
-                      </h2>
-                    </div>
+                      <div className="flex-grow">
+                        <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-black dark:text-white leading-[0.9] mb-8">
+                          {detail.heading}
+                        </h2>
 
-                    <div className={`${isLeft ? 'md:pl-12' : isRight ? 'md:pr-0' : ''}`}>
-                      {detail.sideHeading && (
-                        <h3 className="text-primary font-black uppercase tracking-widest text-xs mb-6">{detail.sideHeading}</h3>
-                      )}
-                      {detail.isPointed ? (
-                        <ul className={`space-y-6 ${isCenter || isRight ? 'inline-block' : ''}`}>
-                          {detail.content.split('\n').filter((line: string) => line.trim()).map((line: string, i: number) => (
-                            <li key={i} className={`flex gap-4 text-gray-700 dark:text-gray-300 text-lg ${isRight ? 'justify-end text-right' : 'justify-start text-left'}`}>
-                              <span className="text-primary font-bold shrink-0 w-8 flex justify-center mt-1">•</span>
-                              <span className="font-medium leading-relaxed">{line.trim()}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed whitespace-pre-line">{detail.content}</p>
-                      )}
+                        <div className={`${isCenter ? '' : 'pl-[20px]'} space-y-6`}>
+                          {detail.sideHeading && (
+                            <h3 className="text-primary font-black uppercase tracking-widest text-xs mb-6">
+                              {detail.sideHeading}
+                            </h3>
+                          )}
+                          
+                          {detail.isPointed ? (
+                            <ul className="space-y-6">
+                              {detail.content.split('\n').filter((line: string) => line.trim()).map((line: string, i: number) => (
+                                <li key={i} className="flex gap-4 text-gray-700 dark:text-gray-300 text-lg items-start">
+                                  <span className="text-primary font-bold shrink-0 w-8 flex justify-center mt-1">•</span>
+                                  <span className="text-left font-medium leading-relaxed">{line.trim()}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed whitespace-pre-line">
+                              {detail.content}
+                            </p>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
