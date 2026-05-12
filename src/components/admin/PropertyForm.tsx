@@ -140,7 +140,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch('/api/content');
+        const res = await fetch(`${window.location.origin}/api/content`);
         if (!res.ok) return;
         const data = await res.json();
         if (data.success && data.data?.propertyCategories) {
@@ -210,7 +210,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
       const uploadFormData = new FormData();
       uploadFormData.append('file', file);
 
-      const response = await fetch('/api/upload', {
+      const response = await fetch(`${window.location.origin}/api/upload`, {
         method: 'POST',
         body: uploadFormData,
       });
@@ -242,7 +242,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
       const uploadFormData = new FormData();
       uploadFormData.append('file', file);
 
-      const response = await fetch('/api/upload', {
+      const response = await fetch(`${window.location.origin}/api/upload`, {
         method: 'POST',
         body: uploadFormData,
       });
@@ -277,7 +277,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
         const uploadFormData = new FormData();
         uploadFormData.append('file', file);
 
-        const response = await fetch('/api/upload', {
+        const response = await fetch(`${window.location.origin}/api/upload`, {
           method: 'POST',
           body: uploadFormData,
         });
@@ -314,7 +314,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
         const uploadFormData = new FormData();
         uploadFormData.append('file', file);
 
-        const response = await fetch('/api/upload', {
+        const response = await fetch(`${window.location.origin}/api/upload`, {
           method: 'POST',
           body: uploadFormData,
         });
@@ -354,7 +354,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
       const file = files[0];
       
       // 1. Get signature from our API
-      const sigResponse = await fetch('/api/upload/signature');
+      const sigResponse = await fetch(`${window.location.origin}/api/upload/signature`);
       const sigData = await sigResponse.json();
       
       if (!sigResponse.ok) throw new Error(sigData.error || 'Failed to get upload signature');
@@ -401,7 +401,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
       const file = files[0];
       const formData = new FormData();
       formData.append('file', file);
-      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      const res = await fetch(`${window.location.origin}/api/upload`, { method: 'POST', body: formData });
       if (res.ok) {
         const data = await res.json();
         setFormData((prev: any) => ({ ...prev, layoutImage: data.url }));
@@ -430,7 +430,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
         const uploadFormData = new FormData();
         uploadFormData.append('file', file);
 
-        const response = await fetch('/api/upload', {
+        const response = await fetch(`${window.location.origin}/api/upload`, {
           method: 'POST',
           body: uploadFormData,
         });
