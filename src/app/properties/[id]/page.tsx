@@ -6,7 +6,7 @@ import { MapPin, Phone, MessageSquare, Send, ArrowLeft, Share2, X, Leaf, Downloa
 import Link from 'next/link';
 import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
-import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
+import { motion, useScroll, useTransform, useMotionValueEvent, useMotionValue, useSpring } from 'framer-motion';
 import ShareAction from '@/components/main/ShareAction';
 import { openContactDialog } from '@/components/layout/ContactDialog';
 
@@ -47,21 +47,53 @@ const PropertyDetails = () => {
   const fruitX = useTransform(scrollYProgress, [0, 1], ['-20%', '120%']);
   const fruitRotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
   
-  // Synchronized horizontal move to stay in empty spaces (opposite to content)
-  const modelX = useTransform(scrollYProgress, (pos) => {
-    // Using Cosine to start on the opposite side of the first Left-aligned section
-    const horizontalMove = Math.cos(pos * Math.PI * 3) * 30; 
-    return `${horizontalMove}vw`;
-  });
-
-  // Sync camera orbit with scroll for exact rotation effect
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    if (modelViewerRef.current) {
-      const rotation = latest * 360 * 3;
-      modelViewerRef.current.cameraOrbit = `${rotation}deg 75deg 10m`;
-    }
-  });
+  const contactSectionRef = useRef<HTMLDivElement>(null);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
   
+  // High damping for premium feel
+  const springX = useSpring(mouseX, { damping: 40, stiffness: 200 });
+  const springY = useSpring(mouseY, { damping: 40, stiffness: 200 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!mounted) return;
+      
+      const screenWidth = window.innerWidth;
+      let x = e.clientX;
+      let y = e.clientY;
+
+      // "Empty Space" logic: if cursor is over central content, push model to margins
+      const contentWidth = 1100; // Average readable content width
+      const margin = (screenWidth - contentWidth) / 2;
+      
+      if (margin > 100) { // Only apply if there's enough margin
+        if (x > margin && x < screenWidth - margin) {
+          x = x < screenWidth / 2 ? margin / 2 : screenWidth - margin / 2;
+        }
+      }
+
+      // Stop above the "Start Your Journey" section
+      if (contactSectionRef.current) {
+        const rect = contactSectionRef.current.getBoundingClientRect();
+        const modelOffset = 100; // Half height of the model
+        if (y + modelOffset > rect.top) {
+          y = rect.top - modelOffset;
+        }
+      }
+
+      mouseX.set(x);
+      mouseY.set(y);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    // Initial position to prevent "hiding on start"
+    mouseX.set(window.innerWidth - 100);
+    mouseY.set(300);
+
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [mounted]);
+
   const modelY = useTransform(scrollYProgress, [0, 1], ['0vh', '80vh']);
 
   useEffect(() => {
@@ -130,11 +162,13 @@ const PropertyDetails = () => {
       {property.threeDElement && mounted && (
         <motion.div 
           style={{ 
-            x: modelX, 
-            y: modelY,
+            x: springX, 
+            y: springY,
+            translateX: '-50%',
+            translateY: '-50%',
             rotate: fruitRotate
           }}
-          className="fixed top-20 right-0 w-[40vw] h-[40vw] pointer-events-none z-[50] hidden lg:block"
+          className="fixed top-0 left-0 w-32 h-32 md:w-48 md:h-48 pointer-events-none z-[15] hidden lg:block"
         >
           <ModelViewer
             ref={modelViewerRef}
@@ -142,7 +176,7 @@ const PropertyDetails = () => {
             auto-rotate
             shadow-intensity="1"
             environment-image="neutral"
-            exposure="1"
+            exposure="1.2"
             interaction-prompt="none"
             style={{ width: '100%', height: '100%' }}
           ></ModelViewer>
@@ -578,6 +612,7 @@ const PropertyDetails = () => {
 
           {/* Bottom Enquiry Form - Center Aligned */}
           <motion.div 
+              ref={contactSectionRef}
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
