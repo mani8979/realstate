@@ -28,6 +28,7 @@ const AdminPlotManagement = () => {
   const [saving, setSaving] = useState(false);
   const [plots, setPlots] = useState<any[]>([]);
   const [bulkInput, setBulkInput] = useState('');
+  const [quickAddNumber, setQuickAddNumber] = useState('');
   const [deleteMode, setDeleteMode] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'map' | 'table'>('grid');
   const [selectedPlotIndex, setSelectedPlotIndex] = useState<number | null>(null);
@@ -143,6 +144,28 @@ const AdminPlotManagement = () => {
     setBulkInput('');
   };
 
+  const handleQuickAdd = () => {
+    if (!quickAddNumber.trim()) return;
+    
+    if (!plots.find(p => p.number === quickAddNumber.trim())) {
+      setPlots([...plots, { 
+        number: quickAddNumber.trim(), 
+        status: 'available', 
+        x: 50, y: 50, width: 5, height: 3 
+      }]);
+      
+      // Try to increment the number
+      const num = parseInt(quickAddNumber);
+      if (!isNaN(num)) {
+        setQuickAddNumber((num + 1).toString());
+      } else {
+        setQuickAddNumber('');
+      }
+    } else {
+      alert('Plot number already exists!');
+    }
+  };
+
   if (loading) return (
     <div className="min-h-screen bg-white dark:bg-[#050505] flex items-center justify-center">
       <Loader2 className="w-10 h-10 text-primary animate-spin" />
@@ -234,11 +257,36 @@ const AdminPlotManagement = () => {
             <p className="mt-4 text-[9px] text-gray-400 uppercase font-black tracking-widest text-center">Click color circles to customize</p>
           </div>
 
+          {/* Sequential Add Tool */}
+          <div className="bg-black/5 dark:bg-white/5 rounded-[2rem] p-8 border border-black/10 dark:border-white/10 flex flex-col gap-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Hash size={18} className="text-primary" />
+              <h3 className="text-sm font-black uppercase tracking-widest text-black dark:text-white">Quick Add Plot</h3>
+            </div>
+            <div className="flex gap-2">
+              <input 
+                type="text"
+                placeholder="Plot Number (e.g. 101)" 
+                className="flex-grow bg-white dark:bg-black rounded-xl px-4 py-4 text-sm font-bold border border-black/10 dark:border-white/10 focus:ring-2 focus:ring-primary/50 outline-none text-black dark:text-white"
+                value={quickAddNumber}
+                onChange={(e) => setQuickAddNumber(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleQuickAdd()}
+              />
+              <button 
+                onClick={handleQuickAdd}
+                className="p-4 bg-primary text-black rounded-xl hover:scale-105 active:scale-95 transition-all"
+              >
+                <Plus size={20} />
+              </button>
+            </div>
+            <p className="text-[9px] text-gray-400 uppercase font-black tracking-widest">Adds plot and suggests next number</p>
+          </div>
+
           {/* Bulk Add Tool */}
           <div className="bg-black/5 dark:bg-white/5 rounded-[2rem] p-8 border border-black/10 dark:border-white/10 flex flex-col gap-4">
             <div className="flex items-center gap-2 mb-2">
               <Plus size={18} className="text-primary" />
-              <h3 className="text-sm font-black uppercase tracking-widest text-black dark:text-white">Add New Plots</h3>
+              <h3 className="text-sm font-black uppercase tracking-widest text-black dark:text-white">Bulk Add Plots</h3>
             </div>
             <textarea 
               placeholder="Enter plot numbers separated by commas or newlines (e.g. 101, 102, 103)" 
@@ -380,7 +428,6 @@ const AdminPlotManagement = () => {
                     <tr className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 border-b border-black/10 dark:border-white/10">
                       <th className="px-6 py-4">Plot Number</th>
                       <th className="px-6 py-4">Plot Status</th>
-                      <th className="px-6 py-4">Position (X, Y)</th>
                       <th className="px-6 py-4 text-right">Actions</th>
                     </tr>
                   </thead>
@@ -409,36 +456,6 @@ const AdminPlotManagement = () => {
                               <option value="booked" className="text-black">Booked</option>
                               <option value="sold" className="text-black">Sold</option>
                             </select>
-                          </div>
-                        </td>
-                        <td className="px-6 py-5">
-                          <div className="flex items-center gap-3">
-                             <div className="flex items-center gap-1">
-                               <span className="text-[9px] font-bold text-gray-400">X:</span>
-                               <input 
-                                 type="number" 
-                                 value={Math.round(plot.x || 0)} 
-                                 onChange={(e) => {
-                                   const newPlots = [...plots];
-                                   newPlots[idx].x = parseInt(e.target.value);
-                                   setPlots(newPlots);
-                                 }}
-                                 className="w-12 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded px-1 py-0.5 text-[10px] font-bold text-black dark:text-white"
-                               />
-                             </div>
-                             <div className="flex items-center gap-1">
-                               <span className="text-[9px] font-bold text-gray-400">Y:</span>
-                               <input 
-                                 type="number" 
-                                 value={Math.round(plot.y || 0)} 
-                                 onChange={(e) => {
-                                   const newPlots = [...plots];
-                                   newPlots[idx].y = parseInt(e.target.value);
-                                   setPlots(newPlots);
-                                 }}
-                                 className="w-12 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded px-1 py-0.5 text-[10px] font-bold text-black dark:text-white"
-                               />
-                             </div>
                           </div>
                         </td>
                         <td className="px-6 py-5 text-right">
