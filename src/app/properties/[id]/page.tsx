@@ -52,49 +52,22 @@ const PropertyDetails = () => {
   const mouseY = useMotionValue(0);
   
   // High damping for premium feel
-  const springX = useSpring(mouseX, { damping: 40, stiffness: 200 });
-  const springY = useSpring(mouseY, { damping: 40, stiffness: 200 });
-
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!mounted) return;
-      
-      const screenWidth = window.innerWidth;
-      let x = e.clientX;
-      let y = e.clientY;
+    // No-op for mouse move, we are switching back to scroll
+  }, []);
 
-      // "Empty Space" logic: if cursor is over central content, push model to margins
-      const contentWidth = 1100; // Average readable content width
-      const margin = (screenWidth - contentWidth) / 2;
-      
-      if (margin > 100) { // Only apply if there's enough margin
-        if (x > margin && x < screenWidth - margin) {
-          x = x < screenWidth / 2 ? margin / 2 : screenWidth - margin / 2;
-        }
-      }
+  // Zig-zag horizontal movement to stay in "empty spaces" (margins)
+  const modelX = useTransform(scrollYProgress, (p) => {
+    // Math.cos creates a smooth wave between left and right
+    // We adjust the frequency (4) and amplitude (40) to keep it in margins
+    const x = Math.cos(p * Math.PI * 4) * 40 + 50; 
+    return `${x}vw`;
+  });
 
-      // Stop above the "Start Your Journey" section
-      if (contactSectionRef.current) {
-        const rect = contactSectionRef.current.getBoundingClientRect();
-        const modelOffset = 100; // Half height of the model
-        if (y + modelOffset > rect.top) {
-          y = rect.top - modelOffset;
-        }
-      }
+  // Vertical movement that "goes down" as you scroll, but stops before the footer/form
+  const modelY = useTransform(scrollYProgress, [0, 0.85, 1], ['15vh', '80vh', '80vh']);
 
-      mouseX.set(x);
-      mouseY.set(y);
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    // Initial position to prevent "hiding on start"
-    mouseX.set(window.innerWidth - 100);
-    mouseY.set(300);
-
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [mounted]);
-
-  const modelY = useTransform(scrollYProgress, [0, 1], ['0vh', '80vh']);
+  const modelYScroll = useTransform(scrollYProgress, [0, 1], ['0vh', '80vh']);
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -162,13 +135,12 @@ const PropertyDetails = () => {
       {property.threeDElement && mounted && (
         <motion.div 
           style={{ 
-            x: springX, 
-            y: springY,
+            x: modelX, 
+            y: modelY,
             translateX: '-50%',
-            translateY: '-50%',
             rotate: fruitRotate
           }}
-          className="fixed top-0 left-0 w-32 h-32 md:w-48 md:h-48 pointer-events-none z-[15] hidden lg:block"
+          className="fixed top-0 left-0 w-32 h-32 md:w-40 md:h-40 pointer-events-none z-[30] hidden lg:block"
         >
           <ModelViewer
             ref={modelViewerRef}
