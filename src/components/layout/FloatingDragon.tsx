@@ -129,15 +129,11 @@ const FloatingDragon = () => {
   // Don't show if not mounted or on admin pages
   if (!mounted || pathname?.startsWith('/admin')) return null;
 
-  // ONLY show on property pages
-  if (!pathname?.includes('/properties/')) return null;
+  // Use property-specific model if available, otherwise global fallback
+  const modelSrc = currentProperty?.threeDElement || settings?.globalThreeDModel;
 
-  // REMOVED title restriction to show on all properties as requested
-  // const isLendyPinkValley = currentProperty?.title?.toLowerCase().includes('lendy pink valley');
-  // if (!isLendyPinkValley) return null;
-
-  // Don't show if no model is set
-  if (!settings?.globalThreeDModel) return null;
+  // Don't show if no model is found anywhere
+  if (!modelSrc) return null;
 
   return (
     <>
@@ -159,7 +155,7 @@ const FloatingDragon = () => {
         >
           <ModelViewer
             ref={modelViewerRef}
-            src={settings.globalThreeDModel}
+            src={modelSrc}
             alt="Global 3D Experience"
             camera-controls
             disable-zoom
