@@ -426,7 +426,7 @@ const MediaPage = () => {
                   </div>
 
                   {/* Plot Status Table */}
-                  <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[2rem] border border-black/10 dark:border-white/10 p-6 flex flex-col gap-4 overflow-hidden h-[400px]">
+                  <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[2rem] border border-black/10 dark:border-white/10 p-6 flex flex-col gap-4 overflow-hidden flex-grow min-h-[400px]">
                     <div className="flex items-center justify-between px-2">
                       <div className="space-y-1">
                         <h3 className="text-xl font-black uppercase tracking-tighter text-black dark:text-white">Inventory Table</h3>
@@ -437,52 +437,40 @@ const MediaPage = () => {
                       </div>
                     </div>
                     
-                    <div className="flex-grow overflow-y-auto pr-4 custom-scrollbar">
-                      <table className="w-full text-left border-separate border-spacing-y-3">
-                        <thead>
-                          <tr className="text-[10px] font-black uppercase tracking-[0.2em] text-black dark:text-white/30">
-                            <th className="px-6 py-4">Plot #</th>
-                            <th className="px-6 py-4">Status</th>
-                            <th className="px-6 py-4 text-right">Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {property.plots?.map((plot: any, idx: number) => (
-                            <tr key={idx} className="bg-white dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl overflow-hidden group hover:bg-black/5 dark:hover:bg-white/10 transition-all">
-                              <td className="px-6 py-4 rounded-l-2xl">
-                                <div className="flex items-center gap-3">
-                                  <div className={`w-1.5 h-6 rounded-full`} style={{
-                                    backgroundColor: plot.status === 'sold' ? (property.soldColor || '#fac915') :
-                                                    plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
-                                                    (property.availableColor || '#ffffff')
-                                  }}></div>
-                                  <span className="text-sm font-black text-black dark:text-white">{plot.number}</span>
-                                </div>
-                              </td>
-                              <td className="px-6 py-4">
-                                <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-black/10 dark:border-white/10`} style={{
-                                  backgroundColor: plot.status === 'sold' ? `${property.soldColor || '#fac915'}20` :
-                                                  plot.status === 'booked' ? `${property.bookedColor || '#22c55e'}20` :
-                                                  'transparent',
+                    <div className="flex-grow overflow-y-auto pr-2 custom-scrollbar">
+                      <div className="space-y-3">
+                        {property.plots?.map((plot: any, idx: number) => (
+                          <div 
+                            key={idx} 
+                            className="bg-white dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl p-4 flex items-center justify-between group hover:bg-black/5 dark:hover:bg-white/10 transition-all"
+                          >
+                            <div className="flex items-center gap-4">
+                              <div className="w-1.5 h-8 rounded-full" style={{
+                                backgroundColor: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                                plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                                (property.availableColor || '#ffffff')
+                              }}></div>
+                              <div className="flex flex-col">
+                                <span className="text-sm font-black text-black dark:text-white">Plot {plot.number}</span>
+                                <span className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-50" style={{
                                   color: plot.status === 'sold' ? (property.soldColor || '#fac915') :
                                          plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
                                          'inherit'
                                 }}>
                                   {plot.status}
                                 </span>
-                              </td>
-                              <td className="px-6 py-5 text-right">
-                                <button 
-                                  onClick={() => openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`)}
-                                  className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-black dark:text-white transition-colors"
-                                >
-                                  Enquire Now
-                                </button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                              </div>
+                            </div>
+                            
+                            <button 
+                              onClick={() => openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`)}
+                              className="text-[9px] font-black uppercase tracking-widest text-primary hover:text-black dark:text-white transition-colors border border-primary/20 px-4 py-2 rounded-xl bg-primary/5 hover:bg-primary"
+                            >
+                              Enquire
+                            </button>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
