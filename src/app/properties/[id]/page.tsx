@@ -84,7 +84,7 @@ const PropertyDetails = () => {
     });
     
     points.push(0.9, 1);
-    xValues.push(50, 50); // Center at the end
+    xValues.push(95, 100); // Stay at edge at the end
     
     return { points, xValues };
   };
@@ -169,7 +169,8 @@ const PropertyDetails = () => {
               x: "-50%",
               y: "-50%"
             }}
-            className="absolute w-48 h-48 md:w-[400px] md:h-[400px] flex items-center justify-center transition-all duration-300 ease-out"
+            className="absolute w-48 h-48 md:w-[400px] md:h-[400px] flex items-center justify-center transition-all duration-300 ease-out pointer-events-auto cursor-pointer group"
+            onClick={() => setShowFruitPopup(true)}
           >
             <ModelViewer
               src={property.threeDElement}
@@ -180,6 +181,14 @@ const PropertyDetails = () => {
               interaction-prompt="none"
               style={{ width: '100%', height: '100%' }}
             ></ModelViewer>
+
+            {/* Click Indicator */}
+            <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 bg-primary/20 backdrop-blur-md border border-primary/30 px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 scale-50 group-hover:scale-100 whitespace-nowrap pointer-events-none">
+              <span className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                <Leaf size={12} />
+                Click for Info
+              </span>
+            </div>
           </motion.div>
         </div>
       )}
