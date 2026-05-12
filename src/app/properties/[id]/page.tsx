@@ -66,7 +66,9 @@ const PropertyDetails = () => {
   
   // Dynamic X Path based on details
   const getXPath = () => {
-    if (!property?.details || property.details.length === 0) return [80, 80, 50, 50];
+    if (!property?.details || property.details.length === 0) {
+      return { points: [0, 1], xValues: [85, 50] };
+    }
     
     const points = [0, 0.1];
     const xValues = [85, 85];
