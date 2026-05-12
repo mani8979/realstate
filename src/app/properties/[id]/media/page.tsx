@@ -428,14 +428,18 @@ const MediaPage = () => {
                               <span className="text-xs font-bold text-black dark:text-white/60">Total Plots</span>
                               <span className="text-xl font-black">{mappedPlots.length}</span>
                             </div>
-                            <div className="grid grid-cols-2 gap-3">
-                              <div className="p-4 rounded-2xl bg-yellow-400/10 border border-yellow-400/20">
-                                <span className="block text-[8px] font-black uppercase tracking-widest text-yellow-400/60 mb-1">Sold</span>
-                                <span className="text-lg font-black text-yellow-400">{mappedPlots.filter((p: any) => p.status === 'sold').length}</span>
+                            <div className="grid grid-cols-3 gap-2">
+                              <div className="p-3 rounded-2xl bg-yellow-400/10 border border-yellow-400/20 flex flex-col items-center">
+                                <span className="block text-[7px] font-black uppercase tracking-widest text-yellow-400/60 mb-1">Sold</span>
+                                <span className="text-base font-black text-yellow-400">{mappedPlots.filter((p: any) => p.status === 'sold').length}</span>
                               </div>
-                              <div className="p-4 rounded-2xl bg-black/10 dark:bg-white/10 border border-black/20 dark:border-white/20">
-                                <span className="block text-[8px] font-black uppercase tracking-widest text-black dark:text-white/60 mb-1">Available</span>
-                                <span className="text-lg font-black text-black dark:text-white">{mappedPlots.filter((p: any) => p.status === 'available' || p.status === 'unsold').length}</span>
+                              <div className="p-3 rounded-2xl bg-green-500/10 border border-green-500/20 flex flex-col items-center">
+                                <span className="block text-[7px] font-black uppercase tracking-widest text-green-500/60 mb-1">Booked</span>
+                                <span className="text-base font-black text-green-500">{mappedPlots.filter((p: any) => p.status === 'booked').length}</span>
+                              </div>
+                              <div className="p-3 rounded-2xl bg-white/5 border border-white/10 flex flex-col items-center">
+                                <span className="block text-[7px] font-black uppercase tracking-widest text-black dark:text-white/60 mb-1">Available</span>
+                                <span className="text-base font-black text-black dark:text-white">{mappedPlots.filter((p: any) => p.status === 'available' || !p.status || p.status === 'unsold').length}</span>
                               </div>
                             </div>
                           </>
