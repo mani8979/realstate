@@ -149,16 +149,27 @@ const PropertyDetails = () => {
         </motion.div>
       )}
       
-      {/* Hero Section - Clean Image */}
-      <div className="relative w-full h-[50vh] md:h-[70vh] overflow-hidden">
+      {/* Hero Section - No Crop Image */}
+      <div className="relative w-full h-[50vh] md:h-[70vh] flex items-center justify-center overflow-hidden bg-black dark:bg-[#050505]">
+        {/* Blurred Background to prevent ugly letterboxing while allowing object-contain */}
+        <div className="absolute inset-0 opacity-40 dark:opacity-30">
+          <Image
+            src={property.images[activeImage] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=2000'}
+            alt="Background"
+            fill
+            className="object-cover blur-3xl scale-110"
+            priority
+          />
+        </div>
+
         <Image
           src={property.images[activeImage] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=2000'}
           alt={property.title}
           fill
-          className="object-cover"
+          className="object-contain z-10"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/20 z-20 pointer-events-none"></div>
         
         {/* Quick Media Icons - Floating Over Hero */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center justify-center gap-3.5 md:gap-6 z-30 bg-white dark:bg-black/60 backdrop-blur-2xl px-5 md:px-10 py-3.5 md:py-5 rounded-[2.5rem] border border-black/10 dark:border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-fit max-w-[95vw]">
@@ -370,7 +381,7 @@ const PropertyDetails = () => {
 
 
           {/* Interactive Plot Inventory */}
-          {property.layoutImage && property.plots?.length > 0 && (
+          {property.plots?.length > 0 && (
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -382,125 +393,177 @@ const PropertyDetails = () => {
                  <p className="text-gray-500 font-medium uppercase tracking-widest text-[10px] md:text-xs">Explore available plots and secure your future asset today</p>
               </div>
 
-              <div className="flex flex-col xl:flex-row gap-10">
-                {/* Map View */}
-                <div className="flex-grow bg-black/5 dark:bg-white/5 rounded-[3rem] border border-black/10 dark:border-white/10 overflow-hidden relative shadow-2xl flex items-center justify-center p-4 md:p-10 min-h-[500px]">
-                   <div className="relative max-w-full max-h-full">
-                      <Image 
-                        src={property.layoutImage} 
-                        alt="Plot Layout" 
-                        width={4000} 
-                        height={3000} 
-                        className="w-auto h-auto max-w-full max-h-[70vh] object-contain rounded-2xl"
-                      />
-                      {property.plots.filter((p: any) => p.x !== undefined && p.y !== undefined).map((plot: any, idx: number) => (
-                        <div 
-                          key={idx}
-                          style={{ 
-                            position: 'absolute',
-                            left: `${plot.x}%`, 
-                            top: `${plot.y}%`,
-                            width: `${plot.width || 5}%`,
-                            height: `${plot.height || 3}%`,
-                            transform: 'translate(-50%, -50%)'
-                          }}
-                          className={`z-10 rounded-md border border-white shadow-lg flex items-center justify-center transition-all hover:scale-125 group/plot ${
-                            plot.status === 'sold' ? 'bg-yellow-400 text-black' :
-                            plot.status === 'booked' ? 'bg-green-500 text-black dark:text-white' :
-                            'bg-white text-black'
-                          }`}
-                        >
-                          <span className="text-[6px] md:text-[8px] font-black">{plot.number}</span>
-                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover/plot:opacity-100 transition-all pointer-events-none whitespace-nowrap z-20">
-                            <div className="bg-white dark:bg-black/90 backdrop-blur-md text-black dark:text-white px-3 py-1.5 rounded-lg border border-black/10 dark:border-white/10 text-[10px] font-bold shadow-2xl">
-                              Plot {plot.number} • <span className={
-                                plot.status === 'sold' ? 'text-yellow-400' :
-                                plot.status === 'booked' ? 'text-green-500' :
-                                'text-black dark:text-white'
-                              }>{plot.status.toUpperCase()}</span>
+              {property.layoutImage ? (
+                <div className="flex flex-col xl:flex-row gap-10">
+                  {/* Map View */}
+                  <div className="flex-grow bg-black/5 dark:bg-white/5 rounded-[3rem] border border-black/10 dark:border-white/10 overflow-hidden relative shadow-2xl flex items-center justify-center p-4 md:p-10 min-h-[500px]">
+                     <div className="relative max-w-full max-h-full">
+                        <Image 
+                          src={property.layoutImage} 
+                          alt="Plot Layout" 
+                          width={4000} 
+                          height={3000} 
+                          className="w-auto h-auto max-w-full max-h-[70vh] object-contain rounded-2xl"
+                        />
+                        {property.plots.filter((p: any) => p.x !== undefined && p.y !== undefined).map((plot: any, idx: number) => (
+                          <div 
+                            key={idx}
+                            style={{ 
+                              position: 'absolute',
+                              left: `${plot.x}%`, 
+                              top: `${plot.y}%`,
+                              width: `${plot.width || 5}%`,
+                              height: `${plot.height || 3}%`,
+                              transform: 'translate(-50%, -50%)'
+                            }}
+                            className={`z-10 rounded-md border border-white shadow-lg flex items-center justify-center transition-all hover:scale-125 group/plot ${
+                              plot.status === 'sold' ? 'bg-yellow-400 text-black' :
+                              plot.status === 'booked' ? 'bg-green-500 text-black dark:text-white' :
+                              'bg-white text-black'
+                            }`}
+                          >
+                            <span className="text-[6px] md:text-[8px] font-black">{plot.number}</span>
+                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover/plot:opacity-100 transition-all pointer-events-none whitespace-nowrap z-20">
+                              <div className="bg-white dark:bg-black/90 backdrop-blur-md text-black dark:text-white px-3 py-1.5 rounded-lg border border-black/10 dark:border-white/10 text-[10px] font-bold shadow-2xl">
+                                Plot {plot.number} • <span className={
+                                  plot.status === 'sold' ? 'text-yellow-400' :
+                                  plot.status === 'booked' ? 'text-green-500' :
+                                  'text-black dark:text-white'
+                                }>{plot.status.toUpperCase()}</span>
+                              </div>
                             </div>
                           </div>
+                        ))}
+                     </div>
+                     
+                     {/* Legend Overlay */}
+                     <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10 flex flex-wrap gap-4 p-4 bg-white/80 dark:bg-black/80 backdrop-blur-xl rounded-2xl border border-black/10 dark:border-white/10 shadow-xl z-20">
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 rounded bg-white border border-gray-200"></div>
+                          <span className="text-[8px] md:text-[10px] font-bold uppercase text-gray-500">Available</span>
                         </div>
-                      ))}
-                   </div>
-                   
-                   {/* Legend Overlay */}
-                   <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10 flex flex-wrap gap-4 p-4 bg-white/80 dark:bg-black/80 backdrop-blur-xl rounded-2xl border border-black/10 dark:border-white/10 shadow-xl z-20">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded bg-white border border-gray-200"></div>
-                        <span className="text-[8px] md:text-[10px] font-bold uppercase text-gray-500">Available</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded bg-green-500"></div>
-                        <span className="text-[8px] md:text-[10px] font-bold uppercase text-gray-500">Booked</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded bg-yellow-400"></div>
-                        <span className="text-[8px] md:text-[10px] font-bold uppercase text-gray-500">Sold</span>
-                      </div>
-                   </div>
-                </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 rounded bg-green-500"></div>
+                          <span className="text-[8px] md:text-[10px] font-bold uppercase text-gray-500">Booked</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 rounded bg-yellow-400"></div>
+                          <span className="text-[8px] md:text-[10px] font-bold uppercase text-gray-500">Sold</span>
+                        </div>
+                     </div>
+                  </div>
 
-                {/* Table View */}
-                <div className="w-full xl:w-[400px] flex flex-col gap-6">
-                   <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[3rem] border border-black/10 dark:border-white/10 p-8 flex flex-col h-[600px]">
-                      <div className="flex items-center justify-between mb-8">
-                         <div className="space-y-1">
-                            <h3 className="text-xl font-black uppercase tracking-tighter text-black dark:text-white">Unit Table</h3>
-                            <p className="text-[10px] font-bold text-primary uppercase tracking-widest">Availability List</p>
-                         </div>
-                         <div className="bg-primary/10 px-4 py-2 rounded-xl border border-primary/20">
-                            <span className="text-[10px] font-black text-primary uppercase tracking-widest">{property.plots.length} Units</span>
-                         </div>
-                      </div>
+                  {/* Table View */}
+                  <div className="w-full xl:w-[400px] flex flex-col gap-6">
+                     <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[3rem] border border-black/10 dark:border-white/10 p-8 flex flex-col h-[600px]">
+                        <div className="flex items-center justify-between mb-8">
+                           <div className="space-y-1">
+                              <h3 className="text-xl font-black uppercase tracking-tighter text-black dark:text-white">Unit Table</h3>
+                              <p className="text-[10px] font-bold text-primary uppercase tracking-widest">Availability List</p>
+                           </div>
+                           <div className="bg-primary/10 px-4 py-2 rounded-xl border border-primary/20">
+                              <span className="text-[10px] font-black text-primary uppercase tracking-widest">{property.plots.length} Units</span>
+                           </div>
+                        </div>
 
-                      <div className="flex-grow overflow-y-auto pr-2 custom-scrollbar">
-                         <table className="w-full text-left border-separate border-spacing-y-3">
-                            <thead>
-                               <tr className="text-[10px] font-black uppercase tracking-[0.2em] text-black dark:text-white/30">
-                                  <th className="px-4 py-2">ID</th>
-                                  <th className="px-4 py-2">Status</th>
-                                  <th className="px-4 py-2 text-right"></th>
-                               </tr>
-                            </thead>
-                            <tbody>
-                               {property.plots.map((plot: any, idx: number) => (
-                                 <tr key={idx} className="bg-white dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl overflow-hidden group hover:bg-black/5 dark:hover:bg-white/10 transition-all">
-                                    <td className="px-4 py-4 rounded-l-2xl">
-                                       <div className="flex items-center gap-3">
-                                          <div className={`w-1.5 h-6 rounded-full ${
-                                            plot.status === 'sold' ? 'bg-yellow-400' :
-                                            plot.status === 'booked' ? 'bg-green-500' :
-                                            'bg-white'
-                                          }`}></div>
-                                          <span className="text-sm font-black text-black dark:text-white">{plot.number}</span>
-                                       </div>
-                                    </td>
-                                    <td className="px-4 py-4">
-                                       <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full border ${
-                                          plot.status === 'sold' ? 'bg-yellow-400/10 text-yellow-400 border-yellow-400/20' :
-                                          plot.status === 'booked' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
-                                          'bg-black/5 dark:bg-white/5 text-black dark:text-white border-black/10 dark:border-white/10'
-                                       }`}>
-                                          {plot.status}
-                                       </span>
-                                    </td>
-                                    <td className="px-4 py-4 text-right rounded-r-2xl">
-                                       <button 
-                                          onClick={() => openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`)}
-                                          className="text-[9px] font-black uppercase tracking-widest text-primary hover:text-black dark:text-white transition-colors"
-                                       >
-                                          Enquire
-                                       </button>
-                                    </td>
+                        <div className="flex-grow overflow-y-auto pr-2 custom-scrollbar">
+                           <table className="w-full text-left border-separate border-spacing-y-3">
+                              <thead>
+                                 <tr className="text-[10px] font-black uppercase tracking-[0.2em] text-black dark:text-white/30">
+                                    <th className="px-4 py-2">ID</th>
+                                    <th className="px-4 py-2">Status</th>
+                                    <th className="px-4 py-2 text-right"></th>
                                  </tr>
-                               ))}
-                            </tbody>
-                         </table>
+                              </thead>
+                              <tbody>
+                                 {property.plots.map((plot: any, idx: number) => (
+                                   <tr key={idx} className="bg-white dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl overflow-hidden group hover:bg-black/5 dark:hover:bg-white/10 transition-all">
+                                      <td className="px-4 py-4 rounded-l-2xl">
+                                         <div className="flex items-center gap-3">
+                                            <div className={`w-1.5 h-6 rounded-full ${
+                                              plot.status === 'sold' ? 'bg-yellow-400' :
+                                              plot.status === 'booked' ? 'bg-green-500' :
+                                              'bg-white'
+                                            }`}></div>
+                                            <span className="text-sm font-black text-black dark:text-white">{plot.number}</span>
+                                         </div>
+                                      </td>
+                                      <td className="px-4 py-4">
+                                         <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full border ${
+                                            plot.status === 'sold' ? 'bg-yellow-400/10 text-yellow-400 border-yellow-400/20' :
+                                            plot.status === 'booked' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
+                                            'bg-black/5 dark:bg-white/5 text-black dark:text-white border-black/10 dark:border-white/10'
+                                         }`}>
+                                            {plot.status}
+                                         </span>
+                                      </td>
+                                      <td className="px-4 py-4 text-right rounded-r-2xl">
+                                         <button 
+                                            onClick={() => openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`)}
+                                            className="text-[9px] font-black uppercase tracking-widest text-primary hover:text-black dark:text-white transition-colors"
+                                         >
+                                            Enquire
+                                         </button>
+                                      </td>
+                                   </tr>
+                                 ))}
+                              </tbody>
+                           </table>
+                        </div>
+                     </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[3rem] border border-black/10 dark:border-white/10 p-8 md:p-12">
+                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+                      <div className="space-y-2">
+                         <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter text-black dark:text-white">Plot Availability Grid</h3>
+                         <p className="text-[10px] font-bold text-primary uppercase tracking-widest">{property.plots.length} Total Units</p>
+                      </div>
+                      
+                      <div className="flex flex-wrap items-center gap-4 bg-white dark:bg-[#050505] p-4 rounded-2xl border border-black/5 dark:border-white/5">
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 rounded-full bg-white border border-gray-200 shadow-inner"></div>
+                          <span className="text-[10px] font-bold uppercase text-gray-500">Available ({property.plots.filter((p:any) => p.status === 'available').length})</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.3)]"></div>
+                          <span className="text-[10px] font-bold uppercase text-green-600 dark:text-green-400">Booked ({property.plots.filter((p:any) => p.status === 'booked').length})</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 rounded-full bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.3)]"></div>
+                          <span className="text-[10px] font-bold uppercase text-yellow-600 dark:text-yellow-400">Sold ({property.plots.filter((p:any) => p.status === 'sold').length})</span>
+                        </div>
                       </div>
                    </div>
+
+                   <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 md:gap-4">
+                     {property.plots.map((plot: any, idx: number) => (
+                        <button
+                          key={idx}
+                          onClick={() => openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`)}
+                          className={`
+                            relative aspect-square rounded-2xl flex flex-col items-center justify-center gap-1 transition-all
+                            border-2 shadow-sm group hover:scale-105 active:scale-95
+                            ${plot.status === 'sold' ? 'bg-yellow-400 border-yellow-500 text-black shadow-yellow-400/20' : 
+                              plot.status === 'booked' ? 'bg-green-500 border-green-600 text-black dark:text-white shadow-green-500/20' : 
+                              'bg-white dark:bg-[#111] border-gray-200 dark:border-gray-800 text-black dark:text-white hover:border-primary'
+                            }
+                          `}
+                        >
+                          <span className="text-xl md:text-2xl font-black tracking-tighter">{plot.number}</span>
+                          <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
+                            plot.status === 'sold' ? 'bg-black/10' :
+                            plot.status === 'booked' ? 'bg-black/20' :
+                            'bg-black/5 dark:bg-white/5'
+                          }`}>
+                            {plot.status}
+                          </span>
+                        </button>
+                     ))}
+                   </div>
                 </div>
-              </div>
+              )}
             </motion.div>
           )}
           <div className="h-px bg-black/5 dark:bg-white/5 mt-20" />
