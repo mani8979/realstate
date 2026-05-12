@@ -49,28 +49,40 @@ export const parseRawText = (text: string): Section[] => {
   const sections: Section[] = [];
   let currentSection: Section | null = null;
 
-  lines.forEach((line) => {
-    // 1. ALL CAPS = Main Heading (Start of a new section)
-    if (line.length > 3 && line === line.toUpperCase() && !line.startsWith('-') && !line.startsWith('*')) {
+  lines.forEach((line, index) => {
+    const isBullet = line.startsWith('-') || line.startsWith('*') || line.startsWith('•') || line.startsWith('→');
+    const isNextLineBullet = index + 1 < lines.length && (lines[index + 1].startsWith('-') || lines[index + 1].startsWith('*') || lines[index + 1].startsWith('•') || lines[index + 1].startsWith('→'));
+    
+    // Advanced Heuristics for Heading:
+    // 1. ALL CAPS (and not a very long sentence)
+    // 2. Ends with a colon
+    // 3. Very short line (< 40 chars) NOT ending with period AND (next line is bullet)
+    const isHeading = !isBullet && line.length < 60 && !line.endsWith('.') && (
+      (line === line.toUpperCase() && line.length > 3) || 
+      line.endsWith(':') || 
+      isNextLineBullet
+    );
+
+    if (isHeading) {
       if (currentSection) sections.push(currentSection);
+      let headingText = line.replace(/:$/, '').trim(); // Remove trailing colon
       currentSection = {
         id: generateId(),
         type: 'heading',
-        heading: line,
+        heading: headingText,
         content: '',
         showArrow: true,
         isPointed: false,
         alignment: 'left'
       };
     } 
-    // 2. Bullet Point detection
-    else if (line.startsWith('-') || line.startsWith('*') || line.startsWith('•')) {
-      const bulletText = line.replace(/^[-*•]\s*/, '');
+    else if (isBullet) {
+      const bulletText = line.replace(/^[-*•→]\s*/, '').trim();
       if (!currentSection) {
         currentSection = {
           id: generateId(),
           type: 'heading',
-          heading: 'Untitled Section',
+          heading: 'Property Details', // Smart default
           content: bulletText,
           isPointed: true,
           alignment: 'left'
@@ -80,31 +92,19 @@ export const parseRawText = (text: string): Section[] => {
         currentSection.content += (currentSection.content ? '\n' : '') + bulletText;
       }
     }
-    // 3. Short lines = Side Heading
-    else if (line.length < 40 && !currentSection?.content) {
-      if (!currentSection) {
-        currentSection = {
-          id: generateId(),
-          type: 'heading',
-          heading: line,
-          content: '',
-          alignment: 'left'
-        };
-      } else {
-        currentSection.sideHeading = line;
-      }
-    }
-    // 4. Paragraph
+    // Regular Paragraph
     else {
       if (!currentSection) {
         currentSection = {
           id: generateId(),
           type: 'heading',
-          heading: 'Untitled Section',
+          heading: 'Overview',
           content: line,
           alignment: 'left'
         };
       } else {
+        // If it's already pointed and we get a normal paragraph, it might be a continuation of a bullet
+        // or just plain text. We just append it.
         currentSection.content += (currentSection.content ? '\n' : '') + line;
       }
     }

@@ -775,7 +775,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                         value={detail.heading}
                         onChange={(e) => {
                           const newDetails = [...formData.details];
-                          newDetails[idx].heading = e.target.value;
+                          newDetails[idx] = { ...newDetails[idx], heading: e.target.value };
                           setFormData({ ...formData, details: newDetails });
                         }}
                       />
@@ -789,7 +789,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                         value={detail.sideHeading}
                         onChange={(e) => {
                           const newDetails = [...formData.details];
-                          newDetails[idx].sideHeading = e.target.value;
+                          newDetails[idx] = { ...newDetails[idx], sideHeading: e.target.value };
                           setFormData({ ...formData, details: newDetails });
                         }}
                       />
@@ -805,7 +805,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                       value={detail.content}
                       onChange={(e) => {
                         const newDetails = [...formData.details];
-                        newDetails[idx].content = e.target.value;
+                        newDetails[idx] = { ...newDetails[idx], content: e.target.value };
                         setFormData({ ...formData, details: newDetails });
                       }}
                     ></textarea>
@@ -819,7 +819,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                         checked={detail.showArrow}
                         onChange={(e) => {
                           const newDetails = [...formData.details];
-                          newDetails[idx].showArrow = e.target.checked;
+                          newDetails[idx] = { ...newDetails[idx], showArrow: e.target.checked };
                           setFormData({ ...formData, details: newDetails });
                         }}
                       />
@@ -832,7 +832,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                         checked={detail.isPointed}
                         onChange={(e) => {
                           const newDetails = [...formData.details];
-                          newDetails[idx].isPointed = e.target.checked;
+                          newDetails[idx] = { ...newDetails[idx], isPointed: e.target.checked };
                           setFormData({ ...formData, details: newDetails });
                         }}
                       />
