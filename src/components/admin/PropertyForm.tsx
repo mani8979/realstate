@@ -4,7 +4,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Image as ImageIcon, X, Plus, Save, Loader2, ChevronUp, ChevronDown, Play, Target, Hash, Settings, Trash, Sliders, Maximize2, ChevronLeft, Zap, List, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SmartContentEditor, Section } from './SmartContentEditor';
+import { SmartContentEditor, Section, parseRawText } from './SmartContentEditor';
+
 
 interface PropertyFormProps {
   initialData?: any;
@@ -160,6 +161,26 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     }));
     setFormData((prev: any) => ({ ...prev, details: formattedDetails }));
     setShowSmartEditor(false);
+  };
+
+  const handleSmartParse = () => {
+    if (!formData.description.trim()) return;
+    const parsed = parseRawText(formData.description);
+    const formattedDetails = parsed.map(s => ({
+      heading: s.heading || '',
+      sideHeading: s.sideHeading || '',
+      content: s.content || '',
+      showArrow: !!s.showArrow,
+      isPointed: !!s.isPointed,
+      alignment: s.alignment || 'left'
+    }));
+    setFormData((prev: any) => ({ ...prev, details: formattedDetails }));
+    
+    // Scroll to the details section
+    const detailsElement = document.getElementById('details-section');
+    if (detailsElement) {
+      detailsElement.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const handleFruitUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -752,7 +773,18 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
 
           {/* Description */}
           <div className="bg-white dark:bg-gray-900/50 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Description</h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white">Description</h3>
+              <button
+                type="button"
+                onClick={handleSmartParse}
+                disabled={!formData.description.trim()}
+                className="flex items-center gap-2 text-primary font-bold text-[10px] uppercase tracking-widest bg-primary/10 px-4 py-2 rounded-xl hover:bg-primary hover:text-black transition-all disabled:opacity-50"
+              >
+                <Sparkles size={14} />
+                <span>Smart Parse into Sections</span>
+              </button>
+            </div>
             <textarea
               required
               rows={8}
@@ -764,7 +796,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           </div>
 
           {/* Structured Details */}
-          <div className="bg-white dark:bg-gray-900/50 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
+          <div id="details-section" className="bg-white dark:bg-gray-900/50 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
             <div className="flex items-center justify-between">
               <h3 className="text-xl font-bold text-gray-900 dark:text-white">Structured Property Details</h3>
               <div className="flex items-center gap-4">
@@ -1852,7 +1884,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
         <button
           type="button"
           onClick={() => window.history.back()}
-          className="px-8 py-4 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-600 dark:text-gray-400 font-bold rounded-2xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+          className="px-8 py-4 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 font-bold rounded-2xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
         >
           Cancel
         </button>

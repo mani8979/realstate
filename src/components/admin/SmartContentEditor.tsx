@@ -42,9 +42,9 @@ interface SmartContentEditorProps {
 
 // --- Utils ---
 
-const generateId = () => Math.random().toString(36).substr(2, 9);
+export const generateId = () => Math.random().toString(36).substr(2, 9);
 
-const parseRawText = (text: string): Section[] => {
+export const parseRawText = (text: string): Section[] => {
   const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
   const sections: Section[] = [];
   let currentSection: Section | null = null;
