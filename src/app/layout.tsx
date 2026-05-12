@@ -56,7 +56,6 @@ export default function RootLayout({
             <Footer />
             <MobileStickyBar />
             <ContactDialog />
-            <FloatingDragon />
           </ScrollProvider>
         </ThemeProvider>
       </body>
