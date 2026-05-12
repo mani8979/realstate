@@ -61,8 +61,35 @@ const PropertyDetails = () => {
     offset: ["start end", "start center"]
   });
   
-  const landingY = useTransform(formScroll, [0, 1], [-1500, -140]);
-  const landingOpacity = useTransform(formScroll, [0, 0.5, 1], [0, 1, 1]);
+  const landingY = useTransform(scrollYProgress, [0, 0.1, 0.9, 1], ["0vh", "20vh", "80vh", "90vh"]);
+  const landingOpacity = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [1, 1, 1, 1]);
+  
+  // Dynamic X Path based on details
+  const getXPath = () => {
+    if (!property?.details || property.details.length === 0) return [80, 80, 50, 50];
+    
+    const points = [0, 0.1];
+    const xValues = [85, 85];
+    
+    property.details.forEach((detail: any, i: number) => {
+      const progress = 0.1 + ((i + 1) / (property.details.length + 1)) * 0.7;
+      points.push(progress);
+      
+      const align = detail.alignment || property.alignment || 'left';
+      if (align === 'left') xValues.push(80);
+      else if (align === 'right') xValues.push(20);
+      else xValues.push(80); // Default to right if center
+    });
+    
+    points.push(0.9, 1);
+    xValues.push(50, 50); // Center at the end
+    
+    return { points, xValues };
+  };
+
+  const { points, xValues } = getXPath();
+  const landingX = useTransform(scrollYProgress, points, xValues.map(v => `${v}%`));
+  const landingScale = useTransform(scrollYProgress, [0, 0.1, 0.9, 1], [1.2, 1, 1, 1.5]);
 
 
   useEffect(() => {
@@ -127,8 +154,34 @@ const PropertyDetails = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-black dark:text-white font-sans selection:bg-primary selection:text-black">
+      {/* Floating 3D Model - Global Pathfinding */}
+      {property.threeDElement && mounted && (
+        <div className="fixed inset-0 pointer-events-none z-[100]">
+          <motion.div 
+            style={{ 
+              top: landingY,
+              left: landingX,
+              opacity: landingOpacity,
+              rotate: fruitRotate,
+              scale: landingScale,
+              x: "-50%",
+              y: "-50%"
+            }}
+            className="absolute w-48 h-48 md:w-80 md:h-80 flex items-center justify-center transition-all duration-500 ease-out"
+          >
+            <ModelViewer
+              src={property.threeDElement}
+              auto-rotate
+              shadow-intensity="1"
+              environment-image="neutral"
+              exposure="1.2"
+              interaction-prompt="none"
+              style={{ width: '100%', height: '100%' }}
+            ></ModelViewer>
+          </motion.div>
+        </div>
+      )}
 
-      
       {/* Hero Section - No Crop Image */}
       <div className="relative w-full h-[50vh] md:h-[90vh] flex items-center justify-center overflow-hidden bg-black dark:bg-[#050505]">
         {/* Blurred Background for cinematic feel */}
@@ -539,27 +592,8 @@ const PropertyDetails = () => {
               viewport={{ once: true }}
               className="relative z-10 p-10 md:p-16 mt-20 bg-black/5 dark:bg-white/5 rounded-[4rem] border border-black/10 dark:border-white/10"
             >
-                {/* 3D Model landing here */}
-                {property.threeDElement && mounted && (
-                  <motion.div 
-                    style={{ 
-                      y: landingY,
-                      opacity: landingOpacity,
-                      rotate: fruitRotate 
-                    }}
-                    className="absolute left-1/2 -translate-x-1/2 z-30 w-48 h-48 md:w-80 md:h-80 pointer-events-none"
-                  >
-                    <ModelViewer
-                      src={property.threeDElement}
-                      auto-rotate
-                      shadow-intensity="1"
-                      environment-image="neutral"
-                      exposure="1.2"
-                      interaction-prompt="none"
-                      style={{ width: '100%', height: '100%' }}
-                    ></ModelViewer>
-                  </motion.div>
-                )}
+                {/* 3D Model space reserved for global floating element */}
+                <div className="h-20" />
                  <div className="max-w-2xl mx-auto text-center mb-12">
                     <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-black dark:text-white mb-4">Start Your Journey</h2>
                     <p className="text-gray-500 dark:text-gray-500 font-medium uppercase tracking-widest text-xs">Fill out the form below to get detailed information</p>
