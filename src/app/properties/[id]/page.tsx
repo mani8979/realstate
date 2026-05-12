@@ -61,13 +61,13 @@ const PropertyDetails = () => {
     offset: ["start end", "start center"]
   });
   
-  const landingY = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], ["20vh", "30vh", "30vh", "15vh"]);
+  const landingY = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], ["20vh", "30vh", "30vh", "8vh"]);
   const landingOpacity = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [1, 1, 1, 1]);
   
   // Dynamic X Path based on details
   const getXPath = () => {
     if (!property?.details || property.details.length === 0) {
-      return { points: [0, 1], xValues: [85, 50] };
+      return { points: [0, 1], xValues: [95, 95] };
     }
     
     const points = [0, 0.1];
