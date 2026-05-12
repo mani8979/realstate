@@ -47,6 +47,7 @@ const PropertyDetails = () => {
   const fruitX = useTransform(scrollYProgress, [0, 1], ['-20%', '120%']);
   const fruitRotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
   
+  const landingY = useTransform(scrollYProgress, [0, 0.2], [-600, 0]);
   const contactSectionRef = useRef<HTMLDivElement>(null);
 
 
@@ -202,7 +203,7 @@ const PropertyDetails = () => {
         {property.threeDElement && mounted && (
           <motion.div 
             style={{ 
-              y: useTransform(scrollYProgress, [0, 0.2], [-600, 0]),
+              y: landingY,
               rotate: fruitRotate 
             }}
             className="absolute -top-20 right-6 md:right-48 w-40 h-40 md:w-80 md:h-80 z-30 pointer-events-none"
