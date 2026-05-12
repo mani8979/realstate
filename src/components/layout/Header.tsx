@@ -127,8 +127,8 @@ const Header = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex items-center gap-4">
-              <div className="hidden md:flex items-center gap-3">
+            <div className="flex items-center gap-2 md:gap-4">
+              <div className="hidden lg:flex items-center gap-3">
                 <ThemeToggle />
                 <button
                   onClick={() => openContactDialog('call')}
@@ -151,16 +151,24 @@ const Header = () => {
                 </button>
               </div>
 
-              {/* Mobile Menu Toggle */}
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className={cn(
-                  "lg:hidden p-3 rounded-xl transition-all duration-500",
-                  shouldBeSolid ? "bg-gray-100 dark:bg-white/5 text-black dark:text-white" : "bg-white/10 text-white backdrop-blur-md"
-                )}
-              >
-                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
+              {/* Mobile Actions (Theme + Menu) */}
+              <div className="flex items-center gap-2 lg:hidden">
+                <div className={cn(
+                  "rounded-xl transition-all duration-500 overflow-hidden",
+                  shouldBeSolid ? "bg-gray-100 dark:bg-white/5" : "bg-white/10 backdrop-blur-md"
+                )}>
+                  <ThemeToggle />
+                </div>
+                <button
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  className={cn(
+                    "p-3 rounded-xl transition-all duration-500",
+                    shouldBeSolid ? "bg-gray-100 dark:bg-white/5 text-black dark:text-white" : "bg-white/10 text-white backdrop-blur-md"
+                  )}
+                >
+                  {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
+              </div>
             </div>
           </nav>
         </div>
@@ -173,7 +181,7 @@ const Header = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 top-[80px] z-50 lg:hidden bg-white dark:bg-black p-6"
+            className="fixed inset-0 top-[70px] md:top-[80px] z-50 lg:hidden bg-white dark:bg-[#050505] p-6 h-[calc(100vh-70px)] overflow-y-auto"
           >
             <div className="flex flex-col gap-4">
               {navLinks.map((link) => (
@@ -212,9 +220,6 @@ const Header = () => {
                   <MessageSquare size={24} />
                   {content.btnEnquire || 'Enquire'}
                 </button>
-              </div>
-              <div className="mt-4 flex justify-center">
-                 <ThemeToggle />
               </div>
             </div>
           </motion.div>

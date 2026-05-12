@@ -347,28 +347,35 @@ const PropertyDetails = () => {
                       )}
                       <div className="flex-grow">
                         <h2 className="text-2xl md:text-5xl font-black uppercase tracking-tighter text-black dark:text-white leading-tight md:leading-[0.9] mb-6 md:mb-8">
-                          {detail.heading}
+                          {detail.heading?.replace(/^#+\s*/, '')}
                         </h2>
 
                         <div className={`${isCenter ? '' : 'pl-4 md:pl-[20px]'} space-y-4 md:space-y-6`}>
                           {detail.sideHeading && (
                             <h3 className="text-primary font-black uppercase tracking-widest text-[10px] md:text-xs mb-4 md:mb-6">
-                              {detail.sideHeading}
+                              {detail.sideHeading?.replace(/^#+\s*/, '')}
                             </h3>
                           )}
                           
                           {detail.isPointed ? (
                             <ul className={`space-y-4 md:space-y-6 ${isCenter ? 'inline-block text-left' : ''}`}>
-                              {detail.content.split('\n').filter((line: string) => line.trim()).map((line: string, i: number) => (
+                              {detail.content.split('\n')
+                                .map((line: string) => line.trim())
+                                .filter((line: string) => line && line !== '---')
+                                .map((line: string) => line.replace(/^#+\s*/, ''))
+                                .map((line: string, i: number) => (
                                 <li key={i} className="flex gap-3 md:gap-4 text-gray-700 dark:text-gray-300 text-base md:text-lg items-start">
                                   <span className="text-primary font-bold shrink-0 w-6 md:w-8 flex justify-center mt-1">•</span>
-                                  <span className="text-left font-medium leading-relaxed">{line.trim()}</span>
+                                  <span className="text-left font-medium leading-relaxed">{line}</span>
                                 </li>
                               ))}
                             </ul>
                           ) : (
                             <p className="text-gray-600 dark:text-gray-400 text-base md:text-lg leading-relaxed whitespace-pre-line">
-                              {detail.content}
+                              {detail.content.split('\n')
+                                .filter((line: string) => line.trim() !== '---')
+                                .map((line: string) => line.replace(/^#+\s*/, ''))
+                                .join('\n')}
                             </p>
                           )}
                         </div>
