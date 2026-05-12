@@ -315,7 +315,6 @@ const PropertyDetails = () => {
               const align = detail.alignment || property.alignment || 'left';
               const isCenter = align === 'center';
               const isRight = align === 'right';
-              // Force left alignment if not centered, as requested for "perfect edge" alignment
               const isLeft = !isCenter; 
 
               return (
@@ -328,26 +327,26 @@ const PropertyDetails = () => {
                     isCenter ? 'justify-center' : 'justify-start'
                   }`}
                 >
-                  <div className={`md:w-1/2 w-full glass-card p-8 md:py-16 md:pr-16 md:pl-0 ${
-                    isCenter ? 'text-center border-b-4 border-primary md:px-16' : 
+                  <div className={`md:w-1/2 w-full glass-card p-8 md:p-16 ${
+                    isCenter ? 'text-center border-b-4 border-primary' : 
                     'text-left border-l-4 border-primary'
                   }`}>
-                    <div className={`flex flex-col items-start gap-4 mb-10 ${
-                      isCenter ? 'items-center' : 'items-start'
+                    <div className={`flex items-start gap-4 mb-8 ${
+                      isCenter ? 'justify-center' : 'justify-start'
                     }`}>
-                      {detail.showArrow && <span className="text-primary font-bold text-2xl">→</span>}
-                      <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-black dark:text-white leading-none">{detail.heading}</h2>
+                      {detail.showArrow && <span className="text-primary font-bold text-2xl w-8 shrink-0 flex justify-center">→</span>}
+                      <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-black dark:text-white leading-[0.9]">{detail.heading}</h2>
                     </div>
 
-                    <div className="space-y-8">
+                    <div className={`${isLeft ? 'md:pl-12' : ''}`}>
                       {detail.sideHeading && (
                         <h3 className="text-primary font-black uppercase tracking-widest text-xs mb-6">{detail.sideHeading}</h3>
                       )}
                       {detail.isPointed ? (
-                        <ul className={`space-y-8 ${isCenter ? 'inline-block text-center' : ''}`}>
+                        <ul className={`space-y-6 ${isCenter ? 'inline-block text-left' : ''}`}>
                           {detail.content.split('\n').filter((line: string) => line.trim()).map((line: string, i: number) => (
-                            <li key={i} className={`flex flex-col gap-2 text-gray-700 dark:text-gray-300 text-lg ${isCenter ? 'items-center' : 'items-start'}`}>
-                              <span className="text-primary font-bold shrink-0">•</span>
+                            <li key={i} className="flex gap-4 text-gray-700 dark:text-gray-300 text-lg">
+                              <span className="text-primary font-bold shrink-0 w-8 flex justify-center mt-1">•</span>
                               <span className="text-left font-medium leading-relaxed">{line.trim()}</span>
                             </li>
                           ))}
