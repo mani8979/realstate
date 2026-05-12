@@ -16,6 +16,17 @@ import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const isLightColor = (color: string) => {
+  if (!color) return false;
+  const hex = color.replace('#', '');
+  if (hex.length < 6) return false;
+  const r = parseInt(hex.substr(0, 2), 16);
+  const g = parseInt(hex.substr(2, 2), 16);
+  const b = parseInt(hex.substr(4, 2), 16);
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  return brightness > 155;
+};
+
 const MediaPage = () => {
   const { id } = useParams();
   const router = useRouter();
@@ -359,30 +370,30 @@ const MediaPage = () => {
                         initial={{ scale: 0, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ delay: idx * 0.05 }}
-                        style={{ 
-                          left: `${plot.x}%`, 
-                          top: `${plot.y}%`,
-                          width: `${plot.width || 5}%`,
-                          height: `${plot.height || 3}%`
-                        }}
-                        className={`absolute -translate-x-1/2 -translate-y-1/2 group/plot cursor-pointer z-10 rounded-md border border-white shadow-lg flex items-center justify-center transition-all group-hover/plot:scale-125 ${
-                          plot.status === 'sold' ? 'bg-yellow-400 text-black' :
-                          plot.status === 'booked' ? 'bg-green-500 text-black dark:text-white' :
-                          'bg-white text-black'
-                        }`}
-                      >
-                        <span className="text-[6px] md:text-[8px] font-black">{plot.number}</span>
-
-                        {/* Tooltip on Hover */}
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover/plot:opacity-100 transition-all pointer-events-none whitespace-nowrap z-20">
-                          <div className="bg-white dark:bg-black/90 backdrop-blur-md text-black dark:text-white px-3 py-1.5 rounded-lg border border-black/10 dark:border-white/10 text-[10px] font-bold shadow-2xl">
-                            Plot {plot.number} • <span className={
-                              plot.status === 'sold' ? 'text-yellow-400' :
-                              plot.status === 'booked' ? 'text-green-500' :
-                              'text-black dark:text-white'
-                            }>{plot.status.toUpperCase()}</span>
-                          </div>
-                        </div>
+                         style={{ 
+                           left: `${plot.x}%`, 
+                           top: `${plot.y}%`,
+                           width: `${plot.width || 5}%`,
+                           height: `${plot.height || 3}%`,
+                           backgroundColor: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                           plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                           (property.availableColor || '#ffffff'),
+                           color: isLightColor(plot.status === 'sold' ? (property.soldColor || '#fac915') : plot.status === 'booked' ? (property.bookedColor || '#22c55e') : (property.availableColor || '#ffffff')) ? '#000000' : '#ffffff'
+                         }}
+                         className={`absolute -translate-x-1/2 -translate-y-1/2 group/plot cursor-pointer z-10 rounded-md border border-white/50 shadow-lg flex items-center justify-center transition-all group-hover/plot:scale-125`}
+                       >
+                         <span className="text-[6px] md:text-[8px] font-black">{plot.number}</span>
+ 
+                         {/* Tooltip on Hover */}
+                         <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover/plot:opacity-100 transition-all pointer-events-none whitespace-nowrap z-20">
+                           <div className="bg-white dark:bg-black/90 backdrop-blur-md text-black dark:text-white px-3 py-1.5 rounded-lg border border-black/10 dark:border-white/10 text-[10px] font-bold shadow-2xl">
+                             Plot {plot.number} • <span style={{
+                               color: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                      plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                      'inherit'
+                             }}>{plot.status.toUpperCase()}</span>
+                           </div>
+                         </div>
                       </motion.div>
                     ))}
                   </div>
@@ -405,15 +416,15 @@ const MediaPage = () => {
                     {/* Legend */}
                     <div className="grid grid-cols-3 gap-3">
                       <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
-                        <div className="w-4 h-4 rounded-full bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.5)]"></div>
+                        <div className="w-4 h-4 rounded-full shadow-lg" style={{ backgroundColor: property.soldColor || '#fac915' }}></div>
                         <span className="text-[8px] font-black uppercase tracking-widest text-black dark:text-white/50">Sold</span>
                       </div>
                       <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
-                        <div className="w-4 h-4 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.3)]"></div>
+                        <div className="w-4 h-4 rounded-full shadow-lg" style={{ backgroundColor: property.bookedColor || '#22c55e' }}></div>
                         <span className="text-[8px] font-black uppercase tracking-widest text-black dark:text-white/50">Booked</span>
                       </div>
                       <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
-                        <div className="w-4 h-4 rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.3)]"></div>
+                        <div className="w-4 h-4 rounded-full shadow-lg border border-gray-200" style={{ backgroundColor: property.availableColor || '#ffffff' }}></div>
                         <span className="text-[8px] font-black uppercase tracking-widest text-black dark:text-white/50">Available</span>
                       </div>
                     </div>
@@ -429,16 +440,16 @@ const MediaPage = () => {
                               <span className="text-xl font-black">{mappedPlots.length}</span>
                             </div>
                             <div className="grid grid-cols-3 gap-2">
-                              <div className="p-3 rounded-2xl bg-yellow-400/10 border border-yellow-400/20 flex flex-col items-center">
-                                <span className="block text-[7px] font-black uppercase tracking-widest text-yellow-400/60 mb-1">Sold</span>
-                                <span className="text-base font-black text-yellow-400">{mappedPlots.filter((p: any) => p.status === 'sold').length}</span>
+                              <div className="p-3 rounded-2xl flex flex-col items-center" style={{ backgroundColor: `${property.soldColor || '#fac915'}15`, border: `1px solid ${property.soldColor || '#fac915'}30` }}>
+                                <span className="block text-[7px] font-black uppercase tracking-widest mb-1" style={{ color: property.soldColor || '#fac915' }}>Sold</span>
+                                <span className="text-base font-black" style={{ color: property.soldColor || '#fac915' }}>{mappedPlots.filter((p: any) => p.status === 'sold').length}</span>
                               </div>
-                              <div className="p-3 rounded-2xl bg-green-500/10 border border-green-500/20 flex flex-col items-center">
-                                <span className="block text-[7px] font-black uppercase tracking-widest text-green-500/60 mb-1">Booked</span>
-                                <span className="text-base font-black text-green-500">{mappedPlots.filter((p: any) => p.status === 'booked').length}</span>
+                              <div className="p-3 rounded-2xl flex flex-col items-center" style={{ backgroundColor: `${property.bookedColor || '#22c55e'}15`, border: `1px solid ${property.bookedColor || '#22c55e'}30` }}>
+                                <span className="block text-[7px] font-black uppercase tracking-widest mb-1" style={{ color: property.bookedColor || '#22c55e' }}>Booked</span>
+                                <span className="text-base font-black" style={{ color: property.bookedColor || '#22c55e' }}>{mappedPlots.filter((p: any) => p.status === 'booked').length}</span>
                               </div>
-                              <div className="p-3 rounded-2xl bg-white/5 border border-white/10 flex flex-col items-center">
-                                <span className="block text-[7px] font-black uppercase tracking-widest text-black dark:text-white/60 mb-1">Available</span>
+                              <div className="p-3 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 flex flex-col items-center">
+                                <span className="block text-[7px] font-black uppercase tracking-widest mb-1 text-black dark:text-white/50">Available</span>
                                 <span className="text-base font-black text-black dark:text-white">{mappedPlots.filter((p: any) => p.status === 'available' || !p.status || p.status === 'unsold').length}</span>
                               </div>
                             </div>
@@ -449,7 +460,7 @@ const MediaPage = () => {
                   </div>
 
                   {/* Plot Status Table */}
-                  <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[3rem] border border-black/10 dark:border-white/10 p-8 flex flex-col gap-6 overflow-hidden flex-grow">
+                  <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[2rem] border border-black/10 dark:border-white/10 p-6 flex flex-col gap-4 overflow-hidden h-[400px]">
                     <div className="flex items-center justify-between px-2">
                       <div className="space-y-1">
                         <h3 className="text-xl font-black uppercase tracking-tighter text-black dark:text-white">Inventory Table</h3>
@@ -471,23 +482,26 @@ const MediaPage = () => {
                         </thead>
                         <tbody>
                           {property.plots?.map((plot: any, idx: number) => (
-                            <tr key={idx} className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-[1.5rem] overflow-hidden group hover:bg-black/10 dark:bg-white/10 transition-all">
-                              <td className="px-6 py-5">
+                            <tr key={idx} className="bg-white dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl overflow-hidden group hover:bg-black/5 dark:hover:bg-white/10 transition-all">
+                              <td className="px-6 py-4 rounded-l-2xl">
                                 <div className="flex items-center gap-3">
-                                  <div className={`w-2 h-8 rounded-full ${
-                                    plot.status === 'sold' ? 'bg-yellow-400' :
-                                    plot.status === 'booked' ? 'bg-green-500' :
-                                    'bg-white'
-                                  }`}></div>
+                                  <div className={`w-1.5 h-6 rounded-full`} style={{
+                                    backgroundColor: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                                    plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                                    (property.availableColor || '#ffffff')
+                                  }}></div>
                                   <span className="text-sm font-black text-black dark:text-white">{plot.number}</span>
                                 </div>
                               </td>
-                              <td className="px-6 py-5">
-                                <span className={`text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full border ${
-                                  plot.status === 'sold' ? 'bg-yellow-400/10 text-yellow-400 border-yellow-400/20' :
-                                  plot.status === 'booked' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
-                                  'bg-black/5 dark:bg-white/5 text-black dark:text-white border-black/10 dark:border-white/10'
-                                }`}>
+                              <td className="px-6 py-4">
+                                <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-black/10 dark:border-white/10`} style={{
+                                  backgroundColor: plot.status === 'sold' ? `${property.soldColor || '#fac915'}20` :
+                                                  plot.status === 'booked' ? `${property.bookedColor || '#22c55e'}20` :
+                                                  'transparent',
+                                  color: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                         plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                         'inherit'
+                                }}>
                                   {plot.status}
                                 </span>
                               </td>
