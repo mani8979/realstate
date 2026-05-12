@@ -587,10 +587,10 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-500 uppercase tracking-widest px-1">Price (₹)</label>
               <input
-                type="number"
+                type="text"
                 required
                 className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl border-none focus:ring-2 focus:ring-primary/50 transition-all"
-                placeholder="0.00"
+                placeholder="e.g. 5.5 Crores"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
               />
