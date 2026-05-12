@@ -44,11 +44,16 @@ const PropertyDetails = () => {
   }, []);
 
   const { scrollYProgress } = useScroll();
-  const fruitX = useTransform(scrollYProgress, [0, 1], ['-20%', '120%']);
   const fruitRotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
   
-  const landingY = useTransform(scrollYProgress, [0, 0.2], [-600, 0]);
   const contactSectionRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: formScroll } = useScroll({
+    target: contactSectionRef,
+    offset: ["start end", "start center"]
+  });
+  
+  const landingY = useTransform(formScroll, [0, 1], [-1500, -140]);
+  const landingOpacity = useTransform(formScroll, [0, 0.5, 1], [0, 1, 1]);
 
 
   useEffect(() => {
@@ -199,26 +204,6 @@ const PropertyDetails = () => {
 
       {/* Property Information Section - Below Image */}
       <div className="bg-white dark:bg-black border-b border-white/5 relative z-10">
-        {/* Animated 3D Model that lands here on scroll */}
-        {property.threeDElement && mounted && (
-          <motion.div 
-            style={{ 
-              y: landingY,
-              rotate: fruitRotate 
-            }}
-            className="absolute -top-20 right-6 md:right-48 w-40 h-40 md:w-80 md:h-80 z-30 pointer-events-none"
-          >
-            <ModelViewer
-              src={property.threeDElement}
-              auto-rotate
-              shadow-intensity="1"
-              environment-image="neutral"
-              exposure="1.2"
-              interaction-prompt="none"
-              style={{ width: '100%', height: '100%' }}
-            ></ModelViewer>
-          </motion.div>
-        )}
         <div className="container mx-auto px-6 md:px-16 py-12 md:py-20">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10">
             <div className={`max-w-4xl space-y-6 ${
@@ -569,6 +554,27 @@ const PropertyDetails = () => {
               viewport={{ once: true }}
               className="relative z-10 p-10 md:p-16 mt-20 bg-black/5 dark:bg-white/5 rounded-[4rem] border border-black/10 dark:border-white/10"
             >
+                {/* 3D Model landing here */}
+                {property.threeDElement && mounted && (
+                  <motion.div 
+                    style={{ 
+                      y: landingY,
+                      opacity: landingOpacity,
+                      rotate: fruitRotate 
+                    }}
+                    className="absolute left-1/2 -translate-x-1/2 z-30 w-48 h-48 md:w-80 md:h-80 pointer-events-none"
+                  >
+                    <ModelViewer
+                      src={property.threeDElement}
+                      auto-rotate
+                      shadow-intensity="1"
+                      environment-image="neutral"
+                      exposure="1.2"
+                      interaction-prompt="none"
+                      style={{ width: '100%', height: '100%' }}
+                    ></ModelViewer>
+                  </motion.div>
+                )}
                  <div className="max-w-2xl mx-auto text-center mb-12">
                     <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-black dark:text-white mb-4">Start Your Journey</h2>
                     <p className="text-gray-500 dark:text-gray-500 font-medium uppercase tracking-widest text-xs">Fill out the form below to get detailed information</p>
