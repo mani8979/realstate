@@ -21,6 +21,15 @@ const getYouTubeEmbedUrl = (url: string) => {
   return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : url;
 };
 
+const isLightColor = (color: string) => {
+  const hex = color.replace('#', '');
+  const r = parseInt(hex.substr(0, 2), 16);
+  const g = parseInt(hex.substr(2, 2), 16);
+  const b = parseInt(hex.substr(4, 2), 16);
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  return brightness > 155;
+};
+
 const PropertyDetails = () => {
   const { id } = useParams();
   const router = useRouter();
@@ -383,35 +392,6 @@ const PropertyDetails = () => {
                           height={3000} 
                           className="w-auto h-auto max-w-full max-h-[70vh] object-contain rounded-2xl"
                         />
-                        {property.plots.filter((p: any) => p.x !== undefined && p.y !== undefined).map((plot: any, idx: number) => (
-                          <div 
-                            key={idx}
-                            className={`z-10 rounded-md border border-white shadow-lg flex items-center justify-center transition-all hover:scale-125 group/plot`}
-                            style={{ 
-                              position: 'absolute',
-                              left: `${plot.x}%`, 
-                              top: `${plot.y}%`,
-                              width: `${plot.width || 5}%`,
-                              height: `${plot.height || 3}%`,
-                              transform: 'translate(-50%, -50%)',
-                              backgroundColor: plot.status === 'sold' ? (property.soldColor || '#fac915') :
-                                              plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
-                                              (property.availableColor || '#ffffff'),
-                              color: (plot.status === 'sold' || plot.status === 'booked') ? '#000' : 'inherit'
-                            }}
-                          >
-                            <span className="text-[6px] md:text-[8px] font-black">{plot.number}</span>
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover/plot:opacity-100 transition-all pointer-events-none whitespace-nowrap z-20">
-                              <div className="bg-white dark:bg-black/90 backdrop-blur-md text-black dark:text-white px-3 py-1.5 rounded-lg border border-black/10 dark:border-white/10 text-[10px] font-bold shadow-2xl">
-                                Plot {plot.number} • <span style={{
-                                  color: plot.status === 'sold' ? (property.soldColor || '#fac915') :
-                                         plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
-                                         'inherit'
-                                }}>{plot.status.toUpperCase()}</span>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
                      </div>
                      
                      {/* Legend Overlay */}
@@ -532,14 +512,13 @@ const PropertyDetails = () => {
                                             plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
                                             (property.availableColor || '#ffffff'),
                             borderColor: 'rgba(0,0,0,0.1)',
-                            color: (plot.status === 'sold' || plot.status === 'booked') ? '#000' : 'inherit'
+                            color: isLightColor(plot.status === 'sold' ? (property.soldColor || '#fac915') : plot.status === 'booked' ? (property.bookedColor || '#22c55e') : (property.availableColor || '#ffffff')) ? '#000000' : '#ffffff'
                           }}
                         >
                           <span className="text-xl md:text-2xl font-black tracking-tighter">{plot.number}</span>
                           <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
-                            plot.status === 'sold' ? 'bg-black/10' :
-                            plot.status === 'booked' ? 'bg-black/20' :
-                            'bg-black/5 dark:bg-white/5'
+                            isLightColor(plot.status === 'sold' ? (property.soldColor || '#fac915') : plot.status === 'booked' ? (property.bookedColor || '#22c55e') : (property.availableColor || '#ffffff'))
+                            ? 'bg-black/10 text-black' : 'bg-white/20 text-white'
                           }`}>
                             {plot.status}
                           </span>
