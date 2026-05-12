@@ -327,7 +327,7 @@ const PropertyDetails = () => {
                   <div className={`md:w-1/2 w-full glass-card p-6 py-10 md:p-8 md:py-16 ${
                     isCenter ? 'text-center border-b-4 border-primary md:px-16 px-6' : 
                     isRight ? 'text-left border-r-4 border-primary md:px-8 px-6' : 
-                    'text-left border-l-4 border-primary md:pl-0 md:pr-16'
+                    'text-left border-l-4 border-primary md:pl-8 md:pr-16'
                   }`}>
                     <div className={`flex items-start gap-4 md:gap-5 ${isCenter ? 'justify-center' : 'justify-start'}`}>
                       {detail.showArrow && !isCenter && (
