@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Image as ImageIcon, X, Plus, Save, Loader2, ChevronUp, ChevronDown, Play, Target, Hash, Settings, Trash, Sliders, Maximize2, ChevronLeft, Zap, List } from 'lucide-react';
+import { Image as ImageIcon, X, Plus, Save, Loader2, ChevronUp, ChevronDown, Play, Target, Hash, Settings, Trash, Sliders, Maximize2, ChevronLeft, Zap, List, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import { SmartContentEditor, Section } from './SmartContentEditor';
 
 interface PropertyFormProps {
   initialData?: any;
@@ -146,6 +147,20 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
   const layoutImageInputRef = useRef<HTMLInputElement>(null);
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const draggingPlotRef = useRef<{ idx: number; startX: number; startY: number; origX: number; origY: number } | null>(null);
+  const [showSmartEditor, setShowSmartEditor] = useState(false);
+
+  const handleSmartSave = (sections: Section[]) => {
+    const formattedDetails = sections.map(s => ({
+      heading: s.heading || '',
+      sideHeading: s.sideHeading || '',
+      content: s.content || '',
+      showArrow: !!s.showArrow,
+      isPointed: !!s.isPointed,
+      alignment: s.alignment || 'left'
+    }));
+    setFormData((prev: any) => ({ ...prev, details: formattedDetails }));
+    setShowSmartEditor(false);
+  };
 
   const handleFruitUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -750,14 +765,24 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           <div className="bg-white dark:bg-gray-900/50 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
             <div className="flex items-center justify-between">
               <h3 className="text-xl font-bold text-gray-900 dark:text-white">Structured Property Details</h3>
-              <button
-                type="button"
-                onClick={() => setFormData({ ...formData, details: [...formData.details, { heading: '', content: '', sideHeading: '', showArrow: false, isPointed: false, alignment: 'left' }] })}
-                className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest hover:underline"
-              >
-                <Plus size={16} />
-                <span>Add Section</span>
-              </button>
+              <div className="flex items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => setShowSmartEditor(true)}
+                  className="flex items-center gap-2 text-primary font-bold text-[10px] uppercase tracking-widest bg-primary/10 px-4 py-2 rounded-xl hover:bg-primary hover:text-black transition-all"
+                >
+                  <Sparkles size={14} />
+                  <span>Smart AI Editor</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, details: [...formData.details, { heading: '', content: '', sideHeading: '', showArrow: false, isPointed: false, alignment: 'left' }] })}
+                  className="flex items-center gap-2 text-gray-500 font-bold text-[10px] uppercase tracking-widest hover:text-primary transition-all"
+                >
+                  <Plus size={14} />
+                  <span>Manual Add</span>
+                </button>
+              </div>
             </div>
             
             <p className="text-sm text-gray-500 mb-6">Add extra side headings, arrow marks, and bullet points (dots) for complex property info.</p>
@@ -1839,6 +1864,23 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
         </button>
       </div>
     </form>
+
+    <SmartContentEditor 
+      isOpen={showSmartEditor}
+      onClose={() => setShowSmartEditor(false)}
+      onSave={handleSmartSave}
+      initialSections={formData.details.map((d: any, i: number) => ({
+        id: `initial-${i}`,
+        heading: d.heading,
+        sideHeading: d.sideHeading,
+        content: d.content,
+        showArrow: d.showArrow,
+        isPointed: d.isPointed,
+        alignment: d.alignment,
+        type: 'heading'
+      }))}
+    />
+  </>
   );
 };
 
