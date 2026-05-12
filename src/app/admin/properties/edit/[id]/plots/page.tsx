@@ -294,15 +294,14 @@ const AdminPlotManagement = () => {
              </button>
           </div>
 
-          {plots.length === 0 ? (
-            <div className="flex-grow flex flex-col items-center justify-center text-center p-10 bg-black/5 dark:bg-white/5 rounded-[3rem] border border-black/10 dark:border-white/10 border-dashed">
-              <LayoutGrid size={48} className="text-gray-300 dark:text-gray-700 mb-4" />
-              <h3 className="text-xl font-black uppercase tracking-tighter mb-2 text-gray-500">No Plots Added Yet</h3>
-              <p className="text-sm text-gray-400 max-w-sm">Use the tool on the left to add your plot numbers, then manage them here.</p>
-            </div>
-          ) : (
-            <div className="bg-black/5 dark:bg-white/5 rounded-[3rem] border border-black/10 dark:border-white/10 overflow-hidden">
-              {viewMode === 'grid' && (
+          <div className="bg-black/5 dark:bg-white/5 rounded-[3rem] border border-black/10 dark:border-white/10 overflow-hidden flex-grow">
+            {viewMode === 'grid' && (
+              plots.length === 0 ? (
+                <div className="flex flex-col items-center justify-center text-center p-20">
+                  <LayoutGrid size={48} className="text-gray-300 dark:text-gray-700 mb-4" />
+                  <h3 className="text-xl font-black uppercase tracking-tighter mb-2 text-gray-500">No Plots Added Yet</h3>
+                </div>
+              ) : (
                 <div className="p-8 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 auto-rows-max">
                   <AnimatePresence>
                     {plots.map((plot, idx) => (
@@ -344,104 +343,70 @@ const AdminPlotManagement = () => {
                     ))}
                   </AnimatePresence>
                 </div>
-              )}
+              )
+            )}
 
-              {viewMode === 'map' && property.layoutImage && (
-                <div className="flex flex-col h-full min-h-[600px]">
-                   <div className="bg-primary/10 p-4 flex items-center justify-between border-b border-primary/20">
-                      <div className="flex items-center gap-3">
-                         <MousePointer2 size={18} className="text-primary" />
-                         <p className="text-xs font-bold uppercase tracking-widest">
-                            {placementMode && selectedPlotIndex !== null 
-                              ? `Click on map to position Plot ${plots[selectedPlotIndex].number}` 
-                              : "Select a plot below to position it on map"}
-                         </p>
-                      </div>
-                      {placementMode && (
-                        <button 
-                          onClick={() => {setPlacementMode(false); setSelectedPlotIndex(null);}}
-                          className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-white"
-                        >
-                          Cancel Placement
-                        </button>
-                      )}
-                   </div>
-                   
-                   <div className="relative flex-grow bg-black flex items-center justify-center overflow-hidden p-4">
-                      <div 
-                        className="relative max-w-full max-h-full cursor-crosshair"
-                        onClick={handleMapClick}
-                      >
-                        <img 
-                          src={property.layoutImage} 
-                          alt="Layout" 
-                          className="max-w-full max-h-[70vh] object-contain rounded-xl select-none"
-                        />
-                        {plots.map((plot, idx) => (
-                          <div 
-                            key={idx}
-                            style={{ 
-                              position: 'absolute',
-                              left: `${plot.x}%`, 
-                              top: `${plot.y}%`,
-                              width: '4%',
-                              height: '2.5%',
-                              transform: 'translate(-50%, -50%)',
-                              backgroundColor: plot.status === 'sold' ? colors.sold : 
-                                              plot.status === 'booked' ? colors.booked : 
-                                              colors.available,
-                              borderColor: selectedPlotIndex === idx ? '#fff' : 'rgba(255,255,255,0.5)'
-                            }}
-                            className={`z-10 rounded-sm border shadow-lg flex items-center justify-center transition-all ${selectedPlotIndex === idx ? 'scale-150 ring-2 ring-primary ring-offset-2 ring-offset-black z-20' : 'opacity-80'}`}
-                          >
-                            <span className="text-[6px] font-black text-black">{plot.number}</span>
-                          </div>
-                        ))}
-                      </div>
-                   </div>
-
-                   <div className="p-4 bg-black/20 overflow-x-auto whitespace-nowrap border-t border-white/5 custom-scrollbar">
-                      <div className="flex gap-2">
-                        {plots.map((plot, idx) => (
-                          <button
-                            key={idx}
-                            onClick={() => {
-                              setSelectedPlotIndex(idx);
-                              setPlacementMode(true);
-                            }}
-                            style={{ 
-                              backgroundColor: plot.status === 'sold' ? colors.sold : 
-                                             plot.status === 'booked' ? colors.booked : 
-                                             colors.available,
-                            }}
-                            className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest text-black border-2 transition-all ${selectedPlotIndex === idx ? 'border-primary scale-110' : 'border-transparent opacity-60'}`}
-                          >
-                            {plot.number}
-                          </button>
-                        ))}
-                      </div>
-                   </div>
-                </div>
-              )}
-
-              {viewMode === 'table' && (
-                <div className="p-6 overflow-x-auto">
-                  <table className="w-full text-left border-collapse">
-                    <thead>
-                      <tr className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 border-b border-black/10 dark:border-white/10">
-                        <th className="px-4 py-4">Plot Number</th>
-                        <th className="px-4 py-4">Status</th>
-                        <th className="px-4 py-4">Position (X, Y)</th>
-                        <th className="px-4 py-4 text-right">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-black/5 dark:divide-white/5">
+            {viewMode === 'map' && property.layoutImage && (
+              <div className="flex flex-col h-full min-h-[600px]">
+                 <div className="bg-primary/10 p-4 flex items-center justify-center border-b border-primary/20">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Map View Mode (Positioning disabled as requested)</p>
+                 </div>
+                 
+                 <div className="relative flex-grow bg-black flex items-center justify-center overflow-hidden p-4">
+                    <div className="relative max-w-full max-h-full">
+                      <img 
+                        src={property.layoutImage} 
+                        alt="Layout" 
+                        className="max-w-full max-h-[70vh] object-contain rounded-xl select-none"
+                      />
                       {plots.map((plot, idx) => (
-                        <tr key={idx} className="group hover:bg-black/5 dark:hover:bg-white/5 transition-all">
-                          <td className="px-4 py-4">
-                            <span className="text-sm font-black text-black dark:text-white">{plot.number}</span>
-                          </td>
-                          <td className="px-4 py-4">
+                        <div 
+                          key={idx}
+                          style={{ 
+                            position: 'absolute',
+                            left: `${plot.x}%`, 
+                            top: `${plot.y}%`,
+                            width: '4%',
+                            height: '2.5%',
+                            transform: 'translate(-50%, -50%)',
+                            backgroundColor: plot.status === 'sold' ? colors.sold : 
+                                            plot.status === 'booked' ? colors.booked : 
+                                            colors.available,
+                            borderColor: 'rgba(255,255,255,0.5)'
+                          }}
+                          className={`z-10 rounded-sm border shadow-lg flex items-center justify-center transition-all opacity-80`}
+                        >
+                          <span className="text-[6px] font-black text-black">{plot.number}</span>
+                        </div>
+                      ))}
+                    </div>
+                 </div>
+              </div>
+            )}
+
+            {viewMode === 'table' && (
+              <div className="p-6 overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 border-b border-black/10 dark:border-white/10">
+                      <th className="px-6 py-4">Plot Number</th>
+                      <th className="px-6 py-4">Plot Status</th>
+                      <th className="px-6 py-4">Position (X, Y)</th>
+                      <th className="px-6 py-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-black/5 dark:divide-white/5">
+                    {plots.map((plot, idx) => (
+                      <tr key={idx} className="group hover:bg-black/5 dark:hover:bg-white/10 transition-all">
+                        <td className="px-6 py-5">
+                          <span className="text-base font-black text-black dark:text-white">{plot.number}</span>
+                        </td>
+                        <td className="px-6 py-5">
+                          <div className="flex items-center gap-3">
+                            <div 
+                              className="w-3 h-3 rounded-full shadow-sm" 
+                              style={{ backgroundColor: plot.status === 'sold' ? colors.sold : plot.status === 'booked' ? colors.booked : colors.available }}
+                            />
                             <select 
                               value={plot.status}
                               onChange={(e) => {
@@ -449,43 +414,68 @@ const AdminPlotManagement = () => {
                                 newPlots[idx].status = e.target.value as any;
                                 setPlots(newPlots);
                               }}
-                              style={{ 
-                                backgroundColor: plot.status === 'sold' ? colors.sold : 
-                                               plot.status === 'booked' ? colors.booked : 
-                                               colors.available,
-                                color: '#000'
-                              }}
-                              className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-black/10 outline-none"
+                              className="bg-transparent text-[10px] font-black uppercase tracking-widest py-1 outline-none cursor-pointer text-black dark:text-white"
                             >
-                              <option value="available">Available</option>
-                              <option value="booked">Booked</option>
-                              <option value="sold">Sold</option>
+                              <option value="available" className="text-black">Available</option>
+                              <option value="booked" className="text-black">Booked</option>
+                              <option value="sold" className="text-black">Sold</option>
                             </select>
-                          </td>
-                          <td className="px-4 py-4">
-                            <div className="flex items-center gap-2 text-[10px] font-bold text-gray-500">
-                              <span className="bg-black/10 dark:bg-white/10 px-2 py-1 rounded">X: {Math.round(plot.x || 0)}%</span>
-                              <span className="bg-black/10 dark:bg-white/10 px-2 py-1 rounded">Y: {Math.round(plot.y || 0)}%</span>
-                            </div>
-                          </td>
-                          <td className="px-4 py-4 text-right">
-                            <button 
-                              onClick={() => {
-                                setPlots(plots.filter((_, i) => i !== idx));
-                              }}
-                              className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
-                            >
-                              <Trash size={16} />
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
-          )}
+                          </div>
+                        </td>
+                        <td className="px-6 py-5">
+                          <div className="flex items-center gap-3">
+                             <div className="flex items-center gap-1">
+                               <span className="text-[9px] font-bold text-gray-400">X:</span>
+                               <input 
+                                 type="number" 
+                                 value={Math.round(plot.x || 0)} 
+                                 onChange={(e) => {
+                                   const newPlots = [...plots];
+                                   newPlots[idx].x = parseInt(e.target.value);
+                                   setPlots(newPlots);
+                                 }}
+                                 className="w-12 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded px-1 py-0.5 text-[10px] font-bold text-black dark:text-white"
+                               />
+                             </div>
+                             <div className="flex items-center gap-1">
+                               <span className="text-[9px] font-bold text-gray-400">Y:</span>
+                               <input 
+                                 type="number" 
+                                 value={Math.round(plot.y || 0)} 
+                                 onChange={(e) => {
+                                   const newPlots = [...plots];
+                                   newPlots[idx].y = parseInt(e.target.value);
+                                   setPlots(newPlots);
+                                 }}
+                                 className="w-12 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded px-1 py-0.5 text-[10px] font-bold text-black dark:text-white"
+                               />
+                             </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-5 text-right">
+                          <button 
+                            onClick={() => {
+                              setPlots(plots.filter((_, i) => i !== idx));
+                            }}
+                            className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
+                          >
+                            <Trash size={16} />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                    {plots.length === 0 && (
+                      <tr>
+                        <td colSpan={4} className="px-6 py-10 text-center text-sm font-bold text-gray-500 uppercase tracking-widest">
+                           No units added yet
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
         </div>
 
       </main>
