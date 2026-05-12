@@ -52,31 +52,28 @@ export const parseRawText = (text: string): Section[] => {
   for (let i = 0; i < rawLines.length; i++) {
     const line = rawLines[i];
     
-    if (!line) continue; // Skip empty lines for logic, but they help separate paragraphs
+    if (!line) continue;
 
-    // Ignore markdown separators (---, ***, ___)
-    if (/^[-*_]{3,}$/.test(line)) {
+    // AGGRESSIVE CLEANUP: Ignore standalone decorative characters and separators
+    // This perfectly catches things like "•", "→", "---", "--", "***", "#" on their own lines
+    if (/^[#\-\*_•→\s]+$/.test(line)) {
       continue;
     }
 
-    // Check if it's an explicitly marked bullet point
-    const isExplicitBullet = /^[-\*•→]\s/.test(line) || /^[-*•→]$/.test(line);
+    // Check if it's an explicitly marked bullet point (handles -, --, *, •, →)
+    const isExplicitBullet = /^[\-\*•→]+\s/.test(line);
     
-    // Look ahead to see if the next non-empty line is a bullet
+    // Look ahead to see if the next non-empty line is a bullet (skipping decorative lines)
     let nextNonEmptyLine = '';
     for (let j = i + 1; j < rawLines.length; j++) {
-      if (rawLines[j] && !/^[-*_]{3,}$/.test(rawLines[j])) {
+      if (rawLines[j] && !/^[#\-\*_•→\s]+$/.test(rawLines[j])) {
         nextNonEmptyLine = rawLines[j];
         break;
       }
     }
-    const isNextLineBullet = /^[-\*•→]\s/.test(nextNonEmptyLine);
+    const isNextLineBullet = /^[\-\*•→]+\s/.test(nextNonEmptyLine);
     
     // Advanced Heuristics for Heading
-    // 1. Markdown heading (Starts with #)
-    // 2. ALL CAPS (and not too long)
-    // 3. Ends with a colon
-    // 4. Short line that precedes a bulleted list
     const isHeading = !isExplicitBullet && line.length < 100 && !line.endsWith('.') && (
       line.startsWith('#') ||
       (line === line.toUpperCase() && line.length > 3) ||
@@ -86,8 +83,8 @@ export const parseRawText = (text: string): Section[] => {
 
     if (isHeading) {
       if (currentSection) sections.push(currentSection);
-      // Clean up the heading text (remove # and colons)
-      let headingText = line.replace(/^#+\s*/, '').replace(/:$/, '').trim();
+      // Clean up the heading text (aggressively remove #, dashes, bullets, and colons)
+      let headingText = line.replace(/^[#\-\*•→\s]+/, '').replace(/:$/, '').trim();
       currentSection = {
         id: generateId(),
         type: 'heading',
@@ -99,12 +96,13 @@ export const parseRawText = (text: string): Section[] => {
       };
     } 
     else if (isExplicitBullet) {
-      const bulletText = line.replace(/^[-*•→]\s*/, '').trim();
+      // Clean up the bullet text (remove the leading -, --, *, •, →)
+      const bulletText = line.replace(/^[\-\*•→]+\s*/, '').trim();
       if (!currentSection) {
         currentSection = {
           id: generateId(),
           type: 'heading',
-          heading: 'Property Details', // Smart fallback heading
+          heading: 'Property Details', // Smart fallback
           content: bulletText,
           isPointed: true,
           alignment: 'left'
@@ -132,13 +130,11 @@ export const parseRawText = (text: string): Section[] => {
 
   if (currentSection) sections.push(currentSection);
 
-  // Post-processing: Automatically detect "implied" bullet lists
-  // If a section has many short lines separated by newlines, it's likely a list.
+  // Post-processing: Detect implied bullet lists based on short line frequency
   sections.forEach(sec => {
     if (!sec.isPointed && sec.content) {
       const lines = sec.content.split('\n');
       if (lines.length >= 3) {
-        // If more than 70% of the lines are short (< 100 characters), convert to a pointed list
         const shortLinesCount = lines.filter(l => l.length < 100).length;
         if (shortLinesCount / lines.length > 0.7) {
           sec.isPointed = true;
