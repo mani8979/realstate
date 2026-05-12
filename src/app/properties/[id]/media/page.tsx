@@ -138,7 +138,7 @@ const MediaPage = () => {
       </div>
 
       {/* Main Viewer Area */}
-      <div className="flex-grow relative flex items-center justify-center h-[70vh] md:h-[80vh]">
+      <div className="flex-grow relative overflow-hidden">
         <AnimatePresence mode="wait">
           {activeTab === 'three_d' && (
             <motion.div 
@@ -345,132 +345,125 @@ const MediaPage = () => {
           {activeTab === 'plot_plan' && (
             <motion.div 
               key="plot_plan"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="w-full h-full flex flex-col gap-8 p-4 md:p-10 overflow-y-auto"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="w-full h-full flex flex-col md:flex-row gap-8 p-4 md:p-8 overflow-hidden"
             >
-              <div className="flex flex-col md:flex-row gap-8 min-h-0">
-                {/* Layout Image with Markers */}
-                {/* Layout Image with Markers */}
-                <div className="flex-grow bg-black/5 dark:bg-white/5 rounded-[2.5rem] border border-black/10 dark:border-white/10 overflow-hidden relative shadow-2xl group flex items-center justify-center min-h-[500px]">
-                  <div className="relative max-w-full max-h-full">
-                    <Image 
-                      src={property.layoutImage} 
-                      alt="Plot Layout" 
-                      width={4000} 
-                      height={3000} 
-                      className="w-auto h-auto max-w-full max-h-[70vh] object-contain rounded-2xl"
-                      priority
-                    />
-                  </div>
-
+              {/* Left Side: Layout Image */}
+              <div className="flex-grow bg-black/5 dark:bg-white/5 rounded-[2.5rem] border border-black/10 dark:border-white/10 overflow-hidden relative shadow-2xl flex items-center justify-center p-4 md:p-10">
+                <div className="relative max-w-full max-h-full">
+                  <Image 
+                    src={property.layoutImage} 
+                    alt="Plot Layout" 
+                    width={4000} 
+                    height={3000} 
+                    className="w-auto h-auto max-w-full max-h-[75vh] object-contain rounded-2xl"
+                    priority
+                  />
+                  
                   <div className="absolute top-6 right-6 flex flex-col gap-2 z-20">
-                    <button className="bg-white dark:bg-black/60 backdrop-blur-md text-black dark:text-white p-3 rounded-full hover:bg-primary hover:text-black transition-all">
+                    <button className="bg-white/80 dark:bg-black/60 backdrop-blur-md text-black dark:text-white p-3 rounded-full hover:bg-primary hover:text-black transition-all border border-black/10 dark:border-white/10">
                       <Maximize2 size={20} />
                     </button>
                   </div>
                 </div>
+              </div>
 
-                {/* Status Board */}
-                <div className="w-full md:w-[350px] flex flex-col gap-6">
-                  <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[2rem] border border-black/10 dark:border-white/10 p-6 space-y-6">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-black uppercase tracking-tighter">Plot Status</h3>
-                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary bg-primary/10 px-3 py-1 rounded-full">Real-time</span>
+              {/* Right Side: Status & Inventory Sidebar */}
+              <div className="w-full md:w-[400px] flex flex-col gap-6 h-full">
+                {/* Status Summary Card */}
+                <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[2rem] border border-black/10 dark:border-white/10 p-6 space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                       <h3 className="text-lg font-black uppercase tracking-tighter">Plot Status</h3>
+                       <p className="text-[8px] font-bold text-gray-500 uppercase tracking-widest">Real-time availability</p>
                     </div>
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">Sync Active</span>
+                  </div>
 
-                    {/* Legend */}
-                    <div className="grid grid-cols-3 gap-3">
-                      <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
-                        <div className="w-4 h-4 rounded-full shadow-lg" style={{ backgroundColor: property.soldColor || '#fac915' }}></div>
-                        <span className="text-[8px] font-black uppercase tracking-widest text-black dark:text-white/50">Sold</span>
-                      </div>
-                      <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
-                        <div className="w-4 h-4 rounded-full shadow-lg" style={{ backgroundColor: property.bookedColor || '#22c55e' }}></div>
-                        <span className="text-[8px] font-black uppercase tracking-widest text-black dark:text-white/50">Booked</span>
-                      </div>
-                      <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
-                        <div className="w-4 h-4 rounded-full shadow-lg border border-gray-200" style={{ backgroundColor: property.availableColor || '#ffffff' }}></div>
-                        <span className="text-[8px] font-black uppercase tracking-widest text-black dark:text-white/50">Available</span>
-                      </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
+                      <div className="w-3 h-3 rounded-full shadow-lg" style={{ backgroundColor: property.soldColor || '#fac915' }}></div>
+                      <span className="text-[7px] font-black uppercase tracking-widest text-black dark:text-white/50">Sold</span>
                     </div>
-
-                    {/* Summary */}
-                    <div className="space-y-3">
-                      {(() => {
-                        const mappedPlots = property.plots?.filter((p: any) => p.x !== undefined && p.y !== undefined && (p.x !== 0 || p.y !== 0)) || [];
-                        return (
-                          <>
-                            <div className="flex items-center justify-between p-4 rounded-2xl bg-white dark:bg-black/40 border border-white/5">
-                              <span className="text-xs font-bold text-black dark:text-white/60">Total Plots</span>
-                              <span className="text-xl font-black">{mappedPlots.length}</span>
-                            </div>
-                            <div className="grid grid-cols-3 gap-2">
-                              <div className="p-3 rounded-2xl flex flex-col items-center" style={{ backgroundColor: `${property.soldColor || '#fac915'}15`, border: `1px solid ${property.soldColor || '#fac915'}30` }}>
-                                <span className="block text-[7px] font-black uppercase tracking-widest mb-1" style={{ color: property.soldColor || '#fac915' }}>Sold</span>
-                                <span className="text-base font-black" style={{ color: property.soldColor || '#fac915' }}>{mappedPlots.filter((p: any) => p.status === 'sold').length}</span>
-                              </div>
-                              <div className="p-3 rounded-2xl flex flex-col items-center" style={{ backgroundColor: `${property.bookedColor || '#22c55e'}15`, border: `1px solid ${property.bookedColor || '#22c55e'}30` }}>
-                                <span className="block text-[7px] font-black uppercase tracking-widest mb-1" style={{ color: property.bookedColor || '#22c55e' }}>Booked</span>
-                                <span className="text-base font-black" style={{ color: property.bookedColor || '#22c55e' }}>{mappedPlots.filter((p: any) => p.status === 'booked').length}</span>
-                              </div>
-                              <div className="p-3 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 flex flex-col items-center">
-                                <span className="block text-[7px] font-black uppercase tracking-widest mb-1 text-black dark:text-white/50">Available</span>
-                                <span className="text-base font-black text-black dark:text-white">{mappedPlots.filter((p: any) => p.status === 'available' || !p.status || p.status === 'unsold').length}</span>
-                              </div>
-                            </div>
-                          </>
-                        );
-                      })()}
+                    <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
+                      <div className="w-3 h-3 rounded-full shadow-lg" style={{ backgroundColor: property.bookedColor || '#22c55e' }}></div>
+                      <span className="text-[7px] font-black uppercase tracking-widest text-black dark:text-white/50">Booked</span>
+                    </div>
+                    <div className="flex flex-col items-center gap-2 p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
+                      <div className="w-3 h-3 rounded-full shadow-lg border border-gray-200" style={{ backgroundColor: property.availableColor || '#ffffff' }}></div>
+                      <span className="text-[7px] font-black uppercase tracking-widest text-black dark:text-white/50">Free</span>
                     </div>
                   </div>
 
-                  {/* Plot Status Table */}
-                  <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[2rem] border border-black/10 dark:border-white/10 p-6 flex flex-col gap-4 overflow-hidden flex-grow min-h-[400px]">
-                    <div className="flex items-center justify-between px-2">
-                      <div className="space-y-1">
-                        <h3 className="text-xl font-black uppercase tracking-tighter text-black dark:text-white">Inventory Table</h3>
-                        <p className="text-[10px] font-bold text-primary uppercase tracking-widest">Real-time Plot Availability</p>
+                  {(() => {
+                    const mappedPlots = property.plots || [];
+                    return (
+                      <div className="grid grid-cols-3 gap-2 pt-2 border-t border-black/5 dark:border-white/5">
+                        <div className="p-3 rounded-2xl flex flex-col items-center justify-center bg-black/5 dark:bg-white/5">
+                          <span className="block text-[7px] font-black uppercase tracking-widest mb-1 opacity-50">Total</span>
+                          <span className="text-sm font-black">{mappedPlots.length}</span>
+                        </div>
+                        <div className="p-3 rounded-2xl flex flex-col items-center justify-center" style={{ backgroundColor: `${property.soldColor || '#fac915'}10` }}>
+                          <span className="block text-[7px] font-black uppercase tracking-widest mb-1" style={{ color: property.soldColor || '#fac915' }}>Sold</span>
+                          <span className="text-sm font-black" style={{ color: property.soldColor || '#fac915' }}>{mappedPlots.filter((p: any) => p.status === 'sold').length}</span>
+                        </div>
+                        <div className="p-3 rounded-2xl flex flex-col items-center justify-center" style={{ backgroundColor: `${property.bookedColor || '#22c55e'}10` }}>
+                          <span className="block text-[7px] font-black uppercase tracking-widest mb-1" style={{ color: property.bookedColor || '#22c55e' }}>Booked</span>
+                          <span className="text-sm font-black" style={{ color: property.bookedColor || '#22c55e' }}>{mappedPlots.filter((p: any) => p.status === 'booked').length}</span>
+                        </div>
                       </div>
-                      <div className="bg-primary/10 px-4 py-2 rounded-xl border border-primary/20">
-                         <span className="text-[10px] font-black text-primary uppercase tracking-widest">{property.plots?.length || 0} Total Units</span>
+                    );
+                  })()}
+                </div>
+
+                {/* Inventory List Table */}
+                <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[2rem] border border-black/10 dark:border-white/10 flex flex-col overflow-hidden flex-grow shadow-xl">
+                  <div className="p-6 pb-4 border-b border-black/5 dark:border-white/5">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <h3 className="text-xl font-black uppercase tracking-tighter">Inventory</h3>
+                        <p className="text-[9px] font-bold text-primary uppercase tracking-widest">Real-time availability</p>
+                      </div>
+                      <div className="bg-primary/10 px-3 py-1.5 rounded-xl border border-primary/20">
+                         <span className="text-[9px] font-black text-primary uppercase tracking-widest">{property.plots?.length || 0} Units</span>
                       </div>
                     </div>
-                    
-                    <div className="flex-grow overflow-y-auto pr-2 custom-scrollbar">
-                      <div className="space-y-3">
-                        {property.plots?.map((plot: any, idx: number) => (
-                          <div 
-                            key={idx} 
-                            className="bg-white dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl p-4 flex items-center justify-between group hover:bg-black/5 dark:hover:bg-white/10 transition-all"
-                          >
-                            <div className="flex items-center gap-4">
-                              <div className="w-1.5 h-8 rounded-full" style={{
-                                backgroundColor: plot.status === 'sold' ? (property.soldColor || '#fac915') :
-                                                plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
-                                                (property.availableColor || '#ffffff')
-                              }}></div>
-                              <div className="flex flex-col">
-                                <span className="text-sm font-black text-black dark:text-white">Plot {plot.number}</span>
-                                <span className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-50" style={{
-                                  color: plot.status === 'sold' ? (property.soldColor || '#fac915') :
-                                         plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
-                                         'inherit'
-                                }}>
-                                  {plot.status}
-                                </span>
-                              </div>
+                  </div>
+                  
+                  <div className="flex-grow overflow-y-auto p-4 custom-scrollbar">
+                    <div className="space-y-2">
+                      {property.plots?.map((plot: any, idx: number) => (
+                        <div 
+                          key={idx} 
+                          className="bg-white dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-2xl p-4 flex items-center justify-between group hover:bg-black/5 dark:hover:bg-white/10 transition-all shadow-sm"
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className="w-1.5 h-8 rounded-full" style={{
+                              backgroundColor: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                              plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                              (property.availableColor || '#ffffff')
+                            }}></div>
+                            <div className="flex flex-col">
+                              <span className="text-sm font-black text-black dark:text-white">Plot {plot.number}</span>
+                              <span className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40" style={{
+                                color: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                       plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                       'inherit'
+                              }}>
+                                {plot.status}
+                              </span>
                             </div>
-                            
-                            <button 
-                              onClick={() => openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`)}
-                              className="text-[9px] font-black uppercase tracking-widest text-primary hover:text-black dark:text-white transition-colors border border-primary/20 px-4 py-2 rounded-xl bg-primary/5 hover:bg-primary"
-                            >
-                              Enquire
-                            </button>
                           </div>
-                        ))}
-                      </div>
+                          
+                          <button 
+                            onClick={() => openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`)}
+                            className="text-[8px] font-black uppercase tracking-widest px-4 py-2 rounded-xl transition-all border border-primary/20 bg-primary/5 text-primary hover:bg-primary hover:text-black"
+                          >
+                            Enquire
+                          </button>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
