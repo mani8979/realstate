@@ -314,6 +314,8 @@ const PropertyDetails = () => {
             {property.details?.map((detail: any, idx: number) => {
               const align = detail.alignment || property.alignment || 'left';
               const isCenter = align === 'center';
+              const isRight = align === 'right';
+              const isLeft = !isCenter && !isRight;
               
               return (
                 <motion.div 
@@ -321,14 +323,15 @@ const PropertyDetails = () => {
                   initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className={`flex ${isCenter ? 'justify-center' : 'justify-start'}`}
+                  className={`flex ${isCenter ? 'justify-center' : isRight ? 'justify-end' : 'justify-start'}`}
                 >
-                  <div className={`md:w-1/2 w-full glass-card p-8 md:py-16 md:pl-0 md:pr-16 ${
+                  <div className={`md:w-1/2 w-full glass-card p-8 md:py-16 ${
                     isCenter ? 'text-center border-b-4 border-primary px-16' : 
-                    'text-left border-l-4 border-primary'
+                    isRight ? 'text-right border-r-4 border-primary md:pr-0 md:pl-16' :
+                    'text-left border-l-4 border-primary md:pl-0 md:pr-16'
                   }`}>
-                    <div className={`flex items-start gap-5 ${isCenter ? 'justify-center' : 'justify-start'}`}>
-                      {detail.showArrow && !isCenter && (
+                    <div className={`flex items-start gap-5 ${isCenter ? 'justify-center' : isRight ? 'justify-end' : 'justify-start'}`}>
+                      {detail.showArrow && !isCenter && !isRight && (
                         <span className="text-primary font-bold text-2xl w-8 shrink-0 flex justify-center mt-1">→</span>
                       )}
                       <div className="flex-grow">
@@ -336,7 +339,7 @@ const PropertyDetails = () => {
                           {detail.heading}
                         </h2>
 
-                        <div className={`${isCenter ? '' : 'pl-[20px]'} space-y-6`}>
+                        <div className={`${isLeft ? 'pl-[20px]' : isRight ? 'pr-[20px]' : ''} space-y-6`}>
                           {detail.sideHeading && (
                             <h3 className="text-primary font-black uppercase tracking-widest text-xs mb-6">
                               {detail.sideHeading}
@@ -344,14 +347,16 @@ const PropertyDetails = () => {
                           )}
                           
                           {detail.isPointed ? (
-                            <ul className="space-y-6">
-                              {detail.content.split('\n').filter((line: string) => line.trim()).map((line: string, i: number) => (
-                                <li key={i} className="flex gap-4 text-gray-700 dark:text-gray-300 text-lg items-start">
-                                  <span className="text-primary font-bold shrink-0 w-8 flex justify-center mt-1">•</span>
-                                  <span className="text-left font-medium leading-relaxed">{line.trim()}</span>
-                                </li>
-                              ))}
-                            </ul>
+                            <div className={isRight || isCenter ? 'inline-block text-left' : ''}>
+                              <ul className="space-y-6">
+                                {detail.content.split('\n').filter((line: string) => line.trim()).map((line: string, i: number) => (
+                                  <li key={i} className="flex gap-4 text-gray-700 dark:text-gray-300 text-lg items-start">
+                                    <span className="text-primary font-bold shrink-0 w-8 flex justify-center mt-1">•</span>
+                                    <span className="text-left font-medium leading-relaxed">{line.trim()}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
                           ) : (
                             <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed whitespace-pre-line">
                               {detail.content}
@@ -359,6 +364,9 @@ const PropertyDetails = () => {
                           )}
                         </div>
                       </div>
+                      {detail.showArrow && isRight && (
+                        <span className="text-primary font-bold text-2xl w-8 shrink-0 flex justify-center mt-1">←</span>
+                      )}
                     </div>
                   </div>
                 </motion.div>
