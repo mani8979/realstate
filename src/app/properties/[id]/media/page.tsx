@@ -397,20 +397,28 @@ const MediaPage = () => {
                   </div>
 
                   {(() => {
-                    const mappedPlots = property.plots || [];
+                    const plots = property.plots || [];
+                    const sold = plots.filter((p: any) => p.status === 'sold').length;
+                    const booked = plots.filter((p: any) => p.status === 'booked').length;
+                    const free = plots.length - sold - booked;
+                    
                     return (
-                      <div className="grid grid-cols-3 gap-2 pt-2 border-t border-black/5 dark:border-white/5">
-                        <div className="p-3 rounded-2xl flex flex-col items-center justify-center bg-black/5 dark:bg-white/5">
-                          <span className="block text-[7px] font-black uppercase tracking-widest mb-1 opacity-50">Total</span>
-                          <span className="text-sm font-black">{mappedPlots.length}</span>
+                      <div className="grid grid-cols-2 gap-3 pt-4 border-t border-black/5 dark:border-white/5">
+                        <div className="p-4 rounded-2xl flex flex-col items-center justify-center bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5">
+                          <span className="block text-[8px] font-black uppercase tracking-widest mb-1 opacity-40">Total Plots</span>
+                          <span className="text-xl font-black">{plots.length}</span>
                         </div>
-                        <div className="p-3 rounded-2xl flex flex-col items-center justify-center" style={{ backgroundColor: `${property.soldColor || '#fac915'}10` }}>
-                          <span className="block text-[7px] font-black uppercase tracking-widest mb-1" style={{ color: property.soldColor || '#fac915' }}>Sold</span>
-                          <span className="text-sm font-black" style={{ color: property.soldColor || '#fac915' }}>{mappedPlots.filter((p: any) => p.status === 'sold').length}</span>
+                        <div className="p-4 rounded-2xl flex flex-col items-center justify-center bg-white/5 dark:bg-white/5 border border-white/10">
+                          <span className="block text-[8px] font-black uppercase tracking-widest mb-1 opacity-60 text-white">Free Units</span>
+                          <span className="text-xl font-black text-white">{free}</span>
                         </div>
-                        <div className="p-3 rounded-2xl flex flex-col items-center justify-center" style={{ backgroundColor: `${property.bookedColor || '#22c55e'}10` }}>
-                          <span className="block text-[7px] font-black uppercase tracking-widest mb-1" style={{ color: property.bookedColor || '#22c55e' }}>Booked</span>
-                          <span className="text-sm font-black" style={{ color: property.bookedColor || '#22c55e' }}>{mappedPlots.filter((p: any) => p.status === 'booked').length}</span>
+                        <div className="p-4 rounded-2xl flex flex-col items-center justify-center" style={{ backgroundColor: `${property.bookedColor || '#22c55e'}15`, border: `1px solid ${property.bookedColor || '#22c55e'}30` }}>
+                          <span className="block text-[8px] font-black uppercase tracking-widest mb-1" style={{ color: property.bookedColor || '#22c55e' }}>Booked</span>
+                          <span className="text-xl font-black" style={{ color: property.bookedColor || '#22c55e' }}>{booked}</span>
+                        </div>
+                        <div className="p-4 rounded-2xl flex flex-col items-center justify-center" style={{ backgroundColor: `${property.soldColor || '#fac915'}15`, border: `1px solid ${property.soldColor || '#fac915'}30` }}>
+                          <span className="block text-[8px] font-black uppercase tracking-widest mb-1" style={{ color: property.soldColor || '#fac915' }}>Sold Out</span>
+                          <span className="text-xl font-black" style={{ color: property.soldColor || '#fac915' }}>{sold}</span>
                         </div>
                       </div>
                     );
