@@ -40,6 +40,7 @@ const MediaPage = () => {
   const [isAutoScroll, setIsAutoScroll] = useState(true);
   const [brochurePageIndex, setBrochurePageIndex] = useState(0);
   const [statusFilter, setStatusFilter] = useState('all');
+  const [zoom, setZoom] = useState(1);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -92,6 +93,14 @@ const MediaPage = () => {
     
     pages.push([brochureImages[brochureImages.length - 1]]); // Back Cover
     return pages;
+  };
+
+  const handleWheel = (e: React.WheelEvent) => {
+    if (e.ctrlKey) {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? -0.1 : 0.1;
+      setZoom(prev => Math.min(Math.max(0.5, prev + delta), 5));
+    }
   };
 
   if (loading) return (
@@ -351,8 +360,14 @@ const MediaPage = () => {
               className="w-full h-full flex flex-col md:flex-row gap-8 p-4 md:p-8 overflow-hidden"
             >
               {/* Left Side: Layout Image */}
-              <div className="flex-grow bg-black/5 dark:bg-white/5 rounded-[2.5rem] border border-black/10 dark:border-white/10 overflow-hidden relative shadow-2xl flex items-center justify-center p-4 md:p-10">
-                <div className="relative max-w-full max-h-full">
+              <div 
+                className="flex-grow bg-black/5 dark:bg-white/5 rounded-[2.5rem] border border-black/10 dark:border-white/10 overflow-hidden relative shadow-2xl flex items-center justify-center p-4 md:p-10 cursor-zoom-in"
+                onWheel={handleWheel}
+              >
+                <div 
+                  className="relative transition-transform duration-200 ease-out"
+                  style={{ transform: `scale(${zoom})` }}
+                >
                   <Image 
                     src={property.layoutImage} 
                     alt="Plot Layout" 
@@ -361,8 +376,13 @@ const MediaPage = () => {
                     className="w-auto h-auto max-w-full max-h-[75vh] object-contain rounded-2xl"
                     priority
                   />
-                  
-                  <div className="absolute top-6 right-6 flex flex-col gap-2 z-20">
+                </div>
+                
+                <div className="absolute bottom-6 left-6 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/50 pointer-events-none">
+                   Hold CTRL + Scroll to Zoom • {Math.round(zoom * 100)}%
+                </div>
+
+                <div className="absolute top-6 right-6 flex flex-col gap-2 z-20">
                     <button className="bg-white/80 dark:bg-black/60 backdrop-blur-md text-black dark:text-white p-3 rounded-full hover:bg-primary hover:text-black transition-all border border-black/10 dark:border-white/10">
                       <Maximize2 size={20} />
                     </button>

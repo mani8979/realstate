@@ -33,6 +33,7 @@ const AdminPlotManagement = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'map' | 'table'>('grid');
   const [selectedPlotIndex, setSelectedPlotIndex] = useState<number | null>(null);
   const [placementMode, setPlacementMode] = useState(false);
+  const [zoom, setZoom] = useState(1);
   
   // Custom colors
   const [colors, setColors] = useState({
@@ -80,6 +81,14 @@ const AdminPlotManagement = () => {
       alert('Failed to save plot inventory.');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleWheel = (e: React.WheelEvent) => {
+    if (e.ctrlKey) {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? -0.1 : 0.1;
+      setZoom(prev => Math.min(Math.max(0.5, prev + delta), 5));
     }
   };
 
@@ -409,15 +418,25 @@ const AdminPlotManagement = () => {
                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Map View Mode (Positioning disabled as requested)</p>
                  </div>
                  
-                 <div className="relative flex-grow bg-black flex items-center justify-center overflow-hidden p-4">
-                    <div className="relative max-w-full max-h-full">
+                 <div 
+                    className="relative flex-grow bg-black flex items-center justify-center overflow-hidden p-4 cursor-zoom-in"
+                    onWheel={handleWheel}
+                  >
+                    <div 
+                      className="relative transition-transform duration-200 ease-out"
+                      style={{ transform: `scale(${zoom})` }}
+                    >
                       <img 
                         src={property.layoutImage} 
                         alt="Layout" 
                         className="max-w-full max-h-[70vh] object-contain rounded-xl select-none"
                       />
                     </div>
-                 </div>
+                    
+                    <div className="absolute bottom-6 right-6 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/50 pointer-events-none">
+                       Hold CTRL + Scroll to Zoom • {Math.round(zoom * 100)}%
+                    </div>
+                  </div>
               </div>
             )}
 
