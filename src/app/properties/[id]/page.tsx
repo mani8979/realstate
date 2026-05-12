@@ -326,7 +326,7 @@ const PropertyDetails = () => {
                 >
                   <div className={`md:w-1/2 w-full glass-card p-8 md:py-16 ${
                     isCenter ? 'text-center border-b-4 border-primary md:px-16' : 
-                    isRight ? 'text-left border-r-4 border-primary md:px-16' : 
+                    isRight ? 'text-left border-r-4 border-primary md:px-8' : 
                     'text-left border-l-4 border-primary md:pl-0 md:pr-16'
                   }`}>
                     <div className={`flex items-start gap-5 ${isCenter ? 'justify-center' : 'justify-start'}`}>
