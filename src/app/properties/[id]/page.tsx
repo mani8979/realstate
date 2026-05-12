@@ -340,25 +340,23 @@ const PropertyDetails = () => {
                       'justify-start'
                     }`}>
                       {detail.showArrow && (
-                        <span className={`text-primary font-bold text-2xl w-8 shrink-0 flex justify-center ${isRight ? 'order-2' : ''}`}>
-                          {isRight ? '←' : '→'}
-                        </span>
+                        <span className="text-primary font-bold text-2xl w-8 shrink-0 flex justify-center">→</span>
                       )}
-                      <h2 className={`text-3xl md:text-5xl font-black uppercase tracking-tighter text-black dark:text-white leading-[0.9] ${isRight ? 'order-1' : ''}`}>
+                      <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-black dark:text-white leading-[0.9]">
                         {detail.heading}
                       </h2>
                     </div>
 
-                    <div className={`${isLeft ? 'md:pl-12' : isRight ? 'md:pr-12' : ''}`}>
+                    <div className={`${isLeft ? 'md:pl-12' : isRight ? 'md:pr-0' : ''}`}>
                       {detail.sideHeading && (
                         <h3 className="text-primary font-black uppercase tracking-widest text-xs mb-6">{detail.sideHeading}</h3>
                       )}
                       {detail.isPointed ? (
-                        <ul className={`space-y-6 ${isCenter || isRight ? 'inline-block text-left' : ''}`}>
+                        <ul className={`space-y-6 ${isCenter || isRight ? 'inline-block' : ''}`}>
                           {detail.content.split('\n').filter((line: string) => line.trim()).map((line: string, i: number) => (
-                            <li key={i} className={`flex gap-4 text-gray-700 dark:text-gray-300 text-lg ${isRight ? 'flex-row-reverse text-right' : ''}`}>
+                            <li key={i} className={`flex gap-4 text-gray-700 dark:text-gray-300 text-lg ${isRight ? 'justify-end text-right' : 'justify-start text-left'}`}>
                               <span className="text-primary font-bold shrink-0 w-8 flex justify-center mt-1">•</span>
-                              <span className={`${isRight ? 'text-right' : 'text-left'} font-medium leading-relaxed`}>{line.trim()}</span>
+                              <span className="font-medium leading-relaxed">{line.trim()}</span>
                             </li>
                           ))}
                         </ul>
