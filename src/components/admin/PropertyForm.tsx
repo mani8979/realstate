@@ -802,14 +802,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
               <div className="flex items-center gap-4">
                 <button
                   type="button"
-                  onClick={() => setShowSmartEditor(true)}
-                  className="flex items-center gap-2 text-primary font-bold text-[10px] uppercase tracking-widest bg-primary/10 px-4 py-2 rounded-xl hover:bg-primary hover:text-black transition-all"
-                >
-                  <Sparkles size={14} />
-                  <span>Smart AI Editor</span>
-                </button>
-                <button
-                  type="button"
                   onClick={() => setFormData({ ...formData, details: [...formData.details, { heading: '', content: '', sideHeading: '', showArrow: false, isPointed: false, alignment: 'left' }] })}
                   className="flex items-center gap-2 text-gray-500 font-bold text-[10px] uppercase tracking-widest hover:text-primary transition-all"
                 >
