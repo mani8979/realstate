@@ -134,23 +134,7 @@ const PropertyDetails = () => {
           className="object-contain z-10 p-0 md:p-4"
           priority
         />
-        {/* Subtle bottom gradient only to ensure text/icon readability, removing heavy top gradient */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-20 pointer-events-none"></div>
-        
-        {/* Static 3D Model on Hero Image */}
-        {property.threeDElement && (
-          <div className="absolute top-4 right-4 md:top-16 md:right-16 z-30 w-32 h-32 md:w-64 md:h-64 pointer-events-none">
-            <ModelViewer
-              src={property.threeDElement}
-              auto-rotate
-              shadow-intensity="1"
-              environment-image="neutral"
-              exposure="1.2"
-              interaction-prompt="none"
-              style={{ width: '100%', height: '100%' }}
-            ></ModelViewer>
-          </div>
-        )}
         
         {/* Quick Media Icons - Floating Over Hero */}
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center justify-center gap-3.5 md:gap-6 z-30 bg-white/10 dark:bg-black/40 backdrop-blur-3xl px-5 md:px-10 py-3.5 md:py-5 rounded-[2.5rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] w-fit max-w-[95vw]">
@@ -214,6 +198,26 @@ const PropertyDetails = () => {
 
       {/* Property Information Section - Below Image */}
       <div className="bg-white dark:bg-black border-b border-white/5 relative z-10">
+        {/* Animated 3D Model that lands here on scroll */}
+        {property.threeDElement && mounted && (
+          <motion.div 
+            style={{ 
+              y: useTransform(scrollYProgress, [0, 0.2], [-600, 0]),
+              rotate: fruitRotate 
+            }}
+            className="absolute -top-20 right-6 md:right-48 w-40 h-40 md:w-80 md:h-80 z-30 pointer-events-none"
+          >
+            <ModelViewer
+              src={property.threeDElement}
+              auto-rotate
+              shadow-intensity="1"
+              environment-image="neutral"
+              exposure="1.2"
+              interaction-prompt="none"
+              style={{ width: '100%', height: '100%' }}
+            ></ModelViewer>
+          </motion.div>
+        )}
         <div className="container mx-auto px-6 md:px-16 py-12 md:py-20">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10">
             <div className={`max-w-4xl space-y-6 ${
