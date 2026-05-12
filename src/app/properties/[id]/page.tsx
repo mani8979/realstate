@@ -308,7 +308,7 @@ const PropertyDetails = () => {
       </div>
 
       <div className="container mx-auto px-6 md:px-16 py-16 md:py-24 relative z-20">
-          <div className={`w-full max-w-7xl mx-auto pb-32 ${property.details?.length > 0 ? 'space-y-64' : ''}`} id="content-anchor">
+          <div className={`w-full max-w-7xl mx-auto pb-32 ${property.details?.length > 0 ? 'md:space-y-64 space-y-32' : ''}`} id="content-anchor">
 
             {/* Dynamic Structured Details — ONLY what admin adds */}
             {property.details?.map((detail: any, idx: number) => {
@@ -324,38 +324,38 @@ const PropertyDetails = () => {
                   viewport={{ once: true }}
                   className={`flex ${isCenter ? 'justify-center' : isRight ? 'justify-end' : 'justify-start'}`}
                 >
-                  <div className={`md:w-1/2 w-full glass-card p-8 md:py-16 ${
-                    isCenter ? 'text-center border-b-4 border-primary md:px-16' : 
-                    isRight ? 'text-left border-r-4 border-primary md:px-8' : 
+                  <div className={`md:w-1/2 w-full glass-card p-6 py-10 md:p-8 md:py-16 ${
+                    isCenter ? 'text-center border-b-4 border-primary md:px-16 px-6' : 
+                    isRight ? 'text-left border-r-4 border-primary md:px-8 px-6' : 
                     'text-left border-l-4 border-primary md:pl-0 md:pr-16'
                   }`}>
-                    <div className={`flex items-start gap-5 ${isCenter ? 'justify-center' : 'justify-start'}`}>
+                    <div className={`flex items-start gap-4 md:gap-5 ${isCenter ? 'justify-center' : 'justify-start'}`}>
                       {detail.showArrow && !isCenter && (
-                        <span className="text-primary font-bold text-2xl w-8 shrink-0 flex justify-center mt-1">→</span>
+                        <span className="text-primary font-bold text-xl md:text-2xl w-6 md:w-8 shrink-0 flex justify-center mt-1">→</span>
                       )}
                       <div className="flex-grow">
-                        <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-black dark:text-white leading-[0.9] mb-8">
+                        <h2 className="text-2xl md:text-5xl font-black uppercase tracking-tighter text-black dark:text-white leading-tight md:leading-[0.9] mb-6 md:mb-8">
                           {detail.heading}
                         </h2>
 
-                        <div className={`${isCenter ? '' : 'pl-[20px]'} space-y-6`}>
+                        <div className={`${isCenter ? '' : 'pl-4 md:pl-[20px]'} space-y-4 md:space-y-6`}>
                           {detail.sideHeading && (
-                            <h3 className="text-primary font-black uppercase tracking-widest text-xs mb-6">
+                            <h3 className="text-primary font-black uppercase tracking-widest text-[10px] md:text-xs mb-4 md:mb-6">
                               {detail.sideHeading}
                             </h3>
                           )}
                           
                           {detail.isPointed ? (
-                            <ul className={`space-y-6 ${isCenter ? 'inline-block text-left' : ''}`}>
+                            <ul className={`space-y-4 md:space-y-6 ${isCenter ? 'inline-block text-left' : ''}`}>
                               {detail.content.split('\n').filter((line: string) => line.trim()).map((line: string, i: number) => (
-                                <li key={i} className="flex gap-4 text-gray-700 dark:text-gray-300 text-lg items-start">
-                                  <span className="text-primary font-bold shrink-0 w-8 flex justify-center mt-1">•</span>
+                                <li key={i} className="flex gap-3 md:gap-4 text-gray-700 dark:text-gray-300 text-base md:text-lg items-start">
+                                  <span className="text-primary font-bold shrink-0 w-6 md:w-8 flex justify-center mt-1">•</span>
                                   <span className="text-left font-medium leading-relaxed">{line.trim()}</span>
                                 </li>
                               ))}
                             </ul>
                           ) : (
-                            <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed whitespace-pre-line">
+                            <p className="text-gray-600 dark:text-gray-400 text-base md:text-lg leading-relaxed whitespace-pre-line">
                               {detail.content}
                             </p>
                           )}
