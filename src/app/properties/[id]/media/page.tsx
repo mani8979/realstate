@@ -362,40 +362,6 @@ const MediaPage = () => {
                       className="w-auto h-auto max-w-full max-h-[70vh] object-contain rounded-2xl"
                       priority
                     />
-                    
-                    {/* Interactive Plot Markers */}
-                    {property.plots?.filter((p: any) => p.x !== undefined && p.y !== undefined && (p.x !== 0 || p.y !== 0)).map((plot: any, idx: number) => (
-                      <motion.div 
-                        key={idx}
-                        initial={{ scale: 0, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: idx * 0.05 }}
-                         style={{ 
-                           left: `${plot.x}%`, 
-                           top: `${plot.y}%`,
-                           width: `${plot.width || 5}%`,
-                           height: `${plot.height || 3}%`,
-                           backgroundColor: plot.status === 'sold' ? (property.soldColor || '#fac915') :
-                                           plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
-                                           (property.availableColor || '#ffffff'),
-                           color: isLightColor(plot.status === 'sold' ? (property.soldColor || '#fac915') : plot.status === 'booked' ? (property.bookedColor || '#22c55e') : (property.availableColor || '#ffffff')) ? '#000000' : '#ffffff'
-                         }}
-                         className={`absolute -translate-x-1/2 -translate-y-1/2 group/plot cursor-pointer z-10 rounded-md border border-white/50 shadow-lg flex items-center justify-center transition-all group-hover/plot:scale-125`}
-                       >
-                         <span className="text-[6px] md:text-[8px] font-black">{plot.number}</span>
- 
-                         {/* Tooltip on Hover */}
-                         <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover/plot:opacity-100 transition-all pointer-events-none whitespace-nowrap z-20">
-                           <div className="bg-white dark:bg-black/90 backdrop-blur-md text-black dark:text-white px-3 py-1.5 rounded-lg border border-black/10 dark:border-white/10 text-[10px] font-bold shadow-2xl">
-                             Plot {plot.number} • <span style={{
-                               color: plot.status === 'sold' ? (property.soldColor || '#fac915') :
-                                      plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
-                                      'inherit'
-                             }}>{plot.status.toUpperCase()}</span>
-                           </div>
-                         </div>
-                      </motion.div>
-                    ))}
                   </div>
 
                   <div className="absolute top-6 right-6 flex flex-col gap-2 z-20">
