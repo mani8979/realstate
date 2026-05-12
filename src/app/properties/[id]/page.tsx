@@ -61,8 +61,8 @@ const PropertyDetails = () => {
     offset: ["start end", "start center"]
   });
   
-  const landingY = useTransform(scrollYProgress, [0, 0.1, 0.9, 1], ["0vh", "20vh", "80vh", "90vh"]);
-  const landingOpacity = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [1, 1, 1, 1]);
+  const landingY = useTransform(scrollYProgress, [0, 1], ["10vh", "92%"]);
+  const landingOpacity = useTransform(scrollYProgress, [0, 0.05, 0.9, 1], [1, 1, 1, 1]);
   
   // Dynamic X Path based on details
   const getXPath = () => {
@@ -158,7 +158,7 @@ const PropertyDetails = () => {
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-black dark:text-white font-sans selection:bg-primary selection:text-black">
       {/* Floating 3D Model - Global Pathfinding */}
       {property.threeDElement && mounted && (
-        <div className="fixed inset-0 pointer-events-none z-[100]">
+        <div className="absolute inset-0 pointer-events-none z-[100] h-full w-full overflow-hidden">
           <motion.div 
             style={{ 
               top: landingY,
@@ -169,7 +169,7 @@ const PropertyDetails = () => {
               x: "-50%",
               y: "-50%"
             }}
-            className="absolute w-48 h-48 md:w-80 md:h-80 flex items-center justify-center transition-all duration-500 ease-out"
+            className="absolute w-64 h-64 md:w-[500px] md:h-[500px] flex items-center justify-center transition-all duration-300 ease-out"
           >
             <ModelViewer
               src={property.threeDElement}
