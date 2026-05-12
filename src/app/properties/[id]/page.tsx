@@ -58,11 +58,11 @@ const PropertyDetails = () => {
 
   // Zig-zag horizontal movement to stay in "empty spaces" (margins)
   const targetX = useTransform(scrollYProgress, (p): number => {
-    // Wave movement covering the center and margins (15vw to 85vw)
-    // Starts at 50vw (center) when p=0
-    return Math.sin(p * Math.PI * 2) * 35 + 50;
+    // Increased frequency (Math.PI * 8) and range (10vw to 90vw) 
+    // to ensure it covers left, right, and middle multiple times during scroll.
+    return Math.sin(p * Math.PI * 8) * 40 + 50;
   });
-  const modelX = useSpring(targetX, { damping: 25, stiffness: 80 });
+  const modelX = useSpring(targetX, { damping: 30, stiffness: 100 });
 
   // Vertical movement that "goes down" as you scroll, but stops before the footer/form
   const modelY = useTransform(scrollYProgress, [0, 0.85, 1], ['15vh', '80vh', '80vh']);
