@@ -103,6 +103,28 @@ const MediaPage = () => {
     }
   };
 
+  const tabs = property ? [
+    { id: 'photos', label: 'Land Gallery', icon: <ImageIcon size={20} />, show: property.landPhotos?.length > 0 },
+    { id: 'three_d', label: '3D Model', icon: <Box size={20} />, show: !!property.threeDElement },
+    { id: 'video', label: 'Video Tour', icon: <Play size={20} />, show: !!property.videoUrl },
+    { id: 'plot_plan', label: 'Plot Plan', icon: <LayoutGrid size={20} />, show: !!property.layoutImage },
+    { id: 'brochure', label: 'Brochure', icon: <Download size={20} />, show: property.landBrochure?.length > 0 },
+    { id: 'map', label: 'Location Map', icon: <MapIcon size={20} />, show: !!property.mapUrl },
+  ] : [];
+
+  useEffect(() => {
+    if (property && tabs.length > 0) {
+      const type = searchParams.get('type');
+      const foundTab = tabs.find(t => t.id === type && t.show);
+      if (type && foundTab) {
+        setActiveTab(type);
+      } else if (!activeTab) {
+        const firstTab = tabs.find(t => t.show);
+        if (firstTab) setActiveTab(firstTab.id);
+      }
+    }
+  }, [property, searchParams, tabs, activeTab]);
+
   if (loading) return (
     <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center">
       <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
@@ -120,27 +142,6 @@ const MediaPage = () => {
   };
 
   const mapInfo = getEmbedSafeUrl(property.mapUrl);
-
-  const tabs = property ? [
-    { id: 'photos', label: 'Land Gallery', icon: <ImageIcon size={20} />, show: property.landPhotos?.length > 0 },
-    { id: 'three_d', label: '3D Model', icon: <Box size={20} />, show: !!property.threeDElement },
-    { id: 'video', label: 'Video Tour', icon: <Play size={20} />, show: !!property.videoUrl },
-    { id: 'plot_plan', label: 'Plot Plan', icon: <LayoutGrid size={20} />, show: !!property.layoutImage },
-    { id: 'brochure', label: 'Brochure', icon: <Download size={20} />, show: property.landBrochure?.length > 0 },
-    { id: 'map', label: 'Location Map', icon: <MapIcon size={20} />, show: !!property.mapUrl },
-  ] : [];
-
-  useEffect(() => {
-    if (property && tabs.length > 0) {
-      const type = searchParams.get('type');
-      if (type && tabs.find(t => t.id === type && t.show)) {
-        setActiveTab(type);
-      } else {
-        const firstTab = tabs.find(t => t.show);
-        if (firstTab) setActiveTab(firstTab.id);
-      }
-    }
-  }, [property, searchParams]);
 
   return (
     <div className="h-screen w-full bg-white dark:bg-black text-black dark:text-white overflow-hidden flex flex-col relative">
