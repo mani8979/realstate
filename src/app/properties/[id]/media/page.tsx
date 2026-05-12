@@ -35,7 +35,7 @@ const MediaPage = () => {
 
   const [property, setProperty] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState(initialType);
+  const [activeTab, setActiveTab] = useState('');
   const [photoIndex, setPhotoIndex] = useState(0);
   const [isAutoScroll, setIsAutoScroll] = useState(true);
   const [brochurePageIndex, setBrochurePageIndex] = useState(0);
@@ -121,17 +121,29 @@ const MediaPage = () => {
 
   const mapInfo = getEmbedSafeUrl(property.mapUrl);
 
-  const tabs = [
+  const tabs = property ? [
     { id: 'photos', label: 'Land Gallery', icon: <ImageIcon size={20} />, show: property.landPhotos?.length > 0 },
     { id: 'three_d', label: '3D Model', icon: <Box size={20} />, show: !!property.threeDElement },
     { id: 'video', label: 'Video Tour', icon: <Play size={20} />, show: !!property.videoUrl },
     { id: 'plot_plan', label: 'Plot Plan', icon: <LayoutGrid size={20} />, show: !!property.layoutImage },
     { id: 'brochure', label: 'Brochure', icon: <Download size={20} />, show: property.landBrochure?.length > 0 },
     { id: 'map', label: 'Location Map', icon: <MapIcon size={20} />, show: !!property.mapUrl },
-  ];
+  ] : [];
+
+  useEffect(() => {
+    if (property && tabs.length > 0) {
+      const type = searchParams.get('type');
+      if (type && tabs.find(t => t.id === type && t.show)) {
+        setActiveTab(type);
+      } else {
+        const firstTab = tabs.find(t => t.show);
+        if (firstTab) setActiveTab(firstTab.id);
+      }
+    }
+  }, [property, searchParams]);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white overflow-hidden flex flex-col">
+    <div className="h-screen w-full bg-white dark:bg-black text-black dark:text-white overflow-hidden flex flex-col relative">
       {/* Header */}
       <div className="flex items-center justify-between p-6 md:p-8 bg-gradient-to-b from-black/80 to-transparent z-50">
         <button 
@@ -156,7 +168,7 @@ const MediaPage = () => {
       </div>
 
       {/* Main Viewer Area */}
-      <div className="flex-grow relative overflow-hidden">
+      <div className="flex-grow w-full relative overflow-hidden bg-black/5 dark:bg-black/20">
         <AnimatePresence mode="wait">
           {activeTab === 'three_d' && (
             <motion.div 
