@@ -403,22 +403,25 @@ const MediaPage = () => {
                     const free = plots.length - sold - booked;
                     
                     return (
-                      <div className="grid grid-cols-2 gap-3 pt-4 border-t border-black/5 dark:border-white/5">
-                        <div className="p-4 rounded-2xl flex flex-col items-center justify-center bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5">
-                          <span className="block text-[8px] font-black uppercase tracking-widest mb-1 opacity-40">Total Plots</span>
-                          <span className="text-xl font-black">{plots.length}</span>
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-3 gap-2">
+                          <div className="p-4 rounded-2xl flex flex-col items-center justify-center bg-white/5 border border-white/10">
+                            <span className="text-2xl font-black text-white leading-none mb-2">{free}</span>
+                            <span className="block text-[8px] font-black uppercase tracking-widest opacity-60 text-white">Free</span>
+                          </div>
+                          <div className="p-4 rounded-2xl flex flex-col items-center justify-center" style={{ backgroundColor: `${property.bookedColor || '#22c55e'}15`, border: `1px solid ${property.bookedColor || '#22c55e'}30` }}>
+                            <span className="text-2xl font-black leading-none mb-2" style={{ color: property.bookedColor || '#22c55e' }}>{booked}</span>
+                            <span className="block text-[8px] font-black uppercase tracking-widest" style={{ color: property.bookedColor || '#22c55e' }}>Booked</span>
+                          </div>
+                          <div className="p-4 rounded-2xl flex flex-col items-center justify-center" style={{ backgroundColor: `${property.soldColor || '#fac915'}15`, border: `1px solid ${property.soldColor || '#fac915'}30` }}>
+                            <span className="text-2xl font-black leading-none mb-2" style={{ color: property.soldColor || '#fac915' }}>{sold}</span>
+                            <span className="block text-[8px] font-black uppercase tracking-widest" style={{ color: property.soldColor || '#fac915' }}>Sold</span>
+                          </div>
                         </div>
-                        <div className="p-4 rounded-2xl flex flex-col items-center justify-center bg-white/5 dark:bg-white/5 border border-white/10">
-                          <span className="block text-[8px] font-black uppercase tracking-widest mb-1 opacity-60 text-white">Free Units</span>
-                          <span className="text-xl font-black text-white">{free}</span>
-                        </div>
-                        <div className="p-4 rounded-2xl flex flex-col items-center justify-center" style={{ backgroundColor: `${property.bookedColor || '#22c55e'}15`, border: `1px solid ${property.bookedColor || '#22c55e'}30` }}>
-                          <span className="block text-[8px] font-black uppercase tracking-widest mb-1" style={{ color: property.bookedColor || '#22c55e' }}>Booked</span>
-                          <span className="text-xl font-black" style={{ color: property.bookedColor || '#22c55e' }}>{booked}</span>
-                        </div>
-                        <div className="p-4 rounded-2xl flex flex-col items-center justify-center" style={{ backgroundColor: `${property.soldColor || '#fac915'}15`, border: `1px solid ${property.soldColor || '#fac915'}30` }}>
-                          <span className="block text-[8px] font-black uppercase tracking-widest mb-1" style={{ color: property.soldColor || '#fac915' }}>Sold Out</span>
-                          <span className="text-xl font-black" style={{ color: property.soldColor || '#fac915' }}>{sold}</span>
+                        
+                        <div className="p-4 rounded-2xl flex items-center justify-between bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5">
+                          <span className="text-[10px] font-black uppercase tracking-widest opacity-40">Total Inventory</span>
+                          <span className="text-xl font-black">{plots.length} Units</span>
                         </div>
                       </div>
                     );
