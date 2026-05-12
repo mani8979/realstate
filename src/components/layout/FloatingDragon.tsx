@@ -25,8 +25,8 @@ const FloatingDragon = () => {
   useEffect(() => {
     setMounted(true);
     let frameId: number;
-    let curX = window.innerWidth * 0.8;
-    let curY = 300;
+    let curX = window.innerWidth * 0.9; // Start from right side
+    let curY = 100; // Start at top
     
     const update = () => {
       if (!mounted) return;
@@ -46,18 +46,19 @@ const FloatingDragon = () => {
 
       // 1. Ideal "Base" Position (Natural floating)
       const time = now / 3000;
-      const idealX = (Math.sin(time) * 0.35 + 0.5) * viewportW;
-      const idealY = (Math.cos(time * 0.7) * 0.35 + 0.5) * viewportH;
+      // Math.cos(0) = 1, so it starts at 0.9 (Right side)
+      const idealX = (Math.cos(time) * 0.4 + 0.5) * viewportW;
+      const idealY = (Math.sin(time * 0.5) * 0.35 + 0.5) * viewportH;
 
       // 2. Physics: Move towards ideal, but get repelled by content
       let forceX = (idealX - curX) * 0.02;
       let forceY = (idealY - curY) * 0.02;
 
-      const modelSize = viewportW < 768 ? 60 : 100;
+      const modelSize = viewportW < 768 ? 60 : 120; // Slightly larger avoidance zone
       
       obstaclesRef.current.forEach(rect => {
-        // Only check if it's near the current viewport Y to save CPU
-        if (rect.bottom < -100 || rect.top > viewportH + 100) return;
+        // Higher sensitivity to keep it "only" in empty spaces
+        if (rect.bottom < -50 || rect.top > viewportH + 50) return;
 
         const cx = rect.left + rect.width / 2;
         const cy = rect.top + rect.height / 2;
@@ -65,12 +66,12 @@ const FloatingDragon = () => {
         const dy = curY - cy;
         const dist = Math.sqrt(dx * dx + dy * dy);
         
-        // Dynamic repulsion zone based on element size
+        // Push harder to ensure it stays in background
         const minDist = (Math.max(rect.width, rect.height) / 2) + modelSize;
 
         if (dist < minDist) {
           const power = Math.pow((minDist - dist) / minDist, 2);
-          const push = power * 25;
+          const push = power * 35; // Stronger push
           forceX += (dx / dist) * push;
           forceY += (dy / dist) * push;
         }
