@@ -386,7 +386,6 @@ const MediaPage = () => {
                     <button className="bg-white/80 dark:bg-black/60 backdrop-blur-md text-black dark:text-white p-3 rounded-full hover:bg-primary hover:text-black transition-all border border-black/10 dark:border-white/10">
                       <Maximize2 size={20} />
                     </button>
-                  </div>
                 </div>
               </div>
 
