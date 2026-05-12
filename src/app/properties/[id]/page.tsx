@@ -150,14 +150,14 @@ const PropertyDetails = () => {
       )}
       
       {/* Hero Section - No Crop Image */}
-      <div className="relative w-full h-[50vh] md:h-[70vh] flex items-center justify-center overflow-hidden bg-black dark:bg-[#050505]">
-        {/* Blurred Background to prevent ugly letterboxing while allowing object-contain */}
-        <div className="absolute inset-0 opacity-40 dark:opacity-30">
+      <div className="relative w-full h-[50vh] md:h-[90vh] flex items-center justify-center overflow-hidden bg-black dark:bg-[#050505]">
+        {/* Blurred Background for cinematic feel */}
+        <div className="absolute inset-0 opacity-40 dark:opacity-20">
           <Image
             src={property.images[activeImage] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=2000'}
             alt="Background"
             fill
-            className="object-cover blur-3xl scale-110"
+            className="object-cover blur-3xl scale-105"
             priority
           />
         </div>
@@ -166,13 +166,14 @@ const PropertyDetails = () => {
           src={property.images[activeImage] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=2000'}
           alt={property.title}
           fill
-          className="object-contain z-10"
+          className="object-contain z-10 p-0 md:p-4"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/20 z-20 pointer-events-none"></div>
+        {/* Subtle bottom gradient only to ensure text/icon readability, removing heavy top gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-20 pointer-events-none"></div>
         
         {/* Quick Media Icons - Floating Over Hero */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center justify-center gap-3.5 md:gap-6 z-30 bg-white dark:bg-black/60 backdrop-blur-2xl px-5 md:px-10 py-3.5 md:py-5 rounded-[2.5rem] border border-black/10 dark:border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-fit max-w-[95vw]">
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center justify-center gap-3.5 md:gap-6 z-30 bg-white/10 dark:bg-black/40 backdrop-blur-3xl px-5 md:px-10 py-3.5 md:py-5 rounded-[2.5rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] w-fit max-w-[95vw]">
           {property.landPhotos?.length > 0 && (
             <Link 
               href={`/properties/${property._id}/media?type=photos`}
