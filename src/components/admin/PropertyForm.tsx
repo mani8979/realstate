@@ -1,11 +1,36 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
-import { Image as ImageIcon, X, Plus, Save, Loader2, ChevronUp, ChevronDown, Play, Target, Hash, Settings, Trash, Sliders, Maximize2, ChevronLeft, Zap, List, Sparkles } from 'lucide-react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { 
+  X, ArrowLeft, Play, Image as ImageIcon, 
+  Map as MapIcon, Download, ChevronLeft, ChevronRight,
+  Maximize2, MousePointer2, LayoutGrid, Box, Settings, List, Sliders, Plus, Trash2, Upload,
+  Loader2, Sparkles, Save, FileText, Check, Search,
+  ChevronUp, ChevronDown, Trash, Edit2, Copy
+} from 'lucide-react';
+import Link from 'next/link';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
-import { SmartContentEditor, Section, parseRawText } from './SmartContentEditor';
+import { SmartContentEditor, Section } from './SmartContentEditor';
 
+const parseRawText = (text: string): any[] => {
+  const sections: any[] = [];
+  const parts = text.split(/\n(?=[A-Z0-9][A-Za-z0-9\s&]{3,40}\n)/);
+  
+  parts.forEach(part => {
+    const lines = part.trim().split('\n');
+    if (lines.length >= 2) {
+      sections.push({
+        heading: lines[0].trim(),
+        content: lines.slice(1).join('\n').trim(),
+        alignment: 'left',
+        isPointed: lines.length > 3,
+        showArrow: true
+      });
+    }
+  });
+  
+  return sections;
+};
 
 interface PropertyFormProps {
   initialData?: any;
@@ -133,12 +158,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     fetchCategories();
   }, []);
   const [uploadingFruit, setUploadingFruit] = useState(false);
-  const [showLayoutEditor, setShowLayoutEditor] = useState(false);
-  const [mappingPlot, setMappingPlot] = useState<{ x: number, y: number } | null>(null);
-  const [editingPlotIndex, setEditingPlotIndex] = useState<number | null>(null);
-  const [selectedPlotIndex, setSelectedPlotIndex] = useState<number | null>(null);
-  const [newPlotNumber, setNewPlotNumber] = useState('');
-  const [newPlotStatus, setNewPlotStatus] = useState<'available' | 'booked' | 'sold'>('available');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const landPhotosInputRef = useRef<HTMLInputElement>(null);
   const fruitInputRef = useRef<HTMLInputElement>(null);
@@ -146,8 +165,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
   const brochureInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
   const layoutImageInputRef = useRef<HTMLInputElement>(null);
-  const imageContainerRef = useRef<HTMLDivElement>(null);
-  const draggingPlotRef = useRef<{ idx: number; startX: number; startY: number; origX: number; origY: number } | null>(null);
   const [showSmartEditor, setShowSmartEditor] = useState(false);
 
   const handleSmartSave = (sections: Section[]) => {
@@ -394,112 +411,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     } finally {
       setUploading(false);
     }
-  };
-
-  const addPlot = () => {
-    setFormData((prev: any) => ({
-      ...prev,
-      plots: [...(prev.plots || []), { number: '', status: 'available' }]
-    }));
-  };
-
-  const removePlot = (index: number) => {
-    setFormData((prev: any) => {
-      const updated = (prev.plots || []).filter((_: any, i: number) => i !== index);
-      return { ...prev, plots: updated };
-    });
-    setEditingPlotIndex(null);
-    setSelectedPlotIndex(null);
-  };
-
-  const handlePlotPointerDown = (e: React.PointerEvent<HTMLDivElement>, idx: number) => {
-    // Don't drag if clicking input or buttons
-    if ((e.target as HTMLElement).tagName === 'INPUT' || (e.target as HTMLElement).tagName === 'BUTTON') return;
-    e.preventDefault();
-    e.stopPropagation();
-    const container = imageContainerRef.current;
-    if (!container) return;
-    const rect = container.getBoundingClientRect();
-    const plot = formData.plots[idx];
-    draggingPlotRef.current = {
-      idx,
-      startX: e.clientX,
-      startY: e.clientY,
-      origX: plot.x,
-      origY: plot.y,
-    };
-    setSelectedPlotIndex(idx);
-    (e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId);
-  };
-
-  const handlePlotPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!draggingPlotRef.current) return;
-    e.preventDefault();
-    const container = imageContainerRef.current;
-    if (!container) return;
-    const rect = container.getBoundingClientRect();
-    const { idx, startX, startY, origX, origY } = draggingPlotRef.current;
-    const dx = ((e.clientX - startX) / rect.width) * 100;
-    const dy = ((e.clientY - startY) / rect.height) * 100;
-    const newX = Math.max(0, Math.min(100, origX + dx));
-    const newY = Math.max(0, Math.min(100, origY + dy));
-    setFormData((prev: any) => {
-      const newPlots = [...(prev.plots || [])];
-      if (newPlots[idx]) {
-        newPlots[idx] = { ...newPlots[idx], x: newX, y: newY };
-      }
-      return { ...prev, plots: newPlots };
-    });
-  };
-
-  const handlePlotPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
-    draggingPlotRef.current = null;
-  };
-
-
-
-  const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Prevent clicking on existing markers from triggering a new plot creation
-    if ((e.target as HTMLElement).closest('.plot-marker')) return;
-
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-    // Use Quick Add values if admin has typed a plot number, otherwise auto-name
-    const hasQuickAdd = newPlotNumber.trim().length > 0;
-    const newPlot = {
-      number: hasQuickAdd ? newPlotNumber.trim() : `Plot ${(formData.plots?.length || 0) + 1}`,
-      status: hasQuickAdd ? newPlotStatus : 'available',
-      x,
-      y,
-      width: 5,
-      height: 3
-    };
-
-    const newPlots = [...(formData.plots || []), newPlot];
-    setFormData((prev: any) => ({
-      ...prev,
-      plots: newPlots
-    }));
-
-    // Clear quick-add input after placing so next click auto-names
-    if (hasQuickAdd) setNewPlotNumber('');
-
-    const newIndex = newPlots.length - 1;
-    setSelectedPlotIndex(newIndex);
-    // Only open configure modal if NOT using quick-add (quick-add already knows number & status)
-    if (!hasQuickAdd) setEditingPlotIndex(newIndex);
-  };
-
-  const updatePlotField = (index: number, field: string, value: any) => {
-    setFormData((prev: any) => {
-      const newPlots = [...(prev.plots || [])];
-      if (newPlots[index]) {
-        newPlots[index] = { ...newPlots[index], [field]: value };
-      }
-      return { ...prev, plots: newPlots };
-    });
   };
 
   const removeVideo = () => {
@@ -1270,10 +1181,16 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
               {formData.layoutImage && (
                 <button
                   type="button"
-                  onClick={() => setShowLayoutEditor(true)}
-                  className="flex items-center gap-2 px-6 py-3 bg-primary text-black dark:text-white font-black uppercase tracking-widest text-[10px] rounded-xl hover:scale-105 transition-all shadow-xl shadow-primary/20"
+                  onClick={() => {
+                    if (initialData?._id) {
+                      window.open(`/admin/properties/edit/${initialData._id}/plots`, '_blank');
+                    } else {
+                      alert('Please save the property first to manage plots.');
+                    }
+                  }}
+                  className="flex items-center gap-2 px-6 py-3 bg-primary text-black font-black uppercase tracking-widest text-[10px] rounded-xl hover:scale-105 transition-all shadow-xl shadow-primary/20"
                 >
-                  <Maximize2 size={16} /> Launch Editor
+                  <Maximize2 size={16} /> Launch Unit Inventory Manager
                 </button>
               )}
             </div>
@@ -1285,7 +1202,13 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                   <div className="absolute inset-0 flex items-center justify-center">
                     <button
                       type="button"
-                      onClick={() => setShowLayoutEditor(true)}
+                      onClick={() => {
+                        if (initialData?._id) {
+                          window.open(`/admin/properties/edit/${initialData._id}/plots`, '_blank');
+                        } else {
+                          alert('Please save the property first to manage plots.');
+                        }
+                      }}
                       className="bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-all border border-black/10 dark:border-white/10"
                     >
                       <Settings size={32} />
@@ -1326,482 +1249,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
               )}
             </div>
           </div>
-
-          {/* Full-Screen Layout Editor Modal */}
-          <AnimatePresence>
-            {showLayoutEditor && (
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-white dark:bg-black/95 backdrop-blur-2xl z-[150] flex flex-col"
-              >
-                {/* Header */}
-                <div className="px-10 py-6 border-b border-black/10 dark:border-white/10 flex items-center justify-between bg-white dark:bg-black/50">
-                  <div className="flex items-center gap-6">
-                    <button 
-                      onClick={() => setShowLayoutEditor(false)}
-                      className="p-3 rounded-2xl bg-black/5 dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:text-black dark:text-white transition-all"
-                    >
-                      <ChevronLeft size={24} />
-                    </button>
-                    <div>
-                      <h2 className="text-2xl font-black uppercase tracking-tighter text-black dark:text-white leading-none">Spatial Layout Editor</h2>
-                      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mt-1">Property Media Suite Configuration</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2 px-6 py-3 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
-                      <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
-                      <span className="text-[10px] font-black uppercase tracking-widest text-black dark:text-white/50">Active Editor Mode</span>
-                    </div>
-                    <button 
-                      type="button"
-                      onClick={() => setShowLayoutEditor(false)}
-                      className="px-10 py-4 bg-primary text-black dark:text-white font-black uppercase tracking-widest text-xs rounded-2xl shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
-                    >
-                      Save & Exit
-                    </button>
-                  </div>
-                </div>
-
-                {/* Editor Body */}
-                <div className="flex-grow flex gap-10 p-10 overflow-hidden">
-                  <div className="flex-grow flex flex-col gap-10 overflow-hidden">
-                    {/* Map Canvas */}
-                    <div className="flex-grow bg-black/5 dark:bg-white/5 rounded-[3rem] border border-black/10 dark:border-white/10 overflow-hidden relative shadow-2xl flex items-center justify-center group">
-                      <div 
-                        ref={imageContainerRef}
-                        className={`relative max-w-full max-h-full ${newPlotNumber.trim() ? 'cursor-cell' : 'cursor-crosshair'}`}
-                        onClick={handleImageClick}
-                      >
-                        <Image 
-                          src={formData.layoutImage} 
-                          alt="Layout Map" 
-                          width={4000} 
-                          height={3000} 
-                          className="w-auto h-auto max-w-full max-h-[75vh] select-none object-contain rounded-2xl" 
-                        />
-                        
-                        {/* Plot Markers — pointer-event drag */}
-                        {Array.isArray(formData.plots) && formData.plots.filter((p: any) => p && p.x > 0 && p.y > 0).map((plot: any, idx: number) => {
-                          const originalIdx = formData.plots.indexOf(plot);
-                          return (
-                            <div
-                              key={originalIdx}
-                              onPointerDown={(e) => handlePlotPointerDown(e, originalIdx)}
-                              onPointerMove={handlePlotPointerMove}
-                              onPointerUp={handlePlotPointerUp}
-                              onPointerCancel={handlePlotPointerUp}
-                              onClick={(e) => { e.stopPropagation(); setSelectedPlotIndex(originalIdx); }}
-                              tabIndex={0}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Backspace' && document.activeElement === e.currentTarget) {
-                                  e.preventDefault();
-                                  removePlot(originalIdx);
-                                }
-                              }}
-                              style={{
-                                position: 'absolute',
-                                left: `${plot.x}%`,
-                                top: `${plot.y}%`,
-                                width: `${plot.width || 5}%`,
-                                height: `${plot.height || 3}%`,
-                                transform: 'translate(-50%, -50%)',
-                                touchAction: 'none',
-                                userSelect: 'none',
-                              }}
-                              className={`plot-marker rounded-md border shadow-2xl flex items-center justify-center text-[10px] font-black cursor-move z-30 group/marker focus:outline-none ${
-                                selectedPlotIndex === originalIdx ? 'ring-2 ring-white ring-offset-1 ring-offset-transparent' : ''
-                              } ${
-                                plot.status === 'sold'   ? 'bg-yellow-400 text-black border-yellow-300 shadow-[0_0_15px_rgba(250,204,21,0.4)]' :
-                                plot.status === 'booked' ? 'bg-green-500 text-black dark:text-white border-green-400 shadow-[0_0_15px_rgba(34,197,94,0.4)]' :
-                                                           'bg-white text-black border-gray-200 shadow-[0_0_15px_rgba(255,255,255,0.4)]'
-                              }`}
-                            >
-                              <input
-                                type="text"
-                                value={plot.number}
-                                onChange={(e) => updatePlotField(originalIdx, 'number', e.target.value)}
-                                className="w-full bg-transparent border-none text-center focus:ring-0 p-0 font-black cursor-text"
-                                onClick={(e) => e.stopPropagation()}
-                              />
-                              {/* Hover toolbar */}
-                              <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-white dark:bg-black/90 backdrop-blur-xl border border-black/20 dark:border-white/20 rounded-full p-1.5 flex items-center gap-2 opacity-0 group-hover/marker:opacity-100 transition-all pointer-events-auto z-[60] shadow-2xl">
-                                <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); updatePlotField(originalIdx, 'status', 'available'); }} className={`w-4 h-4 rounded-full border border-black/20 dark:border-white/20 hover:scale-125 transition-all ${plot.status === 'available' ? 'bg-white scale-110' : 'bg-white/20'}`} />
-                                <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); updatePlotField(originalIdx, 'status', 'booked');    }} className={`w-4 h-4 rounded-full border border-black/20 dark:border-white/20 hover:scale-125 transition-all ${plot.status === 'booked'    ? 'bg-green-500 scale-110' : 'bg-green-500/20'}`} />
-                                <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); updatePlotField(originalIdx, 'status', 'sold');      }} className={`w-4 h-4 rounded-full border border-black/20 dark:border-white/20 hover:scale-125 transition-all ${plot.status === 'sold'      ? 'bg-yellow-400 scale-110'    : 'bg-yellow-400/20'}`} />
-                                <div className="w-px h-3 bg-white/20 mx-1" />
-                                <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setEditingPlotIndex(originalIdx); }} className="text-gray-600 dark:text-gray-400 hover:text-black dark:text-white transition-colors"><Settings size={12} /></button>
-                                <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); removePlot(originalIdx); }} className="text-red-500 hover:text-red-400 transition-colors ml-2 p-1 hover:bg-red-500/10 rounded-lg"><Trash size={16} /></button>
-                              </div>
-                            </div>
-                          );
-                        })}
-
-                        {/* Canvas hint — changes based on Quick Add state */}
-                        <div className="absolute inset-0 pointer-events-none flex items-end justify-center z-10 pb-4">
-                          {newPlotNumber.trim() ? (
-                            <div className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 shadow-2xl animate-pulse ${
-                              newPlotStatus === 'sold'   ? 'bg-yellow-400 text-black'
-                              : newPlotStatus === 'booked' ? 'bg-green-500 text-black dark:text-white'
-                              :                              'bg-white text-black'
-                            }`}>
-                              <span>Click to place "{newPlotNumber}"</span>
-                            </div>
-                          ) : (!formData.plots || formData.plots.length === 0) ? (
-                            <div className="flex flex-col items-center gap-2">
-                              <Target size={36} className="text-primary animate-pulse" />
-                              <span className="text-[11px] font-black uppercase tracking-[0.3em] text-primary">Click to add plot</span>
-                            </div>
-                          ) : null}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Unpositioned Plots Tray */}
-                    <div className="bg-black/5 dark:bg-white/5 rounded-[2.5rem] border border-black/10 dark:border-white/10 p-8 shadow-2xl mt-4">
-                      <div className="flex items-center gap-3 mb-6">
-                        <div className="bg-primary/10 p-2 rounded-lg">
-                          <Target size={16} className="text-primary" />
-                        </div>
-                        <div>
-                          <h3 className="text-xs font-black uppercase tracking-[0.2em] text-black dark:text-white">Unpositioned Inventory</h3>
-                          <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-0.5">Drag these markers onto the layout map above</p>
-                        </div>
-                        <div className="ml-auto bg-black/5 dark:bg-white/5 px-4 py-2 rounded-xl border border-white/5">
-                           <span className="text-[10px] font-black text-black dark:text-white/40 uppercase tracking-widest">{formData.plots?.filter((p: any) => !p.x || !p.y || (p.x === 0 && p.y === 0)).length} Pending</span>
-                        </div>
-                      </div>
-                      
-                      <div className="flex flex-wrap gap-3">
-                        {Array.isArray(formData.plots) && formData.plots.filter((p: any) => p && (!p.x || !p.y || (p.x === 0 && p.y === 0))).map((plot: any, idx: number) => {
-                          const originalIdx = formData.plots.indexOf(plot);
-                          return (
-                            <div 
-                              key={originalIdx}
-                              onPointerDown={(e) => handlePlotPointerDown(e, originalIdx)}
-                              className={`px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest cursor-move transition-all border group flex items-center gap-3 ${
-                                plot.status === 'sold' ? 'bg-yellow-400/10 border-yellow-400/20 text-yellow-400 hover:bg-yellow-400 hover:text-black' :
-                                plot.status === 'booked' ? 'bg-green-500/10 border-green-500/20 text-green-400 hover:bg-green-500 hover:text-black dark:text-white' :
-                                'bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10 text-black dark:text-white hover:bg-white hover:text-black'
-                              }`}
-                            >
-                              <div className={`w-1.5 h-1.5 rounded-full ${
-                                plot.status === 'sold' ? 'bg-yellow-400' :
-                                plot.status === 'booked' ? 'bg-green-500' :
-                                'bg-white'
-                              } group-hover:scale-150 transition-transform`}></div>
-                              {plot.number || `Plot ${originalIdx + 1}`}
-                            </div>
-                          );
-                        })}
-                        {formData.plots?.filter((p: any) => !p.x || !p.y || (p.x === 0 && p.y === 0)).length === 0 && (
-                          <div className="w-full py-10 rounded-2xl border-2 border-dashed border-white/5 flex flex-col items-center justify-center gap-2 opacity-30">
-                            <Zap size={24} />
-                            <p className="text-[10px] font-black uppercase tracking-widest">All plots are surgically positioned</p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Sidebar: Quick Add + Live Plot List */}
-                  <div className="w-[320px] flex flex-col gap-4 overflow-hidden">
-
-                    {/* Stats Strip */}
-                    <div className="grid grid-cols-3 gap-2">
-                      <div className="p-3 rounded-2xl bg-black/5 dark:bg-white/5 border border-white/5 text-center">
-                        <span className="block text-[8px] font-black uppercase tracking-widest text-gray-500">Total</span>
-                        <span className="text-xl font-black text-black dark:text-white">{formData.plots?.length || 0}</span>
-                      </div>
-                      <div className="p-3 rounded-2xl bg-black/10 dark:bg-white/10 border border-black/10 dark:border-white/10 text-center">
-                        <span className="block text-[8px] font-black uppercase tracking-widest text-black dark:text-white/50">Avail</span>
-                        <span className="text-xl font-black text-black dark:text-white">{formData.plots?.filter((p: any) => p.status === 'available' || p.status === 'unsold').length || 0}</span>
-                      </div>
-                      <div className="p-3 rounded-2xl bg-yellow-400/10 border border-yellow-400/10 text-center">
-                        <span className="block text-[8px] font-black uppercase tracking-widest text-yellow-400">Sold</span>
-                        <span className="text-xl font-black text-yellow-400">{formData.plots?.filter((p: any) => p.status === 'sold').length || 0}</span>
-                      </div>
-                    </div>
-
-                    {/* Quick Add Panel */}
-                    <div className="bg-black/5 dark:bg-white/5 backdrop-blur-3xl rounded-3xl border border-black/10 dark:border-white/10 p-5 space-y-4">
-                      <div className="flex items-center gap-2">
-                        <Zap size={14} className="text-primary" />
-                        <h3 className="text-[11px] font-black uppercase tracking-widest text-black dark:text-white">Quick Add Plot</h3>
-                      </div>
-
-                      {/* Plot Number Input — color preview updates as you type */}
-                      <div className="relative">
-                        <input
-                          type="text"
-                          placeholder="Plot Number e.g. A-101"
-                          value={newPlotNumber}
-                          onChange={(e) => setNewPlotNumber(e.target.value)}
-                          className="w-full bg-white dark:bg-black/30 text-black dark:text-white placeholder-gray-600 rounded-xl px-4 py-3 text-sm font-bold border border-black/10 dark:border-white/10 focus:border-primary/60 focus:ring-0 focus:outline-none transition-all"
-                          onKeyDown={(e) => {
-                            if (e.key === 'Escape') setNewPlotNumber('');
-                          }}
-                        />
-                        {/* Live color preview */}
-                        {newPlotNumber.trim() && (
-                          <div className={`absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-md border border-black/20 dark:border-white/20 ${
-                            newPlotStatus === 'sold' ? 'bg-yellow-400' : newPlotStatus === 'booked' ? 'bg-green-500' : 'bg-white'
-                          }`} />
-                        )}
-                      </div>
-
-                      {/* Status Picker — instantly changes what color will be used */}
-                      <div className="flex gap-2">
-                        {(['available', 'booked', 'sold'] as const).map(s => (
-                          <button
-                            key={s}
-                            type="button"
-                            onClick={() => setNewPlotStatus(s)}
-                            className={`flex-1 py-2 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all border ${
-                              newPlotStatus === s
-                                ? s === 'sold'   ? 'bg-yellow-400 text-black border-yellow-400 shadow-lg shadow-yellow-400/20'
-                                : s === 'booked' ? 'bg-green-500 text-black dark:text-white border-green-500 shadow-lg shadow-green-500/20'
-                                :                  'bg-white text-black border-gray-200 shadow-lg shadow-white/20'
-                                : 'bg-black/5 dark:bg-white/5 text-gray-500 border-white/5 hover:bg-black/10 dark:bg-white/10'
-                            }`}
-                          >
-                            {s}
-                          </button>
-                        ))}
-                      </div>
-
-                      {/* "Now click on map" instruction — appears when plot number is typed */}
-                      {newPlotNumber.trim() ? (
-                        <div className={`w-full py-3 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest text-center animate-pulse border-2 border-dashed ${
-                          newPlotStatus === 'sold'   ? 'border-yellow-400 text-yellow-400 bg-yellow-400/10'
-                          : newPlotStatus === 'booked' ? 'border-green-500 text-green-400 bg-green-500/10'
-                          :                              'border-white text-black dark:text-white bg-black/10 dark:bg-white/10'
-                        }`}>
-                          ↓ Now click the plot on the map
-                        </div>
-                      ) : (
-                        <div className="w-full py-3 rounded-xl text-[10px] font-black uppercase tracking-widest text-center text-gray-600 bg-white/3 border border-white/5">
-                          Type a number → click on map
-                        </div>
-                      )}
-
-                      <p className="text-[9px] text-gray-600 text-center">Drag markers on map to reposition • ESC to cancel</p>
-                    </div>
-
-                    {/* Live Plot List — change status → color changes instantly on map */}
-                    <div className="bg-black/5 dark:bg-white/5 backdrop-blur-3xl rounded-3xl border border-black/10 dark:border-white/10 p-5 space-y-3 flex-grow overflow-hidden flex flex-col">
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        <List size={14} className="text-gray-600 dark:text-gray-400" />
-                        <h3 className="text-[11px] font-black uppercase tracking-widest text-black dark:text-white">Plot List</h3>
-                        <span className="ml-auto text-[9px] text-gray-500">{formData.plots?.length || 0} plots</span>
-                      </div>
-                      <div className="overflow-y-auto space-y-2 flex-grow pr-1" style={{ maxHeight: '280px' }}>
-                        {(!formData.plots || formData.plots.length === 0) && (
-                          <p className="text-[10px] text-gray-600 text-center py-4">No plots yet. Click map or use Quick Add.</p>
-                        )}
-                        {Array.isArray(formData.plots) && formData.plots.map((plot: any, idx: number) => (
-                          <div
-                            key={idx}
-                            onClick={() => setSelectedPlotIndex(idx)}
-                            className={`flex items-center gap-2 p-2 rounded-xl cursor-pointer transition-all border ${
-                              selectedPlotIndex === idx ? 'border-black/20 dark:border-white/20 bg-black/10 dark:bg-white/10' : 'border-white/5 bg-white/3 hover:bg-white/8'
-                            }`}
-                          >
-                            {/* Color dot — instantly reflects status */}
-                            <div className={`w-3 h-3 rounded-sm flex-shrink-0 ${
-                              plot.status === 'sold' ? 'bg-yellow-400' : plot.status === 'booked' ? 'bg-green-500' : 'bg-white'
-                            }`} />
-
-                            {/* Editable plot number — as you type, marker on map updates live */}
-                            <input
-                              type="text"
-                              value={plot.number}
-                              onChange={(e) => updatePlotField(idx, 'number', e.target.value)}
-                              onClick={(e) => e.stopPropagation()}
-                              className="bg-transparent text-black dark:text-white text-[10px] font-bold flex-grow border-none focus:ring-0 p-0 min-w-0"
-                              placeholder="Plot #"
-                            />
-
-                            {/* Status cycle button — click to cycle Available → Booked → Sold → Available */}
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                const next = plot.status === 'available' ? 'booked' : plot.status === 'booked' ? 'sold' : 'available';
-                                updatePlotField(idx, 'status', next);
-                              }}
-                              className={`px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-wider transition-all flex-shrink-0 ${
-                                plot.status === 'sold'   ? 'bg-yellow-400/20 text-yellow-400 hover:bg-yellow-400 hover:text-black'
-                                : plot.status === 'booked' ? 'bg-green-500/20 text-green-400 hover:bg-green-500 hover:text-black dark:text-white'
-                                :                            'bg-white/20 text-black dark:text-white hover:bg-white hover:text-black'
-                              }`}
-                              title="Click to cycle status"
-                            >
-                              {plot.status === 'available' ? 'Avail' : plot.status === 'booked' ? 'Booked' : 'Sold'}
-                            </button>
-
-                            {/* Delete */}
-                            <button
-                              type="button"
-                              onClick={(e) => { e.stopPropagation(); removePlot(idx); }}
-                              className="text-gray-700 hover:text-red-400 transition-colors flex-shrink-0 p-0.5"
-                            >
-                              <X size={12} />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Sub-Modal: Advanced Individual Configuration */}
-                <AnimatePresence>
-                  {editingPlotIndex !== null && (
-                    <motion.div 
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="absolute inset-0 bg-white dark:bg-black/80 backdrop-blur-md flex items-center justify-center z-[200] p-6"
-                    >
-                      <motion.div 
-                        initial={{ scale: 0.9, y: 30 }}
-                        animate={{ scale: 1, y: 0 }}
-                        className="bg-white dark:bg-gray-900/50 rounded-[3rem] p-10 w-full max-w-2xl shadow-2xl space-y-10 border border-black/10 dark:border-white/10"
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="space-y-1">
-                            <h4 className="text-2xl font-black uppercase tracking-tighter text-gray-900 dark:text-white">Configure Plot</h4>
-                            <p className="text-xs text-gray-500 uppercase tracking-widest font-bold">Spatial & Availability Settings</p>
-                          </div>
-                          <button 
-                            onClick={() => setEditingPlotIndex(null)}
-                            className="bg-gray-100 dark:bg-gray-800 p-3 rounded-2xl text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-black dark:text-white transition-all"
-                          >
-                            <X size={24} />
-                          </button>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-10">
-                          <div className="space-y-6">
-                            <div className="space-y-3">
-                              <label className="text-xs font-black text-gray-600 dark:text-gray-400 uppercase tracking-widest">Plot Identity</label>
-                              <div className="relative">
-                                <Hash className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 dark:text-gray-400" size={18} />
-                                <input 
-                                  type="text"
-                                  value={formData.plots[editingPlotIndex].number}
-                                  onChange={(e) => updatePlotField(editingPlotIndex, 'number', e.target.value)}
-                                  className="w-full pl-14 pr-6 py-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border-none focus:ring-2 focus:ring-primary/50 font-black text-lg"
-                                  placeholder="Plot #"
-                                />
-                              </div>
-                            </div>
-
-                            <div className="space-y-3">
-                              <label className="text-xs font-black text-gray-600 dark:text-gray-400 uppercase tracking-widest">Market Status</label>
-                              <div className="flex gap-3">
-                                <button
-                                  type="button"
-                                  onClick={() => updatePlotField(editingPlotIndex, 'status', 'available')}
-                                  className={`flex-1 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all border ${
-                                    formData.plots[editingPlotIndex].status === 'available' || formData.plots[editingPlotIndex].status === 'unsold'
-                                    ? 'bg-white text-black border-gray-200 shadow-xl shadow-white/20' 
-                                    : 'bg-black/5 dark:bg-white/5 text-gray-500 border-black/10 dark:border-white/10 hover:bg-black/10 dark:bg-white/10'
-                                  }`}
-                                >
-                                  Available
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => updatePlotField(editingPlotIndex, 'status', 'booked')}
-                                  className={`flex-1 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all border ${
-                                    formData.plots[editingPlotIndex].status === 'booked' 
-                                    ? 'bg-green-500 text-black dark:text-white border-green-500 shadow-xl shadow-green-500/20' 
-                                    : 'bg-green-500/5 text-gray-500 border-green-500/10 hover:bg-green-500/10'
-                                  }`}
-                                >
-                                  Booked
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => updatePlotField(editingPlotIndex, 'status', 'sold')}
-                                  className={`flex-1 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all border ${
-                                    formData.plots[editingPlotIndex].status === 'sold' 
-                                    ? 'bg-yellow-400 text-black border-yellow-400 shadow-xl shadow-yellow-400/20' 
-                                    : 'bg-yellow-400/5 text-gray-500 border-yellow-400/10 hover:bg-yellow-400/10'
-                                  }`}
-                                >
-                                  Sold
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="space-y-8 bg-gray-50 dark:bg-gray-800/50 p-8 rounded-[2rem] border border-gray-100 dark:border-gray-800">
-                            <div className="flex items-center gap-3 mb-2">
-                              <Sliders size={20} className="text-primary" />
-                              <h5 className="text-xs font-black uppercase tracking-widest">Dimension Surgery</h5>
-                            </div>
-
-                            <div className="space-y-4">
-                              <div className="flex justify-between items-center">
-                                <label className="text-[10px] font-black text-gray-600 dark:text-gray-400 uppercase tracking-widest">Width (%)</label>
-                                <span className="text-xs font-black text-primary">{formData.plots[editingPlotIndex].width || 5}%</span>
-                              </div>
-                              <input 
-                                type="range" min="1" max="20" step="0.1"
-                                value={formData.plots[editingPlotIndex].width || 5}
-                                onChange={(e) => updatePlotField(editingPlotIndex, 'width', parseFloat(e.target.value))}
-                                className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary"
-                              />
-                            </div>
-
-                            <div className="space-y-4">
-                              <div className="flex justify-between items-center">
-                                <label className="text-[10px] font-black text-gray-600 dark:text-gray-400 uppercase tracking-widest">Height (%)</label>
-                                <span className="text-xs font-black text-primary">{formData.plots[editingPlotIndex].height || 3}%</span>
-                              </div>
-                              <input 
-                                type="range" min="1" max="20" step="0.1"
-                                value={formData.plots[editingPlotIndex].height || 3}
-                                onChange={(e) => updatePlotField(editingPlotIndex, 'height', parseFloat(e.target.value))}
-                                className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary"
-                              />
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-4 pt-6">
-                          <button 
-                            type="button"
-                            onClick={() => {
-                              removePlot(editingPlotIndex);
-                              setEditingPlotIndex(null);
-                            }}
-                            className="flex items-center justify-center gap-2 px-8 py-5 bg-red-500/10 text-red-500 font-black uppercase tracking-widest rounded-2xl hover:bg-red-500 hover:text-black dark:text-white transition-all group"
-                          >
-                            <Trash size={18} className="group-hover:scale-110 transition-all" />
-                            <span>Delete Plot</span>
-                          </button>
-                          <button 
-                            type="button"
-                            onClick={() => setEditingPlotIndex(null)}
-                            className="flex-grow py-5 bg-primary text-black dark:text-white font-black uppercase tracking-widest rounded-2xl shadow-2xl shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
-                          >
-                            Confirm Changes
-                          </button>
-                        </div>
-                      </motion.div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            )}
-          </AnimatePresence>
           {/* Land Brochure Section */}
           <div className="bg-white dark:bg-gray-900/50 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Land Brochure (Optional)</h3>

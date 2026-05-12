@@ -11,7 +11,7 @@ export interface IPropertyDetail {
 
 export interface IProperty extends Document {
   title: string;
-  price: number;
+  price: number | string;
   location: string;
   type: 'House' | 'Apartment' | 'Plot' | 'Land' | 'Commercial';
   subType?: 'Residential' | 'Commercial' | 'Farm Land' | string;
@@ -40,7 +40,7 @@ export interface IProperty extends Document {
 const PropertySchema = new Schema<IProperty>(
   {
     title: { type: String, required: true },
-    price: { type: Number, required: true },
+    price: { type: Schema.Types.Mixed, required: true },
     location: { type: String, required: true },
     type: { 
       type: String, 
@@ -92,7 +92,4 @@ const PropertySchema = new Schema<IProperty>(
   }
 );
 
-if (mongoose.models.Property) {
-  delete mongoose.models.Property;
-}
-export default model<IProperty>('Property', PropertySchema);
+export default models.Property || model<IProperty>('Property', PropertySchema);
