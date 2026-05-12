@@ -48,26 +48,7 @@ const PropertyDetails = () => {
   const fruitRotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
   
   const contactSectionRef = useRef<HTMLDivElement>(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  
-  // High damping for premium feel
-  useEffect(() => {
-    // No-op for mouse move, we are switching back to scroll
-  }, []);
 
-  // Zig-zag horizontal movement to stay in "empty spaces" (margins)
-  const targetX = useTransform(scrollYProgress, (p): number => {
-    // Increased frequency (Math.PI * 8) and range (10vw to 90vw) 
-    // to ensure it covers left, right, and middle multiple times during scroll.
-    return Math.sin(p * Math.PI * 8) * 40 + 50;
-  });
-  const modelX = useSpring(targetX, { damping: 30, stiffness: 100 });
-
-  // Vertical movement that "goes down" as you scroll, but stops before the footer/form
-  const modelY = useTransform(scrollYProgress, [0, 0.85, 1], ['15vh', '80vh', '80vh']);
-
-  const modelYScroll = useTransform(scrollYProgress, [0, 1], ['0vh', '80vh']);
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -131,29 +112,7 @@ const PropertyDetails = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-black dark:text-white font-sans selection:bg-primary selection:text-black">
-      {/* Floating 3D Model - Standardized for all properties with 3D */}
-      {property.threeDElement && mounted && (
-        <motion.div 
-          style={{ 
-            x: modelX, 
-            y: modelY,
-            translateX: '-50%',
-            rotate: fruitRotate
-          }}
-          className="fixed top-0 left-0 w-32 h-32 md:w-44 md:h-44 pointer-events-none z-[15] hidden lg:block"
-        >
-          <ModelViewer
-            ref={modelViewerRef}
-            src={property.threeDElement}
-            auto-rotate
-            shadow-intensity="1"
-            environment-image="neutral"
-            exposure="1.2"
-            interaction-prompt="none"
-            style={{ width: '100%', height: '100%' }}
-          ></ModelViewer>
-        </motion.div>
-      )}
+
       
       {/* Hero Section - No Crop Image */}
       <div className="relative w-full h-[50vh] md:h-[90vh] flex items-center justify-center overflow-hidden bg-black dark:bg-[#050505]">

@@ -34,6 +34,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 import { ContactDialog } from "@/components/layout/ContactDialog";
+import FloatingDragon from "@/components/layout/FloatingDragon";
 
 export default function RootLayout({
   children,
@@ -55,6 +56,7 @@ export default function RootLayout({
             <Footer />
             <MobileStickyBar />
             <ContactDialog />
+            <FloatingDragon />
           </ScrollProvider>
         </ThemeProvider>
       </body>

@@ -11,37 +11,84 @@ const FloatingDragon = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [settings, setSettings] = useState<any>(null);
   const [currentProperty, setCurrentProperty] = useState<any>(null);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const { scrollYProgress } = useScroll();
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const modelViewerRef = useRef<any>(null);
-  const { scrollYProgress } = useScroll();
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const [isMobile, setIsMobile] = useState(false);
+  // Smart Collision Avoidance State
+  const obstaclesRef = useRef<DOMRect[]>([]);
+  const lastScan = useRef(0);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+    setMounted(true);
+    let frameId: number;
+    let curX = window.innerWidth * 0.8;
+    let curY = 300;
+    
+    const update = () => {
+      if (!mounted) return;
 
-  // Path-aware movement to stay in "Empty Spaces" (Gutters)
-  const modelX = useTransform(scrollYProgress, 
-    [0, 0.2, 0.4, 0.6, 0.8, 1],
-    isMobile 
-      ? ["38vw", "-38vw", "38vw", "-38vw", "38vw", "-38vw"] 
-      : ["42vw", "-42vw", "42vw", "-42vw", "42vw", "-42vw"] // Stays strictly in wide margins
-  );
+      const now = Date.now();
+      // Rescan obstacles every 1s or on scroll to keep performance high
+      if (now - lastScan.current > 1000) {
+        const elements = document.querySelectorAll('.glass-card, h1, h2, h3, p, button, form, .container-padding, img');
+        obstaclesRef.current = Array.from(elements)
+          .map(el => el.getBoundingClientRect())
+          .filter(r => r.width > 10 && r.height > 10);
+        lastScan.current = now;
+      }
 
-  const modelY = useTransform(scrollYProgress, 
-    [0, 0.2, 0.4, 0.6, 0.8, 1], 
-    isMobile 
-      ? ["45vh", "25vh", "55vh", "75vh", "65vh", "85vh"] 
-      : ["20vh", "45vh", "65vh", "35vh", "75vh", "80vh"]
-  );
+      const viewportW = window.innerWidth;
+      const viewportH = window.innerHeight;
 
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [isMobile ? 0.5 : 0.7, 0.8, 0.8, 0.6]);
-  const rotate = useTransform(scrollYProgress, [0, 1], [0, 1080]);
+      // 1. Ideal "Base" Position (Natural floating)
+      const time = now / 3000;
+      const idealX = (Math.sin(time) * 0.35 + 0.5) * viewportW;
+      const idealY = (Math.cos(time * 0.7) * 0.35 + 0.5) * viewportH;
+
+      // 2. Physics: Move towards ideal, but get repelled by content
+      let forceX = (idealX - curX) * 0.02;
+      let forceY = (idealY - curY) * 0.02;
+
+      const modelSize = viewportW < 768 ? 60 : 100;
+      
+      obstaclesRef.current.forEach(rect => {
+        // Only check if it's near the current viewport Y to save CPU
+        if (rect.bottom < -100 || rect.top > viewportH + 100) return;
+
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = curX - cx;
+        const dy = curY - cy;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        
+        // Dynamic repulsion zone based on element size
+        const minDist = (Math.max(rect.width, rect.height) / 2) + modelSize;
+
+        if (dist < minDist) {
+          const power = Math.pow((minDist - dist) / minDist, 2);
+          const push = power * 25;
+          forceX += (dx / dist) * push;
+          forceY += (dy / dist) * push;
+        }
+      });
+
+      // Clamp to viewport
+      curX += forceX;
+      curY += forceY;
+      curX = Math.max(modelSize, Math.min(viewportW - modelSize, curX));
+      curY = Math.max(modelSize, Math.min(viewportH - modelSize, curY));
+
+      setPos({ x: curX, y: curY });
+      frameId = requestAnimationFrame(update);
+    };
+
+    update();
+    return () => cancelAnimationFrame(frameId);
+  }, [mounted]);
 
   useEffect(() => {
     setMounted(true);
@@ -95,13 +142,21 @@ const FloatingDragon = () => {
   return (
     <>
       <motion.div 
-        style={{ x: modelX, y: modelY, scale, rotate }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-        className="fixed top-0 left-0 w-full h-screen pointer-events-none z-[100] flex items-center justify-center overflow-visible"
+        style={{ 
+          x: pos.x, 
+          y: pos.y,
+          translateX: '-50%',
+          translateY: '-50%'
+        }}
+        className="fixed top-0 left-0 w-fit h-fit pointer-events-none z-[100] overflow-visible"
       >
-        <div className="w-[120px] h-[160px] md:w-[200px] md:h-[260px] pointer-events-auto cursor-pointer" onClick={() => setShowPopup(true)}>
+        <motion.div 
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+          className="w-[120px] h-[160px] md:w-[180px] md:h-[240px] pointer-events-auto cursor-pointer" 
+          onClick={() => setShowPopup(true)}
+        >
           <ModelViewer
             ref={modelViewerRef}
             src={settings.globalThreeDModel}
@@ -119,7 +174,7 @@ const FloatingDragon = () => {
             interaction-prompt="none"
             style={{ width: '100%', height: '100%' }}
           ></ModelViewer>
-        </div>
+        </motion.div>
       </motion.div>
 
       {/* Global Popup */}
