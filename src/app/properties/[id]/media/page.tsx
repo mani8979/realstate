@@ -111,7 +111,15 @@ const MediaPage = () => {
 
   if (!property) return null;
 
-  if (!property) return null;
+  const getEmbedSafeUrl = (url: string) => {
+    if (!url) return null;
+    if (url.includes('google.com/maps/embed') || url.includes('/embed')) {
+      return { url, isEmbed: true };
+    }
+    return { url, isEmbed: false };
+  };
+
+  const mapInfo = getEmbedSafeUrl(property.mapUrl);
 
   const tabs = [
     { id: 'photos', label: 'Land Gallery', icon: <ImageIcon size={20} />, show: property.landPhotos?.length > 0 },
@@ -524,14 +532,41 @@ const MediaPage = () => {
               key="map"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="w-full h-full p-4 md:p-20"
+              className="w-full h-full p-4 md:p-10"
             >
-              <div className="w-full h-full bg-black/5 dark:bg-white/5 rounded-[3rem] overflow-hidden border border-black/10 dark:border-white/10 relative shadow-2xl">
-                 <iframe
-                  src={property.mapUrl}
-                  className="absolute inset-0 w-full h-full border-none"
-                  loading="lazy"
-                ></iframe>
+              <div className="w-full h-full bg-black/5 dark:bg-white/5 rounded-[3rem] overflow-hidden border border-black/10 dark:border-white/10 relative shadow-2xl flex flex-col items-center justify-center">
+                 {mapInfo?.isEmbed ? (
+                   <iframe
+                    src={mapInfo.url}
+                    className="absolute inset-0 w-full h-full border-none"
+                    loading="lazy"
+                    title="Location Map"
+                  ></iframe>
+                 ) : (
+                   <div className="flex flex-col items-center gap-8 p-10 text-center">
+                      <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center text-primary animate-pulse">
+                        <MapIcon size={48} />
+                      </div>
+                      <div className="space-y-4 max-w-md">
+                        <h3 className="text-3xl font-black uppercase tracking-tighter">Location Map</h3>
+                        <p className="text-gray-500 font-medium leading-relaxed">
+                          The property location is ready for you. For the best experience, view it directly on Google Maps.
+                        </p>
+                      </div>
+                      <a 
+                        href={property.mapUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-primary text-black font-black uppercase tracking-widest px-10 py-5 rounded-2xl hover:scale-105 transition-all shadow-[0_0_50px_rgba(16,185,129,0.3)] flex items-center gap-3"
+                      >
+                        <MapIcon size={20} />
+                        Open Google Maps
+                      </a>
+                      <p className="text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em] mt-10">
+                         Admin: Use an "Embed" URL to show the map directly here.
+                      </p>
+                   </div>
+                 )}
               </div>
             </motion.div>
           )}
