@@ -113,12 +113,12 @@ const MediaPage = () => {
   ] : [];
 
   useEffect(() => {
-    if (property && tabs.length > 0) {
+    if (property && tabs.length > 0 && !activeTab) {
       const type = searchParams.get('type');
       const foundTab = tabs.find(t => t.id === type && t.show);
       if (type && foundTab) {
         setActiveTab(type);
-      } else if (!activeTab) {
+      } else {
         const firstTab = tabs.find(t => t.show);
         if (firstTab) setActiveTab(firstTab.id);
       }
@@ -600,7 +600,7 @@ const MediaPage = () => {
               }`}
             >
               {tab.icon}
-              <span className="hidden md:block">{tab.label}</span>
+              <span className="text-[10px] md:text-xs">{tab.label}</span>
             </button>
           ))}
         </div>
