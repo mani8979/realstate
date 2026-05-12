@@ -39,6 +39,7 @@ const MediaPage = () => {
   const [photoIndex, setPhotoIndex] = useState(0);
   const [isAutoScroll, setIsAutoScroll] = useState(true);
   const [brochurePageIndex, setBrochurePageIndex] = useState(0);
+  const [statusFilter, setStatusFilter] = useState('all');
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -405,17 +406,17 @@ const MediaPage = () => {
                     return (
                       <div className="space-y-4">
                         <div className="grid grid-cols-3 gap-2">
-                          <div className="p-4 rounded-2xl flex flex-col items-center justify-center bg-white/5 border border-white/10">
-                            <span className="text-2xl font-black text-white leading-none mb-2">{free}</span>
-                            <span className="block text-[8px] font-black uppercase tracking-widest opacity-60 text-white">Free</span>
+                          <div className="p-4 rounded-2xl flex flex-col items-center justify-center" style={{ backgroundColor: `${property.soldColor || '#fac915'}15`, border: `1px solid ${property.soldColor || '#fac915'}30` }}>
+                            <span className="text-2xl font-black leading-none mb-2" style={{ color: property.soldColor || '#fac915' }}>{sold}</span>
+                            <span className="block text-[8px] font-black uppercase tracking-widest" style={{ color: property.soldColor || '#fac915' }}>Sold</span>
                           </div>
                           <div className="p-4 rounded-2xl flex flex-col items-center justify-center" style={{ backgroundColor: `${property.bookedColor || '#22c55e'}15`, border: `1px solid ${property.bookedColor || '#22c55e'}30` }}>
                             <span className="text-2xl font-black leading-none mb-2" style={{ color: property.bookedColor || '#22c55e' }}>{booked}</span>
                             <span className="block text-[8px] font-black uppercase tracking-widest" style={{ color: property.bookedColor || '#22c55e' }}>Booked</span>
                           </div>
-                          <div className="p-4 rounded-2xl flex flex-col items-center justify-center" style={{ backgroundColor: `${property.soldColor || '#fac915'}15`, border: `1px solid ${property.soldColor || '#fac915'}30` }}>
-                            <span className="text-2xl font-black leading-none mb-2" style={{ color: property.soldColor || '#fac915' }}>{sold}</span>
-                            <span className="block text-[8px] font-black uppercase tracking-widest" style={{ color: property.soldColor || '#fac915' }}>Sold</span>
+                          <div className="p-4 rounded-2xl flex flex-col items-center justify-center bg-white/5 border border-white/10">
+                            <span className="text-2xl font-black text-white leading-none mb-2">{free}</span>
+                            <span className="block text-[8px] font-black uppercase tracking-widest opacity-60 text-white">Free</span>
                           </div>
                         </div>
                         
@@ -430,7 +431,7 @@ const MediaPage = () => {
 
                 {/* Inventory List Table */}
                 <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[2rem] border border-black/10 dark:border-white/10 flex flex-col overflow-hidden flex-grow shadow-xl">
-                  <div className="p-6 pb-4 border-b border-black/5 dark:border-white/5">
+                  <div className="p-6 pb-4 border-b border-black/5 dark:border-white/5 space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="space-y-1">
                         <h3 className="text-xl font-black uppercase tracking-tighter">Inventory</h3>
@@ -440,11 +441,28 @@ const MediaPage = () => {
                          <span className="text-[9px] font-black text-primary uppercase tracking-widest">{property.plots?.length || 0} Units</span>
                       </div>
                     </div>
+
+                    {/* Status Selectors */}
+                    <div className="flex items-center gap-2 p-1 bg-black/5 dark:bg-white/5 rounded-xl border border-black/5 dark:border-white/5">
+                      {['all', 'available', 'booked', 'sold'].map((status) => (
+                        <button
+                          key={status}
+                          onClick={() => setStatusFilter(status)}
+                          className={`flex-1 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all ${
+                            statusFilter === status 
+                              ? 'bg-primary text-black shadow-lg scale-[1.02]' 
+                              : 'text-gray-500 hover:text-black dark:hover:text-white'
+                          }`}
+                        >
+                          {status === 'available' ? 'Free' : status}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                   
                   <div className="flex-grow overflow-y-auto p-4 custom-scrollbar">
                     <div className="space-y-2">
-                      {property.plots?.map((plot: any, idx: number) => (
+                      {property.plots?.filter((p: any) => statusFilter === 'all' || p.status === statusFilter).map((plot: any, idx: number) => (
                         <div 
                           key={idx} 
                           className="bg-white dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-2xl p-4 flex items-center justify-between group hover:bg-black/5 dark:hover:bg-white/10 transition-all shadow-sm"
