@@ -61,8 +61,8 @@ const PropertyDetails = () => {
     offset: ["start end", "start center"]
   });
   
-  const landingY = useTransform(scrollYProgress, [0, 1], ["10vh", "92%"]);
-  const landingOpacity = useTransform(scrollYProgress, [0, 0.05, 0.9, 1], [1, 1, 1, 1]);
+  const landingY = useTransform(scrollYProgress, [0, 0.9, 1], ["25vh", "88%", "88%"]);
+  const landingOpacity = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [1, 1, 1, 1]);
   
   // Dynamic X Path based on details
   const getXPath = () => {
@@ -74,13 +74,13 @@ const PropertyDetails = () => {
     const xValues = [85, 85];
     
     property.details.forEach((detail: any, i: number) => {
-      const progress = 0.1 + ((i + 1) / (property.details.length + 1)) * 0.7;
+      const progress = 0.1 + ((i + 0.5) / property.details.length) * 0.7;
       points.push(progress);
       
       const align = detail.alignment || property.alignment || 'left';
-      if (align === 'left') xValues.push(80);
-      else if (align === 'right') xValues.push(20);
-      else xValues.push(80); // Default to right if center
+      if (align === 'left') xValues.push(75); // Center of right half
+      else if (align === 'right') xValues.push(25); // Center of left half
+      else xValues.push(75); // Default to right
     });
     
     points.push(0.9, 1);
@@ -169,7 +169,7 @@ const PropertyDetails = () => {
               x: "-50%",
               y: "-50%"
             }}
-            className="absolute w-64 h-64 md:w-[500px] md:h-[500px] flex items-center justify-center transition-all duration-300 ease-out"
+            className="absolute w-40 h-40 md:w-[320px] md:h-[320px] flex items-center justify-center transition-all duration-300 ease-out"
           >
             <ModelViewer
               src={property.threeDElement}
