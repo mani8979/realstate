@@ -45,27 +45,49 @@ interface SmartContentEditorProps {
 export const generateId = () => Math.random().toString(36).substr(2, 9);
 
 export const parseRawText = (text: string): Section[] => {
-  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  const rawLines = text.split('\n').map(l => l.trim());
   const sections: Section[] = [];
   let currentSection: Section | null = null;
 
-  lines.forEach((line, index) => {
-    const isBullet = line.startsWith('-') || line.startsWith('*') || line.startsWith('•') || line.startsWith('→');
-    const isNextLineBullet = index + 1 < lines.length && (lines[index + 1].startsWith('-') || lines[index + 1].startsWith('*') || lines[index + 1].startsWith('•') || lines[index + 1].startsWith('→'));
+  for (let i = 0; i < rawLines.length; i++) {
+    const line = rawLines[i];
     
-    // Advanced Heuristics for Heading:
-    // 1. ALL CAPS (and not a very long sentence)
-    // 2. Ends with a colon
-    // 3. Very short line (< 40 chars) NOT ending with period AND (next line is bullet)
-    const isHeading = !isBullet && line.length < 60 && !line.endsWith('.') && (
-      (line === line.toUpperCase() && line.length > 3) || 
-      line.endsWith(':') || 
+    if (!line) continue; // Skip empty lines for logic, but they help separate paragraphs
+
+    // Ignore markdown separators (---, ***, ___)
+    if (/^[-*_]{3,}$/.test(line)) {
+      continue;
+    }
+
+    // Check if it's an explicitly marked bullet point
+    const isExplicitBullet = /^[-\*•→]\s/.test(line) || /^[-*•→]$/.test(line);
+    
+    // Look ahead to see if the next non-empty line is a bullet
+    let nextNonEmptyLine = '';
+    for (let j = i + 1; j < rawLines.length; j++) {
+      if (rawLines[j] && !/^[-*_]{3,}$/.test(rawLines[j])) {
+        nextNonEmptyLine = rawLines[j];
+        break;
+      }
+    }
+    const isNextLineBullet = /^[-\*•→]\s/.test(nextNonEmptyLine);
+    
+    // Advanced Heuristics for Heading
+    // 1. Markdown heading (Starts with #)
+    // 2. ALL CAPS (and not too long)
+    // 3. Ends with a colon
+    // 4. Short line that precedes a bulleted list
+    const isHeading = !isExplicitBullet && line.length < 100 && !line.endsWith('.') && (
+      line.startsWith('#') ||
+      (line === line.toUpperCase() && line.length > 3) ||
+      line.endsWith(':') ||
       isNextLineBullet
     );
 
     if (isHeading) {
       if (currentSection) sections.push(currentSection);
-      let headingText = line.replace(/:$/, '').trim(); // Remove trailing colon
+      // Clean up the heading text (remove # and colons)
+      let headingText = line.replace(/^#+\s*/, '').replace(/:$/, '').trim();
       currentSection = {
         id: generateId(),
         type: 'heading',
@@ -76,13 +98,13 @@ export const parseRawText = (text: string): Section[] => {
         alignment: 'left'
       };
     } 
-    else if (isBullet) {
+    else if (isExplicitBullet) {
       const bulletText = line.replace(/^[-*•→]\s*/, '').trim();
       if (!currentSection) {
         currentSection = {
           id: generateId(),
           type: 'heading',
-          heading: 'Property Details', // Smart default
+          heading: 'Property Details', // Smart fallback heading
           content: bulletText,
           isPointed: true,
           alignment: 'left'
@@ -92,7 +114,7 @@ export const parseRawText = (text: string): Section[] => {
         currentSection.content += (currentSection.content ? '\n' : '') + bulletText;
       }
     }
-    // Regular Paragraph
+    // Regular Paragraph or Implied Bullet
     else {
       if (!currentSection) {
         currentSection = {
@@ -103,14 +125,28 @@ export const parseRawText = (text: string): Section[] => {
           alignment: 'left'
         };
       } else {
-        // If it's already pointed and we get a normal paragraph, it might be a continuation of a bullet
-        // or just plain text. We just append it.
         currentSection.content += (currentSection.content ? '\n' : '') + line;
+      }
+    }
+  }
+
+  if (currentSection) sections.push(currentSection);
+
+  // Post-processing: Automatically detect "implied" bullet lists
+  // If a section has many short lines separated by newlines, it's likely a list.
+  sections.forEach(sec => {
+    if (!sec.isPointed && sec.content) {
+      const lines = sec.content.split('\n');
+      if (lines.length >= 3) {
+        // If more than 70% of the lines are short (< 100 characters), convert to a pointed list
+        const shortLinesCount = lines.filter(l => l.length < 100).length;
+        if (shortLinesCount / lines.length > 0.7) {
+          sec.isPointed = true;
+        }
       }
     }
   });
 
-  if (currentSection) sections.push(currentSection);
   return sections;
 };
 
