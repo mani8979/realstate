@@ -112,7 +112,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
             <div className="flex gap-2">
               <div className="bg-primary backdrop-blur-md text-black dark:text-white text-[10px] font-black px-4 py-2 rounded-full uppercase tracking-widest shadow-xl flex items-center gap-1.5 ring-1 ring-white/20">
                 <Zap size={12} />
-                <span>{property.type}</span>
+                <span>{property.subType || property.type}</span>
               </div>
               {property.isNew && (
                 <div className="bg-amber-500 backdrop-blur-md text-black dark:text-white text-[10px] font-black px-4 py-2 rounded-full uppercase tracking-widest shadow-xl flex items-center gap-1.5 ring-1 ring-white/20">
@@ -166,7 +166,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
               <p className="text-[10px] font-black text-gray-600 dark:text-gray-400 uppercase tracking-widest mb-2">Property Type</p>
               <div className="flex items-center gap-2 text-gray-900 dark:text-black dark:text-white font-bold">
                 <Home size={18} className="text-primary/60" />
-                <span>{property.type}</span>
+                <span>{property.subType ? `${property.subType}` : property.type}</span>
               </div>
             </div>
             <div className="bg-gray-50 dark:bg-black/5 dark:bg-white/5 p-4 rounded-2xl border border-transparent hover:border-primary/10 transition-colors">
