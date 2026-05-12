@@ -33,6 +33,9 @@ export interface IProperty extends Document {
   landBrochure?: string[];
   layoutImage?: string;
   plots?: { number: string; status: 'available' | 'booked' | 'sold'; x: number; y: number; width: number; height: number }[];
+  availableColor?: string;
+  bookedColor?: string;
+  soldColor?: string;
   status: 'active' | 'sold' | 'draft';
   alignment?: 'left' | 'center' | 'right';
 }
@@ -83,6 +86,9 @@ const PropertySchema = new Schema<IProperty>(
       width: { type: Number, default: 5 },
       height: { type: Number, default: 3 }
     }],
+    availableColor: { type: String, default: '#ffffff' },
+    bookedColor: { type: String, default: '#22c55e' },
+    soldColor: { type: String, default: '#fac915' },
     status: { type: String, enum: ['active', 'sold', 'draft'], default: 'active' },
     alignment: { type: String, enum: ['left', 'center', 'right'], default: 'left' },
   },

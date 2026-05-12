@@ -1,13 +1,15 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import axios from 'axios';
 import { 
   ArrowLeft, Save, Loader2, LayoutGrid, 
-  Trash, Plus, Hash, Settings, Info, CheckCircle2
+  Trash, Plus, Hash, Settings, Info, CheckCircle2,
+  Map as MapIcon, Table as TableIcon, Palette, MousePointer2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 
 const AdminPlotManagement = () => {
   const { id } = useParams();
@@ -18,13 +20,31 @@ const AdminPlotManagement = () => {
   const [plots, setPlots] = useState<any[]>([]);
   const [bulkInput, setBulkInput] = useState('');
   const [deleteMode, setDeleteMode] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'map' | 'table'>('grid');
+  const [selectedPlotIndex, setSelectedPlotIndex] = useState<number | null>(null);
+  const [placementMode, setPlacementMode] = useState(false);
   
+  // Custom colors
+  const [colors, setColors] = useState({
+    available: '#ffffff',
+    booked: '#22c55e',
+    sold: '#fac915'
+  });
+
   useEffect(() => {
     const fetchProperty = async () => {
       try {
         const res = await axios.get(`/api/properties/${id}`);
         setProperty(res.data);
         setPlots(Array.isArray(res.data.plots) ? res.data.plots : []);
+        setColors({
+          available: res.data.availableColor || '#ffffff',
+          booked: res.data.bookedColor || '#22c55e',
+          sold: res.data.soldColor || '#fac915'
+        });
+        if (res.data.layoutImage) {
+          setViewMode('map');
+        }
       } catch (error) {
         console.error('Error fetching property:', error);
       } finally {
@@ -37,7 +57,13 @@ const AdminPlotManagement = () => {
   const handleSave = async () => {
     setSaving(true);
     try {
-      await axios.put(`/api/properties/${id}`, { ...property, plots });
+      await axios.put(`/api/properties/${id}`, { 
+        ...property, 
+        plots,
+        availableColor: colors.available,
+        bookedColor: colors.booked,
+        soldColor: colors.sold
+      });
       alert('Plot inventory saved successfully!');
     } catch (error) {
       console.error('Error saving plots:', error);
@@ -50,10 +76,17 @@ const AdminPlotManagement = () => {
   const handlePlotClick = (index: number) => {
     if (deleteMode) {
       setPlots(plots.filter((_, i) => i !== index));
+      if (selectedPlotIndex === index) setSelectedPlotIndex(null);
       return;
     }
 
-    // Cycle Status
+    if (viewMode === 'map') {
+      setSelectedPlotIndex(index);
+      setPlacementMode(true);
+      return;
+    }
+
+    // Cycle Status in Grid/Table view
     const newPlots = [...plots];
     const currentStatus = newPlots[index].status;
     const nextStatus = 
@@ -62,6 +95,24 @@ const AdminPlotManagement = () => {
       'available';
     newPlots[index].status = nextStatus;
     setPlots(newPlots);
+  };
+
+  const handleMapClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!placementMode || selectedPlotIndex === null) return;
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+    const newPlots = [...plots];
+    newPlots[selectedPlotIndex] = {
+      ...newPlots[selectedPlotIndex],
+      x,
+      y
+    };
+    setPlots(newPlots);
+    // Optional: stay in placement mode for fine tuning, or exit
+    // setPlacementMode(false);
   };
 
   const addBulkPlots = () => {
@@ -75,8 +126,7 @@ const AdminPlotManagement = () => {
         newPlotsList.push({ 
           number: n, 
           status: 'available', 
-          // Default positional data just in case it's needed elsewhere
-          x: 0, y: 0, width: 5, height: 3 
+          x: 50, y: 50, width: 5, height: 3 
         });
       }
     });
@@ -106,7 +156,7 @@ const AdminPlotManagement = () => {
             <ArrowLeft size={24} />
           </button>
           <div>
-            <h1 className="text-xl md:text-3xl font-black uppercase tracking-tighter">Plot Manager</h1>
+            <h1 className="text-xl md:text-3xl font-black uppercase tracking-tighter text-black dark:text-white">Plot Manager</h1>
             <p className="text-[10px] md:text-xs font-black uppercase tracking-widest text-primary mt-1">{property?.title}</p>
           </div>
         </div>
@@ -126,48 +176,64 @@ const AdminPlotManagement = () => {
         
         {/* Left Side: Controls & Stats */}
         <div className="w-full lg:w-1/3 flex flex-col gap-6">
-          {/* Status Overview */}
+          {/* Status Overview & Color Customization */}
           <div className="bg-black/5 dark:bg-white/5 rounded-[2rem] p-8 border border-black/10 dark:border-white/10">
             <h3 className="text-sm font-black uppercase tracking-widest mb-6 text-gray-500">Inventory Status</h3>
             <div className="flex items-center justify-between mb-8">
-              <span className="text-5xl font-black">{plots.length}</span>
+              <span className="text-5xl font-black text-black dark:text-white">{plots.length}</span>
               <span className="text-[10px] font-bold uppercase tracking-widest bg-black/10 dark:bg-white/10 px-4 py-2 rounded-full">Total Plots</span>
             </div>
             
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 rounded-xl bg-white dark:bg-black/50 border border-black/5 dark:border-white/5">
                 <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full bg-white border-2 border-gray-200 dark:border-gray-700 shadow-inner"></div>
+                  <input 
+                    type="color" 
+                    value={colors.available} 
+                    onChange={(e) => setColors({...colors, available: e.target.value})}
+                    className="w-6 h-6 rounded-full overflow-hidden border-none cursor-pointer bg-transparent"
+                  />
                   <span className="text-xs font-bold uppercase tracking-widest">Available</span>
                 </div>
                 <span className="font-black">{availableCount}</span>
               </div>
-              <div className="flex items-center justify-between p-4 rounded-xl bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400">
+              <div className="flex items-center justify-between p-4 rounded-xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5">
                 <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.4)]"></div>
+                  <input 
+                    type="color" 
+                    value={colors.booked} 
+                    onChange={(e) => setColors({...colors, booked: e.target.value})}
+                    className="w-6 h-6 rounded-full overflow-hidden border-none cursor-pointer bg-transparent"
+                  />
                   <span className="text-xs font-bold uppercase tracking-widest">Booked</span>
                 </div>
                 <span className="font-black">{bookedCount}</span>
               </div>
-              <div className="flex items-center justify-between p-4 rounded-xl bg-yellow-400/10 border border-yellow-400/20 text-yellow-600 dark:text-yellow-400">
+              <div className="flex items-center justify-between p-4 rounded-xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5">
                 <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.4)]"></div>
+                  <input 
+                    type="color" 
+                    value={colors.sold} 
+                    onChange={(e) => setColors({...colors, sold: e.target.value})}
+                    className="w-6 h-6 rounded-full overflow-hidden border-none cursor-pointer bg-transparent"
+                  />
                   <span className="text-xs font-bold uppercase tracking-widest">Sold</span>
                 </div>
                 <span className="font-black">{soldCount}</span>
               </div>
             </div>
+            <p className="mt-4 text-[9px] text-gray-400 uppercase font-black tracking-widest text-center">Click color circles to customize</p>
           </div>
 
           {/* Bulk Add Tool */}
           <div className="bg-black/5 dark:bg-white/5 rounded-[2rem] p-8 border border-black/10 dark:border-white/10 flex flex-col gap-4">
             <div className="flex items-center gap-2 mb-2">
               <Plus size={18} className="text-primary" />
-              <h3 className="text-sm font-black uppercase tracking-widest">Add New Plots</h3>
+              <h3 className="text-sm font-black uppercase tracking-widest text-black dark:text-white">Add New Plots</h3>
             </div>
             <textarea 
               placeholder="Enter plot numbers separated by commas or newlines (e.g. 101, 102, 103)" 
-              className="w-full h-32 bg-white dark:bg-black rounded-xl px-4 py-4 text-sm font-bold border border-black/10 dark:border-white/10 focus:ring-2 focus:ring-primary/50 outline-none resize-none"
+              className="w-full h-32 bg-white dark:bg-black rounded-xl px-4 py-4 text-sm font-bold border border-black/10 dark:border-white/10 focus:ring-2 focus:ring-primary/50 outline-none resize-none text-black dark:text-white"
               value={bulkInput}
               onChange={(e) => setBulkInput(e.target.value)}
             />
@@ -184,16 +250,37 @@ const AdminPlotManagement = () => {
              <div className="flex items-start gap-3 text-primary">
                 <Info size={20} className="shrink-0 mt-0.5" />
                 <p className="text-xs font-bold leading-relaxed">
-                   <strong>Quick Edit:</strong> Click any plot card in the grid to instantly cycle its status (Available → Booked → Sold).
+                   <strong>Quick Edit:</strong> Click any plot card in the grid to instantly cycle its status (Available → Booked → Sold). In Map mode, click a plot then click on the map to position it.
                 </p>
              </div>
           </div>
         </div>
 
-        {/* Right Side: Interactive Grid */}
+        {/* Right Side: Interactive Area */}
         <div className="w-full lg:w-2/3 flex flex-col gap-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-black/5 dark:bg-white/5 p-4 rounded-2xl border border-black/10 dark:border-white/10">
-             <h2 className="text-lg font-black uppercase tracking-tighter px-2">Interactive Grid</h2>
+             <div className="flex items-center gap-2 p-1 bg-black/10 dark:bg-white/10 rounded-xl">
+                <button 
+                  onClick={() => setViewMode('grid')}
+                  className={`px-4 py-2 rounded-lg flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'grid' ? 'bg-primary text-black' : 'hover:bg-white/5'}`}
+                >
+                  <LayoutGrid size={14} /> Grid
+                </button>
+                <button 
+                  onClick={() => setViewMode('map')}
+                  disabled={!property?.layoutImage}
+                  className={`px-4 py-2 rounded-lg flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'map' ? 'bg-primary text-black' : 'hover:bg-white/5'} disabled:opacity-30`}
+                >
+                  <MapIcon size={14} /> Map
+                </button>
+                <button 
+                  onClick={() => setViewMode('table')}
+                  className={`px-4 py-2 rounded-lg flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'table' ? 'bg-primary text-black' : 'hover:bg-white/5'}`}
+                >
+                  <TableIcon size={14} /> Table
+                </button>
+             </div>
+             
              <button
                onClick={() => setDeleteMode(!deleteMode)}
                className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 justify-center ${
@@ -214,46 +301,189 @@ const AdminPlotManagement = () => {
               <p className="text-sm text-gray-400 max-w-sm">Use the tool on the left to add your plot numbers, then manage them here.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 auto-rows-max">
-              <AnimatePresence>
-                {plots.map((plot, idx) => (
-                  <motion.button
-                    key={plot.number + idx}
-                    layout
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.5 }}
-                    onClick={() => handlePlotClick(idx)}
-                    className={`
-                      relative aspect-square rounded-2xl flex flex-col items-center justify-center gap-1 transition-all
-                      border-2 shadow-sm group
-                      ${deleteMode 
-                        ? 'hover:border-red-500 hover:bg-red-500/10 cursor-alias' 
-                        : 'hover:scale-105 active:scale-95 cursor-pointer'
-                      }
-                      ${plot.status === 'sold' ? 'bg-yellow-400 border-yellow-500 text-black shadow-yellow-400/20' : 
-                        plot.status === 'booked' ? 'bg-green-500 border-green-600 text-black dark:text-white shadow-green-500/20' : 
-                        'bg-white dark:bg-[#111] border-gray-200 dark:border-gray-800 text-black dark:text-white'
-                      }
-                    `}
-                  >
-                    <span className="text-lg md:text-xl font-black tracking-tighter">{plot.number}</span>
-                    <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
-                      plot.status === 'sold' ? 'bg-black/10' :
-                      plot.status === 'booked' ? 'bg-black/20' :
-                      'bg-black/5 dark:bg-white/5'
-                    }`}>
-                      {plot.status}
-                    </span>
+            <div className="bg-black/5 dark:bg-white/5 rounded-[3rem] border border-black/10 dark:border-white/10 overflow-hidden">
+              {viewMode === 'grid' && (
+                <div className="p-8 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 auto-rows-max">
+                  <AnimatePresence>
+                    {plots.map((plot, idx) => (
+                      <motion.button
+                        key={plot.number + idx}
+                        layout
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.5 }}
+                        onClick={() => handlePlotClick(idx)}
+                        style={{ 
+                          backgroundColor: plot.status === 'sold' ? colors.sold : 
+                                         plot.status === 'booked' ? colors.booked : 
+                                         colors.available,
+                          color: (plot.status === 'sold' || plot.status === 'booked') ? '#000' : 'inherit',
+                          borderColor: 'rgba(0,0,0,0.1)'
+                        }}
+                        className={`
+                          relative aspect-square rounded-2xl flex flex-col items-center justify-center gap-1 transition-all
+                          border-2 shadow-sm group
+                          ${deleteMode 
+                            ? 'hover:border-red-500 hover:bg-red-500/10 cursor-alias' 
+                            : 'hover:scale-105 active:scale-95 cursor-pointer'
+                          }
+                          ${plot.status === 'available' ? 'dark:text-black' : ''}
+                        `}
+                      >
+                        <span className="text-lg md:text-xl font-black tracking-tighter">{plot.number}</span>
+                        <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-black/10`}>
+                          {plot.status}
+                        </span>
 
-                    {deleteMode && (
-                      <div className="absolute inset-0 bg-red-500/90 backdrop-blur-sm rounded-2xl opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all text-white">
-                        <Trash size={24} />
+                        {deleteMode && (
+                          <div className="absolute inset-0 bg-red-500/90 backdrop-blur-sm rounded-2xl opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all text-white">
+                            <Trash size={24} />
+                          </div>
+                        )}
+                      </motion.button>
+                    ))}
+                  </AnimatePresence>
+                </div>
+              )}
+
+              {viewMode === 'map' && property.layoutImage && (
+                <div className="flex flex-col h-full min-h-[600px]">
+                   <div className="bg-primary/10 p-4 flex items-center justify-between border-b border-primary/20">
+                      <div className="flex items-center gap-3">
+                         <MousePointer2 size={18} className="text-primary" />
+                         <p className="text-xs font-bold uppercase tracking-widest">
+                            {placementMode && selectedPlotIndex !== null 
+                              ? `Click on map to position Plot ${plots[selectedPlotIndex].number}` 
+                              : "Select a plot below to position it on map"}
+                         </p>
                       </div>
-                    )}
-                  </motion.button>
-                ))}
-              </AnimatePresence>
+                      {placementMode && (
+                        <button 
+                          onClick={() => {setPlacementMode(false); setSelectedPlotIndex(null);}}
+                          className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-white"
+                        >
+                          Cancel Placement
+                        </button>
+                      )}
+                   </div>
+                   
+                   <div className="relative flex-grow bg-black flex items-center justify-center overflow-hidden p-4">
+                      <div 
+                        className="relative max-w-full max-h-full cursor-crosshair"
+                        onClick={handleMapClick}
+                      >
+                        <img 
+                          src={property.layoutImage} 
+                          alt="Layout" 
+                          className="max-w-full max-h-[70vh] object-contain rounded-xl select-none"
+                        />
+                        {plots.map((plot, idx) => (
+                          <div 
+                            key={idx}
+                            style={{ 
+                              position: 'absolute',
+                              left: `${plot.x}%`, 
+                              top: `${plot.y}%`,
+                              width: '4%',
+                              height: '2.5%',
+                              transform: 'translate(-50%, -50%)',
+                              backgroundColor: plot.status === 'sold' ? colors.sold : 
+                                              plot.status === 'booked' ? colors.booked : 
+                                              colors.available,
+                              borderColor: selectedPlotIndex === idx ? '#fff' : 'rgba(255,255,255,0.5)'
+                            }}
+                            className={`z-10 rounded-sm border shadow-lg flex items-center justify-center transition-all ${selectedPlotIndex === idx ? 'scale-150 ring-2 ring-primary ring-offset-2 ring-offset-black z-20' : 'opacity-80'}`}
+                          >
+                            <span className="text-[6px] font-black text-black">{plot.number}</span>
+                          </div>
+                        ))}
+                      </div>
+                   </div>
+
+                   <div className="p-4 bg-black/20 overflow-x-auto whitespace-nowrap border-t border-white/5 custom-scrollbar">
+                      <div className="flex gap-2">
+                        {plots.map((plot, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => {
+                              setSelectedPlotIndex(idx);
+                              setPlacementMode(true);
+                            }}
+                            style={{ 
+                              backgroundColor: plot.status === 'sold' ? colors.sold : 
+                                             plot.status === 'booked' ? colors.booked : 
+                                             colors.available,
+                            }}
+                            className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest text-black border-2 transition-all ${selectedPlotIndex === idx ? 'border-primary scale-110' : 'border-transparent opacity-60'}`}
+                          >
+                            {plot.number}
+                          </button>
+                        ))}
+                      </div>
+                   </div>
+                </div>
+              )}
+
+              {viewMode === 'table' && (
+                <div className="p-6 overflow-x-auto">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 border-b border-black/10 dark:border-white/10">
+                        <th className="px-4 py-4">Plot Number</th>
+                        <th className="px-4 py-4">Status</th>
+                        <th className="px-4 py-4">Position (X, Y)</th>
+                        <th className="px-4 py-4 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-black/5 dark:divide-white/5">
+                      {plots.map((plot, idx) => (
+                        <tr key={idx} className="group hover:bg-black/5 dark:hover:bg-white/5 transition-all">
+                          <td className="px-4 py-4">
+                            <span className="text-sm font-black text-black dark:text-white">{plot.number}</span>
+                          </td>
+                          <td className="px-4 py-4">
+                            <select 
+                              value={plot.status}
+                              onChange={(e) => {
+                                const newPlots = [...plots];
+                                newPlots[idx].status = e.target.value as any;
+                                setPlots(newPlots);
+                              }}
+                              style={{ 
+                                backgroundColor: plot.status === 'sold' ? colors.sold : 
+                                               plot.status === 'booked' ? colors.booked : 
+                                               colors.available,
+                                color: '#000'
+                              }}
+                              className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-black/10 outline-none"
+                            >
+                              <option value="available">Available</option>
+                              <option value="booked">Booked</option>
+                              <option value="sold">Sold</option>
+                            </select>
+                          </td>
+                          <td className="px-4 py-4">
+                            <div className="flex items-center gap-2 text-[10px] font-bold text-gray-500">
+                              <span className="bg-black/10 dark:bg-white/10 px-2 py-1 rounded">X: {Math.round(plot.x || 0)}%</span>
+                              <span className="bg-black/10 dark:bg-white/10 px-2 py-1 rounded">Y: {Math.round(plot.y || 0)}%</span>
+                            </div>
+                          </td>
+                          <td className="px-4 py-4 text-right">
+                            <button 
+                              onClick={() => {
+                                setPlots(plots.filter((_, i) => i !== idx));
+                              }}
+                              className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
+                            >
+                              <Trash size={16} />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -386,28 +386,28 @@ const PropertyDetails = () => {
                         {property.plots.filter((p: any) => p.x !== undefined && p.y !== undefined).map((plot: any, idx: number) => (
                           <div 
                             key={idx}
+                            className={`z-10 rounded-md border border-white shadow-lg flex items-center justify-center transition-all hover:scale-125 group/plot`}
                             style={{ 
                               position: 'absolute',
                               left: `${plot.x}%`, 
                               top: `${plot.y}%`,
                               width: `${plot.width || 5}%`,
                               height: `${plot.height || 3}%`,
-                              transform: 'translate(-50%, -50%)'
+                              transform: 'translate(-50%, -50%)',
+                              backgroundColor: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                              plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                              (property.availableColor || '#ffffff'),
+                              color: (plot.status === 'sold' || plot.status === 'booked') ? '#000' : 'inherit'
                             }}
-                            className={`z-10 rounded-md border border-white shadow-lg flex items-center justify-center transition-all hover:scale-125 group/plot ${
-                              plot.status === 'sold' ? 'bg-yellow-400 text-black' :
-                              plot.status === 'booked' ? 'bg-green-500 text-black dark:text-white' :
-                              'bg-white text-black'
-                            }`}
                           >
                             <span className="text-[6px] md:text-[8px] font-black">{plot.number}</span>
                             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover/plot:opacity-100 transition-all pointer-events-none whitespace-nowrap z-20">
                               <div className="bg-white dark:bg-black/90 backdrop-blur-md text-black dark:text-white px-3 py-1.5 rounded-lg border border-black/10 dark:border-white/10 text-[10px] font-bold shadow-2xl">
-                                Plot {plot.number} • <span className={
-                                  plot.status === 'sold' ? 'text-yellow-400' :
-                                  plot.status === 'booked' ? 'text-green-500' :
-                                  'text-black dark:text-white'
-                                }>{plot.status.toUpperCase()}</span>
+                                Plot {plot.number} • <span style={{
+                                  color: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                         plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                         'inherit'
+                                }}>{plot.status.toUpperCase()}</span>
                               </div>
                             </div>
                           </div>
@@ -417,15 +417,15 @@ const PropertyDetails = () => {
                      {/* Legend Overlay */}
                      <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10 flex flex-wrap gap-4 p-4 bg-white/80 dark:bg-black/80 backdrop-blur-xl rounded-2xl border border-black/10 dark:border-white/10 shadow-xl z-20">
                         <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded bg-white border border-gray-200"></div>
+                          <div className="w-3 h-3 rounded border border-gray-200" style={{ backgroundColor: property.availableColor || '#ffffff' }}></div>
                           <span className="text-[8px] md:text-[10px] font-bold uppercase text-gray-500">Available</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded bg-green-500"></div>
+                          <div className="w-3 h-3 rounded" style={{ backgroundColor: property.bookedColor || '#22c55e' }}></div>
                           <span className="text-[8px] md:text-[10px] font-bold uppercase text-gray-500">Booked</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded bg-yellow-400"></div>
+                          <div className="w-3 h-3 rounded" style={{ backgroundColor: property.soldColor || '#fac915' }}></div>
                           <span className="text-[8px] md:text-[10px] font-bold uppercase text-gray-500">Sold</span>
                         </div>
                      </div>
@@ -458,20 +458,23 @@ const PropertyDetails = () => {
                                    <tr key={idx} className="bg-white dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl overflow-hidden group hover:bg-black/5 dark:hover:bg-white/10 transition-all">
                                       <td className="px-4 py-4 rounded-l-2xl">
                                          <div className="flex items-center gap-3">
-                                            <div className={`w-1.5 h-6 rounded-full ${
-                                              plot.status === 'sold' ? 'bg-yellow-400' :
-                                              plot.status === 'booked' ? 'bg-green-500' :
-                                              'bg-white'
-                                            }`}></div>
+                                            <div className={`w-1.5 h-6 rounded-full`} style={{
+                                              backgroundColor: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                                              plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                                              (property.availableColor || '#ffffff')
+                                            }}></div>
                                             <span className="text-sm font-black text-black dark:text-white">{plot.number}</span>
                                          </div>
                                       </td>
                                       <td className="px-4 py-4">
-                                         <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full border ${
-                                            plot.status === 'sold' ? 'bg-yellow-400/10 text-yellow-400 border-yellow-400/20' :
-                                            plot.status === 'booked' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
-                                            'bg-black/5 dark:bg-white/5 text-black dark:text-white border-black/10 dark:border-white/10'
-                                         }`}>
+                                         <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-black/10 dark:border-white/10`} style={{
+                                            backgroundColor: plot.status === 'sold' ? `${property.soldColor || '#fac915'}20` :
+                                                            plot.status === 'booked' ? `${property.bookedColor || '#22c55e'}20` :
+                                                            'transparent',
+                                            color: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                                   plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                                   'inherit'
+                                         }}>
                                             {plot.status}
                                          </span>
                                       </td>
@@ -501,16 +504,16 @@ const PropertyDetails = () => {
                       
                       <div className="flex flex-wrap items-center gap-4 bg-white dark:bg-[#050505] p-4 rounded-2xl border border-black/5 dark:border-white/5">
                         <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded-full bg-white border border-gray-200 shadow-inner"></div>
+                          <div className="w-3 h-3 rounded-full border border-gray-200 shadow-inner" style={{ backgroundColor: property.availableColor || '#ffffff' }}></div>
                           <span className="text-[10px] font-bold uppercase text-gray-500">Available ({property.plots.filter((p:any) => p.status === 'available').length})</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.3)]"></div>
-                          <span className="text-[10px] font-bold uppercase text-green-600 dark:text-green-400">Booked ({property.plots.filter((p:any) => p.status === 'booked').length})</span>
+                          <div className="w-3 h-3 rounded-full shadow-lg" style={{ backgroundColor: property.bookedColor || '#22c55e' }}></div>
+                          <span className="text-[10px] font-bold uppercase" style={{ color: property.bookedColor || '#22c55e' }}>Booked ({property.plots.filter((p:any) => p.status === 'booked').length})</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded-full bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.3)]"></div>
-                          <span className="text-[10px] font-bold uppercase text-yellow-600 dark:text-yellow-400">Sold ({property.plots.filter((p:any) => p.status === 'sold').length})</span>
+                          <div className="w-3 h-3 rounded-full shadow-lg" style={{ backgroundColor: property.soldColor || '#fac915' }}></div>
+                          <span className="text-[10px] font-bold uppercase" style={{ color: property.soldColor || '#fac915' }}>Sold ({property.plots.filter((p:any) => p.status === 'sold').length})</span>
                         </div>
                       </div>
                    </div>
@@ -523,11 +526,14 @@ const PropertyDetails = () => {
                           className={`
                             relative aspect-square rounded-2xl flex flex-col items-center justify-center gap-1 transition-all
                             border-2 shadow-sm group hover:scale-105 active:scale-95
-                            ${plot.status === 'sold' ? 'bg-yellow-400 border-yellow-500 text-black shadow-yellow-400/20' : 
-                              plot.status === 'booked' ? 'bg-green-500 border-green-600 text-black dark:text-white shadow-green-500/20' : 
-                              'bg-white dark:bg-[#111] border-gray-200 dark:border-gray-800 text-black dark:text-white hover:border-primary'
-                            }
                           `}
+                          style={{
+                            backgroundColor: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                            plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                            (property.availableColor || '#ffffff'),
+                            borderColor: 'rgba(0,0,0,0.1)',
+                            color: (plot.status === 'sold' || plot.status === 'booked') ? '#000' : 'inherit'
+                          }}
                         >
                           <span className="text-xl md:text-2xl font-black tracking-tighter">{plot.number}</span>
                           <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
