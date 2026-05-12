@@ -58,10 +58,11 @@ const PropertyDetails = () => {
 
   // Zig-zag horizontal movement to stay in "empty spaces" (margins)
   const targetX = useTransform(scrollYProgress, (p): number => {
-    // Snap to far left (8vw) or far right (92vw) margins to avoid text
-    return Math.cos(p * Math.PI * 3) > 0 ? 92 : 8;
+    // Wave movement covering the center and margins (15vw to 85vw)
+    // Starts at 50vw (center) when p=0
+    return Math.sin(p * Math.PI * 2) * 35 + 50;
   });
-  const modelX = useSpring(targetX, { damping: 30, stiffness: 100 });
+  const modelX = useSpring(targetX, { damping: 25, stiffness: 80 });
 
   // Vertical movement that "goes down" as you scroll, but stops before the footer/form
   const modelY = useTransform(scrollYProgress, [0, 0.85, 1], ['15vh', '80vh', '80vh']);
@@ -139,7 +140,7 @@ const PropertyDetails = () => {
             translateX: '-50%',
             rotate: fruitRotate
           }}
-          className="fixed top-0 left-0 w-24 h-24 md:w-32 md:h-32 pointer-events-none z-[10] hidden lg:block opacity-80"
+          className="fixed top-0 left-0 w-32 h-32 md:w-44 md:h-44 pointer-events-none z-[15] hidden lg:block"
         >
           <ModelViewer
             ref={modelViewerRef}
