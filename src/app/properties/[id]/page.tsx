@@ -61,7 +61,7 @@ const PropertyDetails = () => {
     offset: ["start end", "start center"]
   });
   
-  const landingY = useTransform(scrollYProgress, [0, 1], ["20vh", "80vh"]);
+  const landingY = useTransform(scrollYProgress, [0, 1], ["25vh", "45vh"]);
   const landingOpacity = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [1, 1, 1, 1]);
   
   // Dynamic X Path based on details
@@ -78,9 +78,9 @@ const PropertyDetails = () => {
       points.push(progress);
       
       const align = detail.alignment || property.alignment || 'left';
-      if (align === 'left') xValues.push(75); // Center of right half
-      else if (align === 'right') xValues.push(25); // Center of left half
-      else xValues.push(75); // Default to right
+      if (align === 'left') xValues.push(88); // Far right
+      else if (align === 'right') xValues.push(12); // Far left
+      else xValues.push(88); // Default to far right
     });
     
     points.push(0.9, 1);
@@ -91,7 +91,7 @@ const PropertyDetails = () => {
 
   const { points, xValues } = getXPath();
   const landingX = useTransform(scrollYProgress, points, xValues.map(v => `${v}%`));
-  const landingScale = useTransform(scrollYProgress, [0, 0.1, 0.9, 1], [1.2, 1, 1, 1.5]);
+  const landingScale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.7, 0.9, 0.9, 1.3]);
 
 
   useEffect(() => {
