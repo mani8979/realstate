@@ -157,7 +157,7 @@ const PropertyDetails = () => {
   return (
     <div className="relative min-h-screen bg-white dark:bg-[#0a0a0a] text-black dark:text-white font-sans selection:bg-primary selection:text-black">
       {/* Floating 3D Model - Global Pathfinding */}
-      {property.threeDElement && mounted && (
+      {property.threeDElement && mounted && !showFruitPopup && (
         <div className="fixed inset-0 pointer-events-none z-[100] w-full h-full">
           <motion.div 
             style={{ 
