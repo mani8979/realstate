@@ -57,7 +57,7 @@ const PropertyDetails = () => {
   }, []);
 
   // Zig-zag horizontal movement to stay in "empty spaces" (margins)
-  const targetX = useTransform(scrollYProgress, (p) => {
+  const targetX = useTransform(scrollYProgress, (p): number => {
     // Snap to far left (8vw) or far right (92vw) margins to avoid text
     return Math.cos(p * Math.PI * 3) > 0 ? 92 : 8;
   });
