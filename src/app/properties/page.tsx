@@ -83,7 +83,10 @@ const PropertiesPage = () => {
                 
                 {/* Autocomplete Dropdown */}
                 {showSuggestions && properties.length > 0 && filters.location.length > 0 && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-gray-100 dark:border-gray-700 z-50 overflow-hidden max-h-60 overflow-y-auto">
+                  <div 
+                    className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-gray-100 dark:border-gray-700 z-50 overflow-x-hidden max-h-60 overflow-y-auto overscroll-contain"
+                    onMouseDown={(e) => e.preventDefault()}
+                  >
                     {properties.map((p: any) => (
                       <div 
                         key={p._id}
@@ -161,26 +164,21 @@ const PropertiesPage = () => {
                 />
 
                 {/* Autocomplete Dropdown for Budget */}
-                {showBudgetSuggestions && properties.length > 0 && filters.budget.length > 0 && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-gray-100 dark:border-gray-700 z-50 overflow-hidden max-h-60 overflow-y-auto">
-                    {properties.map((p: any) => (
+                {showBudgetSuggestions && filters.budget.length > 0 && (
+                  <div 
+                    className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-gray-100 dark:border-gray-700 z-50 overflow-x-hidden max-h-60 overflow-y-auto overscroll-contain"
+                    onMouseDown={(e) => e.preventDefault()}
+                  >
+                    {[1, 10, 100, 1000].map(multiplier => parseInt(filters.budget) * multiplier).filter(val => !isNaN(val)).map((suggestedPrice: number, index: number) => (
                       <div 
-                        key={p._id}
+                        key={index}
                         onClick={() => {
-                          // Extract numbers from price string if needed, or just set it if it's already a number
-                          const numericPrice = p.price.replace(/[^0-9]/g, '');
-                          setFilters({ ...filters, budget: numericPrice });
+                          setFilters({ ...filters, budget: suggestedPrice.toString() });
                           setShowBudgetSuggestions(false);
                         }}
-                        className="px-4 py-3 hover:bg-primary/10 cursor-pointer flex flex-col border-b border-gray-100 dark:border-gray-700 last:border-0 transition-colors"
+                        className="px-4 py-3 hover:bg-primary/10 cursor-pointer flex items-center border-b border-gray-100 dark:border-gray-700 last:border-0 transition-colors"
                       >
-                        <span className="font-bold text-sm text-gray-900 dark:text-white">{p.title}</span>
-                        <div className="flex items-center justify-between mt-1">
-                           <span className="text-xs text-gray-500 flex items-center gap-1"><MapPin size={10}/> {p.location}</span>
-                           <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-md">
-                             {p.price.includes('/') ? p.price : `₹${p.price}`}
-                           </span>
-                        </div>
+                        <span className="font-bold text-sm text-gray-900 dark:text-white">₹{suggestedPrice.toLocaleString('en-IN')}</span>
                       </div>
                     ))}
                   </div>
