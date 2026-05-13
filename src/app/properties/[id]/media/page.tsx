@@ -402,16 +402,13 @@ const MediaPage = () => {
                 onWheel={handleWheel}
               >
                 <div 
-                  className="relative transition-transform duration-200 ease-out"
+                  className="w-full h-full flex justify-center items-center transition-transform duration-200 ease-out"
                   style={{ transform: `scale(${zoom})` }}
                 >
-                  <Image 
+                  <img 
                     src={property.layoutImage} 
                     alt="Plot Layout" 
-                    width={4000} 
-                    height={3000} 
-                    className="w-auto h-auto max-w-full max-h-[75vh] object-contain rounded-2xl"
-                    priority
+                    className="max-w-full max-h-full object-contain rounded-2xl block"
                   />
                 </div>
                 
