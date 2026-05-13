@@ -35,14 +35,27 @@ export async function GET(request: Request) {
 
     const budget = searchParams.get('budget');
     if (budget) {
-      const budgetNum = Number(budget);
-      properties = properties.filter((p: any) => {
-        if (!p.price) return false;
-        // Extract only the numeric part (e.g. "1000(per sq yard)" -> 1000)
-        const numericPriceStr = p.price.toString().replace(/[^0-9]/g, '');
-        if (!numericPriceStr) return false;
-        return Number(numericPriceStr) <= budgetNum;
-      });
+      const parsePrice = (str: string): number => {
+        if (!str) return 0;
+        const s = str.toString().toLowerCase();
+        const match = s.match(/[0-9]+(\.[0-9]+)?/);
+        if (!match) return 0;
+        let num = Number(match[0]);
+        if (s.includes('cr')) num *= 10000000;
+        else if (s.match(/lakh|lac|l\b/)) num *= 100000;
+        else if (s.match(/k\b|thousand/)) num *= 1000;
+        return num;
+      };
+
+      const budgetNum = parsePrice(budget);
+      if (budgetNum > 0) {
+        properties = properties.filter((p: any) => {
+          if (!p.price) return false;
+          const propertyPriceNum = parsePrice(p.price);
+          if (propertyPriceNum === 0) return false;
+          return propertyPriceNum <= budgetNum;
+        });
+      }
     }
 
     return NextResponse.json(properties);

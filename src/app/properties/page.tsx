@@ -152,40 +152,15 @@ const PropertiesPage = () => {
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-primary font-bold">₹</span>
                 <input
                   type="text"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  placeholder="Budget (in ₹)..."
+                  placeholder="Budget (e.g. 50L, 1Cr, 5000)..."
                   className="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-900 rounded-xl focus:ring-2 focus:ring-primary/50 transition-all border-none"
                   value={filters.budget}
                   onChange={(e) => {
-                    const numericVal = e.target.value.replace(/[^0-9]/g, '');
-                    setFilters({ ...filters, budget: numericVal });
-                    setShowBudgetSuggestions(true);
+                    setFilters({ ...filters, budget: e.target.value });
                   }}
-                  onFocus={() => setShowBudgetSuggestions(true)}
-                  onBlur={() => setTimeout(() => setShowBudgetSuggestions(false), 200)}
                 />
 
-                {/* Autocomplete Dropdown for Budget */}
-                {showBudgetSuggestions && filters.budget.length > 0 && (
-                  <div 
-                    className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-gray-100 dark:border-gray-700 z-50 overflow-x-hidden max-h-60 overflow-y-auto overscroll-contain"
-                    onMouseDown={(e) => e.preventDefault()}
-                  >
-                    {[1, 10, 100, 1000].map(multiplier => parseInt(filters.budget) * multiplier).filter(val => !isNaN(val)).map((suggestedPrice: number, index: number) => (
-                      <div 
-                        key={index}
-                        onClick={() => {
-                          setFilters({ ...filters, budget: suggestedPrice.toString() });
-                          setShowBudgetSuggestions(false);
-                        }}
-                        className="px-4 py-3 hover:bg-primary/10 cursor-pointer flex items-center border-b border-gray-100 dark:border-gray-700 last:border-0 transition-colors"
-                      >
-                        <span className="font-bold text-sm text-gray-900 dark:text-white">₹{suggestedPrice.toLocaleString('en-IN')}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
+
               </div>
             </div>
 
