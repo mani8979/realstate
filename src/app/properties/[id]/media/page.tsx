@@ -479,8 +479,11 @@ const MediaPage = () => {
                 </div>
 
                 <div className="absolute top-6 right-6 flex flex-col gap-2 z-20">
-                    <button className="bg-white/80 dark:bg-black/60 backdrop-blur-md text-black dark:text-white p-3 rounded-full hover:bg-primary hover:text-black transition-all border border-black/10 dark:border-white/10">
-                      <Maximize2 size={20} />
+                    <button 
+                      onClick={() => setZoom(zoom > 1 ? 1 : 2)}
+                      className="bg-white/80 dark:bg-black/60 backdrop-blur-md text-black dark:text-white p-3 rounded-full hover:bg-primary hover:text-black transition-all border border-black/10 dark:border-white/10 shadow-lg"
+                    >
+                      {zoom > 1 ? <Box size={20} /> : <Maximize2 size={20} />}
                     </button>
                 </div>
               </div>
@@ -490,7 +493,7 @@ const MediaPage = () => {
                 data-lenis-prevent
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="w-[400px] flex flex-col gap-6 h-full overflow-hidden"
+                className="w-[400px] flex flex-col gap-6 h-full overflow-y-auto custom-scrollbar pr-2"
               >
                 {/* Status Summary Card */}
                 <div className="bg-black/5 dark:bg-white/5 rounded-[2.5rem] border border-black/10 dark:border-white/10 p-8 flex flex-col shrink-0">
@@ -587,47 +590,55 @@ const MediaPage = () => {
                     style={{ minHeight: '200px' }}
                   >
                     <div className="space-y-2">
-                      {property.plots?.filter((p: any) => statusFilter === 'all' || p.status === statusFilter).map((plot: any, idx: number) => (
-                        <div 
-                          key={idx} 
-                          data-plot={plot.number}
-                          onMouseEnter={() => setHoveredPlot(plot.number)}
-                          onMouseLeave={() => setHoveredPlot(null)}
-                          className={`
-                            bg-white dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-2xl p-4 flex items-center justify-between group transition-all shadow-sm cursor-pointer
-                            ${hoveredPlot === plot.number ? 'ring-2 ring-primary bg-black/5 dark:bg-white/10 scale-[1.02]' : 'hover:bg-black/5 dark:hover:bg-white/10'}
-                          `}
-                        >
-                          <div className="flex items-center gap-4">
-                            <div className="w-1.5 h-8 rounded-full transition-all" style={{
-                              height: hoveredPlot === plot.number ? '1.5rem' : '1rem',
-                              backgroundColor: plot.status === 'sold' ? (property.soldColor || '#fac915') :
-                                              plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
-                                              (property.availableColor || '#ffffff')
-                            }}></div>
-                            <div className="flex flex-col">
-                              <span className="text-sm font-black text-black dark:text-white">Plot {plot.number}</span>
-                              <span className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40" style={{
-                                color: plot.status === 'sold' ? (property.soldColor || '#fac915') :
-                                       plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
-                                       'inherit'
-                              }}>
-                                {plot.status}
-                              </span>
-                            </div>
-                          </div>
-                          
-                          <button 
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`);
-                            }}
-                            className="text-[8px] font-black uppercase tracking-widest px-4 py-2 rounded-xl transition-all border border-primary/20 bg-primary/5 text-primary hover:bg-primary hover:text-black"
+                      {property.plots?.filter((p: any) => statusFilter === 'all' || p.status === statusFilter).length > 0 ? (
+                        property.plots?.filter((p: any) => statusFilter === 'all' || p.status === statusFilter).map((plot: any, idx: number) => (
+                          <div 
+                            key={idx} 
+                            data-plot={plot.number}
+                            onMouseEnter={() => setHoveredPlot(plot.number)}
+                            onMouseLeave={() => setHoveredPlot(null)}
+                            className={`
+                              bg-white dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-2xl p-4 flex items-center justify-between group transition-all shadow-sm cursor-pointer
+                              ${hoveredPlot === plot.number ? 'ring-2 ring-primary bg-black/5 dark:bg-white/10 scale-[1.02]' : 'hover:bg-black/5 dark:hover:bg-white/10'}
+                            `}
                           >
-                            Enquire
-                          </button>
+                            <div className="flex items-center gap-4">
+                              <div className="w-1.5 h-8 rounded-full transition-all" style={{
+                                height: hoveredPlot === plot.number ? '1.5rem' : '1rem',
+                                backgroundColor: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                                plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                                (property.availableColor || '#ffffff')
+                              }}></div>
+                              <div className="flex flex-col">
+                                <span className="text-sm font-black text-black dark:text-white">Plot {plot.number}</span>
+                                <span className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40" style={{
+                                  color: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                         plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                         'inherit'
+                                }}>
+                                  {plot.status}
+                                </span>
+                              </div>
+                            </div>
+                            
+                            <button 
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`);
+                              }}
+                              className="text-[8px] font-black uppercase tracking-widest px-4 py-2 rounded-xl transition-all border border-primary/20 bg-primary/5 text-primary hover:bg-primary hover:text-black"
+                            >
+                              Enquire
+                            </button>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="flex flex-col items-center justify-center h-full py-10 opacity-30 text-center">
+                           <LayoutGrid size={40} className="mb-4" />
+                           <p className="text-[10px] font-black uppercase tracking-[0.2em]">No Units Found</p>
+                           <p className="text-[8px] font-bold uppercase tracking-widest mt-2">Check back later or change filter</p>
                         </div>
-                      ))}
+                      )}
                     </div>
                   </div>
                   

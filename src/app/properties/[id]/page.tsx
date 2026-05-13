@@ -551,7 +551,7 @@ const PropertyDetails = () => {
                               <p className="text-[10px] font-bold text-primary uppercase tracking-widest">Availability List</p>
                            </div>
                            <div className="bg-primary/10 px-4 py-2 rounded-xl border border-primary/20">
-                              <span className="text-[10px] font-black text-primary uppercase tracking-widest">{property.plots.length} Units</span>
+                              <span className="text-[10px] font-black text-primary uppercase tracking-widest">{property.plots?.length || 0} Units</span>
                            </div>
                         </div>
 
@@ -569,7 +569,7 @@ const PropertyDetails = () => {
                                  </tr>
                               </thead>
                               <tbody>
-                                 {property.plots.map((plot: any, idx: number) => (
+                                 {property.plots?.map((plot: any, idx: number) => (
                                     <tr 
                                        key={idx} 
                                        data-plot={plot.number}
