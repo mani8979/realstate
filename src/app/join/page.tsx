@@ -21,12 +21,14 @@ const JoinPage = async () => {
 
   const rules = serializedContent.joinRules ? serializedContent.joinRules.split('\n') : [];
   const qualifications = serializedContent.joinQualifications ? serializedContent.joinQualifications.split('\n') : [];
+  const eligibility = serializedContent.joinEligibility ? serializedContent.joinEligibility.split('\n') : [];
 
   return (
     <JoinPageClient 
       serializedContent={serializedContent}
       rules={rules}
       qualifications={qualifications}
+      eligibility={eligibility}
     />
   );
 };

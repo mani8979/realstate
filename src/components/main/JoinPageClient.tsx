@@ -8,9 +8,10 @@ interface JoinPageClientProps {
   serializedContent: any;
   rules: string[];
   qualifications: string[];
+  eligibility: string[];
 }
 
-const JoinPageClient = ({ serializedContent, rules, qualifications }: JoinPageClientProps) => {
+const JoinPageClient = ({ serializedContent, rules, qualifications, eligibility }: JoinPageClientProps) => {
   const [isTeamModalOpen, setIsTeamModalOpen] = useState(false);
 
   const teamMembers = (serializedContent.joinTeamLeads || []).filter((m: any) => m.name && m.phone);
@@ -50,7 +51,7 @@ const JoinPageClient = ({ serializedContent, rules, qualifications }: JoinPageCl
         {/* Office & Requirements */}
         <section className="py-24 border-t border-white/5">
           <div className="container mx-auto px-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
               <div className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-10 rounded-[3rem] space-y-6">
                 <div className="w-14 h-14 bg-primary/20 rounded-2xl flex items-center justify-center text-primary">
                   <MapPin size={28} />
@@ -84,6 +85,20 @@ const JoinPageClient = ({ serializedContent, rules, qualifications }: JoinPageCl
                     <li key={i} className="flex gap-3 text-gray-600 dark:text-gray-400 items-start">
                       <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
                       <span>{q}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-10 rounded-[3rem] space-y-6">
+                <div className="w-14 h-14 bg-primary/20 rounded-2xl flex items-center justify-center text-primary">
+                  <Users size={28} />
+                </div>
+                <h2 className="text-2xl font-black uppercase tracking-tight">Eligibility Criteria</h2>
+                <ul className="space-y-3">
+                  {eligibility.map((e, i) => (
+                    <li key={i} className="flex gap-3 text-gray-600 dark:text-gray-400 items-start">
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+                      <span className="capitalize">{e}</span>
                     </li>
                   ))}
                 </ul>

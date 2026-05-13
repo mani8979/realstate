@@ -149,6 +149,7 @@ export interface ISiteContent extends Document {
   joinIndividualTitle: string;
   joinIndividualDesc: string;
   joinTeamDesc: string;
+  joinEligibility: string;
   // Team Leads (Dynamic Array)
   joinTeamLeads: {
     name: string;
@@ -234,7 +235,7 @@ const SiteContentSchema = new Schema<ISiteContent>(
     aboutVision: { type: String, default: "Architectural Innovation" },
     contactEmail: { type: String, default: "hello@starlands.com" },
     contactPhone: { type: String, default: "+91 98765 43210" },
-    contactAddress: { type: String, default: "MVP Colony, Visakhapatnam" },
+    contactAddress: { type: String, default: "Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026." },
     logoTitle: { type: String, default: "STAR LANDS" },
     logoSubtitle: { type: String, default: "DEVELOPERS" },
     navHome: { type: String, default: "Home" },
@@ -251,7 +252,7 @@ const SiteContentSchema = new Schema<ISiteContent>(
     footerPhone: { type: String, default: "+91 96660 80645" },
     footerPhoneSub: { type: String, default: "Available Mon-Sat, 9AM-7PM" },
     footerOfficeLabel: { type: String, default: "Main Office" },
-    footerAddress: { type: String, default: "Beach Road, MVP Colony,\nVisakhapatnam, AP" },
+    footerAddress: { type: String, default: "Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026." },
     footerAddressSub: { type: String, default: "Visit us for a coffee and a chat." },
     footerCopyright: { type: String, default: "© 2026 STAR LANDS DEVELOPERS GROUP" },
     privacyPolicyContent: { type: String, default: "Privacy Policy Content goes here..." },
@@ -298,6 +299,7 @@ const SiteContentSchema = new Schema<ISiteContent>(
     locationBadge: { type: String, default: "Our Presence" },
     locationTitle1: { type: String, default: "FIND US" },
     locationTitle2: { type: String, default: "LOCALLY" },
+    officeAddress: { type: String, default: "Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026." },
     socialFacebook: { type: String, default: "https://www.facebook.com/people/star-land-developers/" },
     socialInstagram: { type: String, default: "https://www.instagram.com/star_land_developer" },
     contactBadge: { type: String, default: "Get In Touch" },
@@ -316,8 +318,8 @@ const SiteContentSchema = new Schema<ISiteContent>(
     joinBadge: { type: String, default: "Career Opportunities" },
     joinTitle: { type: String, default: "Join With Us" },
     joinDesc: { type: String, default: "Become a part of our elite real estate network and build your future with the best in the industry." },
-    joinRules: { type: String, default: "Professional Ethics First\nTransparent Communication\nCommitted to Client Success\nAdherence to Legal Guidelines" },
-    joinQualifications: { type: String, default: "Excellent Communication Skills\nStrong Market Knowledge\nSelf-Motivated & Driven\nReal Estate Experience Preferred" },
+    joinRules: { type: String, default: "Professional Ethics First\nTransparent Communication\nCommitted to Client Success\nAdherence to Legal Guidelines\nPunctual\nAttend Office Meeting(every thursday evening 4 30 pm to 6 30 pm)" },
+    joinQualifications: { type: String, default: "Excellent Communication Skills\nStrong Market Knowledge\nSelf-Motivated & Driven\nCritical Thinking" },
     joinIndividualBtnText: { type: String, default: "Join as Individual" },
     joinIndividualPhone: { type: String, default: "919666080645" },
     joinTeamTitle: { type: String, default: "Join as a Team" },
@@ -331,6 +333,7 @@ const SiteContentSchema = new Schema<ISiteContent>(
     joinIndividualTitle: { type: String, default: "Join as Individual" },
     joinIndividualDesc: { type: String, default: "Looking to start your journey solo? We provide the platform and mentorship you need to succeed." },
     joinTeamDesc: { type: String, default: "Connect with our team leads directly to discuss collaboration opportunities." },
+    joinEligibility: { type: String, default: "no age limit required\nno prior experience required\nanyone interested in real estate business can join" },
     joinTeamLeads: {
       type: [{
         name: String,

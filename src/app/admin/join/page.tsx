@@ -23,6 +23,8 @@ export default function JoinAdmin() {
     joinIndividualTitle: '',
     joinIndividualDesc: '',
     joinTeamDesc: '',
+    joinEligibility: '',
+    officeAddress: '',
     joinTeamLeads: []
   });
   const [loading, setLoading] = useState(true);
@@ -183,6 +185,10 @@ export default function JoinAdmin() {
               <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Floating Chat Label</label>
               <input name="chatWithUsText" value={content.chatWithUsText || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" placeholder="e.g. Chat With Us" />
             </div>
+            <div>
+              <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Office Address</label>
+              <textarea name="officeAddress" rows={2} value={content.officeAddress || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+            </div>
           </div>
         </div>
 
@@ -236,6 +242,10 @@ export default function JoinAdmin() {
             <div>
               <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Qualifications (One per line)</label>
               <textarea name="joinQualifications" rows={4} value={content.joinQualifications || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
+            </div>
+            <div>
+              <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-3">Eligibility Criteria (One per line)</label>
+              <textarea name="joinEligibility" rows={4} value={content.joinEligibility || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium" />
             </div>
           </div>
         </div>
