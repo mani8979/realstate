@@ -60,7 +60,10 @@ export default async function Home() {
       />
       
       <div className="relative z-10">
-        <FeaturedProperties properties={serializedLands.slice(0, 4)} content={serializedContent} />
+        <FeaturedProperties 
+          properties={serializedLands.filter((l: any) => l.featured === true)} 
+          content={serializedContent} 
+        />
       </div>
 
       {/* Cinematic Transition Divider */}
