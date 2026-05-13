@@ -140,7 +140,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -148,10 +148,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(16, 185, 129, 0.5);
+  background: rgba(16, 185, 129, 0.3);
   border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(16, 185, 129, 0.8);
+  background: rgba(16, 185, 129, 0.6);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(16, 185, 129, 0.3) transparent;
 }

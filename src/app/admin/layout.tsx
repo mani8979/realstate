@@ -81,12 +81,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       ) : (
         <>
           {/* Sidebar */}
-          <aside className={`
-            ${isSidebarOpen ? 'w-72' : 'w-20'} 
-            bg-white dark:bg-black border-r border-gray-100 dark:border-gray-900 
-            transition-all duration-300 flex flex-col sticky top-0 h-screen z-50
-            hidden lg:flex
-          `}>
+          <aside 
+            className={`
+              ${isSidebarOpen ? 'w-72' : 'w-20'} 
+              bg-white dark:bg-black border-r border-gray-100 dark:border-gray-900 
+              transition-all duration-300 flex flex-col sticky top-0 h-screen z-50
+              hidden lg:flex
+            `}
+            data-lenis-prevent
+          >
             <div className="p-6 border-b border-gray-100 dark:border-gray-900 flex items-center justify-between">
               <Link href="/" className="flex items-center gap-2 overflow-hidden">
                 <div className="bg-primary p-2 rounded-lg text-black dark:text-white shrink-0">
@@ -99,8 +102,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 )}
               </Link>
             </div>
-
-            <nav className="flex-grow py-6 overflow-y-auto custom-scrollbar px-3 space-y-6" data-lenis-prevent>
+ 
+            <nav className="flex-grow py-6 overflow-y-auto custom-scrollbar px-3 space-y-6 overscroll-contain" data-lenis-prevent>
               {navigation.map((section) => (
                 <div key={section.title} className="space-y-1">
                   {isSidebarOpen && (
