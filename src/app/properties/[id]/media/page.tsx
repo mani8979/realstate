@@ -553,7 +553,7 @@ const MediaPage = () => {
                 </div>
 
                 {/* Inventory List Table */}
-                <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[2rem] border border-black/10 dark:border-white/10 flex flex-col overflow-hidden flex-grow shadow-xl">
+                <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[2rem] border border-black/10 dark:border-white/10 flex flex-col overflow-hidden shrink-0 min-h-[500px] shadow-xl">
                   <div className="p-6 pb-4 border-b border-black/5 dark:border-white/5 space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="space-y-1">
@@ -587,7 +587,7 @@ const MediaPage = () => {
                     ref={inventorySidebarRef}
                     data-lenis-prevent 
                     className="flex-grow overflow-y-auto p-4 custom-scrollbar"
-                    style={{ minHeight: '200px' }}
+                    style={{ minHeight: '400px' }}
                   >
                     <div className="space-y-2">
                       {property.plots?.filter((p: any) => statusFilter === 'all' || p.status === statusFilter).length > 0 ? (
