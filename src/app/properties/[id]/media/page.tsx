@@ -319,7 +319,7 @@ const MediaPage = () => {
                 </div>
 
                 {/* Book View */}
-                <div className="flex-grow relative flex items-center justify-center min-h-[500px] py-10">
+                <div className="flex-grow relative flex items-center justify-center">
                    <AnimatePresence mode="wait">
                      <motion.div 
                         key={brochurePageIndex}
@@ -329,26 +329,27 @@ const MediaPage = () => {
                         transition={{ duration: 0.5, ease: "easeOut" }}
                         className="w-full h-full flex items-center justify-center perspective-2000"
                      >
-                        <div className="w-full h-full flex items-center justify-center gap-1 md:gap-4 px-2 md:px-6">
+                        <div className="w-full h-full flex items-center justify-center gap-0 px-2 md:px-0">
                            {getBrochurePages(property.landBrochure)[brochurePageIndex]?.map((img: string, i: number) => (
                               <div 
                                 key={i} 
-                                className={`relative flex items-center justify-center transition-all duration-700 bg-white dark:bg-zinc-900 shadow-2xl rounded-sm ${
+                                className={`relative h-full flex items-center justify-center transition-all duration-700 bg-white dark:bg-zinc-900 shadow-2xl ${
                                   getBrochurePages(property.landBrochure)[brochurePageIndex].length === 1 
-                                    ? 'max-w-[95%] md:max-w-[90%]' 
-                                    : 'flex-1 max-w-[50%]'
+                                    ? 'w-full' 
+                                    : 'flex-1'
                                 }`}
                                 style={{
                                   boxShadow: '0 30px 60px -12px rgba(0, 0, 0, 0.6)',
                                   transform: getBrochurePages(property.landBrochure)[brochurePageIndex].length === 2 
                                     ? (i === 0 ? 'perspective(2000px) rotateY(1deg)' : 'perspective(2000px) rotateY(-1deg)')
-                                    : 'none'
+                                    : 'none',
+                                  maxWidth: getBrochurePages(property.landBrochure)[brochurePageIndex].length === 1 ? '95%' : '50%'
                                 }}
                               >
                                  <img 
                                    src={img} 
                                    alt="Brochure Page" 
-                                   className="w-full h-auto max-h-[70vh] md:max-h-[75vh] object-contain block"
+                                   className="w-full h-full max-h-[85vh] object-contain block"
                                  />
                                  
                                  {/* Center Shadow for Spreads */}
