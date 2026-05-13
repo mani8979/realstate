@@ -48,6 +48,7 @@ const PropertyDetails = () => {
   const [isReadMore, setIsReadMore] = useState(false);
   const modelViewerRef = useRef<any>(null);
   const [mounted, setMounted] = useState(false);
+  const [hoveredPlot, setHoveredPlot] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -456,19 +457,60 @@ const PropertyDetails = () => {
                  <p className="text-gray-500 font-medium uppercase tracking-widest text-[10px] md:text-xs">Explore available plots and secure your future asset today</p>
               </div>
 
-              {property.layoutImage ? (
-                <div className="flex flex-col xl:flex-row gap-10">
+              <div className="flex flex-col xl:flex-row gap-10">
                   {/* Map View */}
                   <div className="flex-grow bg-black/5 dark:bg-white/5 rounded-[3rem] border border-black/10 dark:border-white/10 overflow-hidden relative shadow-2xl flex items-center justify-center p-4 md:p-10 min-h-[500px]">
-                     <div className="relative max-w-full max-h-full">
-                        <Image 
-                          src={property.layoutImage} 
-                          alt="Plot Layout" 
-                          width={4000} 
-                          height={3000} 
-                          className="w-auto h-auto max-w-full max-h-[70vh] object-contain rounded-2xl"
-                        />
-                     </div>
+                     {property.layoutImage ? (
+                       <div className="relative w-full h-full flex items-center justify-center">
+                          <div className="relative group/map">
+                            <Image 
+                              src={property.layoutImage} 
+                              alt="Plot Layout" 
+                              width={4000} 
+                              height={3000} 
+                              className="w-auto h-auto max-w-full max-h-[70vh] object-contain rounded-2xl"
+                            />
+                            
+                            {/* Plot Overlays */}
+                            <svg 
+                              className="absolute inset-0 w-full h-full pointer-events-none" 
+                              viewBox="0 0 100 100" 
+                              preserveAspectRatio="none"
+                            >
+                              {property.plots.map((plot: any, idx: number) => (
+                                <motion.rect
+                                  key={idx}
+                                  x={plot.x}
+                                  y={plot.y}
+                                  width={plot.width || 5}
+                                  height={plot.height || 3}
+                                  className="pointer-events-auto cursor-pointer"
+                                  initial={{ opacity: 0.3 }}
+                                  animate={{ 
+                                    opacity: hoveredPlot === plot.number ? 0.8 : 0.3,
+                                    scale: hoveredPlot === plot.number ? 1.05 : 1
+                                  }}
+                                  style={{
+                                    fill: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                          plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                          (property.availableColor || '#ffffff'),
+                                    stroke: hoveredPlot === plot.number ? '#fff' : 'transparent',
+                                    strokeWidth: 0.5
+                                  }}
+                                  onMouseEnter={() => setHoveredPlot(plot.number)}
+                                  onMouseLeave={() => setHoveredPlot(null)}
+                                  onClick={() => openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`)}
+                                />
+                              ))}
+                            </svg>
+                          </div>
+                       </div>
+                     ) : (
+                       <div className="flex flex-col items-center gap-6 text-center opacity-30">
+                          <LayoutGrid size={80} />
+                          <p className="text-sm font-black uppercase tracking-widest">Interactive Map coming soon</p>
+                       </div>
+                     )}
                      
                      {/* Legend Overlay */}
                      <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10 flex flex-wrap gap-4 p-4 bg-white/80 dark:bg-black/80 backdrop-blur-xl rounded-2xl border border-black/10 dark:border-white/10 shadow-xl z-20">
@@ -488,8 +530,8 @@ const PropertyDetails = () => {
                   </div>
 
                   {/* Table View */}
-                  <div className="w-full xl:w-[400px] flex flex-col gap-6">
-                     <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[3rem] border border-black/10 dark:border-white/10 p-8 flex flex-col h-[600px]">
+                  <div className="w-full xl:w-[450px] flex flex-col gap-6">
+                     <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[3rem] border border-black/10 dark:border-white/10 p-8 flex flex-col h-[600px] shadow-2xl">
                         <div className="flex items-center justify-between mb-8">
                            <div className="space-y-1">
                               <h3 className="text-xl font-black uppercase tracking-tighter text-black dark:text-white">Unit Table</h3>
@@ -506,15 +548,23 @@ const PropertyDetails = () => {
                                  <tr className="text-[10px] font-black uppercase tracking-[0.2em] text-black dark:text-white/30">
                                     <th className="px-4 py-2">ID</th>
                                     <th className="px-4 py-2">Status</th>
-                                    <th className="px-4 py-2 text-right"></th>
+                                    <th className="px-4 py-2 text-right">Action</th>
                                  </tr>
                               </thead>
                               <tbody>
                                  {property.plots.map((plot: any, idx: number) => (
-                                   <tr key={idx} className="bg-white dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl overflow-hidden group hover:bg-black/5 dark:hover:bg-white/10 transition-all">
+                                   <tr 
+                                     key={idx} 
+                                     onMouseEnter={() => setHoveredPlot(plot.number)}
+                                     onMouseLeave={() => setHoveredPlot(null)}
+                                     className={`
+                                       bg-white dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl overflow-hidden group transition-all cursor-pointer
+                                       ${hoveredPlot === plot.number ? 'ring-2 ring-primary bg-black/5 dark:bg-white/10 scale-[1.02]' : 'hover:bg-black/5 dark:hover:bg-white/10'}
+                                     `}
+                                   >
                                       <td className="px-4 py-4 rounded-l-2xl">
                                          <div className="flex items-center gap-3">
-                                            <div className={`w-1.5 h-6 rounded-full`} style={{
+                                            <div className={`w-1.5 h-6 rounded-full transition-all ${hoveredPlot === plot.number ? 'h-8' : ''}`} style={{
                                               backgroundColor: plot.status === 'sold' ? (property.soldColor || '#fac915') :
                                                               plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
                                                               (property.availableColor || '#ffffff')
@@ -535,74 +585,51 @@ const PropertyDetails = () => {
                                          </span>
                                       </td>
                                       <td className="px-4 py-4 text-right rounded-r-2xl">
-                                         <button 
-                                            onClick={() => openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`)}
-                                            className="text-[9px] font-black uppercase tracking-widest text-primary hover:text-black dark:text-white transition-colors"
-                                         >
-                                            Enquire
-                                         </button>
+                                         <div className="flex items-center justify-end gap-3">
+                                            {property.landBrochure?.length > 0 && (
+                                              <button 
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  router.push(`/properties/${property._id}/media?type=brochure`);
+                                                }}
+                                                className="p-2 rounded-lg bg-black/5 dark:bg-white/5 text-gray-400 hover:text-primary transition-colors"
+                                                title="View Brochure"
+                                              >
+                                                <Download size={14} />
+                                              </button>
+                                            )}
+                                            <button 
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`);
+                                                }}
+                                                className="text-[9px] font-black uppercase tracking-widest text-primary hover:text-black dark:text-white transition-colors bg-primary/10 hover:bg-primary px-3 py-1.5 rounded-lg border border-primary/20"
+                                            >
+                                                Enquire
+                                            </button>
+                                         </div>
                                       </td>
                                    </tr>
                                  ))}
                               </tbody>
                            </table>
                         </div>
+                        
+                        {/* Analysis / Hint Block */}
+                        <div className="mt-6 p-4 bg-primary/10 rounded-2xl border border-primary/20">
+                           <div className="flex items-center gap-3">
+                              <Box size={16} className="text-primary" />
+                              <div>
+                                 <p className="text-[10px] font-black uppercase tracking-widest text-primary">Live Status Analysis</p>
+                                 <p className="text-[8px] font-bold text-black/60 dark:text-white/60">
+                                    {hoveredPlot ? `Viewing details for Plot ${hoveredPlot}` : 'Hover over a unit to see its location on the map'}
+                                 </p>
+                              </div>
+                           </div>
+                        </div>
                      </div>
                   </div>
                 </div>
-              ) : (
-                <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[3rem] border border-black/10 dark:border-white/10 p-8 md:p-12">
-                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
-                      <div className="space-y-2">
-                         <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter text-black dark:text-white">Plot Availability Grid</h3>
-                         <p className="text-[10px] font-bold text-primary uppercase tracking-widest">{property.plots.length} Total Units</p>
-                      </div>
-                      
-                      <div className="flex flex-wrap items-center gap-4 bg-white dark:bg-[#050505] p-4 rounded-2xl border border-black/5 dark:border-white/5">
-                        <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded-full border border-gray-200 shadow-inner" style={{ backgroundColor: property.availableColor || '#ffffff' }}></div>
-                          <span className="text-[10px] font-bold uppercase text-gray-500">Available ({property.plots.filter((p:any) => p.status === 'available').length})</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded-full shadow-lg" style={{ backgroundColor: property.bookedColor || '#22c55e' }}></div>
-                          <span className="text-[10px] font-bold uppercase" style={{ color: property.bookedColor || '#22c55e' }}>Booked ({property.plots.filter((p:any) => p.status === 'booked').length})</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded-full shadow-lg" style={{ backgroundColor: property.soldColor || '#fac915' }}></div>
-                          <span className="text-[10px] font-bold uppercase" style={{ color: property.soldColor || '#fac915' }}>Sold ({property.plots.filter((p:any) => p.status === 'sold').length})</span>
-                        </div>
-                      </div>
-                   </div>
-
-                   <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 md:gap-4">
-                     {property.plots.map((plot: any, idx: number) => (
-                        <button
-                          key={idx}
-                          onClick={() => openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`)}
-                          className={`
-                            relative aspect-square rounded-2xl flex flex-col items-center justify-center gap-1 transition-all
-                            border-2 shadow-sm group hover:scale-105 active:scale-95
-                          `}
-                          style={{
-                            backgroundColor: plot.status === 'sold' ? (property.soldColor || '#fac915') :
-                                            plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
-                                            (property.availableColor || '#ffffff'),
-                            borderColor: 'rgba(0,0,0,0.1)',
-                            color: isLightColor(plot.status === 'sold' ? (property.soldColor || '#fac915') : plot.status === 'booked' ? (property.bookedColor || '#22c55e') : (property.availableColor || '#ffffff')) ? '#000000' : '#ffffff'
-                          }}
-                        >
-                          <span className="text-xl md:text-2xl font-black tracking-tighter">{plot.number}</span>
-                          <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
-                            isLightColor(plot.status === 'sold' ? (property.soldColor || '#fac915') : plot.status === 'booked' ? (property.bookedColor || '#22c55e') : (property.availableColor || '#ffffff'))
-                            ? 'bg-black/10 text-black' : 'bg-white/20 text-white'
-                          }`}>
-                            {plot.status}
-                          </span>
-                        </button>
-                     ))}
-                   </div>
-                </div>
-              )}
             </motion.div>
           )}
           <div className="h-px bg-black/5 dark:bg-white/5 mt-20" />
