@@ -78,20 +78,30 @@ const MediaPage = () => {
   const getBrochurePages = (images: string[]) => {
     const brochureImages = images.filter(img => !img.endsWith('.pdf'));
     if (brochureImages.length === 0) return [];
-    if (brochureImages.length === 1) return [[brochureImages[0]]];
     
     const pages = [];
-    pages.push([brochureImages[0]]); // Cover
+    // If only 1 image, just show it
+    if (brochureImages.length === 1) return [[brochureImages[0]]];
     
+    // cover
+    pages.push([brochureImages[0]]);
+    
+    // intermediate spreads
     for (let i = 1; i < brochureImages.length - 1; i += 2) {
-      if (i + 1 < brochureImages.length - 1) {
+      if (i + 1 < brochureImages.length) {
         pages.push([brochureImages[i], brochureImages[i + 1]]);
       } else {
         pages.push([brochureImages[i]]);
       }
     }
     
-    pages.push([brochureImages[brochureImages.length - 1]]); // Back Cover
+    // back cover (if not already included in a spread)
+    const lastIndex = brochureImages.length - 1;
+    const allPushed = pages.flat();
+    if (!allPushed.includes(brochureImages[lastIndex])) {
+      pages.push([brochureImages[lastIndex]]);
+    }
+    
     return pages;
   };
 
@@ -309,33 +319,47 @@ const MediaPage = () => {
                 </div>
 
                 {/* Book View */}
-                <div className="flex-grow relative flex items-center justify-center min-h-[500px]">
+                <div className="flex-grow relative flex items-center justify-center min-h-[500px] py-10">
                    <AnimatePresence mode="wait">
                      <motion.div 
                         key={brochurePageIndex}
-                        initial={{ opacity: 0, x: 20, rotateY: -10 }}
-                        animate={{ opacity: 1, x: 0, rotateY: 0 }}
-                        exit={{ opacity: 0, x: -20, rotateY: 10 }}
-                        transition={{ duration: 0.4 }}
-                        className="w-full h-full flex items-center justify-center perspective-1000"
+                        initial={{ opacity: 0, scale: 0.95, rotateY: -5 }}
+                        animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+                        exit={{ opacity: 0, scale: 1.05, rotateY: 5 }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
+                        className="w-full h-full flex items-center justify-center perspective-2000"
                      >
-                        <div className="w-full h-[70vh] md:h-[80vh] flex items-center justify-center gap-4 px-2 md:px-10">
+                        <div className="w-full h-full flex items-center justify-center gap-1 md:gap-2 px-2 md:px-4">
                            {getBrochurePages(property.landBrochure)[brochurePageIndex]?.map((img: string, i: number) => (
                               <div 
                                 key={i} 
-                                className={`relative h-full transition-all duration-700 ${
+                                className={`relative h-full flex items-center justify-center transition-all duration-700 bg-white dark:bg-zinc-900 shadow-2xl rounded-sm overflow-hidden ${
                                   getBrochurePages(property.landBrochure)[brochurePageIndex].length === 1 
-                                    ? 'w-full max-w-[95%] md:max-w-[85%]' 
-                                    : 'flex-1'
+                                    ? 'w-full max-w-[95%] md:max-w-[70%]' 
+                                    : 'flex-1 max-w-[50%]'
                                 }`}
+                                style={{
+                                  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+                                  transform: getBrochurePages(property.landBrochure)[brochurePageIndex].length === 2 
+                                    ? (i === 0 ? 'perspective(1000px) rotateY(2deg)' : 'perspective(1000px) rotateY(-2deg)')
+                                    : 'none'
+                                }}
                               >
-                                 <Image 
-                                   src={img} 
-                                   alt="Brochure Page" 
-                                   fill 
-                                   className="object-contain"
-                                   priority
-                                 />
+                                 <div className="relative w-full h-full min-h-[400px] md:min-h-[600px]">
+                                  <Image 
+                                    src={img} 
+                                    alt="Brochure Page" 
+                                    fill 
+                                    className="object-contain"
+                                    sizes="(max-width: 768px) 100vw, 50vw"
+                                    priority
+                                  />
+                                 </div>
+                                 
+                                 {/* Center Shadow for Spreads */}
+                                 {getBrochurePages(property.landBrochure)[brochurePageIndex].length === 2 && (
+                                   <div className={`absolute top-0 bottom-0 w-20 pointer-events-none ${i === 0 ? 'right-0 bg-gradient-to-l from-black/20 to-transparent' : 'left-0 bg-gradient-to-r from-black/20 to-transparent'}`} />
+                                 )}
                               </div>
                            ))}
                         </div>
