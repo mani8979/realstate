@@ -333,10 +333,10 @@ const MediaPage = () => {
                            {getBrochurePages(property.landBrochure)[brochurePageIndex]?.map((img: string, i: number) => (
                               <div 
                                 key={i} 
-                                className={`relative flex items-center justify-center bg-white dark:bg-zinc-900 shadow-2xl ${
+                                className={`relative flex items-center justify-center bg-white dark:bg-zinc-900 shadow-2xl rounded-sm p-1 md:p-2 ${
                                   getBrochurePages(property.landBrochure)[brochurePageIndex].length === 1 
-                                    ? 'w-fit h-fit max-w-full' 
-                                    : 'flex-1 h-fit'
+                                    ? 'w-full h-[50vh] md:h-[70vh]' 
+                                    : 'flex-1 h-[50vh] md:h-[70vh]'
                                 }`}
                                 style={{
                                   boxShadow: '0 40px 80px -15px rgba(0, 0, 0, 0.7)',
@@ -345,7 +345,7 @@ const MediaPage = () => {
                                  <img 
                                    src={img} 
                                    alt="Brochure Page" 
-                                   className="w-auto h-auto max-w-full max-h-[60vh] md:max-h-[70vh] object-contain block"
+                                   className="w-full h-full object-contain block"
                                  />
                                  
                                  {/* Center Crease Shadow for Spreads */}
