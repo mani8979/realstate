@@ -151,12 +151,15 @@ const PropertiesPage = () => {
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-primary font-bold">₹</span>
                 <input
-                  type="number"
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                   placeholder="Budget (in ₹)..."
                   className="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-900 rounded-xl focus:ring-2 focus:ring-primary/50 transition-all border-none"
                   value={filters.budget}
                   onChange={(e) => {
-                    setFilters({ ...filters, budget: e.target.value });
+                    const numericVal = e.target.value.replace(/[^0-9]/g, '');
+                    setFilters({ ...filters, budget: numericVal });
                     setShowBudgetSuggestions(true);
                   }}
                   onFocus={() => setShowBudgetSuggestions(true)}
