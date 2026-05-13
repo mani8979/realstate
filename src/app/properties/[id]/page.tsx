@@ -629,7 +629,7 @@ const PropertyDetails = () => {
                           <input
                             type="text"
                             required
-                            className="w-full px-8 py-5 bg-white dark:bg-black/50 text-black dark:text-white rounded-[2rem] focus:ring-2 focus:ring-primary/50 border border-black/10 dark:border-white/10 transition-all placeholder:text-black dark:text-white/10"
+                            className="w-full px-8 py-5 bg-white dark:bg-black/50 text-black dark:text-white rounded-[2rem] focus:ring-2 focus:ring-primary/50 border border-black/10 dark:border-white/10 transition-all placeholder:text-black/30 dark:placeholder:text-white/30"
                             placeholder="John Doe"
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -640,7 +640,7 @@ const PropertyDetails = () => {
                           <input
                             type="tel"
                             required
-                            className="w-full px-8 py-5 bg-white dark:bg-black/50 text-black dark:text-white rounded-[2rem] focus:ring-2 focus:ring-primary/50 border border-black/10 dark:border-white/10 transition-all placeholder:text-black dark:text-white/10"
+                            className="w-full px-8 py-5 bg-white dark:bg-black/50 text-black dark:text-white rounded-[2rem] focus:ring-2 focus:ring-primary/50 border border-black/10 dark:border-white/10 transition-all placeholder:text-black/30 dark:placeholder:text-white/30"
                             placeholder="+91 00000 00000"
                             value={formData.phone}
                             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -651,7 +651,7 @@ const PropertyDetails = () => {
                           <input
                             type="text"
                             required
-                            className="w-full px-8 py-5 bg-white dark:bg-black/50 text-black dark:text-white rounded-[2rem] focus:ring-2 focus:ring-primary/50 border border-black/10 dark:border-white/10 transition-all placeholder:text-black dark:text-white/10"
+                            className="w-full px-8 py-5 bg-white dark:bg-black/50 text-black dark:text-white rounded-[2rem] focus:ring-2 focus:ring-primary/50 border border-black/10 dark:border-white/10 transition-all placeholder:text-black/30 dark:placeholder:text-white/30"
                             placeholder="Which land you want to visit?"
                             value={formData.landInfo}
                             onChange={(e) => setFormData({ ...formData, landInfo: e.target.value })}
@@ -664,7 +664,7 @@ const PropertyDetails = () => {
                           <textarea
                             required
                             rows={5}
-                            className="w-full px-8 py-5 bg-white dark:bg-black/50 text-black dark:text-white rounded-[2rem] focus:ring-2 focus:ring-primary/50 border border-black/10 dark:border-white/10 transition-all resize-none placeholder:text-black dark:text-white/10"
+                            className="w-full px-8 py-5 bg-white dark:bg-black/50 text-black dark:text-white rounded-[2rem] focus:ring-2 focus:ring-primary/50 border border-black/10 dark:border-white/10 transition-all resize-none placeholder:text-black/30 dark:placeholder:text-white/30"
                             value={formData.message}
                             onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                           ></textarea>
