@@ -82,7 +82,7 @@ const PropertiesPage = () => {
                 />
                 
                 {/* Autocomplete Dropdown */}
-                {showSuggestions && properties.length > 0 && (
+                {showSuggestions && properties.length > 0 && filters.location.length > 0 && (
                   <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-gray-100 dark:border-gray-700 z-50 overflow-hidden max-h-60 overflow-y-auto">
                     {properties.map((p: any) => (
                       <div 
@@ -161,7 +161,7 @@ const PropertiesPage = () => {
                 />
 
                 {/* Autocomplete Dropdown for Budget */}
-                {showBudgetSuggestions && properties.length > 0 && (
+                {showBudgetSuggestions && properties.length > 0 && filters.budget.length > 0 && (
                   <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-gray-100 dark:border-gray-700 z-50 overflow-hidden max-h-60 overflow-y-auto">
                     {properties.map((p: any) => (
                       <div 
