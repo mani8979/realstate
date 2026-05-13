@@ -14,21 +14,43 @@ import { SmartContentEditor, Section } from './SmartContentEditor';
 
 const parseRawText = (text: string): any[] => {
   const sections: any[] = [];
-  const parts = text.split(/\n(?=[A-Z0-9][A-Za-z0-9\s&]{3,40}\n)/);
-  
-  parts.forEach(part => {
-    const lines = part.trim().split('\n');
-    if (lines.length >= 2) {
-      sections.push({
-        heading: lines[0].trim(),
-        content: lines.slice(1).join('\n').trim(),
+  const lines = text.split('\n').map(l => l.trim()).filter(l => l !== '');
+  let currentSection: any = null;
+
+  lines.forEach(line => {
+    // Heading detection: All caps, at least 3 chars, not a list item
+    const isAllCaps = line.length >= 3 && line === line.toUpperCase() && !/^[\-\*\•\d\.]/.test(line);
+    const cleanLine = line.replace(/[^A-Z]/g, '');
+    
+    if ((isAllCaps && cleanLine.length > 0) || !currentSection) {
+      if (currentSection) {
+        sections.push(currentSection);
+      }
+      currentSection = {
+        heading: line,
+        content: '',
         alignment: 'left',
-        isPointed: lines.length > 3,
+        isPointed: false,
         showArrow: true
-      });
+      };
+    } else {
+      currentSection.content += (currentSection.content ? '\n' : '') + line;
+      
+      // Auto-detect list format: if multiple lines or any line starts with a marker
+      const contentLines = currentSection.content.split('\n');
+      const hasBulletMarker = /^[\-\*\•\d\.]/.test(line);
+      const isListLike = contentLines.length > 1 && contentLines.every((l: string) => l.length < 150);
+      
+      if (hasBulletMarker || isListLike) {
+        currentSection.isPointed = true;
+      }
     }
   });
-  
+
+  if (currentSection) {
+    sections.push(currentSection);
+  }
+
   return sections;
 };
 
