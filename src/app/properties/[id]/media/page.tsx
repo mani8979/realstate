@@ -398,17 +398,22 @@ const MediaPage = () => {
             >
               {/* Left Side: Layout Image */}
               <div 
-                className="flex-grow bg-black/5 dark:bg-white/5 rounded-[2.5rem] border border-black/10 dark:border-white/10 overflow-hidden relative shadow-2xl flex items-center justify-center p-4 md:p-10 cursor-zoom-in"
+                className="flex-grow bg-black/5 dark:bg-white/5 rounded-[2.5rem] border border-black/10 dark:border-white/10 overflow-auto relative shadow-2xl custom-scrollbar flex p-4 cursor-zoom-in"
                 onWheel={handleWheel}
               >
                 <div 
-                  className="w-full h-full flex justify-center items-center transition-transform duration-200 ease-out"
-                  style={{ transform: `scale(${zoom})` }}
+                  className="m-auto transition-all duration-200 ease-out flex justify-center items-center"
+                  style={{ 
+                    width: `${zoom * 100}%`, 
+                    height: `${zoom * 100}%`,
+                    minWidth: '100%',
+                    minHeight: '100%'
+                  }}
                 >
                   <img 
                     src={property.layoutImage} 
                     alt="Plot Layout" 
-                    className="max-w-full max-h-full object-contain rounded-2xl block"
+                    className="w-full h-full object-contain rounded-2xl block"
                   />
                 </div>
                 
