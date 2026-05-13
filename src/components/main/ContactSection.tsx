@@ -97,7 +97,7 @@ const ContactSection = ({ content }: { content?: any }) => {
                     {content?.contactVisitLabel || 'Visit Us'}
                   </p>
                   <p className="text-xl font-bold text-gray-900 dark:text-black dark:text-white">
-                    {content?.contactVisitSub || 'Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026.'}
+                    {content?.officeAddress || 'Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026.'}
                   </p>
                 </div>
               </div>

@@ -214,8 +214,8 @@ export default function FooterAdmin() {
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                       <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2 flex items-center gap-2"><MapPin size={10} /> Address</label>
-                       <textarea name="contactAddress" rows={3} value={content.contactAddress || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-medium" />
+                       <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2 flex items-center gap-2"><MapPin size={10} /> Office Address (Global)</label>
+                       <textarea name="officeAddress" rows={3} value={content.officeAddress || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-medium" />
                     </div>
                     <div className="space-y-6">
                        <div>

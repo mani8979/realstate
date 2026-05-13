@@ -104,7 +104,7 @@ const Footer = async () => {
                   <MapPin size={18} />
                 </div>
                 <span className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
-                  {content.contactAddress || 'Flat No. 202, Opposite D-Mart, Srinagar, Gajuwaka, Vizag – 530026.'}
+                  {content.officeAddress || 'Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026.'}
                 </span>
               </li>
               <li className="flex flex-col md:flex-row items-center md:items-start gap-4">
