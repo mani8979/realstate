@@ -41,6 +41,7 @@ const MediaPage = () => {
   const [brochurePageIndex, setBrochurePageIndex] = useState(0);
   const [statusFilter, setStatusFilter] = useState('all');
   const [zoom, setZoom] = useState(1);
+  const [hoveredPlot, setHoveredPlot] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -410,11 +411,11 @@ const MediaPage = () => {
             >
               {/* Left Side: Layout Image */}
               <div 
-                className="flex-grow bg-black/5 dark:bg-white/5 rounded-[2.5rem] border border-black/10 dark:border-white/10 overflow-auto relative shadow-2xl custom-scrollbar flex p-4 cursor-zoom-in"
+                className="flex-grow bg-black/5 dark:bg-white/5 rounded-[2.5rem] border border-black/10 dark:border-white/10 overflow-auto relative shadow-2xl custom-scrollbar flex p-4 cursor-zoom-in group/map"
                 onWheel={handleWheel}
               >
                 <div 
-                  className="m-auto transition-all duration-200 ease-out flex justify-center items-center"
+                  className="m-auto transition-all duration-200 ease-out flex justify-center items-center relative"
                   style={{ 
                     width: `${zoom * 100}%`, 
                     height: `${zoom * 100}%`,
@@ -427,9 +428,42 @@ const MediaPage = () => {
                     alt="Plot Layout" 
                     className="w-full h-full object-contain rounded-2xl block"
                   />
+                  
+                  {/* Plot Overlays */}
+                  <svg 
+                    className="absolute inset-0 w-full h-full pointer-events-none" 
+                    viewBox="0 0 100 100" 
+                    preserveAspectRatio="none"
+                  >
+                    {property.plots?.map((plot: any, idx: number) => (
+                      <motion.rect
+                        key={idx}
+                        x={plot.x}
+                        y={plot.y}
+                        width={plot.width || 5}
+                        height={plot.height || 3}
+                        className="pointer-events-auto cursor-pointer"
+                        initial={{ opacity: 0.3 }}
+                        animate={{ 
+                          opacity: hoveredPlot === plot.number ? 0.8 : 0.3,
+                          scale: hoveredPlot === plot.number ? 1.05 : 1
+                        }}
+                        style={{
+                          fill: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                (property.availableColor || '#ffffff'),
+                          stroke: hoveredPlot === plot.number ? '#fff' : 'transparent',
+                          strokeWidth: 0.5
+                        }}
+                        onMouseEnter={() => setHoveredPlot(plot.number)}
+                        onMouseLeave={() => setHoveredPlot(null)}
+                        onClick={() => openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`)}
+                      />
+                    ))}
+                  </svg>
                 </div>
                 
-                <div className="absolute bottom-6 left-6 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/50 pointer-events-none">
+                <div className="absolute bottom-6 left-6 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/50 pointer-events-none z-20">
                    Hold CTRL + Scroll to Zoom • {Math.round(zoom * 100)}%
                 </div>
 
@@ -535,10 +569,16 @@ const MediaPage = () => {
                       {property.plots?.filter((p: any) => statusFilter === 'all' || p.status === statusFilter).map((plot: any, idx: number) => (
                         <div 
                           key={idx} 
-                          className="bg-white dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-2xl p-4 flex items-center justify-between group hover:bg-black/5 dark:hover:bg-white/10 transition-all shadow-sm"
+                          onMouseEnter={() => setHoveredPlot(plot.number)}
+                          onMouseLeave={() => setHoveredPlot(null)}
+                          className={`
+                            bg-white dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-2xl p-4 flex items-center justify-between group transition-all shadow-sm cursor-pointer
+                            ${hoveredPlot === plot.number ? 'ring-2 ring-primary bg-black/5 dark:bg-white/10 scale-[1.02]' : 'hover:bg-black/5 dark:hover:bg-white/10'}
+                          `}
                         >
                           <div className="flex items-center gap-4">
-                            <div className="w-1.5 h-8 rounded-full" style={{
+                            <div className="w-1.5 h-8 rounded-full transition-all" style={{
+                              height: hoveredPlot === plot.number ? '1.5rem' : '1rem',
                               backgroundColor: plot.status === 'sold' ? (property.soldColor || '#fac915') :
                                               plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
                                               (property.availableColor || '#ffffff')
@@ -556,7 +596,10 @@ const MediaPage = () => {
                           </div>
                           
                           <button 
-                            onClick={() => openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`);
+                            }}
                             className="text-[8px] font-black uppercase tracking-widest px-4 py-2 rounded-xl transition-all border border-primary/20 bg-primary/5 text-primary hover:bg-primary hover:text-black"
                           >
                             Enquire
@@ -564,6 +607,16 @@ const MediaPage = () => {
                         </div>
                       ))}
                     </div>
+                  </div>
+                  
+                  {/* Sidebar Analysis Block */}
+                  <div className="p-4 bg-primary/10 border-t border-primary/20">
+                     <div className="flex items-center gap-3">
+                        <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                        <p className="text-[9px] font-black uppercase tracking-widest text-primary">
+                           {hoveredPlot ? `Highlighting Plot ${hoveredPlot}` : 'Hover to analyze units'}
+                        </p>
+                     </div>
                   </div>
                 </div>
               </div>
