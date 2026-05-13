@@ -11,7 +11,13 @@ export async function GET(request: Request) {
     const filters: any = {};
     
     const location = searchParams.get('location');
-    if (location) filters.location = { $regex: location, $options: 'i' };
+    if (location) {
+      filters.$or = [
+        { title: { $regex: location, $options: 'i' } },
+        { location: { $regex: location, $options: 'i' } },
+        { description: { $regex: location, $options: 'i' } }
+      ];
+    }
     
     const type = searchParams.get('type');
     if (type) {

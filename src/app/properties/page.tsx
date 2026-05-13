@@ -17,6 +17,7 @@ const PropertiesPage = () => {
     budget: searchParams.get('budget') || '',
   });
   const [categories, setCategories] = useState<any[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
     fetch('/api/content')
@@ -63,16 +64,45 @@ const PropertiesPage = () => {
         <div className="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 mb-12">
           <form onSubmit={handleSearch} className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
             <div className="space-y-2">
-              <label className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider px-1">Site Location</label>
+              <label className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider px-1">Search Property</label>
               <div className="relative">
                 <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" size={18} />
                 <input
                   type="text"
-                  placeholder="Enter site location name only..."
+                  placeholder="Enter property name, location, etc..."
                   className="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-900 rounded-xl focus:ring-2 focus:ring-primary/50 transition-all border-none"
                   value={filters.location}
-                  onChange={(e) => setFilters({ ...filters, location: e.target.value })}
+                  onChange={(e) => {
+                    setFilters({ ...filters, location: e.target.value });
+                    setShowSuggestions(true);
+                  }}
+                  onFocus={() => setShowSuggestions(true)}
+                  onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
                 />
+                
+                {/* Autocomplete Dropdown */}
+                {showSuggestions && properties.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-gray-100 dark:border-gray-700 z-50 overflow-hidden max-h-60 overflow-y-auto">
+                    {properties.map((p: any) => (
+                      <div 
+                        key={p._id}
+                        onClick={() => {
+                          setFilters({ ...filters, location: p.title });
+                          setShowSuggestions(false);
+                        }}
+                        className="px-4 py-3 hover:bg-primary/10 cursor-pointer flex flex-col border-b border-gray-100 dark:border-gray-700 last:border-0 transition-colors"
+                      >
+                        <span className="font-bold text-sm text-gray-900 dark:text-white">{p.title}</span>
+                        <div className="flex items-center justify-between mt-1">
+                           <span className="text-xs text-gray-500 flex items-center gap-1"><MapPin size={10}/> {p.location}</span>
+                           <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-md">
+                             {p.price.includes('/') ? p.price : `₹${p.price}`}
+                           </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
