@@ -605,9 +605,8 @@ const MediaPage = () => {
         </AnimatePresence>
       </div>
 
-      {/* Navigation Footer */}
-      <div className="p-6 md:p-10 bg-gradient-to-t from-black/80 to-transparent z-50">
-        <div className="max-w-fit mx-auto flex items-center gap-2 md:gap-4 bg-black/5 dark:bg-white/5 backdrop-blur-3xl px-4 md:px-8 py-4 rounded-[2rem] border border-black/10 dark:border-white/10">
+      <div className="p-4 md:p-10 bg-gradient-to-t from-black/80 to-transparent z-50 flex justify-center">
+        <div className="w-full md:w-auto max-w-6xl overflow-x-auto no-scrollbar flex items-center gap-2 md:gap-4 bg-black/5 dark:bg-white/5 backdrop-blur-3xl px-4 md:px-8 py-4 rounded-3xl md:rounded-[2rem] border border-black/10 dark:border-white/10 whitespace-nowrap">
           {tabs.filter(t => t.show).map((tab) => (
             <button
               key={tab.id}
@@ -619,7 +618,7 @@ const MediaPage = () => {
               }`}
             >
               {tab.icon}
-              <span className="text-[10px] md:text-xs">{tab.label}</span>
+              <span className="text-[10px] md:text-xs whitespace-nowrap">{tab.label}</span>
             </button>
           ))}
         </div>
