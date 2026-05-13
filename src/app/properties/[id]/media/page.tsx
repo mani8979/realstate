@@ -486,10 +486,15 @@ const MediaPage = () => {
               </div>
 
               {/* Right Side: Status & Inventory Sidebar */}
-              <div className="w-full md:w-[400px] flex flex-col gap-6 h-full">
+              <motion.div 
+                data-lenis-prevent
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="w-[400px] flex flex-col gap-6 h-full overflow-hidden"
+              >
                 {/* Status Summary Card */}
-                <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[2rem] border border-black/10 dark:border-white/10 p-6 space-y-6">
-                  <div className="flex items-center justify-between">
+                <div className="bg-black/5 dark:bg-white/5 rounded-[2.5rem] border border-black/10 dark:border-white/10 p-8 flex flex-col shrink-0">
+                  <div className="flex items-center justify-between mb-6">
                     <div className="space-y-1">
                        <h3 className="text-lg font-black uppercase tracking-tighter">Plot Status</h3>
                        <p className="text-[8px] font-bold text-gray-500 uppercase tracking-widest">Real-time availability</p>
@@ -579,6 +584,7 @@ const MediaPage = () => {
                     ref={inventorySidebarRef}
                     data-lenis-prevent 
                     className="flex-grow overflow-y-auto p-4 custom-scrollbar"
+                    style={{ minHeight: '200px' }}
                   >
                     <div className="space-y-2">
                       {property.plots?.filter((p: any) => statusFilter === 'all' || p.status === statusFilter).map((plot: any, idx: number) => (

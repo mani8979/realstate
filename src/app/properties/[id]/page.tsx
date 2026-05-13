@@ -469,7 +469,10 @@ const PropertyDetails = () => {
 
               <div className="flex flex-col xl:flex-row gap-10">
                   {/* Map View */}
-                  <div className="flex-grow bg-black/5 dark:bg-white/5 rounded-[3rem] border border-black/10 dark:border-white/10 overflow-hidden relative shadow-2xl flex items-center justify-center p-4 md:p-10 min-h-[500px]">
+                  <div 
+                     data-lenis-prevent
+                     className="flex-grow bg-black/5 dark:bg-white/5 rounded-[3rem] border border-black/10 dark:border-white/10 overflow-hidden relative shadow-2xl flex items-center justify-center p-4 md:p-10 min-h-[500px]"
+                  >
                      {property.layoutImage ? (
                        <div className="relative w-full h-full flex items-center justify-center">
                           <div className="relative group/map">
