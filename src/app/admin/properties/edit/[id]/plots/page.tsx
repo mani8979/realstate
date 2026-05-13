@@ -415,15 +415,21 @@ const AdminPlotManagement = () => {
             {viewMode === 'map' && property.layoutImage && (
               <div className="flex flex-col h-full min-h-[600px]">
                  <div className="bg-primary/10 p-4 flex items-center justify-center border-b border-primary/20">
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Map View Mode (Positioning disabled as requested)</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
+                       {selectedPlotIndex !== null 
+                         ? `Currently Positioning: Plot ${plots[selectedPlotIndex]?.number} • Click on map to move` 
+                         : 'Select a plot below to position it on the map'}
+                    </p>
                  </div>
                  
                  <div 
-                    className="relative flex-grow bg-black flex items-center justify-center overflow-hidden p-4 cursor-zoom-in"
+                    data-lenis-prevent
+                    className="relative flex-grow bg-black flex items-center justify-center overflow-hidden p-4 cursor-crosshair"
                     onWheel={handleWheel}
+                    onClick={handleMapClick}
                   >
                     <div 
-                      className="relative transition-transform duration-200 ease-out"
+                      className="relative transition-transform duration-200 ease-out inline-block"
                       style={{ transform: `scale(${zoom})` }}
                     >
                       <img 
@@ -431,11 +437,61 @@ const AdminPlotManagement = () => {
                         alt="Layout" 
                         className="max-w-full max-h-[70vh] object-contain rounded-xl select-none"
                       />
+                      
+                      {/* Plot Markers */}
+                      {plots.map((plot, idx) => (
+                        <motion.div
+                          key={idx}
+                          initial={false}
+                          animate={{ 
+                            left: `${plot.x}%`, 
+                            top: `${plot.y}%`,
+                            scale: selectedPlotIndex === idx ? 1.2 : 1
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedPlotIndex(idx);
+                            setPlacementMode(true);
+                          }}
+                          className={`
+                            absolute w-4 h-4 -ml-2 -mt-2 rounded-full border-2 border-white shadow-xl cursor-pointer transition-all z-10
+                            ${selectedPlotIndex === idx ? 'ring-4 ring-primary' : ''}
+                          `}
+                          style={{ 
+                            backgroundColor: plot.status === 'sold' ? colors.sold : 
+                                           plot.status === 'booked' ? colors.booked : 
+                                           colors.available 
+                          }}
+                        >
+                           <div className="absolute top-full mt-1 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-sm text-white text-[8px] font-black px-1.5 py-0.5 rounded pointer-events-none whitespace-nowrap">
+                              {plot.number}
+                           </div>
+                        </motion.div>
+                      ))}
                     </div>
                     
-                    <div className="absolute bottom-6 right-6 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/50 pointer-events-none">
+                    <div className="absolute bottom-6 right-6 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/50 pointer-events-none z-20">
                        Hold CTRL + Scroll to Zoom • {Math.round(zoom * 100)}%
                     </div>
+                  </div>
+
+                  {/* Selected Plot Selector in Map View */}
+                  <div className="p-4 bg-black/5 border-t border-black/10 overflow-x-auto custom-scrollbar flex gap-2">
+                     {plots.map((plot, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => {
+                            setSelectedPlotIndex(idx);
+                            setPlacementMode(true);
+                          }}
+                          className={`
+                            shrink-0 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all
+                            ${selectedPlotIndex === idx ? 'bg-primary text-black' : 'bg-white/5 text-gray-500 hover:text-white'}
+                          `}
+                        >
+                           Plot {plot.number}
+                        </button>
+                     ))}
                   </div>
               </div>
             )}

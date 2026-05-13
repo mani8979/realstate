@@ -49,6 +49,16 @@ const PropertyDetails = () => {
   const modelViewerRef = useRef<any>(null);
   const [mounted, setMounted] = useState(false);
   const [hoveredPlot, setHoveredPlot] = useState<string | null>(null);
+  const inventoryListRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (hoveredPlot && inventoryListRef.current) {
+      const element = inventoryListRef.current.querySelector(`[data-plot="${hoveredPlot}"]`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+  }, [hoveredPlot]);
 
   useEffect(() => {
     setMounted(true);
@@ -99,7 +109,7 @@ const PropertyDetails = () => {
   useEffect(() => {
     const fetchProperty = async () => {
       try {
-        const res = await axios.get(`/api/properties/${id}`);
+        const res = await axios.get(`/api/properties/${id}?t=${Date.now()}`);
         setProperty(res.data);
         setFormData(prev => ({ 
           ...prev, 
@@ -445,7 +455,7 @@ const PropertyDetails = () => {
 
 
           {/* Interactive Plot Inventory */}
-          {property.plots?.length > 0 && (
+          {(property.plots?.length > 0 || property.layoutImage) && (
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -542,7 +552,11 @@ const PropertyDetails = () => {
                            </div>
                         </div>
 
-                        <div className="flex-grow overflow-y-auto pr-2 custom-scrollbar">
+                        <div 
+                           ref={inventoryListRef}
+                           data-lenis-prevent 
+                           className="flex-grow overflow-y-auto pr-2 custom-scrollbar"
+                        >
                            <table className="w-full text-left border-separate border-spacing-y-3">
                               <thead>
                                  <tr className="text-[10px] font-black uppercase tracking-[0.2em] text-black dark:text-white/30">
@@ -553,11 +567,12 @@ const PropertyDetails = () => {
                               </thead>
                               <tbody>
                                  {property.plots.map((plot: any, idx: number) => (
-                                   <tr 
-                                     key={idx} 
-                                     onMouseEnter={() => setHoveredPlot(plot.number)}
-                                     onMouseLeave={() => setHoveredPlot(null)}
-                                     className={`
+                                    <tr 
+                                       key={idx} 
+                                       data-plot={plot.number}
+                                       onMouseEnter={() => setHoveredPlot(plot.number)}
+                                       onMouseLeave={() => setHoveredPlot(null)}
+                                       className={`
                                        bg-white dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl overflow-hidden group transition-all cursor-pointer
                                        ${hoveredPlot === plot.number ? 'ring-2 ring-primary bg-black/5 dark:bg-white/10 scale-[1.02]' : 'hover:bg-black/5 dark:hover:bg-white/10'}
                                      `}

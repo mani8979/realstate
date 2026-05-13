@@ -43,6 +43,16 @@ const MediaPage = () => {
   const [zoom, setZoom] = useState(1);
   const [hoveredPlot, setHoveredPlot] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const inventorySidebarRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (hoveredPlot && inventorySidebarRef.current) {
+      const element = inventorySidebarRef.current.querySelector(`[data-plot="${hoveredPlot}"]`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+  }, [hoveredPlot]);
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -411,6 +421,7 @@ const MediaPage = () => {
             >
               {/* Left Side: Layout Image */}
               <div 
+                data-lenis-prevent
                 className="flex-grow bg-black/5 dark:bg-white/5 rounded-[2.5rem] border border-black/10 dark:border-white/10 overflow-auto relative shadow-2xl custom-scrollbar flex p-4 cursor-zoom-in group/map"
                 onWheel={handleWheel}
               >
@@ -564,11 +575,16 @@ const MediaPage = () => {
                     </div>
                   </div>
                   
-                  <div className="flex-grow overflow-y-auto p-4 custom-scrollbar">
+                  <div 
+                    ref={inventorySidebarRef}
+                    data-lenis-prevent 
+                    className="flex-grow overflow-y-auto p-4 custom-scrollbar"
+                  >
                     <div className="space-y-2">
                       {property.plots?.filter((p: any) => statusFilter === 'all' || p.status === statusFilter).map((plot: any, idx: number) => (
                         <div 
                           key={idx} 
+                          data-plot={plot.number}
                           onMouseEnter={() => setHoveredPlot(plot.number)}
                           onMouseLeave={() => setHoveredPlot(null)}
                           className={`
