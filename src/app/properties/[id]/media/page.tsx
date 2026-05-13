@@ -145,9 +145,21 @@ const MediaPage = () => {
 
   const getEmbedSafeUrl = (url: string) => {
     if (!url) return null;
-    if (url.includes('google.com/maps/embed') || url.includes('/embed')) {
+    
+    // Check if the admin pasted an entire iframe tag
+    const trimmedUrl = url.trim();
+    if (trimmedUrl.toLowerCase().startsWith('<iframe')) {
+      const srcMatch = trimmedUrl.match(/src=["']([^"']+)["']/);
+      if (srcMatch && srcMatch[1]) {
+        return { url: srcMatch[1], isEmbed: true };
+      }
+    }
+
+    // Check if the URL is an embed URL
+    if (url.includes('google.com/maps/embed') || url.includes('/embed') || url.includes('output=embed')) {
       return { url, isEmbed: true };
     }
+    
     return { url, isEmbed: false };
   };
 
