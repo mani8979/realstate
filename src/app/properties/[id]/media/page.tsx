@@ -329,36 +329,31 @@ const MediaPage = () => {
                         transition={{ duration: 0.5, ease: "easeOut" }}
                         className="w-full h-full flex items-center justify-center perspective-2000"
                      >
-                        <div className="w-full h-full flex items-center justify-center gap-1 md:gap-2 px-2 md:px-4">
+                        <div className="w-full h-full flex items-center justify-center gap-1 md:gap-4 px-2 md:px-6">
                            {getBrochurePages(property.landBrochure)[brochurePageIndex]?.map((img: string, i: number) => (
                               <div 
                                 key={i} 
-                                className={`relative h-full flex items-center justify-center transition-all duration-700 bg-white dark:bg-zinc-900 shadow-2xl rounded-sm overflow-hidden ${
+                                className={`relative flex items-center justify-center transition-all duration-700 bg-white dark:bg-zinc-900 shadow-2xl rounded-sm ${
                                   getBrochurePages(property.landBrochure)[brochurePageIndex].length === 1 
-                                    ? 'w-full max-w-[95%] md:max-w-[70%]' 
+                                    ? 'max-w-[95%] md:max-w-[90%]' 
                                     : 'flex-1 max-w-[50%]'
                                 }`}
                                 style={{
-                                  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+                                  boxShadow: '0 30px 60px -12px rgba(0, 0, 0, 0.6)',
                                   transform: getBrochurePages(property.landBrochure)[brochurePageIndex].length === 2 
-                                    ? (i === 0 ? 'perspective(1000px) rotateY(2deg)' : 'perspective(1000px) rotateY(-2deg)')
+                                    ? (i === 0 ? 'perspective(2000px) rotateY(1deg)' : 'perspective(2000px) rotateY(-1deg)')
                                     : 'none'
                                 }}
                               >
-                                 <div className="relative w-full h-full min-h-[400px] md:min-h-[600px]">
-                                  <Image 
-                                    src={img} 
-                                    alt="Brochure Page" 
-                                    fill 
-                                    className="object-contain"
-                                    sizes="(max-width: 768px) 100vw, 50vw"
-                                    priority
-                                  />
-                                 </div>
+                                 <img 
+                                   src={img} 
+                                   alt="Brochure Page" 
+                                   className="w-full h-auto max-h-[70vh] md:max-h-[75vh] object-contain block"
+                                 />
                                  
                                  {/* Center Shadow for Spreads */}
                                  {getBrochurePages(property.landBrochure)[brochurePageIndex].length === 2 && (
-                                   <div className={`absolute top-0 bottom-0 w-20 pointer-events-none ${i === 0 ? 'right-0 bg-gradient-to-l from-black/20 to-transparent' : 'left-0 bg-gradient-to-r from-black/20 to-transparent'}`} />
+                                   <div className={`absolute top-0 bottom-0 w-32 pointer-events-none z-10 ${i === 0 ? 'right-0 bg-gradient-to-l from-black/30 to-transparent' : 'left-0 bg-gradient-to-r from-black/30 to-transparent'}`} />
                                  )}
                               </div>
                            ))}
