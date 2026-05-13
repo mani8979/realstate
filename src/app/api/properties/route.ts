@@ -37,7 +37,7 @@ export async function GET(request: Request) {
     if (budget) {
       const parsePrice = (str: string): number => {
         if (!str) return 0;
-        const s = str.toString().toLowerCase();
+        const s = str.toString().toLowerCase().replace(/,/g, '');
         const match = s.match(/[0-9]+(\.[0-9]+)?/);
         if (!match) return 0;
         let num = Number(match[0]);
@@ -53,7 +53,7 @@ export async function GET(request: Request) {
           if (!p.price) return false;
           const propertyPriceNum = parsePrice(p.price);
           if (propertyPriceNum === 0) return false;
-          return propertyPriceNum <= budgetNum;
+          return propertyPriceNum === budgetNum;
         });
       }
     }
