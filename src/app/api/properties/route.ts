@@ -31,10 +31,20 @@ export async function GET(request: Request) {
     const subType = searchParams.get('subType');
     if (subType) filters.subType = subType;
     
-    const budget = searchParams.get('budget');
-    if (budget) filters.price = { $lte: Number(budget) };
+    let properties = await Property.find(filters).sort({ createdAt: -1 });
 
-    const properties = await Property.find(filters).sort({ createdAt: -1 });
+    const budget = searchParams.get('budget');
+    if (budget) {
+      const budgetNum = Number(budget);
+      properties = properties.filter((p: any) => {
+        if (!p.price) return false;
+        // Extract only the numeric part (e.g. "1000(per sq yard)" -> 1000)
+        const numericPriceStr = p.price.toString().replace(/[^0-9]/g, '');
+        if (!numericPriceStr) return false;
+        return Number(numericPriceStr) <= budgetNum;
+      });
+    }
+
     return NextResponse.json(properties);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
