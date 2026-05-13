@@ -9,7 +9,7 @@ const Loading = () => {
       </div>
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-black dark:text-white">STAR <span className="text-primary">LANDS</span></h2>
-        <p className="text-gray-500 font-medium animate-pulse">Loading your dream home...</p>
+        <p className="text-gray-500 font-medium animate-pulse">Loading your dream lands...</p>
       </div>
     </div>
   );
