@@ -642,9 +642,8 @@ const MediaPage = () => {
                   </div>
                 </div>
               </motion.div>
-            </div>
-          </motion.div>
-        )}
+            </motion.div>
+          )}
 
           {activeTab === 'map' && (
             <motion.div 
