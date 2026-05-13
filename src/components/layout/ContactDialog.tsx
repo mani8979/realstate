@@ -10,7 +10,7 @@ type DialogType = 'call' | 'whatsapp' | 'book' | null;
 export const ContactDialog = () => {
   const [activeDialog, setActiveDialog] = useState<DialogType>(null);
   const [customMessage, setCustomMessage] = useState<string | null>(null);
-  const [formData, setFormData] = useState({ name: '', phone: '' });
+  const [formData, setFormData] = useState({ name: '', phone: '', landInfo: '' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [contacts, setContacts] = useState<any[]>([]);
 
@@ -45,6 +45,9 @@ export const ContactDialog = () => {
     const handleOpenContact = (e: any) => {
       setActiveDialog(e.detail.type);
       setCustomMessage(e.detail.message || null);
+      if (e.detail.type === 'book' && e.detail.message) {
+        setFormData(prev => ({ ...prev, landInfo: e.detail.message }));
+      }
     };
     window.addEventListener('open-contact-dialog', handleOpenContact);
     return () => window.removeEventListener('open-contact-dialog', handleOpenContact);
@@ -54,7 +57,7 @@ export const ContactDialog = () => {
     setActiveDialog(null);
     setCustomMessage(null);
     setStatus('idle');
-    setFormData({ name: '', phone: '' });
+    setFormData({ name: '', phone: '', landInfo: '' });
   };
 
   const handleBookVisit = async (e: React.FormEvent) => {
@@ -87,6 +90,7 @@ export const ContactDialog = () => {
         body: JSON.stringify({
           name: formData.name,
           phone: formData.phone,
+          landInfo: formData.landInfo,
           message: `Requested a Site Visit from page: ${window.location.href}`,
           type: 'Site Visit'
         })
@@ -224,6 +228,20 @@ export const ContactDialog = () => {
                               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                               className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl py-4 pl-12 pr-4 text-black dark:text-white font-medium focus:border-primary/50 focus:ring-0 outline-none transition-all"
                             />
+                          </div>
+                          <div>
+                            <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-2 ml-1">Land Info / Property Name</label>
+                            <div className="relative">
+                              <Sparkles className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" size={18} />
+                              <input 
+                                type="text"
+                                required
+                                placeholder="Which land you want to visit?"
+                                value={formData.landInfo}
+                                onChange={(e) => setFormData({ ...formData, landInfo: e.target.value })}
+                                className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl py-4 pl-12 pr-4 text-black dark:text-white font-medium focus:border-primary/50 focus:ring-0 outline-none transition-all"
+                              />
+                            </div>
                           </div>
                         </div>
                       </div>

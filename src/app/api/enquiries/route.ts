@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     if (botToken && chatId) {
       const isSiteVisit = data.type === 'Site Visit';
       const header = isSiteVisit ? '🚀 *New Site Visit Booking* 🚀' : '📧 *New Website Enquiry* 📧';
-      const message = `${header}\n\n👤 *Name:* ${data.name}\n📞 *Phone:* ${data.phone}\n💬 *Message:* ${data.message || 'No message'}\n🔗 *Type:* ${data.type || 'General Enquiry'}`;
+      const message = `${header}\n\n👤 *Name:* ${data.name}\n📞 *Phone:* ${data.phone}\n🏢 *Land/Property:* ${data.landInfo || 'Not specified'}\n💬 *Message:* ${data.message || 'No message'}\n🔗 *Type:* ${data.type || 'General Enquiry'}`;
       
       try {
         await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {

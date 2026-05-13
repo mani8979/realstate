@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { MapPin, Phone, MessageSquare, Send, ArrowLeft, Share2, X, Leaf, Download, Save } from 'lucide-react';
+import { MapPin, Phone, MessageSquare, Send, ArrowLeft, Share2, X, Leaf, Download, Save, Calendar } from 'lucide-react';
 import Link from 'next/link';
 import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
@@ -39,6 +39,7 @@ const PropertyDetails = () => {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
+    landInfo: '',
     message: ''
   });
   const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -99,7 +100,11 @@ const PropertyDetails = () => {
       try {
         const res = await axios.get(`/api/properties/${id}`);
         setProperty(res.data);
-        setFormData(prev => ({ ...prev, message: `Hi, I'm interested in ${res.data.title}. Please provide more details.` }));
+        setFormData(prev => ({ 
+          ...prev, 
+          landInfo: res.data.title,
+          message: `Hi, I'm interested in ${res.data.title}. Please provide more details.` 
+        }));
       } catch (error) {
         console.error('Error fetching property:', error);
       } finally {
@@ -129,7 +134,7 @@ const PropertyDetails = () => {
       setFormStatus('success');
 
       // WhatsApp redirect to specified number
-      const message = `Property: ${property?.title}\nFull Name: ${formData.name}\nPhone: ${formData.phone}\nMessage: ${formData.message}`;
+      const message = `Property: ${formData.landInfo}\nFull Name: ${formData.name}\nPhone: ${formData.phone}\nMessage: ${formData.message}`;
       const encodedMessage = encodeURIComponent(message);
       window.open(`https://wa.me/919666080645?text=${encodedMessage}`, '_blank');
 
@@ -348,6 +353,13 @@ const PropertyDetails = () => {
                     text={`Check out this property: ${property.title} in ${property.location}`}
                     className="w-full md:w-auto"
                 />
+                <button 
+                  onClick={() => openContactDialog('book', property.title)}
+                  className="flex items-center gap-2 bg-primary text-black dark:text-white font-black uppercase tracking-widest text-[10px] px-8 py-4 rounded-full border border-primary transition-all group w-full md:w-auto text-center justify-center shadow-xl shadow-primary/20"
+                >
+                  <Calendar size={16} className="group-hover:scale-110 transition-transform" />
+                  <span>Book a Site Visit</span>
+                </button>
                 {property.landBrochure?.length > 0 && (
                     <Link 
                     href={`/properties/${property._id}/media?type=brochure`}
@@ -632,6 +644,17 @@ const PropertyDetails = () => {
                             placeholder="+91 00000 00000"
                             value={formData.phone}
                             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-black dark:text-white/50 font-black uppercase tracking-[0.2em] mb-2 block px-2">Land Info / Property Name</label>
+                          <input
+                            type="text"
+                            required
+                            className="w-full px-8 py-5 bg-white dark:bg-black/50 text-black dark:text-white rounded-[2rem] focus:ring-2 focus:ring-primary/50 border border-black/10 dark:border-white/10 transition-all placeholder:text-black dark:text-white/10"
+                            placeholder="Which land you want to visit?"
+                            value={formData.landInfo}
+                            onChange={(e) => setFormData({ ...formData, landInfo: e.target.value })}
                           />
                         </div>
                     </div>
