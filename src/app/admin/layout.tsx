@@ -100,7 +100,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </Link>
             </div>
 
-            <nav className="flex-grow py-6 overflow-y-auto scrollbar-hide px-3 space-y-6">
+            <nav className="flex-grow py-6 overflow-y-auto custom-scrollbar px-3 space-y-6" data-lenis-prevent>
               {navigation.map((section) => (
                 <div key={section.title} className="space-y-1">
                   {isSidebarOpen && (
@@ -155,7 +155,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </header>
 
             {/* Mobile Nav (Horizontal Scroll) */}
-            <div className="lg:hidden w-full overflow-x-auto scrollbar-hide border-b border-gray-100 dark:border-gray-900 bg-white dark:bg-black sticky top-[65px] z-50">
+            <div className="lg:hidden w-full overflow-x-auto custom-scrollbar border-b border-gray-100 dark:border-gray-900 bg-white dark:bg-black sticky top-[65px] z-50" data-lenis-prevent>
               <nav className="flex items-center gap-2 p-3 px-6 min-w-max">
                 {navigation.flatMap(s => s.items).map((item) => (
                   <Link
