@@ -293,7 +293,7 @@ const MediaPage = () => {
               animate={{ opacity: 1 }}
               className="w-full h-full flex flex-col items-center justify-center p-4 md:p-10"
             >
-              <div className="w-full max-w-6xl h-full flex flex-col">
+              <div className="w-full h-full flex flex-col">
                 <div className="flex items-center justify-between mb-8">
                   <div className="space-y-1">
                     <h2 className="text-2xl md:text-4xl font-black uppercase tracking-tighter">Brochure Book</h2>
@@ -319,42 +319,38 @@ const MediaPage = () => {
                 </div>
 
                 {/* Book View */}
-                <div className="flex-grow relative flex items-center justify-center">
+                <div className="flex-grow relative flex items-center justify-center overflow-hidden px-4 md:px-10">
                    <AnimatePresence mode="wait">
                      <motion.div 
                         key={brochurePageIndex}
-                        initial={{ opacity: 0, scale: 0.95, rotateY: -5 }}
-                        animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-                        exit={{ opacity: 0, scale: 1.05, rotateY: 5 }}
-                        transition={{ duration: 0.5, ease: "easeOut" }}
-                        className="w-full h-full flex items-center justify-center perspective-2000"
+                        initial={{ opacity: 0, scale: 0.98 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 1.02 }}
+                        transition={{ duration: 0.4 }}
+                        className="w-full h-full flex items-center justify-center"
                      >
-                        <div className="w-full h-full flex items-center justify-center gap-0 px-2 md:px-0">
+                        <div className="w-full h-full flex items-center justify-center gap-2 md:gap-6">
                            {getBrochurePages(property.landBrochure)[brochurePageIndex]?.map((img: string, i: number) => (
                               <div 
                                 key={i} 
-                                className={`relative h-full flex items-center justify-center transition-all duration-700 bg-white dark:bg-zinc-900 shadow-2xl ${
+                                className={`relative flex items-center justify-center bg-white dark:bg-zinc-900 shadow-2xl overflow-hidden ${
                                   getBrochurePages(property.landBrochure)[brochurePageIndex].length === 1 
-                                    ? 'w-full' 
-                                    : 'flex-1'
+                                    ? 'w-auto h-auto max-w-full max-h-full' 
+                                    : 'flex-1 h-auto max-h-full'
                                 }`}
                                 style={{
-                                  boxShadow: '0 30px 60px -12px rgba(0, 0, 0, 0.6)',
-                                  transform: getBrochurePages(property.landBrochure)[brochurePageIndex].length === 2 
-                                    ? (i === 0 ? 'perspective(2000px) rotateY(1deg)' : 'perspective(2000px) rotateY(-1deg)')
-                                    : 'none',
-                                  maxWidth: getBrochurePages(property.landBrochure)[brochurePageIndex].length === 1 ? '95%' : '50%'
+                                  boxShadow: '0 40px 80px -15px rgba(0, 0, 0, 0.7)',
                                 }}
                               >
                                  <img 
                                    src={img} 
                                    alt="Brochure Page" 
-                                   className="w-full h-full max-h-[85vh] object-contain block"
+                                   className="max-w-full max-h-[75vh] md:max-h-[80vh] object-contain block"
                                  />
                                  
-                                 {/* Center Shadow for Spreads */}
+                                 {/* Center Crease Shadow for Spreads */}
                                  {getBrochurePages(property.landBrochure)[brochurePageIndex].length === 2 && (
-                                   <div className={`absolute top-0 bottom-0 w-32 pointer-events-none z-10 ${i === 0 ? 'right-0 bg-gradient-to-l from-black/30 to-transparent' : 'left-0 bg-gradient-to-r from-black/30 to-transparent'}`} />
+                                   <div className={`absolute top-0 bottom-0 w-24 pointer-events-none z-10 ${i === 0 ? 'right-0 bg-gradient-to-l from-black/25 to-transparent' : 'left-0 bg-gradient-to-r from-black/25 to-transparent'}`} />
                                  )}
                               </div>
                            ))}
