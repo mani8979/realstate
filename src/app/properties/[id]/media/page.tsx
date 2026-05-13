@@ -291,9 +291,9 @@ const MediaPage = () => {
               key="brochure"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="w-full h-full flex flex-col items-center justify-center p-4 md:p-10"
+              className="w-full h-full flex flex-col items-center justify-center p-4 md:p-10 min-h-0"
             >
-              <div className="w-full h-full flex flex-col">
+              <div className="w-full h-full flex flex-col min-h-0">
                 <div className="flex items-center justify-between mb-8">
                   <div className="space-y-1">
                     <h2 className="text-2xl md:text-4xl font-black uppercase tracking-tighter">Brochure Book</h2>
@@ -319,7 +319,7 @@ const MediaPage = () => {
                 </div>
 
                 {/* Book View */}
-                <div className="flex-grow relative flex items-center justify-center overflow-hidden px-4 md:px-10">
+                <div className="flex-grow relative flex items-center justify-center overflow-hidden px-4 md:px-10 min-h-0">
                    <AnimatePresence mode="wait">
                      <motion.div 
                         key={brochurePageIndex}
@@ -327,9 +327,9 @@ const MediaPage = () => {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 1.02 }}
                         transition={{ duration: 0.4 }}
-                        className="w-full h-full flex items-center justify-center"
+                        className="w-full h-full flex items-center justify-center min-h-0"
                      >
-                        <div className="flex items-center justify-center gap-2 md:gap-6 w-full h-full">
+                        <div className="flex items-center justify-center gap-2 md:gap-6 w-full h-full min-h-0">
                            {getBrochurePages(property.landBrochure)[brochurePageIndex]?.map((img: string, i: number) => (
                               <div 
                                 key={i} 
