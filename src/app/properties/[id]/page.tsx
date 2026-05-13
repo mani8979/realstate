@@ -696,11 +696,11 @@ const PropertyDetails = () => {
               </motion.div>
 
           {/* Quick Actions & Contact Section */}
-          <div className="max-w-4xl mx-auto w-full mt-32">
+          <div className="max-w-4xl mx-auto w-full mt-12">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               
               {/* Quick Actions */}
-              <div className="grid grid-cols-2 gap-4 md:col-span-1">
+              <div className="grid grid-cols-2 gap-2 md:col-span-1">
                 <a
                   href={`tel:+919666080645`}
                   className="bg-black/5 dark:bg-white/5 hover:bg-primary border border-black/10 dark:border-white/10 hover:border-primary text-black dark:text-white hover:text-black font-bold p-6 rounded-3xl flex flex-col items-center justify-center gap-3 transition-all group"

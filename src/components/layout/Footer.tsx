@@ -99,7 +99,7 @@ const Footer = async () => {
           <div className="text-center md:text-left">
             <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-8">{content.footerCol3Title || 'Get In Touch'}</h3>
             <ul className="space-y-6">
-              <li className="flex flex-col md:flex-row items-center md:items-start gap-4">
+              <li className="flex flex-col md:flex-row items-center gap-4">
                 <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary shrink-0">
                   <MapPin size={18} />
                 </div>
@@ -107,13 +107,13 @@ const Footer = async () => {
                   {content.officeAddress || 'Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026.'}
                 </span>
               </li>
-              <li className="flex flex-col md:flex-row items-center md:items-start gap-4">
+              <li className="flex flex-col md:flex-row items-center gap-4">
                 <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary shrink-0">
                   <Phone size={18} />
                 </div>
                 <span className="text-sm text-gray-600 dark:text-gray-400 font-bold">{content.contactPhone || '91 96660 80645'}</span>
               </li>
-              <li className="flex flex-col md:flex-row items-center md:items-start gap-4">
+              <li className="flex flex-col md:flex-row items-center gap-4">
                 <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary shrink-0">
                   <Mail size={18} />
                 </div>
