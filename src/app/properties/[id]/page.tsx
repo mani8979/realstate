@@ -51,6 +51,7 @@ const PropertyDetails = () => {
   const [hoveredPlot, setHoveredPlot] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isMapExpanded, setIsMapExpanded] = useState(false);
+  const [shouldLoadModel, setShouldLoadModel] = useState(false);
 
   useEffect(() => {
     if (isMapExpanded) {
@@ -73,6 +74,8 @@ const PropertyDetails = () => {
 
   useEffect(() => {
     setMounted(true);
+    const timer = setTimeout(() => setShouldLoadModel(true), 1500);
+    return () => clearTimeout(timer);
   }, []);
 
   const { scrollYProgress } = useScroll();
@@ -184,7 +187,7 @@ const PropertyDetails = () => {
   return (
     <div className="relative min-h-screen bg-white dark:bg-[#0a0a0a] text-black dark:text-white font-sans selection:bg-primary selection:text-black">
       {/* Floating 3D Model - Global Pathfinding */}
-      {property.threeDElement && mounted && !showFruitPopup && !isMapExpanded && (
+      {property.threeDElement && mounted && shouldLoadModel && !showFruitPopup && !isMapExpanded && (
         <div className="fixed inset-0 pointer-events-none z-[100] w-full h-full">
           <motion.div 
             style={{ 

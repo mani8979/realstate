@@ -11,7 +11,7 @@ import LocationSection from '@/components/main/LocationSection';
 import Founder from '@/components/main/Founder';
 import MotivationBanner from '@/components/main/MotivationBanner';
 
-export const revalidate = 0; // Disable static caching for the home page
+export const revalidate = 60; // Enable ISR caching for the home page (revalidate every minute)
 
 
 async function getLands() {

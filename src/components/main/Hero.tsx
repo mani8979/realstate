@@ -48,6 +48,8 @@ const Hero = ({ content: propContent }: { content?: any }) => {
               fill
               className="object-cover"
               priority
+              sizes="100vw"
+              quality={85}
             />
           )}
           {/* Enhanced Overlays */}

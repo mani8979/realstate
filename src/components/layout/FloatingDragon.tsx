@@ -12,6 +12,7 @@ const FloatingDragon = () => {
   const [settings, setSettings] = useState<any>(null);
   const [currentProperty, setCurrentProperty] = useState<any>(null);
   const [pos, setPos] = useState({ x: 0, y: 0 });
+  const [shouldLoad, setShouldLoad] = useState(false); // New state for lazy loading
   const { scrollYProgress } = useScroll();
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
@@ -21,6 +22,20 @@ const FloatingDragon = () => {
   // Smart Collision Avoidance State
   const obstaclesRef = useRef<DOMRect[]>([]);
   const lastScan = useRef(0);
+
+  useEffect(() => {
+    // Wait for page to be ready and a short delay or scroll
+    const timer = setTimeout(() => setShouldLoad(true), 3000);
+    const onScroll = () => {
+      setShouldLoad(true);
+      window.removeEventListener('scroll', onScroll);
+    };
+    window.addEventListener('scroll', onScroll);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -127,8 +142,8 @@ const FloatingDragon = () => {
 
   // --- RESTRICTION LOGIC ---
   
-  // Don't show if not mounted or on admin pages
-  if (!mounted || pathname?.startsWith('/admin')) return null;
+  // Don't show if not mounted, on admin pages, or not yet shouldLoad
+  if (!mounted || !shouldLoad || pathname?.startsWith('/admin')) return null;
 
   // Use property-specific model if available, otherwise global fallback
   const modelSrc = currentProperty?.threeDElement || settings?.globalThreeDModel;
