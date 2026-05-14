@@ -186,6 +186,17 @@ const PropertyDetails = () => {
 
   return (
     <div className="relative min-h-screen bg-white dark:bg-[#0a0a0a] text-black dark:text-white font-sans selection:bg-primary selection:text-black">
+      {/* Back Button */}
+      <div className="fixed top-24 left-6 md:left-10 z-[100]">
+        <button 
+          onClick={() => router.push('/properties')}
+          className="flex items-center gap-3 bg-white/10 dark:bg-black/10 hover:bg-primary hover:text-black px-4 md:px-6 py-2 md:py-3 rounded-full border border-black/20 dark:border-white/20 transition-all group backdrop-blur-md shadow-xl"
+        >
+          <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+          <span className="font-bold uppercase tracking-widest text-[10px] md:text-xs">Back to Properties</span>
+        </button>
+      </div>
+
       {/* Floating 3D Model - Global Pathfinding */}
       {property.threeDElement && mounted && shouldLoadModel && !showFruitPopup && !isMapExpanded && (
         <div className="fixed inset-0 pointer-events-none z-[100] w-full h-full">
@@ -505,39 +516,6 @@ const PropertyDetails = () => {
                               height={3000} 
                               className="w-auto h-auto max-w-full max-h-[70vh] object-contain rounded-2xl"
                             />
-                            
-                            {/* Plot Overlays */}
-                            <svg 
-                              className="absolute inset-0 w-full h-full pointer-events-none" 
-                              viewBox="0 0 100 100" 
-                              preserveAspectRatio="none"
-                            >
-                              {property.plots.map((plot: any, idx: number) => (
-                                <motion.rect
-                                  key={idx}
-                                  x={plot.x}
-                                  y={plot.y}
-                                  width={plot.width || 5}
-                                  height={plot.height || 3}
-                                  className="pointer-events-auto cursor-pointer"
-                                  initial={{ opacity: 0.3 }}
-                                  animate={{ 
-                                    opacity: hoveredPlot === plot.number ? 0.8 : 0.3,
-                                    scale: hoveredPlot === plot.number ? 1.05 : 1
-                                  }}
-                                  style={{
-                                    fill: plot.status === 'sold' ? (property.soldColor || '#fac915') :
-                                          plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
-                                          (property.availableColor || '#ffffff'),
-                                    stroke: hoveredPlot === plot.number ? '#fff' : 'transparent',
-                                    strokeWidth: 0.5
-                                  }}
-                                  onMouseEnter={() => setHoveredPlot(plot.number)}
-                                  onMouseLeave={() => setHoveredPlot(null)}
-                                  onClick={() => openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`)}
-                                />
-                              ))}
-                            </svg>
                           </div>
                        </div>
                      ) : (
@@ -547,20 +525,8 @@ const PropertyDetails = () => {
                        </div>
                      )}
                      
-                     {/* Legend Overlay */}
-                     <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10 flex flex-wrap gap-4 p-4 bg-white/80 dark:bg-black/80 backdrop-blur-xl rounded-2xl border border-black/10 dark:border-white/10 shadow-xl z-20">
-                        <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded border border-gray-200" style={{ backgroundColor: property.availableColor || '#ffffff' }}></div>
-                          <span className="text-[8px] md:text-[10px] font-bold uppercase text-gray-500">Available</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded" style={{ backgroundColor: property.bookedColor || '#22c55e' }}></div>
-                          <span className="text-[8px] md:text-[10px] font-bold uppercase text-gray-500">Booked</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded" style={{ backgroundColor: property.soldColor || '#fac915' }}></div>
-                          <span className="text-[8px] md:text-[10px] font-bold uppercase text-gray-500">Sold</span>
-                        </div>
+                     {/* Note: Legend removed as markings are disabled */}
+            </div>
                      </div>
                   </div>
 

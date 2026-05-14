@@ -438,36 +438,7 @@ const AdminPlotManagement = () => {
                         className="max-w-full max-h-[70vh] object-contain rounded-xl select-none"
                       />
                       
-                      {/* Plot Markers */}
-                      {plots.map((plot, idx) => (
-                        <motion.div
-                          key={idx}
-                          initial={false}
-                          animate={{ 
-                            left: `${plot.x}%`, 
-                            top: `${plot.y}%`,
-                            scale: selectedPlotIndex === idx ? 1.2 : 1
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedPlotIndex(idx);
-                            setPlacementMode(true);
-                          }}
-                          className={`
-                            absolute w-4 h-4 -ml-2 -mt-2 rounded-full border-2 border-white shadow-xl cursor-pointer transition-all z-10
-                            ${selectedPlotIndex === idx ? 'ring-4 ring-primary' : ''}
-                          `}
-                          style={{ 
-                            backgroundColor: plot.status === 'sold' ? colors.sold : 
-                                           plot.status === 'booked' ? colors.booked : 
-                                           colors.available 
-                          }}
-                        >
-                           <div className="absolute top-full mt-1 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-sm text-white text-[8px] font-black px-1.5 py-0.5 rounded pointer-events-none whitespace-nowrap">
-                              {plot.number}
-                           </div>
-                        </motion.div>
-                      ))}
+                      {/* Plot Markers Removed as requested */}
                     </div>
                     
                     <div className="absolute bottom-6 right-6 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/50 pointer-events-none z-20">

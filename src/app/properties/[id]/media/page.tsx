@@ -191,8 +191,14 @@ const MediaPage = () => {
       {/* Header */}
       <div className="flex items-center justify-between p-6 md:p-8 bg-gradient-to-b from-black/80 to-transparent z-50">
         <button 
-          onClick={() => router.back()}
-          className="flex items-center gap-3 bg-black/10 dark:bg-white/10 hover:bg-white/20 px-4 md:px-6 py-2 md:py-3 rounded-full border border-black/20 dark:border-white/20 transition-all group backdrop-blur-md"
+          onClick={() => {
+            if (window.history.length > 1) {
+              router.back();
+            } else {
+              router.push(`/properties/${id}`);
+            }
+          }}
+          className="flex items-center gap-3 bg-black/10 dark:bg-white/10 hover:bg-primary hover:text-black px-4 md:px-6 py-2 md:py-3 rounded-full border border-black/20 dark:border-white/20 transition-all group backdrop-blur-md"
         >
           <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
           <span className="font-bold uppercase tracking-widest text-[10px] md:text-xs">Exit</span>
@@ -449,39 +455,6 @@ const MediaPage = () => {
                     alt="Plot Layout" 
                     className="w-full h-full object-contain rounded-2xl block"
                   />
-                  
-                  {/* Plot Overlays */}
-                  <svg 
-                    className="absolute inset-0 w-full h-full pointer-events-none" 
-                    viewBox="0 0 100 100" 
-                    preserveAspectRatio="none"
-                  >
-                    {property.plots?.map((plot: any, idx: number) => (
-                      <motion.rect
-                        key={idx}
-                        x={plot.x}
-                        y={plot.y}
-                        width={plot.width || 5}
-                        height={plot.height || 3}
-                        className="pointer-events-auto cursor-pointer"
-                        initial={{ opacity: 0.3 }}
-                        animate={{ 
-                          opacity: hoveredPlot === plot.number ? 0.8 : 0.3,
-                          scale: hoveredPlot === plot.number ? 1.05 : 1
-                        }}
-                        style={{
-                          fill: plot.status === 'sold' ? (property.soldColor || '#fac915') :
-                                plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
-                                (property.availableColor || '#ffffff'),
-                          stroke: hoveredPlot === plot.number ? '#fff' : 'transparent',
-                          strokeWidth: 0.5
-                        }}
-                        onMouseEnter={() => setHoveredPlot(plot.number)}
-                        onMouseLeave={() => setHoveredPlot(null)}
-                        onClick={() => openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`)}
-                      />
-                    ))}
-                  </svg>
                 </div>
                 
                 <div className="absolute bottom-6 left-6 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/50 pointer-events-none z-20">
@@ -766,40 +739,6 @@ const MediaPage = () => {
                     height={3000}
                     className="w-auto h-auto max-w-full max-h-[90vh] object-contain rounded-2xl"
                   />
-                  <svg 
-                    className="absolute inset-0 w-full h-full pointer-events-none" 
-                    viewBox="0 0 100 100" 
-                    preserveAspectRatio="none"
-                  >
-                    {property.plots.map((plot: any, idx: number) => (
-                      <motion.rect
-                        key={idx}
-                        x={plot.x}
-                        y={plot.y}
-                        width={plot.width || 5}
-                        height={plot.height || 3}
-                        className="pointer-events-auto cursor-pointer"
-                        initial={{ opacity: 0.3 }}
-                        animate={{ 
-                          opacity: hoveredPlot === plot.number ? 0.8 : 0.3,
-                          scale: hoveredPlot === plot.number ? 1.05 : 1
-                        }}
-                        style={{
-                          fill: plot.status === 'sold' ? (property.soldColor || '#fac915') :
-                                plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
-                                (property.availableColor || '#ffffff'),
-                          stroke: hoveredPlot === plot.number ? '#fff' : 'transparent',
-                          strokeWidth: 0.5
-                        }}
-                        onMouseEnter={() => setHoveredPlot(plot.number)}
-                        onMouseLeave={() => setHoveredPlot(null)}
-                        onClick={() => {
-                          setIsMapExpanded(false);
-                          openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`);
-                        }}
-                      />
-                    ))}
-                  </svg>
                 </div>
              </div>
           </motion.div>
