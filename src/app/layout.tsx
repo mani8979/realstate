@@ -26,8 +26,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const content = await SiteContent.findOne().lean();
   
   return {
-    title: content?.heroTitle || "STAR LANDS | Find Your Dream Property",
-    description: content?.heroSubtitle || "Browse the best properties for sale, rent, or lease.",
+    title: content?.heroTitle || "Star Land Developers | Premium Real Estate & Lands",
+    description: content?.heroSubtitle || "Star Land Developers offers the best premium lands and luxury properties for sale. Discover your dream asset with us.",
     icons: {
       icon: content?.faviconImage || "/favicon.ico",
     },
