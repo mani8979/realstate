@@ -145,7 +145,7 @@ const FloatingDragon = () => {
           translateX: '-50%',
           translateY: '-50%'
         }}
-        className="fixed top-0 left-0 w-fit h-fit pointer-events-none z-[100] overflow-visible"
+        className="dragon-container fixed top-0 left-0 w-fit h-fit pointer-events-none z-[100] overflow-visible"
       >
         <motion.div 
           initial={{ opacity: 0, scale: 0 }}

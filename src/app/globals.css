@@ -173,3 +173,20 @@ h1, h2, h3, h4, h5, h6 {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Map Expansion Utilities */
+body.map-expanded {
+  overflow: hidden !important;
+}
+
+body.map-expanded header {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+body.map-expanded .dragon-container {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}

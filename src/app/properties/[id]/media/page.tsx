@@ -43,6 +43,15 @@ const MediaPage = () => {
   const [zoom, setZoom] = useState(1);
   const [hoveredPlot, setHoveredPlot] = useState<string | null>(null);
   const [isMapExpanded, setIsMapExpanded] = useState(false);
+
+  useEffect(() => {
+    if (isMapExpanded) {
+      document.body.classList.add('map-expanded');
+    } else {
+      document.body.classList.remove('map-expanded');
+    }
+    return () => document.body.classList.remove('map-expanded');
+  }, [isMapExpanded]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inventorySidebarRef = useRef<HTMLDivElement>(null);
 

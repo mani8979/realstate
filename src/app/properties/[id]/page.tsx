@@ -51,6 +51,15 @@ const PropertyDetails = () => {
   const [hoveredPlot, setHoveredPlot] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isMapExpanded, setIsMapExpanded] = useState(false);
+
+  useEffect(() => {
+    if (isMapExpanded) {
+      document.body.classList.add('map-expanded');
+    } else {
+      document.body.classList.remove('map-expanded');
+    }
+    return () => document.body.classList.remove('map-expanded');
+  }, [isMapExpanded]);
   const inventoryListRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
