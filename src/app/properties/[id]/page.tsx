@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { MapPin, Phone, MessageSquare, Send, ArrowLeft, Share2, X, Leaf, Download, Save, Calendar } from 'lucide-react';
+import { MapPin, Phone, MessageSquare, Send, ArrowLeft, Share2, X, Leaf, Download, Save, Calendar, Search } from 'lucide-react';
 import Link from 'next/link';
 import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
@@ -49,6 +49,7 @@ const PropertyDetails = () => {
   const modelViewerRef = useRef<any>(null);
   const [mounted, setMounted] = useState(false);
   const [hoveredPlot, setHoveredPlot] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const inventoryListRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -545,13 +546,27 @@ const PropertyDetails = () => {
                   {/* Table View */}
                   <div className="w-full xl:w-[450px] flex flex-col gap-6">
                      <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[3rem] border border-black/10 dark:border-white/10 p-8 flex flex-col h-[600px] shadow-2xl">
-                        <div className="flex items-center justify-between mb-8">
-                           <div className="space-y-1">
-                              <h3 className="text-xl font-black uppercase tracking-tighter text-black dark:text-white">Unit Table</h3>
-                              <p className="text-[10px] font-bold text-primary uppercase tracking-widest">Availability List</p>
+                        <div className="flex flex-col gap-6 mb-8">
+                           <div className="flex items-center justify-between">
+                              <div className="space-y-1">
+                                 <h3 className="text-xl font-black uppercase tracking-tighter text-black dark:text-white">Unit Table</h3>
+                                 <p className="text-[10px] font-bold text-primary uppercase tracking-widest">Availability List</p>
+                              </div>
+                              <div className="bg-primary/10 px-4 py-2 rounded-xl border border-primary/20">
+                                 <span className="text-[10px] font-black text-primary uppercase tracking-widest">{property.plots?.length || 0} Units</span>
+                              </div>
                            </div>
-                           <div className="bg-primary/10 px-4 py-2 rounded-xl border border-primary/20">
-                              <span className="text-[10px] font-black text-primary uppercase tracking-widest">{property.plots?.length || 0} Units</span>
+                           
+                           {/* Search Bar */}
+                           <div className="relative group">
+                              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors" size={16} />
+                              <input 
+                                 type="text"
+                                 placeholder="Search Plot Number..."
+                                 value={searchQuery}
+                                 onChange={(e) => setSearchQuery(e.target.value)}
+                                 className="w-full pl-12 pr-4 py-3 bg-white dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl focus:ring-2 focus:ring-primary/50 outline-none transition-all text-sm font-bold placeholder:text-gray-400"
+                              />
                            </div>
                         </div>
 
@@ -569,7 +584,9 @@ const PropertyDetails = () => {
                                  </tr>
                               </thead>
                               <tbody>
-                                 {property.plots?.map((plot: any, idx: number) => (
+                                 {property.plots?.filter((plot: any) => 
+                                    plot.number.toString().toLowerCase().includes(searchQuery.toLowerCase())
+                                 ).map((plot: any, idx: number) => (
                                     <tr 
                                        key={idx} 
                                        data-plot={plot.number}
@@ -604,18 +621,6 @@ const PropertyDetails = () => {
                                       </td>
                                       <td className="px-4 py-4 text-right rounded-r-2xl">
                                          <div className="flex items-center justify-end gap-3">
-                                            {property.landBrochure?.length > 0 && (
-                                              <button 
-                                                onClick={(e) => {
-                                                  e.stopPropagation();
-                                                  router.push(`/properties/${property._id}/media?type=brochure`);
-                                                }}
-                                                className="p-2 rounded-lg bg-black/5 dark:bg-white/5 text-gray-400 hover:text-primary transition-colors"
-                                                title="View Brochure"
-                                              >
-                                                <Download size={14} />
-                                              </button>
-                                            )}
                                             <button 
                                                 onClick={(e) => {
                                                   e.stopPropagation();
