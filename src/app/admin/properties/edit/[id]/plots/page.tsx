@@ -6,7 +6,7 @@ import axios from 'axios';
 import { 
   ArrowLeft, Save, Loader2, LayoutGrid, 
   Trash, Plus, Hash, Settings, Info, CheckCircle2,
-  Map as MapIcon, Table as TableIcon, Palette, MousePointer2
+  Map as MapIcon, Table as TableIcon, Palette, MousePointer2, Search, X, Maximize
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
@@ -34,6 +34,9 @@ const AdminPlotManagement = () => {
   const [selectedPlotIndex, setSelectedPlotIndex] = useState<number | null>(null);
   const [placementMode, setPlacementMode] = useState(false);
   const [zoom, setZoom] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isFullscreenMap, setIsFullscreenMap] = useState(false);
+  const [hoveredPlotIdx, setHoveredPlotIdx] = useState<number | null>(null);
   
   // Custom colors
   const [colors, setColors] = useState({
@@ -191,10 +194,16 @@ const AdminPlotManagement = () => {
       <header className="px-6 md:px-10 py-6 border-b border-black/10 dark:border-white/10 flex items-center justify-between sticky top-0 bg-white/80 dark:bg-black/80 backdrop-blur-xl z-[100]">
         <div className="flex items-center gap-4 md:gap-6">
           <button 
-            onClick={() => router.back()}
-            className="p-3 rounded-2xl bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-all"
+            onClick={() => {
+              if (window.history.length > 1) {
+                router.back();
+              } else {
+                router.push(`/admin/properties/edit/${id}`);
+              }
+            }}
+            className="p-3 rounded-2xl bg-black/5 dark:bg-white/5 hover:bg-primary hover:text-black transition-all group"
           >
-            <ArrowLeft size={24} />
+            <ArrowLeft size={24} className="group-hover:-translate-x-1 transition-transform" />
           </button>
           <div>
             <h1 className="text-xl md:text-3xl font-black uppercase tracking-tighter text-black dark:text-white">Plot Manager</h1>
@@ -264,6 +273,31 @@ const AdminPlotManagement = () => {
               </div>
             </div>
             <p className="mt-4 text-[9px] text-gray-400 uppercase font-black tracking-widest text-center">Click color circles to customize</p>
+          </div>
+
+          {/* Search Plots */}
+          <div className="bg-black/5 dark:bg-white/5 rounded-[2rem] p-8 border border-black/10 dark:border-white/10 flex flex-col gap-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Search size={18} className="text-primary" />
+              <h3 className="text-sm font-black uppercase tracking-widest text-black dark:text-white">Search Inventory</h3>
+            </div>
+            <div className="relative">
+              <input 
+                type="text"
+                placeholder="Find Plot Number..." 
+                className="w-full bg-white dark:bg-black rounded-xl px-4 py-4 text-sm font-bold border border-black/10 dark:border-white/10 focus:ring-2 focus:ring-primary/50 outline-none text-black dark:text-white"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button 
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-black/5 rounded-full"
+                >
+                  <X size={16} />
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Sequential Add Tool */}
@@ -362,22 +396,27 @@ const AdminPlotManagement = () => {
 
           <div className="bg-black/5 dark:bg-white/5 rounded-[3rem] border border-black/10 dark:border-white/10 overflow-hidden flex-grow">
             {viewMode === 'grid' && (
-              plots.length === 0 ? (
+              (plots.length === 0 || (searchQuery && plots.filter(p => p.number.toLowerCase().includes(searchQuery.toLowerCase())).length === 0)) ? (
                 <div className="flex flex-col items-center justify-center text-center p-20">
                   <LayoutGrid size={48} className="text-gray-300 dark:text-gray-700 mb-4" />
-                  <h3 className="text-xl font-black uppercase tracking-tighter mb-2 text-gray-500">No Plots Added Yet</h3>
+                  <h3 className="text-xl font-black uppercase tracking-tighter mb-2 text-gray-500">
+                    {searchQuery ? 'No Plots Match Search' : 'No Plots Added Yet'}
+                  </h3>
                 </div>
               ) : (
                 <div className="p-8 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 auto-rows-max">
                   <AnimatePresence>
-                    {plots.map((plot, idx) => (
-                      <motion.button
-                        key={plot.number + idx}
-                        layout
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.5 }}
-                        onClick={() => handlePlotClick(idx)}
+                    {plots
+                      .map((p, i) => ({ ...p, originalIndex: i }))
+                      .filter(p => p.number.toLowerCase().includes(searchQuery.toLowerCase()))
+                      .map((plot) => (
+                        <motion.button
+                          key={plot.number + plot.originalIndex}
+                          layout
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.5 }}
+                          onClick={() => handlePlotClick(plot.originalIndex)}
                         style={{ 
                           backgroundColor: plot.status === 'sold' ? colors.sold : 
                                          plot.status === 'booked' ? colors.booked : 
@@ -424,10 +463,18 @@ const AdminPlotManagement = () => {
                  
                  <div 
                     data-lenis-prevent
-                    className="relative flex-grow bg-black flex items-center justify-center overflow-hidden p-4 cursor-crosshair"
+                    className="relative flex-grow bg-black flex items-center justify-center overflow-hidden p-4 cursor-crosshair group/map-canvas"
                     onWheel={handleWheel}
                     onClick={handleMapClick}
                   >
+                    {/* Fullscreen Trigger */}
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); setIsFullscreenMap(true); }}
+                      className="absolute top-6 right-6 z-30 bg-white/10 hover:bg-primary text-white hover:text-black p-3 rounded-xl backdrop-blur-md transition-all opacity-0 group-hover/map-canvas:opacity-100 shadow-xl border border-white/10"
+                    >
+                      <Maximize size={20} />
+                    </button>
+
                     <div 
                       className="relative transition-transform duration-200 ease-out inline-block"
                       style={{ transform: `scale(${zoom})` }}
@@ -531,6 +578,43 @@ const AdminPlotManagement = () => {
         </div>
 
       </main>
+
+      {/* Fullscreen Map Modal */}
+      <AnimatePresence>
+        {isFullscreenMap && property?.layoutImage && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[1000] bg-white/95 dark:bg-black/95 backdrop-blur-2xl flex items-center justify-center p-4 md:p-10"
+          >
+             {/* Close Icon - Placed Perfectly */}
+             <button 
+               onClick={() => setIsFullscreenMap(false)}
+               className="absolute top-6 right-6 md:top-10 md:right-10 z-[1010] bg-black/10 dark:bg-white/10 hover:bg-red-500 text-black dark:text-white hover:text-white p-5 rounded-2xl transition-all shadow-2xl border border-black/10 dark:border-white/10 group"
+             >
+               <X size={32} className="group-hover:rotate-90 transition-transform duration-300" />
+             </button>
+
+             <div className="w-full h-full relative flex items-center justify-center overflow-auto custom-scrollbar" onClick={() => setIsFullscreenMap(false)}>
+                <div 
+                  className="relative transition-transform duration-200"
+                  style={{ transform: `scale(${zoom * 1.5})` }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <img 
+                    src={property.layoutImage} 
+                    alt="Layout Expanded" 
+                    className="max-w-full max-h-[85vh] object-contain rounded-3xl shadow-2xl"
+                  />
+                </div>
+                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-md px-8 py-4 rounded-2xl text-white text-xs font-black uppercase tracking-[0.3em] pointer-events-none border border-white/10">
+                   Interactive Fullscreen Mode
+                </div>
+             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
