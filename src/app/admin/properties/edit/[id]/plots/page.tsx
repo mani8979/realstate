@@ -608,9 +608,6 @@ const AdminPlotManagement = () => {
                     className="max-w-full max-h-[85vh] object-contain rounded-3xl shadow-2xl"
                   />
                 </div>
-                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-md px-8 py-4 rounded-2xl text-white text-xs font-black uppercase tracking-[0.3em] pointer-events-none border border-white/10">
-                   Interactive Fullscreen Mode
-                </div>
              </div>
           </motion.div>
         )}
