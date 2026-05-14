@@ -526,8 +526,6 @@ const PropertyDetails = () => {
                      )}
                      
                      {/* Note: Legend removed as markings are disabled */}
-            </div>
-                     </div>
                   </div>
 
                   {/* Table View */}
