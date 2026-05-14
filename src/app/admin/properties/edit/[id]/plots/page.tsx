@@ -463,7 +463,7 @@ const AdminPlotManagement = () => {
                  
                  <div 
                     data-lenis-prevent
-                    className="relative flex-grow bg-black flex items-center justify-center overflow-hidden p-4 cursor-crosshair group/map-canvas"
+                    className="relative flex-grow bg-black flex items-center justify-center overflow-auto p-4 cursor-crosshair group/map-canvas custom-scrollbar"
                     onWheel={handleWheel}
                     onClick={handleMapClick}
                   >
