@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Save, Info, Upload, X, Users, Plus, Trash2 } from 'lucide-react';
+import { Save, Info, Upload, X, Users, Plus, Trash2, Loader2 } from 'lucide-react';
+import FileDropzone from '@/components/admin/FileDropzone';
 
 export default function JoinAdmin() {
   const [content, setContent] = useState<any>({
@@ -62,8 +63,8 @@ export default function JoinAdmin() {
     setContent({ ...content, joinTeamLeads: updatedLeads });
   };
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: string, index?: number) => {
-    const file = e.target.files?.[0];
+  const handleUpload = async (files: FileList | File[], field: string, index?: number) => {
+    const file = files[0];
     if (!file) return;
 
     const uploadKey = index !== undefined ? `lead-${index}` : field;
@@ -82,7 +83,7 @@ export default function JoinAdmin() {
         if (index !== undefined) {
           handleLeadChange(index, 'image', data.url);
         } else {
-          setContent({ ...content, [field]: data.url });
+          setContent((prev: any) => ({ ...prev, [field]: data.url }));
         }
       }
     } catch (err) {
@@ -146,11 +147,16 @@ export default function JoinAdmin() {
                 </button>
               </div>
             ) : (
-              <label className="flex flex-col items-center justify-center w-full aspect-[21/9] rounded-3xl border-2 border-dashed border-gray-300 dark:border-gray-800 hover:border-primary transition-all cursor-pointer bg-gray-50 dark:bg-gray-800/50">
-                <Upload size={32} className="text-gray-600 dark:text-gray-400 mb-2" />
-                <span className="text-sm font-bold text-gray-500">Upload Hero Background</span>
-                <input type="file" className="hidden" onChange={(e) => handleUpload(e, 'joinBgImage')} />
-              </label>
+              <FileDropzone
+                onFilesSelected={(files) => handleUpload(files, 'joinBgImage')}
+                uploading={uploading === 'joinBgImage'}
+                accept="image/*"
+              >
+                <div className="flex flex-col items-center justify-center w-full aspect-[21/9] rounded-3xl border-2 border-dashed border-gray-300 dark:border-gray-800 hover:border-primary transition-all cursor-pointer bg-gray-50 dark:bg-gray-800/50">
+                  {uploading === 'joinBgImage' ? <Loader2 className="animate-spin" /> : <Upload size={32} className="text-gray-600 dark:text-gray-400 mb-2" />}
+                  <span className="text-sm font-bold text-gray-500">Upload Hero Background</span>
+                </div>
+              </FileDropzone>
             )}
             <div className="flex items-center gap-2 text-xs text-gray-500 italic mt-2">
               <Info size={14} className="text-primary" />
@@ -285,11 +291,16 @@ export default function JoinAdmin() {
                         <button onClick={() => handleLeadChange(index, 'image', '')} className="absolute inset-0 bg-white dark:bg-black/40 text-black dark:text-white flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-all"><X size={16} /></button>
                       </div>
                     ) : (
-                      <label className="flex flex-col items-center justify-center aspect-square rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-700 hover:border-primary transition-all cursor-pointer">
-                        <Upload size={20} className="text-gray-600 dark:text-gray-400 mb-1" />
-                        <span className="text-[10px] font-bold text-gray-500 uppercase">Upload</span>
-                        <input type="file" className="hidden" onChange={(e) => handleUpload(e, '', index)} />
-                      </label>
+                      <FileDropzone
+                        onFilesSelected={(files) => handleUpload(files, '', index)}
+                        uploading={uploading === `lead-${index}`}
+                        accept="image/*"
+                      >
+                        <div className="flex flex-col items-center justify-center aspect-square rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-700 hover:border-primary transition-all cursor-pointer">
+                          {uploading === `lead-${index}` ? <Loader2 className="animate-spin" /> : <Upload size={20} className="text-gray-600 dark:text-gray-400 mb-1" />}
+                          <span className="text-[10px] font-bold text-gray-500 uppercase">Upload</span>
+                        </div>
+                      </FileDropzone>
                     )}
                     {uploading === `lead-${index}` && <p className="text-[10px] text-primary font-bold mt-2 animate-pulse">Uploading...</p>}
                   </div>
@@ -340,11 +351,16 @@ export default function JoinAdmin() {
                   <button onClick={() => setContent({ ...content, joinOfficeImage1: '' })} className="absolute top-4 right-4 bg-red-500 text-black dark:text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all"><X size={20} /></button>
                 </div>
               ) : (
-                <label className="flex flex-col items-center justify-center w-full aspect-video rounded-3xl border-2 border-dashed border-gray-300 dark:border-gray-800 hover:border-primary transition-all cursor-pointer bg-gray-50 dark:bg-gray-800/50">
-                  <Upload size={32} className="text-gray-600 dark:text-gray-400 mb-2" />
-                  <span className="text-sm font-bold text-gray-500">Upload Photo 1</span>
-                  <input type="file" className="hidden" onChange={(e) => handleUpload(e, 'joinOfficeImage1')} />
-                </label>
+                <FileDropzone
+                  onFilesSelected={(files) => handleUpload(files, 'joinOfficeImage1')}
+                  uploading={uploading === 'joinOfficeImage1'}
+                  accept="image/*"
+                >
+                  <div className="flex flex-col items-center justify-center w-full aspect-video rounded-3xl border-2 border-dashed border-gray-300 dark:border-gray-800 hover:border-primary transition-all cursor-pointer bg-gray-50 dark:bg-gray-800/50">
+                    {uploading === 'joinOfficeImage1' ? <Loader2 className="animate-spin" /> : <Upload size={32} className="text-gray-600 dark:text-gray-400 mb-2" />}
+                    <span className="text-sm font-bold text-gray-500">Upload Photo 1</span>
+                  </div>
+                </FileDropzone>
               )}
             </div>
             <div className="space-y-4">
@@ -355,11 +371,16 @@ export default function JoinAdmin() {
                   <button onClick={() => setContent({ ...content, joinOfficeImage2: '' })} className="absolute top-4 right-4 bg-red-500 text-black dark:text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all"><X size={20} /></button>
                 </div>
               ) : (
-                <label className="flex flex-col items-center justify-center w-full aspect-video rounded-3xl border-2 border-dashed border-gray-300 dark:border-gray-800 hover:border-primary transition-all cursor-pointer bg-gray-50 dark:bg-gray-800/50">
-                  <Upload size={32} className="text-gray-600 dark:text-gray-400 mb-2" />
-                  <span className="text-sm font-bold text-gray-500">Upload Photo 2</span>
-                  <input type="file" className="hidden" onChange={(e) => handleUpload(e, 'joinOfficeImage2')} />
-                </label>
+                <FileDropzone
+                  onFilesSelected={(files) => handleUpload(files, 'joinOfficeImage2')}
+                  uploading={uploading === 'joinOfficeImage2'}
+                  accept="image/*"
+                >
+                  <div className="flex flex-col items-center justify-center w-full aspect-video rounded-3xl border-2 border-dashed border-gray-300 dark:border-gray-800 hover:border-primary transition-all cursor-pointer bg-gray-50 dark:bg-gray-800/50">
+                    {uploading === 'joinOfficeImage2' ? <Loader2 className="animate-spin" /> : <Upload size={32} className="text-gray-600 dark:text-gray-400 mb-2" />}
+                    <span className="text-sm font-bold text-gray-500">Upload Photo 2</span>
+                  </div>
+                </FileDropzone>
               )}
             </div>
           </div>

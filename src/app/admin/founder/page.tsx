@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Save, Upload, X } from 'lucide-react';
+import { Save, Upload, X, Loader2 } from 'lucide-react';
+import FileDropzone from '@/components/admin/FileDropzone';
 
 export default function FounderAdmin() {
   const [content, setContent] = useState<any>({
@@ -37,8 +38,8 @@ export default function FounderAdmin() {
     setContent({ ...content, [e.target.name]: e.target.value });
   };
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
-    const file = e.target.files?.[0];
+  const handleUpload = async (files: FileList | File[], field: string) => {
+    const file = files[0];
     if (!file) return;
 
     setUploading(field);
@@ -52,7 +53,7 @@ export default function FounderAdmin() {
       });
       const data = await res.json();
       if (data.url) {
-        setContent({ ...content, [field]: data.url });
+        setContent((prev: any) => ({ ...prev, [field]: data.url }));
       }
     } catch (err) {
       alert('Upload failed');
@@ -121,11 +122,16 @@ export default function FounderAdmin() {
                     </button>
                   </div>
                 ) : (
-                  <label className="flex flex-col items-center justify-center w-full aspect-[4/5] rounded-3xl border-2 border-dashed border-gray-300 dark:border-gray-800 hover:border-primary transition-all cursor-pointer bg-gray-50 dark:bg-gray-800/50">
-                    <Upload size={32} className="text-gray-600 dark:text-gray-400 mb-2" />
-                    <span className="text-sm font-bold text-gray-500">Upload Photo</span>
-                    <input type="file" className="hidden" onChange={(e) => handleUpload(e, 'mainFounderImage')} />
-                  </label>
+                  <FileDropzone
+                    onFilesSelected={(files) => handleUpload(files, 'mainFounderImage')}
+                    uploading={uploading === 'mainFounderImage'}
+                    accept="image/*"
+                  >
+                    <div className="flex flex-col items-center justify-center w-full aspect-[4/5] rounded-3xl border-2 border-dashed border-gray-300 dark:border-gray-800 hover:border-primary transition-all cursor-pointer bg-gray-50 dark:bg-gray-800/50">
+                      {uploading === 'mainFounderImage' ? <Loader2 className="animate-spin" /> : <Upload size={32} className="text-gray-600 dark:text-gray-400 mb-2" />}
+                      <span className="text-sm font-bold text-gray-500">Upload Photo</span>
+                    </div>
+                  </FileDropzone>
                 )}
                 {uploading === 'mainFounderImage' && <p className="text-primary text-xs font-bold mt-2 animate-pulse">Uploading...</p>}
               </div>
@@ -217,11 +223,16 @@ export default function FounderAdmin() {
                     </button>
                   </div>
                 ) : (
-                  <label className="flex flex-col items-center justify-center w-full aspect-[4/5] rounded-3xl border-2 border-dashed border-gray-300 dark:border-gray-800 hover:border-primary transition-all cursor-pointer bg-gray-50 dark:bg-gray-800/50">
-                    <Upload size={32} className="text-gray-600 dark:text-gray-400 mb-2" />
-                    <span className="text-sm font-bold text-gray-500">Upload Photo</span>
-                    <input type="file" className="hidden" onChange={(e) => handleUpload(e, 'cofounderImage')} />
-                  </label>
+                  <FileDropzone
+                    onFilesSelected={(files) => handleUpload(files, 'cofounderImage')}
+                    uploading={uploading === 'cofounderImage'}
+                    accept="image/*"
+                  >
+                    <div className="flex flex-col items-center justify-center w-full aspect-[4/5] rounded-3xl border-2 border-dashed border-gray-300 dark:border-gray-800 hover:border-primary transition-all cursor-pointer bg-gray-50 dark:bg-gray-800/50">
+                      {uploading === 'cofounderImage' ? <Loader2 className="animate-spin" /> : <Upload size={32} className="text-gray-600 dark:text-gray-400 mb-2" />}
+                      <span className="text-sm font-bold text-gray-500">Upload Photo</span>
+                    </div>
+                  </FileDropzone>
                 )}
                 {uploading === 'cofounderImage' && <p className="text-primary text-xs font-bold mt-2 animate-pulse">Uploading...</p>}
               </div>

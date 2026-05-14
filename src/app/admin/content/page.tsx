@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Save } from 'lucide-react';
+import { Save, Loader2, Upload } from 'lucide-react';
+import FileDropzone from '@/components/admin/FileDropzone';
 
 export default function SiteContentAdmin() {
   const [content, setContent] = useState<any>({
@@ -176,35 +177,35 @@ export default function SiteContentAdmin() {
                   className="flex-grow p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
                   placeholder="e.g. /models/untitled.glb or https://..."
                 />
-                <label className="bg-gray-50 dark:bg-gray-900 dark:bg-white text-black dark:text-white dark:text-black px-6 py-4 rounded-xl font-bold cursor-pointer hover:opacity-80 transition-all flex-shrink-0">
-                  Upload GLB
-                  <input 
-                    type="file"
-                    accept=".glb"
-                    className="hidden"
-                    onChange={async (e) => {
-                      const file = e.target.files?.[0];
-                      if (!file) return;
-                      
-                      const formData = new FormData();
-                      formData.append('file', file);
-                      
-                      try {
-                        const res = await fetch('/api/upload', {
-                          method: 'POST',
-                          body: formData
-                        });
-                        const data = await res.json();
-                        if (data.url) {
-                          setContent({ ...content, globalThreeDModel: data.url });
-                          alert('3D Model uploaded successfully!');
-                        }
-                      } catch (err) {
-                        alert('Upload failed');
+                <FileDropzone
+                  onFilesSelected={async (files) => {
+                    const file = files[0];
+                    if (!file) return;
+                    
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    
+                    try {
+                      const res = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: formData
+                      });
+                      const data = await res.json();
+                      if (data.url) {
+                        setContent((prev: any) => ({ ...prev, globalThreeDModel: data.url }));
+                        alert('3D Model uploaded successfully!');
                       }
-                    }}
-                  />
-                </label>
+                    } catch (err) {
+                      alert('Upload failed');
+                    }
+                  }}
+                  accept=".glb"
+                >
+                  <div className="bg-gray-50 dark:bg-gray-900 dark:bg-white text-black dark:text-white dark:text-black px-6 py-4 rounded-xl font-bold cursor-pointer hover:opacity-80 transition-all flex-shrink-0 flex items-center gap-2">
+                    <Upload size={18} />
+                    Upload GLB
+                  </div>
+                </FileDropzone>
               </div>
               <p className="mt-2 text-xs text-gray-500 font-medium italic">Current: {content.globalThreeDModel || 'None'}</p>
             </div>

@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Save, Info, Upload, X, Users, Plus, Trash2, Layout, Sparkles, ShieldCheck, Target, Award, Camera, Settings } from 'lucide-react';
+import { Save, Info, Upload, X, Users, Plus, Trash2, Layout, Sparkles, ShieldCheck, Target, Award, Camera, Settings, Loader2 } from 'lucide-react';
+import FileDropzone from '@/components/admin/FileDropzone';
 import { cn } from '@/lib/utils';
 
 type TabType = 'branding' | 'hero' | 'founder' | 'vision' | 'values' | 'journey' | 'gallery';
@@ -58,8 +59,8 @@ export default function AboutAdmin() {
     setContent({ ...content, [e.target.name]: e.target.value });
   };
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: string, index?: number) => {
-    const file = e.target.files?.[0];
+  const handleUpload = async (files: FileList | File[], field: string, index?: number) => {
+    const file = files[0];
     if (!file) return;
 
     const uploadKey = index !== undefined ? `gallery-${index}` : field;
@@ -75,9 +76,9 @@ export default function AboutAdmin() {
         if (index !== undefined) {
           const updatedGallery = [...content.aboutGallery];
           updatedGallery[index] = { ...updatedGallery[index], url: data.url };
-          setContent({ ...content, aboutGallery: updatedGallery });
+          setContent((prev: any) => ({ ...prev, aboutGallery: updatedGallery }));
         } else {
-          setContent({ ...content, [field]: data.url });
+          setContent((prev: any) => ({ ...prev, [field]: data.url }));
         }
       }
     } catch (err) {
@@ -221,10 +222,15 @@ export default function AboutAdmin() {
                         <button onClick={() => setContent({...content, mainFounderImage: ''})} className="absolute inset-0 bg-black/40 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all"><X size={24} /></button>
                       </div>
                     ) : (
-                      <label className="flex flex-col items-center justify-center aspect-square rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 cursor-pointer hover:border-primary transition-all">
-                        <Upload size={32} className="text-gray-400" />
-                        <input type="file" className="hidden" onChange={(e) => handleUpload(e, 'mainFounderImage')} />
-                      </label>
+                      <FileDropzone
+                        onFilesSelected={(files) => handleUpload(files, 'mainFounderImage')}
+                        uploading={uploading === 'mainFounderImage'}
+                        accept="image/*"
+                      >
+                        <div className="flex flex-col items-center justify-center aspect-square rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 cursor-pointer hover:border-primary transition-all">
+                          {uploading === 'mainFounderImage' ? <Loader2 className="animate-spin" /> : <Upload size={32} className="text-gray-400" />}
+                        </div>
+                      </FileDropzone>
                     )}
                   </div>
                   <div className="md:col-span-3 space-y-6">
@@ -257,10 +263,15 @@ export default function AboutAdmin() {
                         <button onClick={() => setContent({...content, cofounderImage: ''})} className="absolute inset-0 bg-black/40 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all"><X size={24} /></button>
                       </div>
                     ) : (
-                      <label className="flex flex-col items-center justify-center aspect-square rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 cursor-pointer hover:border-primary transition-all">
-                        <Upload size={32} className="text-gray-400" />
-                        <input type="file" className="hidden" onChange={(e) => handleUpload(e, 'cofounderImage')} />
-                      </label>
+                      <FileDropzone
+                        onFilesSelected={(files) => handleUpload(files, 'cofounderImage')}
+                        uploading={uploading === 'cofounderImage'}
+                        accept="image/*"
+                      >
+                        <div className="flex flex-col items-center justify-center aspect-square rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 cursor-pointer hover:border-primary transition-all">
+                          {uploading === 'cofounderImage' ? <Loader2 className="animate-spin" /> : <Upload size={32} className="text-gray-400" />}
+                        </div>
+                      </FileDropzone>
                     )}
                   </div>
                   <div className="md:col-span-3 space-y-6">
@@ -350,10 +361,15 @@ export default function AboutAdmin() {
                             <button onClick={() => handleGalleryChange(index, 'url', '')} className="absolute inset-0 bg-black/40 flex items-center justify-center text-white opacity-0 group-hover/img:opacity-100 transition-all"><X size={20} /></button>
                           </div>
                         ) : (
-                          <label className="flex flex-col items-center justify-center aspect-video rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 cursor-pointer hover:border-primary transition-all">
-                            <Upload size={24} className="text-gray-400" />
-                            <input type="file" className="hidden" onChange={(e) => handleUpload(e, '', index)} />
-                          </label>
+                          <FileDropzone
+                            onFilesSelected={(files) => handleUpload(files, '', index)}
+                            uploading={uploading === `gallery-${index}`}
+                            accept="image/*"
+                          >
+                            <div className="flex flex-col items-center justify-center aspect-video rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 cursor-pointer hover:border-primary transition-all">
+                              {uploading === `gallery-${index}` ? <Loader2 className="animate-spin" /> : <Upload size={24} className="text-gray-400" />}
+                            </div>
+                          </FileDropzone>
                         )}
                         <input value={item.caption || ''} onChange={(e) => handleGalleryChange(index, 'caption', e.target.value)} placeholder="Image caption..." className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-sm" />
                      </div>

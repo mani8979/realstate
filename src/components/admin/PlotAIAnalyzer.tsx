@@ -5,9 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Brain, Upload, Zap, CheckCircle, AlertCircle, RefreshCw, X,
   Eye, Download, Sparkles, ImageIcon, ChevronRight, Target,
-  TrendingUp, Home, Clock, Activity, MapPin
+  TrendingUp, Home, Clock, Activity, MapPin, Loader2
 } from 'lucide-react';
 import Image from 'next/image';
+import FileDropzone from '@/components/admin/FileDropzone';
 
 interface DetectedPlot {
   plotNumber: string;
@@ -65,18 +66,17 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
   const fileRef = useRef<HTMLInputElement>(null);
 
   // ----- File handling -----
-  const handleFile = useCallback((file: File) => {
-    if (!file.type.startsWith('image/')) { setError('Please upload an image file (JPG, PNG, WEBP)'); return; }
+  const handleFileSelection = (files: FileList | File[]) => {
+    const file = files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setError('Please upload an image file (JPG, PNG, WEBP)');
+      return;
+    }
     setUploadedFile(file);
     setUploadedPreview(URL.createObjectURL(file));
     setError('');
-  }, []);
-
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault(); setIsDragOver(false);
-    const file = e.dataTransfer.files[0];
-    if (file) handleFile(file);
-  }, [handleFile]);
+  };
 
   // ----- Simulate processing steps animation -----
   const runProcessingAnimation = async () => {
@@ -227,37 +227,33 @@ export default function PlotAIAnalyzer({ layoutImageUrl, onPlotsDetected, onClos
               )}
 
               {/* Custom upload (override) */}
-              <div className="space-y-3">
-                <label className="text-xs font-black text-gray-600 dark:text-gray-400 uppercase tracking-widest">
-                  {layoutImageUrl ? 'Or Upload a Different Image to Analyze' : 'Upload Plot Layout Image'}
-                </label>
-                <div
-                  onDrop={handleDrop}
-                  onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
-                  onDragLeave={() => setIsDragOver(false)}
-                  onClick={() => fileRef.current?.click()}
-                  className={`relative border-2 border-dashed rounded-3xl p-10 text-center cursor-pointer transition-all ${
-                    isDragOver ? 'border-violet-500 bg-violet-500/10' : 'border-black/10 dark:border-white/10 hover:border-violet-500/50 hover:bg-violet-500/5'
-                  }`}
-                >
-                  <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => e.target.files?.[0] && handleFile(e.target.files[0])} />
-                  {uploadedPreview ? (
-                    <div className="relative aspect-video max-h-48 mx-auto rounded-2xl overflow-hidden">
-                      <Image src={uploadedPreview} alt="Upload preview" fill className="object-contain" />
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <div className="w-16 h-16 mx-auto rounded-3xl bg-violet-500/10 flex items-center justify-center">
-                        <Upload size={28} className="text-violet-400" />
-                      </div>
-                      <div>
-                        <p className="text-black dark:text-white font-bold text-sm">Drop your plot layout here</p>
-                        <p className="text-gray-500 text-xs mt-1">JPG, PNG, WEBP supported • Any quality</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
+               <div className="space-y-3">
+                 <label className="text-xs font-black text-gray-600 dark:text-gray-400 uppercase tracking-widest">
+                   {layoutImageUrl ? 'Or Upload a Different Image to Analyze' : 'Upload Plot Layout Image'}
+                 </label>
+                 <FileDropzone
+                   onFilesSelected={handleFileSelection}
+                   accept="image/*"
+                 >
+                   <div className="relative border-2 border-dashed border-black/10 dark:border-white/10 hover:border-violet-500/50 hover:bg-violet-500/5 rounded-3xl p-10 text-center cursor-pointer transition-all group">
+                     {uploadedPreview ? (
+                       <div className="relative aspect-video max-h-48 mx-auto rounded-2xl overflow-hidden">
+                         <Image src={uploadedPreview} alt="Upload preview" fill className="object-contain" />
+                       </div>
+                     ) : (
+                       <div className="space-y-4">
+                         <div className="w-16 h-16 mx-auto rounded-3xl bg-violet-500/10 flex items-center justify-center group-hover:bg-violet-500 transition-all group-hover:text-black dark:text-white">
+                           <Upload size={28} className="text-violet-400 group-hover:text-inherit" />
+                         </div>
+                         <div>
+                           <p className="text-black dark:text-white font-bold text-sm">Drop your plot layout here</p>
+                           <p className="text-gray-500 text-xs mt-1 font-bold">Drag & Drop Supported</p>
+                         </div>
+                       </div>
+                     )}
+                   </div>
+                 </FileDropzone>
+               </div>
 
               {error && (
                 <div className="flex items-start gap-3 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl">

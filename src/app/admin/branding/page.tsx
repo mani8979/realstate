@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Save, Upload, X, Globe, Layout, Smartphone } from 'lucide-react';
+import { Save, Upload, X, Globe, Layout, Smartphone, Loader2 } from 'lucide-react';
+import FileDropzone from '@/components/admin/FileDropzone';
 
 export default function BrandingAdmin() {
   const [content, setContent] = useState<any>({
@@ -28,8 +29,8 @@ export default function BrandingAdmin() {
     setContent({ ...content, [e.target.name]: e.target.value });
   };
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
-    const file = e.target.files?.[0];
+  const handleUpload = async (files: FileList | File[], field: string) => {
+    const file = files[0];
     if (!file) return;
 
     setUploading(field);
@@ -40,7 +41,7 @@ export default function BrandingAdmin() {
       const res = await fetch('/api/upload', { method: 'POST', body: formData });
       const data = await res.json();
       if (data.url) {
-        setContent({ ...content, [field]: data.url });
+        setContent((prev: any) => ({ ...prev, [field]: data.url }));
       }
     } catch (err) {
       alert('Upload failed');
@@ -106,11 +107,16 @@ export default function BrandingAdmin() {
                     <button onClick={() => setContent({...content, headerLogoImage: ''})} className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-all"><X size={18} /></button>
                   </div>
                 ) : (
-                  <label className="flex flex-col items-center justify-center aspect-video rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 cursor-pointer hover:border-primary transition-all bg-gray-50 dark:bg-gray-800/50">
-                    <Upload size={32} className="text-gray-400 mb-2" />
-                    <span className="text-sm font-bold text-gray-500">{uploading === 'headerLogoImage' ? 'Uploading...' : 'Upload Header Logo'}</span>
-                    <input type="file" className="hidden" onChange={(e) => handleUpload(e, 'headerLogoImage')} />
-                  </label>
+                  <FileDropzone
+                    onFilesSelected={(files) => handleUpload(files, 'headerLogoImage')}
+                    uploading={uploading === 'headerLogoImage'}
+                    accept="image/*"
+                  >
+                    <div className="flex flex-col items-center justify-center aspect-video rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 cursor-pointer hover:border-primary transition-all bg-gray-50 dark:bg-gray-800/50">
+                      {uploading === 'headerLogoImage' ? <Loader2 className="animate-spin" /> : <Upload size={32} className="text-gray-400 mb-2" />}
+                      <span className="text-sm font-bold text-gray-500">{uploading === 'headerLogoImage' ? 'Uploading...' : 'Upload Header Logo'}</span>
+                    </div>
+                  </FileDropzone>
                 )}
              </div>
 
@@ -122,11 +128,16 @@ export default function BrandingAdmin() {
                     <button onClick={() => setContent({...content, footerLogoImage: ''})} className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-all"><X size={18} /></button>
                   </div>
                 ) : (
-                  <label className="flex flex-col items-center justify-center aspect-video rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 cursor-pointer hover:border-primary transition-all bg-gray-50 dark:bg-gray-800/50">
-                    <Upload size={32} className="text-gray-400 mb-2" />
-                    <span className="text-sm font-bold text-gray-500">{uploading === 'footerLogoImage' ? 'Uploading...' : 'Upload Footer Logo'}</span>
-                    <input type="file" className="hidden" onChange={(e) => handleUpload(e, 'footerLogoImage')} />
-                  </label>
+                  <FileDropzone
+                    onFilesSelected={(files) => handleUpload(files, 'footerLogoImage')}
+                    uploading={uploading === 'footerLogoImage'}
+                    accept="image/*"
+                  >
+                    <div className="flex flex-col items-center justify-center aspect-video rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 cursor-pointer hover:border-primary transition-all bg-gray-50 dark:bg-gray-800/50">
+                      {uploading === 'footerLogoImage' ? <Loader2 className="animate-spin" /> : <Upload size={32} className="text-gray-400 mb-2" />}
+                      <span className="text-sm font-bold text-gray-500">{uploading === 'footerLogoImage' ? 'Uploading...' : 'Upload Footer Logo'}</span>
+                    </div>
+                  </FileDropzone>
                 )}
              </div>
           </div>
@@ -163,10 +174,16 @@ export default function BrandingAdmin() {
                    <button onClick={() => setContent({...content, faviconImage: ''})} className="absolute inset-0 bg-black/40 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all"><X size={18} /></button>
                 </div>
              ) : (
-                <label className="flex flex-col items-center justify-center w-24 h-24 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 cursor-pointer hover:border-primary transition-all bg-gray-50 dark:bg-gray-800/50">
-                   <Upload size={24} className="text-gray-400" />
-                   <input type="file" className="hidden" onChange={(e) => handleUpload(e, 'faviconImage')} />
-                </label>
+                 <FileDropzone
+                   onFilesSelected={(files) => handleUpload(files, 'faviconImage')}
+                   uploading={uploading === 'faviconImage'}
+                   accept="image/*"
+                   className="w-24 h-24"
+                 >
+                    <div className="flex flex-col items-center justify-center w-24 h-24 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 cursor-pointer hover:border-primary transition-all bg-gray-50 dark:bg-gray-800/50">
+                      {uploading === 'faviconImage' ? <Loader2 className="animate-spin" /> : <Upload size={24} className="text-gray-400" />}
+                    </div>
+                 </FileDropzone>
              )}
              <div className="flex-1">
                 <h4 className="text-sm font-bold text-gray-900 dark:text-white">Browser Tab Icon</h4>

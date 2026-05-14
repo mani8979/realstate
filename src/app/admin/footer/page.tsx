@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Save, Globe, Share2, MapPin, Phone, Mail, Info, FileText, Layout } from 'lucide-react';
+import { Save, Globe, Share2, MapPin, Phone, Mail, Info, FileText, Layout, Loader2 } from 'lucide-react';
+import FileDropzone from '@/components/admin/FileDropzone';
 
 export default function FooterAdmin() {
   const [content, setContent] = useState<any>({
@@ -108,21 +109,26 @@ export default function FooterAdmin() {
                     <button onClick={() => setContent({ ...content, footerLogoImage: '' })} className="absolute inset-0 bg-black/40 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all font-bold">Remove Logo</button>
                   </div>
                 ) : (
-                  <label className="flex flex-col items-center justify-center aspect-[3/1] rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-800 cursor-pointer hover:border-primary transition-all bg-gray-50 dark:bg-gray-800/50 group">
-                    <input type="file" className="hidden" onChange={async (e) => {
-                      const file = e.target.files?.[0];
+                  <FileDropzone
+                    onFilesSelected={async (files) => {
+                      const file = files[0];
                       if (!file) return;
                       setUploadingFooter(true);
                       const formData = new FormData();
                       formData.append('file', file);
                       const res = await fetch('/api/upload', { method: 'POST', body: formData });
                       const data = await res.json();
-                      if (data.url) setContent({ ...content, footerLogoImage: data.url });
+                      if (data.url) setContent((prev: any) => ({ ...prev, footerLogoImage: data.url }));
                       setUploadingFooter(false);
-                    }} />
-                    <Layout size={24} className="text-gray-400 group-hover:text-primary transition-colors" />
-                    <span className="text-xs font-bold text-gray-500 mt-2">Upload Footer Logo</span>
-                  </label>
+                    }}
+                    uploading={uploadingFooter}
+                    accept="image/*"
+                  >
+                    <div className="flex flex-col items-center justify-center aspect-[3/1] rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-800 cursor-pointer hover:border-primary transition-all bg-gray-50 dark:bg-gray-800/50 group">
+                      {uploadingFooter ? <Loader2 className="animate-spin" /> : <Layout size={24} className="text-gray-400 group-hover:text-primary transition-colors" />}
+                      <span className="text-xs font-bold text-gray-500 mt-2">Upload Footer Logo</span>
+                    </div>
+                  </FileDropzone>
                 )}
               </div>
             </div>

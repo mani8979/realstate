@@ -11,6 +11,7 @@ import {
 import Link from 'next/link';
 import Image from 'next/image';
 import { SmartContentEditor, Section } from './SmartContentEditor';
+import FileDropzone from './FileDropzone';
 
 const parseRawText = (text: string): any[] => {
   const sections: any[] = [];
@@ -222,8 +223,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     }
   };
 
-  const handleFruitUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
+  const handleFruitUpload = async (files: FileList | File[]) => {
     if (!files || files.length === 0) return;
 
     setUploadingFruit(true);
@@ -246,7 +246,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
       alert('Upload failed. Please try again.');
     } finally {
       setUploadingFruit(false);
-      if (fruitInputRef.current) fruitInputRef.current.value = '';
     }
   };
 
@@ -254,8 +253,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     setFormData((prev: any) => ({ ...prev, fruitImage: '' }));
   };
 
-  const handleThreeDUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
+  const handleThreeDUpload = async (files: FileList | File[]) => {
     if (!files || files.length === 0) return;
 
     setUploading(true);
@@ -278,7 +276,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
       alert('Upload failed. Please try again.');
     } finally {
       setUploading(false);
-      if (threeDInputRef.current) threeDInputRef.current.value = '';
     }
   };
 
@@ -286,14 +283,11 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     setFormData((prev: any) => ({ ...prev, threeDElement: '' }));
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
+  const handleFileUpload = async (files: FileList | File[]) => {
     if (!files || files.length === 0) return;
 
     setUploading(true);
     try {
-      const newImages = [...formData.images];
-      
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const uploadFormData = new FormData();
@@ -306,31 +300,25 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
 
         if (response.ok) {
           const data = await response.json();
-          newImages.push(data.url);
+          setFormData((prev: any) => ({
+            ...prev,
+            images: [...prev.images, data.url]
+          }));
         }
       }
-
-      setFormData((prev: any) => ({
-        ...prev,
-        images: newImages
-      }));
     } catch (error) {
       console.error('Upload failed:', error);
       alert('Upload failed. Please try again.');
     } finally {
       setUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 
-  const handleLandPhotosUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
+  const handleLandPhotosUpload = async (files: FileList | File[]) => {
     if (!files || files.length === 0) return;
 
     setUploading(true);
     try {
-      const newImages = [...formData.landPhotos];
-      
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const uploadFormData = new FormData();
@@ -343,20 +331,17 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
 
         if (response.ok) {
           const data = await response.json();
-          newImages.push(data.url);
+          setFormData((prev: any) => ({
+            ...prev,
+            landPhotos: [...prev.landPhotos, data.url]
+          }));
         }
       }
-
-      setFormData((prev: any) => ({
-        ...prev,
-        landPhotos: newImages
-      }));
     } catch (error) {
       console.error('Upload failed:', error);
       alert('Upload failed. Please try again.');
     } finally {
       setUploading(false);
-      if (landPhotosInputRef.current) landPhotosInputRef.current.value = '';
     }
   };
 
@@ -367,8 +352,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     }));
   };
 
-  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
+  const handleVideoUpload = async (files: FileList | File[]) => {
     if (!files || files.length === 0) return;
 
     setUploading(true);
@@ -410,12 +394,10 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
       alert('Upload failed: ' + error.message);
     } finally {
       setUploading(false);
-      if (videoInputRef.current) videoInputRef.current.value = '';
     }
   };
 
-  const handleLayoutImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
+  const handleLayoutImageUpload = async (files: FileList | File[]) => {
     if (!files || files.length === 0) return;
 
     setUploading(true);
@@ -439,14 +421,11 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     setFormData((prev: any) => ({ ...prev, videoUrl: '' }));
   };
 
-  const handleBrochureUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
+  const handleBrochureUpload = async (files: FileList | File[]) => {
     if (!files || files.length === 0) return;
 
     setUploading(true);
     try {
-      const newBrochures = [...formData.landBrochure];
-      
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const uploadFormData = new FormData();
@@ -459,20 +438,17 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
 
         if (response.ok) {
           const data = await response.json();
-          newBrochures.push(data.url);
+          setFormData((prev: any) => ({
+            ...prev,
+            landBrochure: [...prev.landBrochure, data.url]
+          }));
         }
       }
-
-      setFormData((prev: any) => ({
-        ...prev,
-        landBrochure: newBrochures
-      }));
     } catch (error) {
       console.error('Upload failed:', error);
       alert('Upload failed. Please try again.');
     } finally {
       setUploading(false);
-      if (brochureInputRef.current) brochureInputRef.current.value = '';
     }
   };
 
@@ -678,28 +654,22 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                 </div>
               ))}
               
-              <input
-                type="file"
-                accept="image/*"
+              <FileDropzone
+                onFilesSelected={handleFileUpload}
+                uploading={uploading}
                 multiple
-                className="hidden"
-                ref={fileInputRef}
-                onChange={handleFileUpload}
-              />
-              
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={uploading}
-                className="aspect-square rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-all group disabled:opacity-50"
+                accept="image/*"
+                className="aspect-square"
               >
-                <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-xl group-hover:bg-primary group-hover:text-black dark:text-white transition-all">
-                  {uploading ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
+                <div className="h-full rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-all group">
+                  <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-xl group-hover:bg-primary group-hover:text-black dark:text-white transition-all">
+                    {uploading ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
+                  </div>
+                  <span className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-widest">
+                    {uploading ? 'Uploading...' : 'Add Image'}
+                  </span>
                 </div>
-                <span className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-widest">
-                  {uploading ? 'Uploading...' : 'Add Image'}
-                </span>
-              </button>
+              </FileDropzone>
             </div>
             <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">* Images are securely hosted on Cloudinary.</p>
           </div>
@@ -921,26 +891,20 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                   </div>
                 ) : (
                   <>
-                    <input
-                      type="file"
+                    <FileDropzone
+                      onFilesSelected={handleThreeDUpload}
+                      uploading={uploading}
                       accept=".glb,.gltf"
-                      className="hidden"
-                      ref={threeDInputRef}
-                      onChange={handleThreeDUpload}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => threeDInputRef.current?.click()}
-                      disabled={uploading}
-                      className="w-full h-32 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-all group disabled:opacity-50"
                     >
-                      <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-xl group-hover:bg-primary group-hover:text-black dark:text-white transition-all">
-                        {uploading ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
+                      <div className="w-full h-32 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-all group">
+                        <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-xl group-hover:bg-primary group-hover:text-black dark:text-white transition-all">
+                          {uploading ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
+                        </div>
+                        <span className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-widest">
+                          {uploading ? 'Uploading...' : 'Upload GLB/GLTF Model'}
+                        </span>
                       </div>
-                      <span className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-widest">
-                        {uploading ? 'Uploading...' : 'Upload GLB/GLTF Model'}
-                      </span>
-                    </button>
+                    </FileDropzone>
                   </>
                 )}
               </div>
@@ -968,24 +932,19 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                   </div>
                 ) : (
                   <>
-                    <input
-                      type="file"
+                    <FileDropzone
+                      onFilesSelected={handleFruitUpload}
+                      uploading={uploadingFruit}
                       accept="image/*"
-                      className="hidden"
-                      ref={fruitInputRef}
-                      onChange={handleFruitUpload}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => fruitInputRef.current?.click()}
-                      disabled={uploadingFruit}
-                      className="w-32 h-32 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-all group disabled:opacity-50"
+                      className="w-32 h-32"
                     >
-                      <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-xl group-hover:bg-primary group-hover:text-black dark:text-white transition-all">
-                        {uploadingFruit ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
+                      <div className="w-32 h-32 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-all group">
+                        <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-xl group-hover:bg-primary group-hover:text-black dark:text-white transition-all">
+                          {uploadingFruit ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
+                        </div>
+                        <span className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-widest">Add Image</span>
                       </div>
-                      <span className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-widest">Add Image</span>
-                    </button>
+                    </FileDropzone>
                   </>
                 )}
               </div>
@@ -1101,25 +1060,19 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                 </div>
               ))}
               
-              <input
-                type="file"
-                accept="image/*"
+              <FileDropzone
+                onFilesSelected={handleLandPhotosUpload}
+                uploading={uploading}
                 multiple
-                className="hidden"
-                ref={landPhotosInputRef}
-                onChange={handleLandPhotosUpload}
-              />
-              
-              <button
-                type="button"
-                onClick={() => landPhotosInputRef.current?.click()}
-                disabled={uploading}
-                className="aspect-square rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-all group disabled:opacity-50"
+                accept="image/*"
+                className="aspect-square"
               >
-                <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-xl group-hover:bg-primary group-hover:text-black dark:text-white transition-all">
-                  {uploading ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
+                <div className="h-full rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-all group">
+                  <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-xl group-hover:bg-primary group-hover:text-black dark:text-white transition-all">
+                    {uploading ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
+                  </div>
                 </div>
-              </button>
+              </FileDropzone>
             </div>
           </div>
 
@@ -1167,26 +1120,20 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                   </div>
                 ) : (
                   <>
-                    <input
-                      type="file"
+                    <FileDropzone
+                      onFilesSelected={handleVideoUpload}
+                      uploading={uploading}
                       accept="video/*"
-                      className="hidden"
-                      ref={videoInputRef}
-                      onChange={handleVideoUpload}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => videoInputRef.current?.click()}
-                      disabled={uploading}
-                      className="w-full py-6 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-all group disabled:opacity-50"
                     >
-                      <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-xl group-hover:bg-primary group-hover:text-black dark:text-white transition-all">
-                        {uploading ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
+                      <div className="w-full py-6 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-all group">
+                        <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-xl group-hover:bg-primary group-hover:text-black dark:text-white transition-all">
+                          {uploading ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
+                        </div>
+                        <span className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-widest">
+                          {uploading ? 'Uploading...' : 'Upload Video File'}
+                        </span>
                       </div>
-                      <span className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-widest">
-                        {uploading ? 'Uploading...' : 'Upload Video File'}
-                      </span>
-                    </button>
+                    </FileDropzone>
                   </>
                 )}
               </div>
@@ -1246,27 +1193,21 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                 </div>
               ) : (
                 <>
-                  <input
-                    type="file"
+                  <FileDropzone
+                    onFilesSelected={handleLayoutImageUpload}
+                    uploading={uploading}
                     accept="image/*"
-                    className="hidden"
-                    ref={layoutImageInputRef}
-                    onChange={handleLayoutImageUpload}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => layoutImageInputRef.current?.click()}
-                    disabled={uploading}
-                    className="w-full py-16 rounded-[3rem] border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-4 hover:border-primary hover:bg-primary/5 transition-all group disabled:opacity-50"
                   >
-                    <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-3xl group-hover:bg-primary group-hover:text-black dark:text-white transition-all">
-                      {uploading ? <Loader2 size={32} className="animate-spin" /> : <Plus size={32} />}
+                    <div className="w-full py-16 rounded-[3rem] border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-4 hover:border-primary hover:bg-primary/5 transition-all group">
+                      <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-3xl group-hover:bg-primary group-hover:text-black dark:text-white transition-all">
+                        {uploading ? <Loader2 size={32} className="animate-spin" /> : <Plus size={32} />}
+                      </div>
+                      <div className="text-center">
+                        <span className="block text-sm font-black text-gray-900 dark:text-white uppercase tracking-widest mb-1">Upload Layout Map</span>
+                        <span className="text-xs text-gray-600 dark:text-gray-400 font-medium text-center">Required for interactive mapping</span>
+                      </div>
                     </div>
-                    <div className="text-center">
-                      <span className="block text-sm font-black text-gray-900 dark:text-white uppercase tracking-widest mb-1">Upload Layout Map</span>
-                      <span className="text-xs text-gray-600 dark:text-gray-400 font-medium text-center">Required for interactive mapping</span>
-                    </div>
-                  </button>
+                  </FileDropzone>
                 </>
               )}
             </div>
@@ -1298,25 +1239,20 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                   </div>
                 ))}
                 
-                <input
-                  type="file"
-                  accept=".pdf,image/*"
+                <FileDropzone
+                  onFilesSelected={handleBrochureUpload}
+                  uploading={uploading}
                   multiple
-                  className="hidden"
-                  ref={brochureInputRef}
-                  onChange={handleBrochureUpload}
-                />
-                <button
-                  type="button"
-                  onClick={() => brochureInputRef.current?.click()}
-                  disabled={uploading}
-                  className="aspect-video rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-all group disabled:opacity-50"
+                  accept=".pdf,image/*"
+                  className="aspect-video"
                 >
-                  <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-xl group-hover:bg-primary group-hover:text-black dark:text-white transition-all">
-                    {uploading ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
+                  <div className="h-full rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-all group">
+                    <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-xl group-hover:bg-primary group-hover:text-black dark:text-white transition-all">
+                      {uploading ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400">Add More</span>
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400">Add More</span>
-                </button>
+                </FileDropzone>
               </div>
             </div>
           </div>
