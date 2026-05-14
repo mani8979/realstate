@@ -21,6 +21,18 @@ const AdminEnquiries = () => {
     }
   };
 
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this lead? This action cannot be undone.')) return;
+    
+    try {
+      await axios.delete(`/api/enquiries/${id}`);
+      setEnquiries(enquiries.filter(e => e._id !== id));
+    } catch (error) {
+      console.error('Error deleting enquiry:', error);
+      alert('Failed to delete enquiry');
+    }
+  };
+
   useEffect(() => {
     fetchEnquiries();
   }, []);
@@ -106,6 +118,13 @@ const AdminEnquiries = () => {
                         <Phone size={18} />
                         <span>Call Lead</span>
                       </a>
+                      <button
+                        onClick={() => handleDelete(enquiry?._id)}
+                        className="flex items-center justify-center p-3 text-red-500 hover:bg-red-500/10 rounded-xl transition-all border border-red-500/20"
+                        title="Delete Lead"
+                      >
+                        <Trash2 size={20} />
+                      </button>
                     </div>
                   </div>
                 </div>
