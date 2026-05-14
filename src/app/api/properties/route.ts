@@ -31,7 +31,7 @@ export async function GET(request: Request) {
     const subType = searchParams.get('subType');
     if (subType) filters.subType = subType;
     
-    let properties = await Property.find(filters).sort({ createdAt: -1 });
+    let properties = await Property.find(filters).sort({ createdAt: -1 }).limit(200).lean();
 
     const budget = searchParams.get('budget');
     if (budget) {
@@ -78,6 +78,11 @@ export async function POST(request: Request) {
     
     console.log('Attempting to create property with data:', JSON.stringify(cleanedData, null, 2));
     
+    const payloadSize = JSON.stringify(cleanedData).length;
+    if (payloadSize > 10 * 1024 * 1024) { // 10MB limit
+      return NextResponse.json({ error: 'Payload too large' }, { status: 413 });
+    }
+
     const property = await Property.create(cleanedData);
     console.log('Property created successfully:', property._id);
     
@@ -92,6 +97,7 @@ export async function POST(request: Request) {
     return NextResponse.json(property, { status: 201 });
   } catch (error: any) {
     console.error('FULL Property creation error:', error);
+    const status = error.name === 'ValidationError' ? 400 : 500;
     return NextResponse.json({ 
       error: error.message,
       stack: error.stack,
@@ -100,7 +106,7 @@ export async function POST(request: Request) {
         message: error.errors[key].message,
         value: error.errors[key].value
       })) : []
-    }, { status: 500 });
+    }, { status });
   }
 }
 

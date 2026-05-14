@@ -42,14 +42,15 @@ export interface IProperty extends Document {
 
 const PropertySchema = new Schema<IProperty>(
   {
-    title: { type: String, required: true },
+    title: { type: String, required: true, index: true },
     price: { type: Schema.Types.Mixed, required: true },
-    location: { type: String, required: true },
+    location: { type: String, required: true, index: true },
     type: { 
       type: String, 
-      required: true
+      required: true,
+      index: true
     },
-    subType: { type: String },
+    subType: { type: String, index: true },
     description: { type: String, required: true },
     images: { type: [String], required: true },
     area: { type: String },

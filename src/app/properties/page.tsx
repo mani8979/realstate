@@ -44,8 +44,11 @@ const PropertiesPage = () => {
   };
 
   useEffect(() => {
-    fetchProperties();
-  }, [filters]); // Refetch when filters change
+    const timer = setTimeout(() => {
+      fetchProperties();
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [filters]); // Refetch when filters change with debounce
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

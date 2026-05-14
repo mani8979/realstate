@@ -5,7 +5,7 @@ import Enquiry from '@/lib/models/Enquiry';
 export async function GET() {
   try {
     await dbConnect();
-    const enquiries = await Enquiry.find().sort({ createdAt: -1 });
+    const enquiries = await Enquiry.find().sort({ createdAt: -1 }).limit(100).lean();
     return NextResponse.json(enquiries);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -28,6 +28,8 @@ export async function POST(request: Request) {
       const message = `${header}\n\n👤 *Name:* ${data.name}\n📞 *Phone:* ${data.phone}\n🏢 *Land/Property:* ${data.landInfo || 'Not specified'}\n💬 *Message:* ${data.message || 'No message'}\n🔗 *Type:* ${data.type || 'General Enquiry'}`;
       
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
         await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -35,8 +37,10 @@ export async function POST(request: Request) {
             chat_id: chatId,
             text: message,
             parse_mode: 'Markdown'
-          })
+          }),
+          signal: controller.signal
         });
+        clearTimeout(timeoutId);
       } catch (tgError) {
         console.error('Telegram notification failed:', tgError);
       }
