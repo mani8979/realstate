@@ -91,7 +91,7 @@ const Founder: React.FC<FounderProps> = ({
               </div>
               <h3 className="text-4xl md:text-7xl font-black text-black dark:text-white uppercase tracking-tighter leading-[1.1] md:leading-[0.95]">
                 The {isMain ? "Founder's" : "Co-Founder's"} <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-primary to-amber-400">Vision</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-900 dark:from-white via-primary to-amber-400 drop-shadow-sm">Vision</span>
               </h3>
             </div>
 

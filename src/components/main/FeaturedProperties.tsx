@@ -63,7 +63,7 @@ const FeaturedProperties = ({ properties = [], content: propContent }: { propert
               <div className="w-8 md:w-16 h-[2px] bg-primary" />
               <span>{content.featuredBadgeText}</span>
             </div>
-            <h3 className="text-4xl md:text-7xl lg:text-[10rem] font-black text-black dark:text-white leading-[1.1] md:leading-[0.8] tracking-tighter uppercase mb-0">
+            <h3 className="text-4xl md:text-7xl lg:text-[7rem] font-black text-black dark:text-white leading-[1.1] md:leading-[0.8] tracking-tighter uppercase mb-0">
               {content.featuredTitle} <br /> 
               <span className="text-primary italic font-light lowercase">
                 {content.featuredSubtitle}

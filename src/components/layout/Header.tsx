@@ -59,7 +59,7 @@ const Header = () => {
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 z-[60] transition-all duration-500',
+        'fixed top-0 left-0 right-0 z-[110] transition-all duration-500',
         isAdmin ? 'hidden pointer-events-none' : (shouldBeSolid ? 'py-4 bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-gray-100 dark:border-white/10 shadow-lg shadow-black/5' : 'py-8 bg-transparent')
       )}
     >
@@ -135,8 +135,8 @@ const Header = () => {
                   className={cn(
                     "px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-500 flex items-center gap-2",
                     shouldBeSolid 
-                      ? "bg-gray-100 dark:bg-white/5 text-gray-900 dark:text-white hover:bg-primary hover:text-black dark:hover:text-white" 
-                      : "bg-white/10 text-white hover:bg-white hover:text-black backdrop-blur-md"
+                      ? "bg-gray-200 dark:bg-white/10 border border-gray-300 dark:border-white/5 text-gray-900 dark:text-white hover:bg-primary hover:border-primary hover:text-black dark:hover:text-white shadow-sm" 
+                      : "bg-white/10 text-white hover:bg-white hover:text-black backdrop-blur-md border border-white/20"
                   )}
                 >
                   <Phone size={14} />
@@ -144,7 +144,7 @@ const Header = () => {
                 </button>
                 <button
                   onClick={() => openContactDialog('whatsapp')}
-                  className="px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest bg-primary text-black dark:text-white shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
+                  className="px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest bg-primary text-black dark:text-white shadow-sm dark:shadow-xl dark:shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
                 >
                   <MessageSquare size={14} />
                   <span>{content.btnEnquire || 'Enquire'}</span>
@@ -190,9 +190,9 @@ const Header = () => {
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={cn(
-                    "p-6 rounded-2xl text-2xl font-black uppercase tracking-tighter border transition-all",
+                    "p-4 md:p-3 rounded-2xl text-xl md:text-lg font-black uppercase tracking-tight border transition-all",
                     pathname === link.href 
-                      ? "bg-primary text-black dark:text-white border-primary shadow-xl shadow-primary/20" 
+                      ? "bg-primary text-black dark:text-white border-primary shadow-md dark:shadow-xl dark:shadow-primary/20" 
                       : "bg-gray-50 dark:bg-white/5 text-gray-900 dark:text-white border-transparent"
                   )}
                 >

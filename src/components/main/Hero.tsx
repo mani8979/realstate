@@ -72,10 +72,10 @@ const Hero = ({ content: propContent }: { content?: any }) => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-4xl md:text-8xl font-black text-white mb-8 leading-[1.1] md:leading-tight tracking-tighter uppercase"
+            className="text-4xl md:text-8xl font-black text-white drop-shadow-xl mb-8 leading-[1.1] md:leading-tight tracking-tighter uppercase"
           >
             {(content.heroTitle || 'Find Your Perfect Property').split(' ').map((word: string, i: number) => (
-              <span key={i} className={word.toLowerCase() === 'perfect' || word.toLowerCase() === 'signature' ? "text-transparent bg-clip-text bg-gradient-to-r from-primary via-yellow-500 to-primary animate-gradient-x" : ""}>
+              <span key={i} className={word.toLowerCase() === 'perfect' || word.toLowerCase() === 'signature' ? "text-transparent bg-clip-text bg-gradient-to-r from-primary via-yellow-300 to-primary animate-gradient-x drop-shadow-md" : ""}>
                 {word}{' '}
               </span>
             ))}
@@ -85,7 +85,7 @@ const Hero = ({ content: propContent }: { content?: any }) => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-base md:text-2xl text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto md:mx-0 leading-relaxed font-medium"
+            className="text-base md:text-2xl text-white/90 drop-shadow-md mb-12 max-w-2xl mx-auto md:mx-0 leading-relaxed font-semibold bg-black/20 md:bg-transparent px-4 py-2 md:p-0 rounded-xl md:rounded-none backdrop-blur-sm md:backdrop-blur-none"
           >
             {content.heroSubtitle || 'Discover exclusive lands and luxury developments tailored for your vision.'}
           </motion.p>

@@ -143,7 +143,7 @@ export const ContactDialog = () => {
                   {activeDialog === 'book' && <Calendar size={24} />}
                 </div>
                 <div>
-                  <h3 className="text-2xl font-black text-black dark:text-white uppercase tracking-tighter">
+                  <h3 className="text-2xl font-black text-black dark:text-white uppercase tracking-tight">
                     {activeDialog === 'call' && 'Direct Call'}
                     {activeDialog === 'whatsapp' && 'WhatsApp Chat'}
                     {activeDialog === 'book' && 'Book a Visit'}

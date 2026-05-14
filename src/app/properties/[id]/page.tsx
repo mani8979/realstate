@@ -2,11 +2,11 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { MapPin, Phone, MessageSquare, Send, ArrowLeft, Share2, X, Leaf, Download, Save, Calendar, Search } from 'lucide-react';
+import { MapPin, Phone, MessageSquare, Send, ArrowLeft, Share2, X, Leaf, Download, Save, Calendar, Search, Maximize } from 'lucide-react';
 import Link from 'next/link';
 import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
-import { motion, useScroll, useTransform, useMotionValueEvent, useMotionValue, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, useMotionValueEvent, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
 import ShareAction from '@/components/main/ShareAction';
 import { openContactDialog } from '@/components/layout/ContactDialog';
 
@@ -50,6 +50,7 @@ const PropertyDetails = () => {
   const [mounted, setMounted] = useState(false);
   const [hoveredPlot, setHoveredPlot] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isMapExpanded, setIsMapExpanded] = useState(false);
   const inventoryListRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -475,6 +476,15 @@ const PropertyDetails = () => {
                   >
                      {property.layoutImage ? (
                        <div className="relative w-full h-full flex items-center justify-center">
+                          {/* Expand Button */}
+                          <button 
+                            onClick={() => setIsMapExpanded(true)}
+                            className="absolute top-4 right-4 z-30 bg-black/50 hover:bg-primary border border-white/20 hover:border-primary text-white hover:text-black p-3 rounded-xl backdrop-blur-md transition-all shadow-xl"
+                            title="Expand Map"
+                          >
+                            <Maximize size={20} />
+                          </button>
+                          
                           <div className="relative group/map">
                             <Image 
                               src={property.layoutImage} 
@@ -911,6 +921,75 @@ const PropertyDetails = () => {
           </div>
         </div>
       )}
+
+      {/* Fullscreen Map Modal */}
+      <AnimatePresence>
+        {isMapExpanded && property.layoutImage && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[9999] bg-white/95 dark:bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 md:p-10" 
+            onClick={() => setIsMapExpanded(false)}
+          >
+             <button 
+               onClick={() => setIsMapExpanded(false)}
+               className="absolute top-6 right-6 md:top-10 md:right-10 z-[10000] bg-black/10 dark:bg-white/10 hover:bg-red-500 text-black dark:text-white hover:text-white p-4 rounded-full transition-all shadow-xl"
+             >
+               <X size={24} />
+             </button>
+             <div 
+               className="relative w-full h-full max-w-[95vw] max-h-[90vh] flex items-center justify-center"
+               onClick={(e) => e.stopPropagation()}
+             >
+                <div className="relative w-auto h-auto max-w-full max-h-full flex items-center justify-center">
+                  <Image 
+                    src={property.layoutImage} 
+                    alt="Plot Layout Expanded" 
+                    width={4000}
+                    height={3000}
+                    className="w-auto h-auto max-w-full max-h-[90vh] object-contain rounded-2xl"
+                  />
+                  <svg 
+                    className="absolute inset-0 w-full h-full pointer-events-none" 
+                    viewBox="0 0 100 100" 
+                    preserveAspectRatio="none"
+                  >
+                    {property.plots.map((plot: any, idx: number) => (
+                      <motion.rect
+                        key={idx}
+                        x={plot.x}
+                        y={plot.y}
+                        width={plot.width || 5}
+                        height={plot.height || 3}
+                        className="pointer-events-auto cursor-pointer"
+                        initial={{ opacity: 0.3 }}
+                        animate={{ 
+                          opacity: hoveredPlot === plot.number ? 0.8 : 0.3,
+                          scale: hoveredPlot === plot.number ? 1.05 : 1
+                        }}
+                        style={{
+                          fill: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                (property.availableColor || '#ffffff'),
+                          stroke: hoveredPlot === plot.number ? '#fff' : 'transparent',
+                          strokeWidth: 0.5
+                        }}
+                        onMouseEnter={() => setHoveredPlot(plot.number)}
+                        onMouseLeave={() => setHoveredPlot(null)}
+                        onClick={() => {
+                          setIsMapExpanded(false);
+                          openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`);
+                        }}
+                      />
+                    ))}
+                  </svg>
+                </div>
+             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </div>
   </div>
 </div>
