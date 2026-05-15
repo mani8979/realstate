@@ -153,10 +153,10 @@ const FloatingDragon = () => {
   // Don't show if not mounted, on admin pages, or not yet shouldLoad
   if (!mounted || !shouldLoad || pathname?.startsWith('/admin')) return null;
 
-  // Use property-specific model if available, otherwise global fallback
-  const modelSrc = currentProperty?.threeDElement || settings?.globalThreeDModel;
+  // Only show if we have a property-specific model. Global fallback removed as per user request.
+  const modelSrc = currentProperty?.threeDElement;
 
-  // Don't show if no model is found anywhere
+  // Don't show if no model is found for this specific property
   if (!modelSrc) return null;
 
   return (
