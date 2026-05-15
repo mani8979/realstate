@@ -49,11 +49,19 @@ const FloatingDragon = () => {
       const now = Date.now();
       // Rescan obstacles every 1s
       if (now - lastScan.current > 1000) {
-        // Only repel from text, cards, and buttons. Ignore large background images.
-        const elements = document.querySelectorAll('.glass-card, h1, h2, h3, p, button, form, .container-padding');
+        // Repel from text, cards, buttons, and specifically marked elements (.dragon-repel)
+        // Also include images that aren't giant backgrounds
+        const elements = document.querySelectorAll('.glass-card, h1, h2, h3, p, button, form, .container-padding, .dragon-repel, img:not(.hero-bg)');
         obstaclesRef.current = Array.from(elements)
-          .map(el => el.getBoundingClientRect())
-          .filter(r => r.width > 10 && r.height > 10);
+          .map(el => {
+            const rect = el.getBoundingClientRect();
+            // Ignore giant images (likely backgrounds)
+            if (el.tagName === 'IMG' && (rect.width > viewportW * 0.8 || rect.height > viewportH * 0.8)) {
+              return null;
+            }
+            return rect;
+          })
+          .filter((r): r is DOMRect => r !== null && r.width > 10 && r.height > 10);
         lastScan.current = now;
       }
 

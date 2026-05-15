@@ -159,6 +159,41 @@ const PropertyDetails = () => {
     if (id) fetchProperty();
   }, [id]);
 
+  // Fix Map Scrolling & Zooming
+  useEffect(() => {
+    const map = mapContainerRef.current;
+    if (!map) return;
+
+    const handleNativeWheel = (e: WheelEvent) => {
+      // 1. If zooming (Ctrl held), always prevent default and stop propagation
+      if (e.ctrlKey) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Handle zoom logic
+        const delta = e.deltaY > 0 ? -0.1 : 0.1;
+        setZoom(prev => Math.min(Math.max(0.5, prev + delta), 5));
+        return;
+      }
+
+      // 2. If map is scrollable, handle internal scroll vs page scroll
+      const isScrollable = map.scrollHeight > map.clientHeight || map.scrollWidth > map.clientWidth;
+      if (isScrollable) {
+        const isAtTop = map.scrollTop <= 0;
+        const isAtBottom = Math.abs(map.scrollTop + map.clientHeight - map.scrollHeight) < 1;
+        const isScrollingDown = e.deltaY > 0;
+        
+        // Only stop propagation if we can actually scroll further inside the map
+        if ((isScrollingDown && !isAtBottom) || (!isScrollingDown && !isAtTop)) {
+          e.stopPropagation();
+        }
+      }
+    };
+
+    map.addEventListener('wheel', handleNativeWheel, { passive: false });
+    return () => map.removeEventListener('wheel', handleNativeWheel);
+  }, [id, property]); // Re-bind when property loads
+
   const handleEnquiry = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormStatus('loading');
@@ -481,8 +516,7 @@ const PropertyDetails = () => {
                   {/* Map View */}
                   <div 
                      ref={mapContainerRef}
-                     data-lenis-prevent
-                     className="flex-grow bg-black/5 dark:bg-white/5 rounded-[3rem] border border-black/10 dark:border-white/10 overflow-auto relative shadow-2xl flex items-center justify-center p-4 md:p-10 min-h-[500px] custom-scrollbar"
+                     className="dragon-repel flex-grow bg-black/5 dark:bg-white/5 rounded-[3rem] border border-black/10 dark:border-white/10 overflow-auto relative shadow-2xl flex items-center justify-center p-4 md:p-10 min-h-[500px] custom-scrollbar"
                   >
                      {property.layoutImage ? (
                        <div className="relative w-full h-full flex items-center justify-center">
@@ -545,39 +579,35 @@ const PropertyDetails = () => {
                      
                      {/* Note: Legend removed as markings are disabled */}
                   </div>
-
-                  {/* Table View */}
-                  <div className="w-full xl:w-[450px] flex flex-col gap-6">
-                     <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[3rem] border border-black/10 dark:border-white/10 p-8 flex flex-col h-[600px] shadow-2xl">
-                        <div className="flex flex-col gap-6 mb-8">
-                           <div className="flex items-center justify-between">
-                              <div className="space-y-1">
-                                 <h3 className="text-xl font-black uppercase tracking-tighter text-black dark:text-white">Unit Table</h3>
-                                 <p className="text-[10px] font-bold text-primary uppercase tracking-widest">Availability List</p>
-                              </div>
-                              <div className="bg-primary/10 px-4 py-2 rounded-xl border border-primary/20">
-                                 <span className="text-[10px] font-black text-primary uppercase tracking-widest">{property.plots?.length || 0} Units</span>
-                              </div>
+                  <div 
+                     ref={inventoryListRef}
+                     className="dragon-repel bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-[2.5rem] border border-black/10 dark:border-white/10 flex flex-col overflow-hidden shrink-0 lg:w-[350px] xl:w-[450px] shadow-xl p-8"
+                  >      
+                     <div className="flex flex-col gap-6 mb-8">
+                        <div className="flex items-center justify-between">
+                           <div className="space-y-1">
+                              <h3 className="text-xl font-black uppercase tracking-tighter text-black dark:text-white">Unit Table</h3>
+                              <p className="text-[10px] font-bold text-primary uppercase tracking-widest">Availability List</p>
                            </div>
-                           
-                           {/* Search Bar */}
-                           <div className="relative group">
-                              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors" size={16} />
-                              <input 
-                                 type="text"
-                                 placeholder="Search Plot Number..."
-                                 value={searchQuery}
-                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                 className="w-full pl-12 pr-4 py-3 bg-white dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl focus:ring-2 focus:ring-primary/50 outline-none transition-all text-sm font-bold placeholder:text-gray-400"
-                              />
+                           <div className="bg-primary/10 px-4 py-2 rounded-xl border border-primary/20">
+                              <span className="text-[10px] font-black text-primary uppercase tracking-widest">{property.plots?.length || 0} Units</span>
                            </div>
                         </div>
+                        
+                        {/* Search Bar */}
+                        <div className="relative group">
+                           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors" size={16} />
+                           <input 
+                              type="text"
+                              placeholder="Search Plot Number..."
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              className="w-full pl-12 pr-4 py-3 bg-white dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl focus:ring-2 focus:ring-primary/50 outline-none transition-all text-sm font-bold placeholder:text-gray-400"
+                           />
+                        </div>
+                     </div>
 
-                        <div 
-                           ref={inventoryListRef}
-                           data-lenis-prevent 
-                           className="flex-grow overflow-y-auto pr-2 custom-scrollbar"
-                        >
+                     <div className="flex-grow overflow-y-auto pr-2 custom-scrollbar">
                            <table className="w-full text-left border-separate border-spacing-y-3">
                               <thead>
                                  <tr className="text-[10px] font-black uppercase tracking-[0.2em] text-black dark:text-white/30">

@@ -146,6 +146,35 @@ const MediaPage = () => {
     return pages;
   };
 
+  // Fix Map Scrolling & Zooming
+  useEffect(() => {
+    const map = mapContainerRef.current;
+    if (!map) return;
+
+    const handleNativeWheel = (e: WheelEvent) => {
+      if (e.ctrlKey) {
+        e.preventDefault();
+        e.stopPropagation();
+        const delta = e.deltaY > 0 ? -0.1 : 0.1;
+        setZoom(prev => Math.min(Math.max(0.5, prev + delta), 5));
+        return;
+      }
+
+      const isScrollable = map.scrollHeight > map.clientHeight || map.scrollWidth > map.clientWidth;
+      if (isScrollable) {
+        const isAtTop = map.scrollTop <= 0;
+        const isAtBottom = Math.abs(map.scrollTop + map.clientHeight - map.scrollHeight) < 1;
+        const isScrollingDown = e.deltaY > 0;
+        if ((isScrollingDown && !isAtBottom) || (!isScrollingDown && !isAtTop)) {
+          e.stopPropagation();
+        }
+      }
+    };
+
+    map.addEventListener('wheel', handleNativeWheel, { passive: false });
+    return () => map.removeEventListener('wheel', handleNativeWheel);
+  }, [zoom]); 
+
   const handleWheel = (e: React.WheelEvent) => {
     if (e.ctrlKey) {
       e.preventDefault();
@@ -458,8 +487,7 @@ const MediaPage = () => {
               {/* Left Side: Layout Image */}
               <div 
                 ref={mapContainerRef}
-                data-lenis-prevent
-                className="flex-grow bg-black/5 dark:bg-white/5 rounded-[2.5rem] border border-black/10 dark:border-white/10 overflow-auto relative shadow-2xl custom-scrollbar flex p-4 cursor-zoom-in group/map"
+                className="dragon-repel flex-grow bg-black/5 dark:bg-white/5 rounded-[2.5rem] border border-black/10 dark:border-white/10 overflow-auto relative shadow-2xl custom-scrollbar flex p-4 cursor-zoom-in group/map"
                 onWheel={handleWheel}
               >
                 <div 
@@ -626,8 +654,7 @@ const MediaPage = () => {
                   
                   <div 
                     ref={inventorySidebarRef}
-                    data-lenis-prevent 
-                    className="flex-grow overflow-y-auto p-4 custom-scrollbar"
+                    className="dragon-repel flex-grow overflow-y-auto p-4 custom-scrollbar"
                     style={{ minHeight: '400px' }}
                   >
                     <div className="space-y-2">
