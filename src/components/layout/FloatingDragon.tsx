@@ -40,16 +40,17 @@ const FloatingDragon = () => {
   useEffect(() => {
     setMounted(true);
     let frameId: number;
-    let curX = window.innerWidth * 0.9; // Start from right side
-    let curY = 100; // Start at top
+    let curX = window.innerWidth * 0.8; // Start from right side, but not too high
+    let curY = window.innerHeight * 0.4; // Start near middle-height
     
     const update = () => {
       if (!mounted) return;
 
       const now = Date.now();
-      // Rescan obstacles every 1s or on scroll to keep performance high
+      // Rescan obstacles every 1s
       if (now - lastScan.current > 1000) {
-        const elements = document.querySelectorAll('.glass-card, h1, h2, h3, p, button, form, .container-padding, img');
+        // Only repel from text, cards, and buttons. Ignore large background images.
+        const elements = document.querySelectorAll('.glass-card, h1, h2, h3, p, button, form, .container-padding');
         obstaclesRef.current = Array.from(elements)
           .map(el => el.getBoundingClientRect())
           .filter(r => r.width > 10 && r.height > 10);
@@ -59,44 +60,43 @@ const FloatingDragon = () => {
       const viewportW = window.innerWidth;
       const viewportH = window.innerHeight;
 
-      // 1. Ideal "Base" Position (Natural floating)
-      const time = now / 3000;
-      // Math.cos(0) = 1, so it starts at 0.9 (Right side)
-      const idealX = (Math.cos(time) * 0.4 + 0.5) * viewportW;
-      const idealY = (Math.sin(time * 0.5) * 0.35 + 0.5) * viewportH;
+      // 1. Ideal "Base" Position (Gently circling the viewport)
+      const time = now / 4000;
+      const idealX = (Math.cos(time) * 0.35 + 0.5) * viewportW;
+      const idealY = (Math.sin(time * 0.4) * 0.3 + 0.5) * viewportH;
 
-      // 2. Physics: Move towards ideal, but get repelled by content
-      let forceX = (idealX - curX) * 0.02;
-      let forceY = (idealY - curY) * 0.02;
+      // 2. Physics: Move towards ideal
+      let forceX = (idealX - curX) * 0.015;
+      let forceY = (idealY - curY) * 0.015;
 
-      const modelSize = viewportW < 768 ? 60 : 120; // Slightly larger avoidance zone
+      const modelSize = viewportW < 768 ? 50 : 90; 
       
       obstaclesRef.current.forEach(rect => {
-        // Higher sensitivity to keep it "only" in empty spaces
         if (rect.bottom < -50 || rect.top > viewportH + 50) return;
 
         const cx = rect.left + rect.width / 2;
         const cy = rect.top + rect.height / 2;
         const dx = curX - cx;
         const dy = curY - cy;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+        const dist = Math.sqrt(dx * dx + dy * dy) || 1; // Avoid division by zero
         
-        // Push harder to ensure it stays in background
+        // Push away if too close to content
         const minDist = (Math.max(rect.width, rect.height) / 2) + modelSize;
 
         if (dist < minDist) {
           const power = Math.pow((minDist - dist) / minDist, 2);
-          const push = power * 35; // Stronger push
+          const push = power * 20; // Reduced push force for smoother movement
           forceX += (dx / dist) * push;
           forceY += (dy / dist) * push;
         }
       });
 
-      // Clamp to viewport
+      // Clamp to viewport with padding
       curX += forceX;
       curY += forceY;
-      curX = Math.max(modelSize, Math.min(viewportW - modelSize, curX));
-      curY = Math.max(modelSize, Math.min(viewportH - modelSize, curY));
+      const padding = modelSize;
+      curX = Math.max(padding, Math.min(viewportW - padding, curX));
+      curY = Math.max(padding, Math.min(viewportH - padding, curY));
 
       setPos({ x: curX, y: curY });
       frameId = requestAnimationFrame(update);
