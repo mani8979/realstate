@@ -12,7 +12,8 @@ const FloatingDragon = () => {
   const [settings, setSettings] = useState<any>(null);
   const [currentProperty, setCurrentProperty] = useState<any>(null);
   const [pos, setPos] = useState({ x: 0, y: 0 });
-  const [shouldLoad, setShouldLoad] = useState(false); // New state for lazy loading
+  const [shouldLoad, setShouldLoad] = useState(false);
+  const [visible, setVisible] = useState(true); // controls opacity for disappear zones
   const { scrollYProgress } = useScroll();
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
@@ -40,67 +41,62 @@ const FloatingDragon = () => {
   useEffect(() => {
     setMounted(true);
     let frameId: number;
-    let curX = window.innerWidth * 0.8; // Start from right side, but not too high
-    let curY = window.innerHeight * 0.4; // Start near middle-height
+    // Start at top-right of viewport
+    let curX = window.innerWidth * 0.88;
+    let curY = window.innerHeight * 0.12;
     
     const update = () => {
       if (!mounted) return;
 
       const now = Date.now();
-      // Declare viewport dimensions FIRST so they're in scope for the obstacle scan map callback
+      // Declare viewport dimensions FIRST (avoids TDZ in minified builds)
       const viewportW = window.innerWidth;
       const viewportH = window.innerHeight;
 
-      // Rescan obstacles every 1s
-      if (now - lastScan.current > 1000) {
-        // Repel from text, cards, buttons, and specifically marked elements (.dragon-repel)
-        // Also include images that aren't giant backgrounds
-        const elements = document.querySelectorAll('.glass-card, h1, h2, h3, p, button, form, .container-padding, .dragon-repel, img:not(.hero-bg)');
+      // Rescan obstacles every 1.5s - only repel from admin-marked zones
+      if (now - lastScan.current > 1500) {
+        const elements = document.querySelectorAll('.dragon-repel');
         obstaclesRef.current = Array.from(elements)
           .map(el => {
             const rect = el.getBoundingClientRect();
-            // Ignore giant images (likely backgrounds)
-            if (el.tagName === 'IMG' && (rect.width > viewportW * 0.8 || rect.height > viewportH * 0.8)) {
-              return null;
-            }
+            // Skip off-screen elements
+            if (rect.bottom < -100 || rect.top > viewportH + 100) return null;
             return rect;
           })
           .filter((r): r is DOMRect => r !== null && r.width > 10 && r.height > 10);
         lastScan.current = now;
       }
 
-      // 1. Ideal "Base" Position (Gently circling the viewport)
-      const time = now / 4000;
-      const idealX = (Math.cos(time) * 0.35 + 0.5) * viewportW;
-      const idealY = (Math.sin(time * 0.4) * 0.3 + 0.5) * viewportH;
+      // 1. Gentle orbital path: starts top-right, drifts slowly down and around
+      const time = now / 6000;
+      const idealX = (Math.cos(time) * 0.30 + 0.72) * viewportW;
+      const idealY = (Math.sin(time * 0.5) * 0.28 + 0.45) * viewportH;
 
-      // 2. Physics: Move towards ideal
-      let forceX = (idealX - curX) * 0.015;
-      let forceY = (idealY - curY) * 0.015;
+      // 2. Physics: drift towards ideal
+      let forceX = (idealX - curX) * 0.012;
+      let forceY = (idealY - curY) * 0.012;
 
-      const modelSize = viewportW < 768 ? 50 : 90; 
+      const modelSize = viewportW < 768 ? 55 : 100;
       
+      // 3. Repel from .dragon-repel zones (admin content areas)
       obstaclesRef.current.forEach(rect => {
-        if (rect.bottom < -50 || rect.top > viewportH + 50) return;
-
         const cx = rect.left + rect.width / 2;
         const cy = rect.top + rect.height / 2;
         const dx = curX - cx;
         const dy = curY - cy;
-        const dist = Math.sqrt(dx * dx + dy * dy) || 1; // Avoid division by zero
+        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
         
-        // Push away if too close to content
-        const minDist = (Math.max(rect.width, rect.height) / 2) + modelSize;
+        const minDist = (Math.max(rect.width, rect.height) / 2) + modelSize + 40;
 
         if (dist < minDist) {
           const power = Math.pow((minDist - dist) / minDist, 2);
-          const push = power * 20; // Reduced push force for smoother movement
+          const push = power * 25;
           forceX += (dx / dist) * push;
           forceY += (dy / dist) * push;
         }
       });
 
-      // Clamp to viewport with padding
+      // 4. Clamp inside viewport
       curX += forceX;
       curY += forceY;
       const padding = modelSize;
@@ -108,6 +104,23 @@ const FloatingDragon = () => {
       curY = Math.max(padding, Math.min(viewportH - padding, curY));
 
       setPos({ x: curX, y: curY });
+
+      // 5. Disappear when overlapping any .dragon-disappear zone
+      const disappearZones = document.querySelectorAll('.dragon-disappear');
+      let shouldHide = false;
+      disappearZones.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (
+          curX + modelSize > rect.left &&
+          curX - modelSize < rect.right &&
+          curY + modelSize > rect.top &&
+          curY - modelSize < rect.bottom
+        ) {
+          shouldHide = true;
+        }
+      });
+      setVisible(!shouldHide);
+
       frameId = requestAnimationFrame(update);
     };
 
@@ -173,8 +186,8 @@ const FloatingDragon = () => {
       >
         <motion.div 
           initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
+          animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0 }}
+          transition={{ duration: visible ? 1.5 : 0.4, ease: "easeOut" }}
           className="w-[120px] h-[160px] md:w-[180px] md:h-[240px] pointer-events-auto cursor-pointer" 
           onClick={() => setShowPopup(true)}
         >

@@ -696,7 +696,7 @@ const PropertyDetails = () => {
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="relative z-10 p-10 md:p-16 mt-20 bg-black/5 dark:bg-white/5 rounded-[4rem] border border-black/10 dark:border-white/10"
+              className="dragon-disappear relative z-10 p-10 md:p-16 mt-20 bg-black/5 dark:bg-white/5 rounded-[4rem] border border-black/10 dark:border-white/10"
             >
                 {/* 3D Model space reserved for global floating element */}
                 <div className="h-20" />
