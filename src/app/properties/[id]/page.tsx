@@ -684,9 +684,8 @@ const PropertyDetails = () => {
                            </div>
                         </div>
                      </div>
-                  </div>
-                </div>
-            </motion.div>
+                   </div>
+             </motion.div>
           )}
           <div className="h-px bg-black/5 dark:bg-white/5 mt-20" />
 
@@ -874,6 +873,8 @@ const PropertyDetails = () => {
       </AnimatePresence>
 
     </div>
+  </div>
+</div>
   );
 };
 
