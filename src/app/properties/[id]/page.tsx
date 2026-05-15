@@ -62,15 +62,35 @@ const PropertyDetails = () => {
     return () => document.body.classList.remove('map-expanded');
   }, [isMapExpanded]);
   const inventoryListRef = useRef<HTMLDivElement>(null);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (hoveredPlot && inventoryListRef.current) {
-      const element = inventoryListRef.current.querySelector(`[data-plot="${hoveredPlot}"]`);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    if (!hoveredPlot || !property) return;
+
+    // 1. Scroll Sidebar to Plot Item
+    const listItem = inventoryListRef.current?.querySelector(`[data-plot="${hoveredPlot}"]`);
+    if (listItem) {
+      listItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // 2. Scroll Map to Plot (if mapContainer exists)
+    const mapContainer = mapContainerRef.current;
+    if (mapContainer) {
+      const plot = property.plots?.find((p: any) => p.number === hoveredPlot);
+      if (plot) {
+        const { x, y } = plot;
+        // Calculate scroll position (simplified for non-zoomable main map)
+        const scrollX = (x / 100) * (mapContainer.scrollWidth) - (mapContainer.clientWidth / 2);
+        const scrollY = (y / 100) * (mapContainer.scrollHeight) - (mapContainer.clientHeight / 2);
+        
+        mapContainer.scrollTo({
+          left: scrollX,
+          top: scrollY,
+          behavior: 'smooth'
+        });
       }
     }
-  }, [hoveredPlot]);
+  }, [hoveredPlot, property]);
 
   useEffect(() => {
     setMounted(true);
@@ -460,7 +480,9 @@ const PropertyDetails = () => {
               <div className="flex flex-col xl:flex-row gap-10">
                   {/* Map View */}
                   <div 
-                     className="flex-grow bg-black/5 dark:bg-white/5 rounded-[3rem] border border-black/10 dark:border-white/10 overflow-hidden relative shadow-2xl flex items-center justify-center p-4 md:p-10 min-h-[500px]"
+                     ref={mapContainerRef}
+                     data-lenis-prevent
+                     className="flex-grow bg-black/5 dark:bg-white/5 rounded-[3rem] border border-black/10 dark:border-white/10 overflow-auto relative shadow-2xl flex items-center justify-center p-4 md:p-10 min-h-[500px] custom-scrollbar"
                   >
                      {property.layoutImage ? (
                        <div className="relative w-full h-full flex items-center justify-center">
@@ -473,14 +495,45 @@ const PropertyDetails = () => {
                             <Maximize size={20} />
                           </button>
                           
-                          <div className="relative group/map">
+                          <div className="relative group/map min-w-full min-h-full flex items-center justify-center">
                             <Image 
                               src={property.layoutImage} 
                               alt="Plot Layout" 
                               width={4000} 
                               height={3000} 
-                              className="w-auto h-auto max-w-full max-h-[70vh] object-contain rounded-2xl"
+                              className="w-auto h-auto max-w-none max-h-none object-contain rounded-2xl"
+                              style={{ minWidth: '100%', minHeight: '100%' }}
                             />
+                            <svg 
+                              className="absolute inset-0 w-full h-full pointer-events-none" 
+                              viewBox="0 0 100 100" 
+                              preserveAspectRatio="none"
+                            >
+                              {property.plots?.map((plot: any, idx: number) => (
+                                <motion.rect
+                                  key={idx}
+                                  x={plot.x}
+                                  y={plot.y}
+                                  width={plot.width || 5}
+                                  height={plot.height || 3}
+                                  className="pointer-events-auto cursor-pointer"
+                                  initial={{ opacity: 0 }}
+                                  animate={{ 
+                                    opacity: hoveredPlot === plot.number ? 0.6 : 0,
+                                  }}
+                                  style={{
+                                    fill: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                          plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                          (property.availableColor || '#ffffff'),
+                                    stroke: hoveredPlot === plot.number ? '#fff' : 'transparent',
+                                    strokeWidth: 0.5
+                                  }}
+                                  onMouseEnter={() => setHoveredPlot(plot.number)}
+                                  onMouseLeave={() => setHoveredPlot(null)}
+                                  onClick={() => openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`)}
+                                />
+                              ))}
+                            </svg>
                           </div>
                        </div>
                      ) : (

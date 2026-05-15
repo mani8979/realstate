@@ -52,17 +52,37 @@ const MediaPage = () => {
     }
     return () => document.body.classList.remove('map-expanded');
   }, [isMapExpanded]);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  // Refs for auto-scrolling
+  const mapContainerRef = useRef<HTMLDivElement>(null);
   const inventorySidebarRef = useRef<HTMLDivElement>(null);
 
+  // Bi-directional scrolling logic
   useEffect(() => {
-    if (hoveredPlot && inventorySidebarRef.current) {
-      const element = inventorySidebarRef.current.querySelector(`[data-plot="${hoveredPlot}"]`);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    if (!hoveredPlot || !property) return;
+
+    // 1. Scroll Sidebar to Plot Item
+    const listItem = inventorySidebarRef.current?.querySelector(`[data-plot="${hoveredPlot}"]`);
+    if (listItem) {
+      listItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // 2. Scroll Map to Plot (if zoomed in)
+    const mapContainer = mapContainerRef.current;
+    if (mapContainer && zoom > 1) {
+      const plot = property.plots?.find((p: any) => p.number === hoveredPlot);
+      if (plot) {
+        const { x, y } = plot;
+        const scrollX = (x / 100) * (mapContainer.scrollWidth) - (mapContainer.clientWidth / 2);
+        const scrollY = (y / 100) * (mapContainer.scrollHeight) - (mapContainer.clientHeight / 2);
+        
+        mapContainer.scrollTo({
+          left: scrollX,
+          top: scrollY,
+          behavior: 'smooth'
+        });
       }
     }
-  }, [hoveredPlot]);
+  }, [hoveredPlot, property, zoom]);
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -437,6 +457,7 @@ const MediaPage = () => {
             >
               {/* Left Side: Layout Image */}
               <div 
+                ref={mapContainerRef}
                 data-lenis-prevent
                 className="flex-grow bg-black/5 dark:bg-white/5 rounded-[2.5rem] border border-black/10 dark:border-white/10 overflow-auto relative shadow-2xl custom-scrollbar flex p-4 cursor-zoom-in group/map"
                 onWheel={handleWheel}
@@ -455,6 +476,36 @@ const MediaPage = () => {
                     alt="Plot Layout" 
                     className="w-full h-full object-contain rounded-2xl block"
                   />
+                  <svg 
+                    className="absolute inset-0 w-full h-full pointer-events-none" 
+                    viewBox="0 0 100 100" 
+                    preserveAspectRatio="none"
+                  >
+                    {property.plots?.map((plot: any, idx: number) => (
+                      <motion.rect
+                        key={idx}
+                        x={plot.x}
+                        y={plot.y}
+                        width={plot.width || 5}
+                        height={plot.height || 3}
+                        className="pointer-events-auto cursor-pointer"
+                        initial={{ opacity: 0 }}
+                        animate={{ 
+                          opacity: hoveredPlot === plot.number ? 0.6 : 0,
+                        }}
+                        style={{
+                          fill: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                (property.availableColor || '#ffffff'),
+                          stroke: hoveredPlot === plot.number ? '#fff' : 'transparent',
+                          strokeWidth: 0.5
+                        }}
+                        onMouseEnter={() => setHoveredPlot(plot.number)}
+                        onMouseLeave={() => setHoveredPlot(null)}
+                        onClick={() => openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`)}
+                      />
+                    ))}
+                  </svg>
                 </div>
                 
                 <div className="absolute bottom-6 left-6 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/50 pointer-events-none z-20">
@@ -739,6 +790,40 @@ const MediaPage = () => {
                     height={3000}
                     className="w-auto h-auto max-w-full max-h-[90vh] object-contain rounded-2xl"
                   />
+                  <svg 
+                    className="absolute inset-0 w-full h-full pointer-events-none" 
+                    viewBox="0 0 100 100" 
+                    preserveAspectRatio="none"
+                  >
+                    {property.plots?.map((plot: any, idx: number) => (
+                      <motion.rect
+                        key={idx}
+                        x={plot.x}
+                        y={plot.y}
+                        width={plot.width || 5}
+                        height={plot.height || 3}
+                        className="pointer-events-auto cursor-pointer"
+                        initial={{ opacity: 0.3 }}
+                        animate={{ 
+                          opacity: hoveredPlot === plot.number ? 0.8 : 0.3,
+                          scale: hoveredPlot === plot.number ? 1.05 : 1
+                        }}
+                        style={{
+                          fill: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                (property.availableColor || '#ffffff'),
+                          stroke: hoveredPlot === plot.number ? '#fff' : 'transparent',
+                          strokeWidth: 0.5
+                        }}
+                        onMouseEnter={() => setHoveredPlot(plot.number)}
+                        onMouseLeave={() => setHoveredPlot(null)}
+                        onClick={() => {
+                          setIsMapExpanded(false);
+                          openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`);
+                        }}
+                      />
+                    ))}
+                  </svg>
                 </div>
              </div>
           </motion.div>
