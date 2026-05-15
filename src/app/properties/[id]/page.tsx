@@ -11,7 +11,7 @@ import ShareAction from '@/components/main/ShareAction';
 import { openContactDialog } from '@/components/layout/ContactDialog';
 
 // Bypass TypeScript error for custom element
-const ModelViewer = 'model-viewer' as any;
+
 import { Play, Map as MapIcon, Image as ImageIcon, LayoutGrid, Box } from 'lucide-react';
 
 const getYouTubeEmbedUrl = (url: string) => {
@@ -197,42 +197,7 @@ const PropertyDetails = () => {
         </button>
       </div>
 
-      {/* Floating 3D Model - Global Pathfinding */}
-      {property.threeDElement && mounted && shouldLoadModel && !showFruitPopup && !isMapExpanded && (
-        <div className="fixed inset-0 pointer-events-none z-[100] w-full h-full">
-          <motion.div 
-            style={{ 
-              top: landingY,
-              left: landingX,
-              opacity: landingOpacity,
-              rotate: fruitRotate,
-              scale: landingScale,
-              x: "-50%",
-              y: "-50%"
-            }}
-            className="absolute w-48 h-48 md:w-[400px] md:h-[400px] flex items-center justify-center transition-all duration-300 ease-out pointer-events-auto cursor-pointer group"
-            onClick={() => setShowFruitPopup(true)}
-          >
-            <ModelViewer
-              src={property.threeDElement}
-              auto-rotate
-              shadow-intensity="1"
-              environment-image="neutral"
-              exposure="1.2"
-              interaction-prompt="none"
-              style={{ width: '100%', height: '100%' }}
-            ></ModelViewer>
 
-            {/* Click Indicator */}
-            <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 bg-primary/20 backdrop-blur-md border border-primary/30 px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 scale-50 group-hover:scale-100 whitespace-nowrap pointer-events-none">
-              <span className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
-                <Leaf size={12} />
-                Click for Info
-              </span>
-            </div>
-          </motion.div>
-        </div>
-      )}
 
       {/* Hero Section - No Crop Image */}
       <div className="relative w-full h-[50vh] md:h-[90vh] flex items-center justify-center overflow-hidden bg-black dark:bg-[#050505]">
@@ -755,148 +720,7 @@ const PropertyDetails = () => {
               </div>
             </div>
           </div>
-        {/* Cultivation Info Popup */}
-      {showFruitPopup && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-10 bg-white dark:bg-black/95 backdrop-blur-3xl" onClick={() => setShowFruitPopup(false)}>
-          <div 
-            className="relative w-full max-w-6xl bg-white dark:bg-[#0a0a0a] border-2 border-primary/30 rounded-[3rem] overflow-hidden flex flex-col md:flex-row shadow-[0_0_100px_rgba(16,185,129,0.2)] h-auto md:h-[85vh] max-h-[95vh]"
-            onClick={e => e.stopPropagation()}
-          >
-            {/* Close Button */}
-            <button 
-              onClick={() => setShowFruitPopup(false)}
-              className="absolute top-8 right-8 z-[210] bg-black/10 dark:bg-white/10 hover:bg-red-500 text-black dark:text-white p-3 rounded-full transition-all"
-            >
-              <X size={24} />
-            </button>
 
-            {/* Content Side */}
-            <div data-lenis-prevent className="w-full md:w-1/2 p-8 md:p-16 overflow-y-auto custom-scrollbar flex flex-col text-left">
-              <div className="bg-primary/20 p-5 rounded-2xl mb-10 border border-primary/20 flex-shrink-0 w-fit">
-                <Leaf className="text-primary" size={40} />
-              </div>
-              
-              <h3 className="text-4xl md:text-6xl font-black text-primary uppercase tracking-tighter mb-8 leading-none">
-                {property.title.toLowerCase().includes('sandalwood') ? 'Plantation' : 'Cultivation'} <br/> <span className="text-black dark:text-white">Model</span>
-              </h3>
-              
-              <div className="space-y-10 text-gray-700 dark:text-gray-300">
-                {property.fruitDetails?.length > 0 ? (
-                  <div className="space-y-12">
-                    {property.fruitDetails.map((detail: any, i: number) => (
-                      <div key={i} className="space-y-6">
-                        <div className="flex items-center gap-4">
-                          {detail.showArrow && <span className="text-primary font-bold text-2xl">→</span>}
-                          <p className="text-primary font-black uppercase tracking-[0.2em] text-sm">{detail.heading}</p>
-                        </div>
-                        {detail.isPointed ? (
-                          <ul className="grid grid-cols-1 gap-4">
-                            {detail.content.split('\n').filter((l: string) => l.trim()).map((line: string, j: number) => (
-                              <li key={j} className="flex gap-4 items-start bg-black/5 dark:bg-white/5 p-5 rounded-2xl border border-white/5 group hover:border-primary/30 transition-all">
-                                <div className="w-2 h-2 rounded-full bg-primary mt-2.5 flex-shrink-0 group-hover:scale-125 transition-transform"></div>
-                                <span className="text-lg font-medium text-gray-800 dark:text-gray-200">{line.trim()}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <p className="text-xl leading-relaxed font-medium bg-black/5 dark:bg-white/5 p-6 rounded-2xl border border-white/5 italic whitespace-pre-line">
-                            {detail.content}
-                          </p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                ) : property.fruitInfo ? (
-                  <div className="text-xl leading-relaxed font-medium whitespace-pre-line prose dark:prose-invert max-w-none">
-                    {property.fruitInfo}
-                  </div>
-                ) : (
-                  <>
-                    <p className="text-xl leading-relaxed font-medium">
-                      Dragon fruit cultivation is a high-demand and profitable farming option with long-term benefits.
-                    </p>
-
-                    <div className="space-y-4">
-                      <p className="text-primary font-black uppercase tracking-[0.2em] text-xs">Plantation Details (Per 100 Sq. Yards)</p>
-                      <ul className="grid grid-cols-1 gap-3">
-                        <li className="flex gap-3 items-center bg-black/5 dark:bg-white/5 p-4 rounded-xl border border-white/5">
-                          <span className="text-primary font-bold">→</span> 40 dragon fruit plants
-                        </li>
-                        <li className="flex gap-3 items-center bg-black/5 dark:bg-white/5 p-4 rounded-xl border border-white/5">
-                          <span className="text-primary font-bold">→</span> 4 plants per pole
-                        </li>
-                        <li className="flex gap-3 items-center bg-black/5 dark:bg-white/5 p-4 rounded-xl border border-white/5">
-                          <span className="text-primary font-bold">→</span> 10 poles in each 100 sq. yards
-                        </li>
-                      </ul>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <p className="text-primary font-black uppercase tracking-[0.2em] text-[10px]">Plantation Period</p>
-                        <p className="text-black dark:text-white font-bold italic text-lg">May to November</p>
-                      </div>
-                      <div className="space-y-2">
-                        <p className="text-primary font-black uppercase tracking-[0.2em] text-[10px]">Yield Duration</p>
-                        <p className="text-black dark:text-white font-bold italic text-lg">Up to 30 Years</p>
-                      </div>
-                    </div>
-
-                    <div className="p-8 bg-primary/10 rounded-3xl border border-primary/20 space-y-4">
-                      <p className="text-primary font-black uppercase tracking-[0.2em] text-xs text-center">Profit Sharing</p>
-                      <div className="flex items-center justify-center gap-10">
-                        <div className="text-center">
-                          <p className="text-4xl font-black text-black dark:text-white">50%</p>
-                          <p className="text-[10px] uppercase font-bold text-gray-600 dark:text-gray-400">Company</p>
-                        </div>
-                        <div className="h-10 w-[1px] bg-primary/30"></div>
-                        <div className="text-center">
-                          <p className="text-4xl font-black text-primary">50%</p>
-                          <p className="text-[10px] uppercase font-bold text-gray-600 dark:text-gray-400">Client</p>
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-
-              <button 
-                onClick={() => setShowFruitPopup(false)}
-                className="mt-16 bg-primary text-black font-black uppercase tracking-widest py-6 rounded-2xl hover:bg-white transition-all shadow-2xl shadow-primary/30"
-              >
-                Close Details
-              </button>
-            </div>
-
-            {/* Media Preview Side */}
-            <div className="w-full md:w-1/2 h-64 md:h-full bg-white dark:bg-black/40 relative border-l border-white/5">
-              {property.threeDElement ? (
-                <ModelViewer
-                  src={property.threeDElement}
-                  auto-rotate
-                  camera-controls
-                  shadow-intensity="2"
-                  exposure="1.2"
-                  style={{ width: '100%', height: '100%' }}
-                ></ModelViewer>
-              ) : property.fruitImage ? (
-                <Image 
-                  src={property.fruitImage} 
-                  alt="Fruit Preview" 
-                  fill 
-                  className="object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-700">
-                  <Leaf size={100} className="opacity-10" />
-                </div>
-              )}
-              
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none"></div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Fullscreen Map Modal */}
       <AnimatePresence>

@@ -4,7 +4,7 @@ import React, { useState, useCallback } from 'react';
 import { Upload, Loader2 } from 'lucide-react';
 
 interface FileDropzoneProps {
-  onFilesSelected: (files: FileList | File[]) => void;
+  onFilesSelected: (files: File[]) => void;
   uploading?: boolean;
   multiple?: boolean;
   accept?: string;

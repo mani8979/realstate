@@ -48,6 +48,7 @@ export default function RootLayout({
         <Script 
           src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js" 
           strategy="lazyOnload"
+          type="module"
         />
       </head>
       <body className="flex flex-col font-sans transition-colors duration-300">
@@ -60,6 +61,7 @@ export default function RootLayout({
             <Footer />
             <MobileStickyBar />
             <ContactDialog />
+            <FloatingDragon />
           </ScrollProvider>
         </ThemeProvider>
       </body>

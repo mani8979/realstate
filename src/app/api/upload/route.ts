@@ -31,6 +31,8 @@ export async function POST(request: NextRequest) {
         {
           folder: 'starlands_uploads',
           resource_type: resourceType,
+          use_filename: true,
+          unique_filename: true,
           chunk_size: 6000000, // 6MB chunks for videos
         },
         (error, result) => {
@@ -52,5 +54,38 @@ export async function POST(request: NextRequest) {
       error: 'Upload failed', 
       details: error.message || 'Unknown error' 
     }, { status: 500 });
+  }
+}
+export async function DELETE(request: NextRequest) {
+  try {
+    const { url } = await request.json();
+    if (!url || !url.includes('cloudinary.com')) {
+      return NextResponse.json({ error: 'Invalid Cloudinary URL' }, { status: 400 });
+    }
+
+    // Extract public_id from URL
+    // Format: .../v[version]/[folder]/[id].[ext]
+    const parts = url.split('/');
+    const folderIndex = parts.findIndex((p: string) => p === 'starlands_uploads');
+    if (folderIndex === -1) {
+      return NextResponse.json({ error: 'Could not find folder in URL' }, { status: 400 });
+    }
+
+    const publicIdWithExt = parts.slice(folderIndex).join('/');
+    const publicId = publicIdWithExt.split('.')[0];
+
+    // Determine resource type from URL or extension
+    let resourceType: 'image' | 'video' | 'raw' = 'image';
+    if (url.includes('/video/upload/')) resourceType = 'video';
+    if (url.endsWith('.glb') || url.endsWith('.gltf')) resourceType = 'raw';
+
+    console.log(`Deleting Cloudinary asset: ${publicId}, Type: ${resourceType}`);
+
+    const result = await cloudinary.uploader.destroy(publicId, { resource_type: resourceType });
+
+    return NextResponse.json({ success: true, result });
+  } catch (error: any) {
+    console.error('Delete API error:', error);
+    return NextResponse.json({ error: 'Delete failed', details: error.message }, { status: 500 });
   }
 }

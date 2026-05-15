@@ -6,7 +6,7 @@ import {
   Map as MapIcon, Download, ChevronLeft, ChevronRight,
   Maximize2, MousePointer2, LayoutGrid, Box, Settings, List, Sliders, Plus, Trash2, Upload,
   Loader2, Sparkles, Save, FileText, Check, Search,
-  ChevronUp, ChevronDown, Trash, Edit2, Copy
+  ChevronUp, ChevronDown, Trash, Edit2, Copy, Star
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -180,7 +180,22 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     };
     fetchCategories();
   }, []);
-  const [uploadingFruit, setUploadingFruit] = useState(false);
+  const [localFiles, setLocalFiles] = useState<{
+    images: { file: File; preview: string }[];
+    landPhotos: { file: File; preview: string }[];
+    landBrochure: { file: File; preview: string }[];
+    fruitImage: { file: File; preview: string } | null;
+    threeDElement: { file: File; preview: string } | null;
+    layoutImage: { file: File; preview: string } | null;
+  }>({
+    images: [],
+    landPhotos: [],
+    landBrochure: [],
+    fruitImage: null,
+    threeDElement: null,
+    layoutImage: null
+  });
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const landPhotosInputRef = useRef<HTMLInputElement>(null);
   const fruitInputRef = useRef<HTMLInputElement>(null);
@@ -190,6 +205,18 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
   const layoutImageInputRef = useRef<HTMLInputElement>(null);
   const [showSmartEditor, setShowSmartEditor] = useState(false);
 
+  const deleteAsset = async (url: string) => {
+    if (!url || !url.includes('cloudinary.com')) return;
+    try {
+      await fetch(`${window.location.origin}/api/upload`, {
+        method: 'DELETE',
+        body: JSON.stringify({ url }),
+        headers: { 'Content-Type': 'application/json' }
+      });
+    } catch (err) {
+      console.error('Failed to delete asset:', err);
+    }
+  };
   const handleSmartSave = (sections: Section[]) => {
     const formattedDetails = sections.map(s => ({
       heading: s.heading || '',
@@ -223,129 +250,96 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     }
   };
 
-  const handleFruitUpload = async (files: FileList | File[]) => {
+  const uploadFile = async (file: File): Promise<string> => {
+    const uploadFormData = new FormData();
+    uploadFormData.append('file', file);
+    const response = await fetch(`${window.location.origin}/api/upload`, {
+      method: 'POST',
+      body: uploadFormData,
+    });
+    if (!response.ok) throw new Error('Upload failed');
+    const data = await response.json();
+    return data.url;
+  };
+
+  const handleFruitUpload = (files: File[]) => {
     if (!files || files.length === 0) return;
-
-    setUploadingFruit(true);
-    try {
-      const file = files[0];
-      const uploadFormData = new FormData();
-      uploadFormData.append('file', file);
-
-      const response = await fetch(`${window.location.origin}/api/upload`, {
-        method: 'POST',
-        body: uploadFormData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setFormData((prev: any) => ({ ...prev, fruitImage: data.url }));
-      }
-    } catch (error) {
-      console.error('Upload failed:', error);
-      alert('Upload failed. Please try again.');
-    } finally {
-      setUploadingFruit(false);
+    const file = files[0];
+    const preview = URL.createObjectURL(file);
+    
+    // Auto-delete old cloudinary image if overwriting
+    if (formData.fruitImage?.includes('cloudinary.com')) {
+      deleteAsset(formData.fruitImage);
     }
+
+    setLocalFiles(prev => ({ ...prev, fruitImage: { file, preview } }));
+    setFormData((prev: any) => ({ ...prev, fruitImage: preview }));
   };
 
   const removeFruitImage = () => {
+    if (formData.fruitImage?.includes('cloudinary.com')) {
+      deleteAsset(formData.fruitImage);
+    }
+    setLocalFiles(prev => ({ ...prev, fruitImage: null }));
     setFormData((prev: any) => ({ ...prev, fruitImage: '' }));
   };
 
-  const handleThreeDUpload = async (files: FileList | File[]) => {
+  const handleThreeDUpload = (files: File[]) => {
     if (!files || files.length === 0) return;
+    const file = files[0];
+    const preview = URL.createObjectURL(file);
 
-    setUploading(true);
-    try {
-      const file = files[0];
-      const uploadFormData = new FormData();
-      uploadFormData.append('file', file);
-
-      const response = await fetch(`${window.location.origin}/api/upload`, {
-        method: 'POST',
-        body: uploadFormData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setFormData((prev: any) => ({ ...prev, threeDElement: data.url }));
-      }
-    } catch (error) {
-      console.error('Upload failed:', error);
-      alert('Upload failed. Please try again.');
-    } finally {
-      setUploading(false);
+    if (formData.threeDElement?.includes('cloudinary.com')) {
+      deleteAsset(formData.threeDElement);
     }
+
+    setLocalFiles(prev => ({ ...prev, threeDElement: { file, preview } }));
+    setFormData((prev: any) => ({ ...prev, threeDElement: preview }));
   };
 
   const removeThreeD = () => {
+    if (formData.threeDElement?.includes('cloudinary.com')) {
+      deleteAsset(formData.threeDElement);
+    }
+    setLocalFiles(prev => ({ ...prev, threeDElement: null }));
     setFormData((prev: any) => ({ ...prev, threeDElement: '' }));
   };
 
-  const handleFileUpload = async (files: FileList | File[]) => {
+  const handleFileUpload = (files: File[]) => {
     if (!files || files.length === 0) return;
+    
+    const newFiles = files.map(file => ({
+      file,
+      preview: URL.createObjectURL(file)
+    }));
 
-    setUploading(true);
-    try {
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const uploadFormData = new FormData();
-        uploadFormData.append('file', file);
-
-        const response = await fetch(`${window.location.origin}/api/upload`, {
-          method: 'POST',
-          body: uploadFormData,
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setFormData((prev: any) => ({
-            ...prev,
-            images: [...prev.images, data.url]
-          }));
-        }
-      }
-    } catch (error) {
-      console.error('Upload failed:', error);
-      alert('Upload failed. Please try again.');
-    } finally {
-      setUploading(false);
-    }
+    setLocalFiles(prev => ({ ...prev, images: [...prev.images, ...newFiles] }));
+    setFormData((prev: any) => ({
+      ...prev,
+      images: [...prev.images, ...newFiles.map(f => f.preview)]
+    }));
   };
 
-  const handleLandPhotosUpload = async (files: FileList | File[]) => {
+  const handleLandPhotosUpload = (files: File[]) => {
     if (!files || files.length === 0) return;
+    
+    const newFiles = files.map(file => ({
+      file,
+      preview: URL.createObjectURL(file)
+    }));
 
-    setUploading(true);
-    try {
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const uploadFormData = new FormData();
-        uploadFormData.append('file', file);
-
-        const response = await fetch(`${window.location.origin}/api/upload`, {
-          method: 'POST',
-          body: uploadFormData,
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setFormData((prev: any) => ({
-            ...prev,
-            landPhotos: [...prev.landPhotos, data.url]
-          }));
-        }
-      }
-    } catch (error) {
-      console.error('Upload failed:', error);
-      alert('Upload failed. Please try again.');
-    } finally {
-      setUploading(false);
-    }
+    setLocalFiles(prev => ({ ...prev, landPhotos: [...prev.landPhotos, ...newFiles] }));
+    setFormData((prev: any) => ({
+      ...prev,
+      landPhotos: [...prev.landPhotos, ...newFiles.map(f => f.preview)]
+    }));
   };
 
   const removeLandPhoto = (url: string) => {
+    setLocalFiles(prev => ({
+      ...prev,
+      landPhotos: prev.landPhotos.filter(f => f.preview !== url)
+    }));
     setFormData((prev: any) => ({
       ...prev,
       landPhotos: prev.landPhotos.filter((img: string) => img !== url)
@@ -397,78 +391,151 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
     }
   };
 
-  const handleLayoutImageUpload = async (files: FileList | File[]) => {
-    if (!files || files.length === 0) return;
-
-    setUploading(true);
-    try {
-      const file = files[0];
-      const formData = new FormData();
-      formData.append('file', file);
-      const res = await fetch(`${window.location.origin}/api/upload`, { method: 'POST', body: formData });
-      if (res.ok) {
-        const data = await res.json();
-        setFormData((prev: any) => ({ ...prev, layoutImage: data.url }));
-      }
-    } catch (error) {
-      console.error('Upload failed:', error);
-    } finally {
-      setUploading(false);
-    }
-  };
-
   const removeVideo = () => {
     setFormData((prev: any) => ({ ...prev, videoUrl: '' }));
   };
 
-  const handleBrochureUpload = async (files: FileList | File[]) => {
+  const handleLayoutImageUpload = (files: File[]) => {
     if (!files || files.length === 0) return;
+    const file = files[0];
+    const preview = URL.createObjectURL(file);
 
-    setUploading(true);
-    try {
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const uploadFormData = new FormData();
-        uploadFormData.append('file', file);
-
-        const response = await fetch(`${window.location.origin}/api/upload`, {
-          method: 'POST',
-          body: uploadFormData,
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setFormData((prev: any) => ({
-            ...prev,
-            landBrochure: [...prev.landBrochure, data.url]
-          }));
-        }
-      }
-    } catch (error) {
-      console.error('Upload failed:', error);
-      alert('Upload failed. Please try again.');
-    } finally {
-      setUploading(false);
+    if (formData.layoutImage?.includes('cloudinary.com')) {
+      deleteAsset(formData.layoutImage);
     }
+
+    setLocalFiles(prev => ({ ...prev, layoutImage: { file, preview } }));
+    setFormData((prev: any) => ({ ...prev, layoutImage: preview }));
   };
 
-  const removeBrochure = (url: string) => {
+  const removeLayoutImage = () => {
+    if (formData.layoutImage?.includes('cloudinary.com')) {
+      deleteAsset(formData.layoutImage);
+    }
+    setLocalFiles(prev => ({ ...prev, layoutImage: null }));
+    setFormData((prev: any) => ({ ...prev, layoutImage: '' }));
+  };
+
+  const handleBrochureUpload = (files: File[]) => {
+    if (!files || files.length === 0) return;
+    
+    const newFiles = files.map(file => ({
+      file,
+      preview: URL.createObjectURL(file)
+    }));
+
+    setLocalFiles(prev => ({ ...prev, landBrochure: [...prev.landBrochure, ...newFiles] }));
     setFormData((prev: any) => ({
       ...prev,
-      landBrochure: prev.landBrochure.filter((item: string) => item !== url)
+      landBrochure: [...prev.landBrochure, ...newFiles.map(f => f.preview)]
     }));
   };
 
   const removeImage = (url: string) => {
+    if (url.includes('cloudinary.com')) {
+      deleteAsset(url);
+    }
+    setLocalFiles(prev => ({
+      ...prev,
+      images: prev.images.filter(f => f.preview !== url)
+    }));
     setFormData((prev: any) => ({
       ...prev,
       images: prev.images.filter((img: string) => img !== url)
     }));
   };
 
+  const setAsMainImage = (url: string) => {
+    setFormData((prev: any) => ({
+      ...prev,
+      images: [url, ...prev.images.filter((img: string) => img !== url)]
+    }));
+  };
+
+  const removeBrochure = (url: string) => {
+    if (url.includes('cloudinary.com')) {
+      deleteAsset(url);
+    }
+    setLocalFiles(prev => ({
+      ...prev,
+      landBrochure: prev.landBrochure.filter(f => f.preview !== url)
+    }));
+    setFormData((prev: any) => ({
+      ...prev,
+      landBrochure: prev.landBrochure.filter((item: string) => item !== url)
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSubmit(formData);
+    setUploading(true);
+    
+    try {
+      const finalPayload = { ...formData };
+
+      // 1. Upload Gallery Images
+      const galleryUrls = [];
+      for (const img of formData.images) {
+        if (img.startsWith('blob:')) {
+          const local = localFiles.images.find(f => f.preview === img);
+          if (local) {
+            const url = await uploadFile(local.file);
+            galleryUrls.push(url);
+          }
+        } else {
+          galleryUrls.push(img);
+        }
+      }
+      finalPayload.images = galleryUrls;
+
+      // 2. Upload Land Photos
+      const landUrls = [];
+      for (const img of formData.landPhotos) {
+        if (img.startsWith('blob:')) {
+          const local = localFiles.landPhotos.find(f => f.preview === img);
+          if (local) {
+            const url = await uploadFile(local.file);
+            landUrls.push(url);
+          }
+        } else {
+          landUrls.push(img);
+        }
+      }
+      finalPayload.landPhotos = landUrls;
+
+      // 3. Upload Brochures
+      const brochureUrls = [];
+      for (const img of formData.landBrochure) {
+        if (img.startsWith('blob:')) {
+          const local = localFiles.landBrochure.find(f => f.preview === img);
+          if (local) {
+            const url = await uploadFile(local.file);
+            brochureUrls.push(url);
+          }
+        } else {
+          brochureUrls.push(img);
+        }
+      }
+      finalPayload.landBrochure = brochureUrls;
+
+      // 4. Single File Fields
+      if (formData.fruitImage?.startsWith('blob:') && localFiles.fruitImage) {
+        finalPayload.fruitImage = await uploadFile(localFiles.fruitImage.file);
+      }
+      if (formData.threeDElement?.startsWith('blob:') && localFiles.threeDElement) {
+        finalPayload.threeDElement = await uploadFile(localFiles.threeDElement.file);
+      }
+      if (formData.layoutImage?.startsWith('blob:') && localFiles.layoutImage) {
+        finalPayload.layoutImage = await uploadFile(localFiles.layoutImage.file);
+      }
+
+      await onSubmit(finalPayload);
+    } catch (error) {
+      console.error('Final publish failed:', error);
+      alert('Failed to publish property assets. Please try again.');
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -476,6 +543,32 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
 
     <form onSubmit={handleSubmit} className="space-y-10">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        {/* Submit Section */}
+        <div className="col-span-full bg-white dark:bg-gray-900/50 p-10 rounded-[2.5rem] shadow-xl border border-primary/20 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-1">
+            <h3 className="text-xl font-black text-gray-900 dark:text-white uppercase tracking-tighter">Ready to Publish?</h3>
+            <p className="text-sm font-bold text-gray-500 uppercase tracking-widest italic">All changes will be saved and photos will be securely synced to the cloud.</p>
+          </div>
+          
+          <button
+            type="submit"
+            disabled={loading || uploading}
+            className="w-full md:w-auto bg-primary hover:bg-white text-black font-black px-12 py-5 rounded-2xl transition-all flex items-center justify-center gap-4 group shadow-[0_20px_50px_rgba(212,175,55,0.3)] disabled:opacity-70"
+          >
+            {loading || uploading ? (
+              <>
+                <Loader2 size={24} className="animate-spin" />
+                <span className="uppercase tracking-[0.2em] text-xs">Publishing Property & Assets...</span>
+              </>
+            ) : (
+              <>
+                <Save size={24} className="group-hover:scale-110 transition-transform" />
+                <span className="uppercase tracking-[0.2em] text-xs">Publish Property Now</span>
+              </>
+            )}
+          </button>
+        </div>
+
         {/* Basic Info */}
         <div className="bg-white dark:bg-gray-900/50 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 space-y-6">
           <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Basic Information</h3>
@@ -640,17 +733,38 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
           <div className="bg-white dark:bg-gray-900/50 p-10 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Property Images</h3>
             
-            <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6">
               {formData.images.map((img: string, i: number) => (
-                <div key={i} className="relative aspect-square rounded-2xl overflow-hidden border-2 border-gray-100 dark:border-gray-800 group">
-                  {img && <Image src={img} alt="Property" fill className="object-cover" />}
-                  <button
-                    type="button"
-                    onClick={() => removeImage(img)}
-                    className="absolute top-2 right-2 bg-red-500 text-black dark:text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <X size={14} />
-                  </button>
+                <div key={i} className={`relative aspect-square rounded-2xl overflow-hidden border-2 group transition-all ${i === 0 ? 'border-primary ring-2 ring-primary/20 scale-[1.02]' : 'border-gray-100 dark:border-gray-800'}`}>
+                  {img && <Image src={img} alt="Property" fill className="object-cover" unoptimized={img.startsWith('blob:')} />}
+                  
+                  {/* Badge for Title Image */}
+                  {i === 0 && (
+                    <div className="absolute top-2 left-2 bg-primary text-black px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-widest z-10">
+                      Title Image
+                    </div>
+                  )}
+
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                    {i !== 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setAsMainImage(img)}
+                        className="bg-primary text-black p-2 rounded-xl hover:scale-110 transition-transform"
+                        title="Set as Title Image"
+                      >
+                        <Star size={16} fill="currentColor" />
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeImage(img)}
+                      className="bg-red-500 text-black p-2 rounded-xl hover:scale-110 transition-transform"
+                      title="Delete Image"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
                 </div>
               ))}
               
@@ -663,15 +777,18 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
               >
                 <div className="h-full rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-all group">
                   <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-xl group-hover:bg-primary group-hover:text-black dark:text-white transition-all">
-                    {uploading ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
+                    <Plus size={20} />
                   </div>
-                  <span className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-widest">
-                    {uploading ? 'Uploading...' : 'Add Image'}
+                  <span className="text-[10px] font-bold text-gray-600 dark:text-gray-400 uppercase tracking-widest text-center px-2">
+                    Add Property Photos
                   </span>
                 </div>
               </FileDropzone>
             </div>
-            <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">* Images are securely hosted on Cloudinary.</p>
+            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest flex items-center gap-2">
+              <Sparkles size={12} className="text-primary" />
+              Tip: The first image will be used as the property's title/cover photo.
+            </p>
           </div>
 
           {/* Description */}
@@ -934,13 +1051,13 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ initialData, onSubmit, load
                   <>
                     <FileDropzone
                       onFilesSelected={handleFruitUpload}
-                      uploading={uploadingFruit}
+                      uploading={uploading}
                       accept="image/*"
                       className="w-32 h-32"
                     >
                       <div className="w-32 h-32 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-all group">
                         <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-xl group-hover:bg-primary group-hover:text-black dark:text-white transition-all">
-                          {uploadingFruit ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
+                          {uploading ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}
                         </div>
                         <span className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-widest">Add Image</span>
                       </div>
