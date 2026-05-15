@@ -52,6 +52,7 @@ const PropertyDetails = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isMapExpanded, setIsMapExpanded] = useState(false);
   const [shouldLoadModel, setShouldLoadModel] = useState(false);
+  const [zoom, setZoom] = useState(1);
 
   useEffect(() => {
     if (isMapExpanded) {
