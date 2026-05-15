@@ -874,8 +874,6 @@ const PropertyDetails = () => {
       </AnimatePresence>
 
     </div>
-  </div>
-</div>
   );
 };
 

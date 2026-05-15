@@ -1,38 +1,42 @@
-import os
+const fs = require('fs');
+const path = require('path');
 
-file_path = r"d:\reals\src\app\properties\[id]\page.tsx"
+const filePath = path.join('d:', 'reals', 'src', 'app', 'properties', '[id]', 'page.tsx');
 
-with open(file_path, 'r', encoding='utf-8') as f:
-    lines = f.readlines()
+let content = fs.readFileSync(filePath, 'utf8');
+const lines = content.split('\n');
 
-# Look for the Interactive Plot Inventory section
-start_index = -1
-for i, line in enumerate(lines):
-    if "Interactive Plot Inventory" in line:
-        start_index = i
-        break
+let startIndex = -1;
+for (let i = 0; i < lines.length; i++) {
+    if (lines[i].includes('Interactive Plot Inventory')) {
+        startIndex = i;
+        break;
+    }
+}
 
-if start_index == -1:
-    print("Could not find start index")
-    exit(1)
+if (startIndex === -1) {
+    console.log("Could not find start index");
+    process.exit(1);
+}
 
-# Find the end of this block
-# It ends with )} followed by a mt-20 div
-end_index = -1
-for i in range(start_index, len(lines)):
-    if ")} " in lines[i] or ")} \n" in lines[i] or lines[i].strip() == ")}":
-        if i + 1 < len(lines) and "mt-20" in lines[i+1]:
-            end_index = i
-            break
+let endIndex = -1;
+for (let i = startIndex; i < lines.length; i++) {
+    if (lines[i].includes(')} ') || lines[i].includes(')}') || lines[i].trim() === ')}') {
+        if (i + 1 < lines.length && lines[i+1].includes('mt-20')) {
+            endIndex = i;
+            break;
+        }
+    }
+}
 
-if end_index == -1:
-    print("Could not find end index")
-    exit(1)
+if (endIndex === -1) {
+    console.log("Could not find end index");
+    process.exit(1);
+}
 
-print(f"Found block from line {start_index+1} to {end_index+1}")
+console.log(`Found block from line ${startIndex + 1} to ${endIndex + 1}`);
 
-# Replacement block
-new_block = """          {/* Interactive Plot Inventory */}
+const newBlock = `          {/* Interactive Plot Inventory */}
           {(property.plots?.length > 0 || property.layoutImage) && (
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
@@ -71,7 +75,7 @@ new_block = """          {/* Interactive Plot Inventory */}
                                style={{ minWidth: '100%', minHeight: '100%' }}
                              />
                              <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
-                               {property.plots?.map((plot: any, idx: number) => (
+                               {property.plots?.map((plot, idx) => (
                                  <motion.rect
                                    key={idx}
                                    x={plot.x}
@@ -90,7 +94,7 @@ new_block = """          {/* Interactive Plot Inventory */}
                                    }}
                                    onMouseEnter={() => setHoveredPlot(plot.number)}
                                    onMouseLeave={() => setHoveredPlot(null)}
-                                   onClick={() => openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`)}
+                                   onClick={() => openContactDialog('whatsapp', \`I'm interested in Plot \${plot.number} of \${property.title}\`)}
                                  />
                                ))}
                              </svg>
@@ -116,7 +120,7 @@ new_block = """          {/* Interactive Plot Inventory */}
                               <p className="text-[10px] font-bold text-primary uppercase tracking-widest">Availability List</p>
                            </div>
                            <div className="bg-primary/10 px-4 py-2 rounded-xl border border-primary/20">
-                              <span className="text-[10px] font-black text-primary uppercase tracking-widest">{property.plots?.length || 0} Units</span>
+                              <span className="text-[10px] font-black text-primary uppercase tracking-widest">\${property.plots?.length || 0} Units</span>
                            </div>
                         </div>
                         
@@ -142,33 +146,33 @@ new_block = """          {/* Interactive Plot Inventory */}
                               </tr>
                            </thead>
                            <tbody>
-                              {property.plots?.filter((plot: any) => 
+                              {property.plots?.filter((plot) => 
                                  plot.number.toString().toLowerCase().includes(searchQuery.toLowerCase())
-                              ).map((plot: any, idx: number) => (
+                              ).map((plot, idx) => (
                                  <tr 
                                     key={idx} 
                                     data-plot={plot.number}
                                     onMouseEnter={() => setHoveredPlot(plot.number)}
                                     onMouseLeave={() => setHoveredPlot(null)}
-                                    className={`
+                                    className={\`
                                     bg-white dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl overflow-hidden group transition-all cursor-pointer
-                                    ${hoveredPlot === plot.number ? 'ring-2 ring-primary bg-black/5 dark:bg-white/10 scale-[1.02]' : 'hover:bg-black/5 dark:hover:bg-white/10'}
-                                  `}
+                                    \${hoveredPlot === plot.number ? 'ring-2 ring-primary bg-black/5 dark:bg-white/10 scale-[1.02]' : 'hover:bg-black/5 dark:hover:bg-white/10'}
+                                  \`}
                                  >
                                     <td className="px-4 py-4 rounded-l-2xl">
                                        <div className="flex items-center gap-3">
-                                          <div className={`w-1.5 h-6 rounded-full transition-all ${hoveredPlot === plot.number ? 'h-8' : ''}`} style={{
+                                          <div className={\`w-1.5 h-6 rounded-full transition-all \${hoveredPlot === plot.number ? 'h-8' : ''}\`} style={{
                                             backgroundColor: plot.status === 'sold' ? (property.soldColor || '#fac915') :
                                                             plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
                                                             (property.availableColor || '#ffffff')
                                           }}></div>
-                                          <span className="text-sm font-black text-black dark:text-white">{plot.number}</span>
+                                          <span className="text-sm font-black text-black dark:text-white">\${plot.number}</span>
                                        </div>
                                     </td>
                                     <td className="px-4 py-4">
                                        <span className="text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-black/10 dark:border-white/10" style={{
-                                          backgroundColor: plot.status === 'sold' ? f"{property.soldColor || '#fac915'}20" :
-                                                          plot.status === 'booked' ? f"{property.bookedColor || '#22c55e'}20" :
+                                          backgroundColor: plot.status === 'sold' ? \`\${property.soldColor || '#fac915'}20\` :
+                                                          plot.status === 'booked' ? \`\${property.bookedColor || '#22c55e'}20\` :
                                                           'transparent',
                                           color: plot.status === 'sold' ? (property.soldColor || '#fac915') :
                                                  plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
@@ -178,7 +182,7 @@ new_block = """          {/* Interactive Plot Inventory */}
                                        </span>
                                     </td>
                                     <td className="px-4 py-4 text-right rounded-r-2xl">
-                                       <button onClick={(e) => { e.stopPropagation(); openContactDialog('whatsapp', f"I'm interested in Plot {plot.number} of {property.title}"); }} className="text-[9px] font-black uppercase tracking-widest text-primary hover:text-black dark:text-white transition-colors bg-primary/10 hover:bg-primary px-3 py-1.5 rounded-lg border border-primary/20">
+                                       <button onClick={(e) => { e.stopPropagation(); openContactDialog('whatsapp', \`I'm interested in Plot \${plot.number} of \${property.title}\`); }} className="text-[9px] font-black uppercase tracking-widest text-primary hover:text-black dark:text-white transition-colors bg-primary/10 hover:bg-primary px-3 py-1.5 rounded-lg border border-primary/20">
                                           Enquire
                                        </button>
                                     </td>
@@ -194,7 +198,7 @@ new_block = """          {/* Interactive Plot Inventory */}
                            <div>
                               <p className="text-[10px] font-black uppercase tracking-widest text-primary">Live Status Analysis</p>
                               <p className="text-[8px] font-bold text-black/60 dark:text-white/60">
-                                 {hoveredPlot ? f"Viewing details for Plot {hoveredPlot}" : 'Hover over a unit to see its location on the map'}
+                                 {hoveredPlot ? \`Viewing details for Plot \${hoveredPlot}\` : 'Hover over a unit to see its location on the map'}
                               </p>
                            </div>
                         </div>
@@ -202,11 +206,9 @@ new_block = """          {/* Interactive Plot Inventory */}
                   </div>
               </div>
             </motion.div>
-          )"""
+          )\`;
 
-final_lines = lines[:start_index] + [new_block + "\n"] + lines[end_index+1:]
+const finalLines = [...lines.slice(0, startIndex), newBlock, ...lines.slice(endIndex + 1)];
+fs.writeFileSync(filePath, finalLines.join('\\n'), 'utf8');
 
-with open(file_path, 'w', encoding='utf-8') as f:
-    f.writelines(final_lines)
-
-print("File updated successfully")
+console.log("File updated successfully");
