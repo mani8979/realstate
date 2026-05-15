@@ -41,71 +41,81 @@ const FloatingDragon = () => {
   useEffect(() => {
     setMounted(true);
     let frameId: number;
-    // Start at top-right of viewport
+    // Current interpolated position (starts top-right)
     let curX = window.innerWidth * 0.88;
     let curY = window.innerHeight * 0.12;
-    
-    const update = () => {
-      if (!mounted) return;
 
-      const now = Date.now();
-      // Declare viewport dimensions FIRST (avoids TDZ in minified builds)
-      const viewportW = window.innerWidth;
-      const viewportH = window.innerHeight;
+    // --- HELPER: find the best X position at a given viewport-Y ---
+    const findEmptyX = (fixedY: number, viewportW: number, modelSize: number): number => {
+      const pad = modelSize + 20;
+      const repelEls = document.querySelectorAll('.dragon-repel');
 
-      // Rescan obstacles every 1.5s - only repel from admin-marked zones
-      if (now - lastScan.current > 1500) {
-        const elements = document.querySelectorAll('.dragon-repel');
-        obstaclesRef.current = Array.from(elements)
-          .map(el => {
-            const rect = el.getBoundingClientRect();
-            // Skip off-screen elements
-            if (rect.bottom < -100 || rect.top > viewportH + 100) return null;
-            return rect;
-          })
-          .filter((r): r is DOMRect => r !== null && r.width > 10 && r.height > 10);
-        lastScan.current = now;
-      }
-
-      // 1. Gentle orbital path: starts top-right, drifts slowly down and around
-      const time = now / 6000;
-      const idealX = (Math.cos(time) * 0.30 + 0.72) * viewportW;
-      const idealY = (Math.sin(time * 0.5) * 0.28 + 0.45) * viewportH;
-
-      // 2. Physics: drift towards ideal
-      let forceX = (idealX - curX) * 0.012;
-      let forceY = (idealY - curY) * 0.012;
-
-      const modelSize = viewportW < 768 ? 55 : 100;
-      
-      // 3. Repel from .dragon-repel zones (admin content areas)
-      obstaclesRef.current.forEach(rect => {
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-        const dx = curX - cx;
-        const dy = curY - cy;
-        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-        
-        const minDist = (Math.max(rect.width, rect.height) / 2) + modelSize + 40;
-
-        if (dist < minDist) {
-          const power = Math.pow((minDist - dist) / minDist, 2);
-          const push = power * 25;
-          forceX += (dx / dist) * push;
-          forceY += (dy / dist) * push;
+      // Collect horizontal ranges occupied by .dragon-repel elements at this Y level
+      const occupied: { left: number; right: number }[] = [];
+      repelEls.forEach(el => {
+        const r = el.getBoundingClientRect();
+        // Only elements whose vertical extent covers our current Y
+        if (r.top - pad < fixedY && r.bottom + pad > fixedY) {
+          occupied.push({ left: Math.max(0, r.left - pad), right: Math.min(viewportW, r.right + pad) });
         }
       });
 
-      // 4. Clamp inside viewport
-      curX += forceX;
-      curY += forceY;
-      const padding = modelSize;
-      curX = Math.max(padding, Math.min(viewportW - padding, curX));
-      curY = Math.max(padding, Math.min(viewportH - padding, curY));
+      // Sort by left edge
+      occupied.sort((a, b) => a.left - b.left);
+
+      // Scan for free gaps from [modelSize, viewportW - modelSize]
+      const gaps: { start: number; end: number; width: number }[] = [];
+      let scanX = modelSize;
+      for (const range of occupied) {
+        if (range.left > scanX) {
+          gaps.push({ start: scanX, end: range.left, width: range.left - scanX });
+        }
+        if (range.right > scanX) scanX = range.right;
+      }
+      // Final gap at the right edge
+      if (scanX < viewportW - modelSize) {
+        gaps.push({ start: scanX, end: viewportW - modelSize, width: viewportW - modelSize - scanX });
+      }
+
+      if (gaps.length === 0) return viewportW - modelSize; // fallback: stick to right edge
+
+      // Prefer a gap on the right side (end > 55% width) if wide enough for the model
+      const rightGap = gaps.find(g => g.end > viewportW * 0.55 && g.width >= modelSize * 2);
+      if (rightGap) return (rightGap.start + rightGap.end) / 2;
+
+      // Otherwise pick the widest gap
+      const widest = gaps.reduce((a, b) => (a.width > b.width ? a : b));
+      return (widest.start + widest.end) / 2;
+    };
+
+    const update = () => {
+      if (!mounted) return;
+
+      // Viewport dimensions FIRST (avoids TDZ in minified builds)
+      const viewportW = window.innerWidth;
+      const viewportH = window.innerHeight;
+      const modelSize = viewportW < 768 ? 55 : 100;
+
+      // --- SCROLL-DRIVEN Y ---
+      // Maps scroll progress (0→1) to viewport Y (12%→88%)
+      const pageHeight = document.body.scrollHeight - viewportH;
+      const scrollProgress = pageHeight > 0 ? Math.min(1, window.scrollY / pageHeight) : 0;
+      const targetY = viewportH * (0.12 + scrollProgress * 0.76);
+
+      // --- EMPTY-SPACE X ---
+      const targetX = findEmptyX(targetY, viewportW, modelSize);
+
+      // --- SMOOTH LERP towards target (no snapping) ---
+      curX += (targetX - curX) * 0.06;
+      curY += (targetY - curY) * 0.06;
+
+      // Clamp inside viewport
+      curX = Math.max(modelSize, Math.min(viewportW - modelSize, curX));
+      curY = Math.max(modelSize, Math.min(viewportH - modelSize, curY));
 
       setPos({ x: curX, y: curY });
 
-      // 5. Disappear when overlapping any .dragon-disappear zone
+      // --- DISAPPEAR when overlapping .dragon-disappear zone ---
       const disappearZones = document.querySelectorAll('.dragon-disappear');
       let shouldHide = false;
       disappearZones.forEach(el => {
