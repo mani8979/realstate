@@ -47,6 +47,10 @@ const FloatingDragon = () => {
       if (!mounted) return;
 
       const now = Date.now();
+      // Declare viewport dimensions FIRST so they're in scope for the obstacle scan map callback
+      const viewportW = window.innerWidth;
+      const viewportH = window.innerHeight;
+
       // Rescan obstacles every 1s
       if (now - lastScan.current > 1000) {
         // Repel from text, cards, buttons, and specifically marked elements (.dragon-repel)
@@ -64,9 +68,6 @@ const FloatingDragon = () => {
           .filter((r): r is DOMRect => r !== null && r.width > 10 && r.height > 10);
         lastScan.current = now;
       }
-
-      const viewportW = window.innerWidth;
-      const viewportH = window.innerHeight;
 
       // 1. Ideal "Base" Position (Gently circling the viewport)
       const time = now / 4000;
