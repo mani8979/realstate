@@ -25,8 +25,10 @@ const FloatingDragon = () => {
   // ── Motion values bypass React state → zero re-renders, zero drift ─────────
   const mX      = useMotionValue(typeof window !== 'undefined' ? window.innerWidth - 120 : 900);
   const mY      = useMotionValue(typeof window !== 'undefined' ? window.innerHeight * 0.12 : 120);
-  // Fast-settling spring for X — no gravity feel, snappy side switch
+  // X: snappy spring for left⇔right switch
   const springX = useSpring(mX, { stiffness: 70, damping: 20, mass: 1 });
+  // Y: gravity-feel spring — model "falls" into position as you scroll down
+  const springY = useSpring(mY, { stiffness: 60, damping: 12, mass: 0.8 });
 
   // ── Lazy-load trigger ───────────────────────────────────────────────────────
   useEffect(() => {
@@ -90,8 +92,8 @@ const FloatingDragon = () => {
 
     // Set correct initial position without spring animation
     compute();
-    // Jump springX to current mX value so spring doesn't animate from 0
     springX.jump(mX.get());
+    springY.jump(mY.get()); // initialise springY too so it doesn’t animate from 0
 
     // Only recompute when scrollY actually changes
     let lastY = window.scrollY;
@@ -154,7 +156,7 @@ const FloatingDragon = () => {
     <>
       {/* ── Floating model ─────────────────────────────────────────────────── */}
       <motion.div
-        style={{ x: springX, y: mY, translateX: '-50%', translateY: '-50%' }}
+        style={{ x: springX, y: springY, translateX: '-50%', translateY: '-50%' }}
         className="fixed top-0 left-0 pointer-events-none z-[100]"
       >
         <motion.div
