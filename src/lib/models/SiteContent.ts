@@ -48,6 +48,7 @@ export interface ISiteContent extends Document {
   contactAddress: string;
   logoTitle: string;
   logoSubtitle: string;
+  logoLink: string;
   navHome: string;
   navProperties: string;
   navAbout: string;
