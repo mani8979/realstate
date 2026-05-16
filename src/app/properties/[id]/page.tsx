@@ -447,6 +447,7 @@ const PropertyDetails = () => {
                   initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
+                  data-model-align={align}
                   className={`flex ${isCenter ? 'justify-center' : isRight ? 'justify-end' : 'justify-start'}`}
                 >
                   <div className={`md:w-1/2 w-full glass-card p-6 py-10 md:p-8 md:py-16 ${
