@@ -80,11 +80,11 @@ const FloatingDragon = () => {
     const computeX = () => {
       const W = window.innerWidth;
       const H = window.innerHeight;
-      const msz = W < 768 ? 60 : 110;
+      const msz = W < 768 ? 80 : 150; // Increased safety margin
       const currentY = mY.get();
 
       // X: Detect empty spaces based on current Y position
-      if (W < 768) { mX.set(W - msz - PAD); return; }
+      if (W < 768) { mX.set(W - msz - 20); return; }
 
       const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-model-align]'));
       let targetX = W - msz - PAD; // Default right
@@ -155,8 +155,8 @@ const FloatingDragon = () => {
   if (!src) return null;
 
   const mob = typeof window !== 'undefined' && window.innerWidth < 768;
-  const mW = mob ? 110 : 170;
-  const mH = mob ? 148 : 225;
+  const mW = mob ? 140 : 220; // Increased width
+  const mH = mob ? 180 : 280; // Increased height
 
   return (
     <>
@@ -167,9 +167,9 @@ const FloatingDragon = () => {
           y: springY, 
           translateX: '-50%',
           translateY: '-50%',
-          perspective: 1000 
+          perspective: 1500 // Increased perspective depth
         }}
-        className="fixed top-0 left-0 pointer-events-none z-[100]"
+        className="fixed top-0 left-0 pointer-events-none z-[100] overflow-visible"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0 }}
@@ -177,7 +177,7 @@ const FloatingDragon = () => {
           whileHover={{ scale: 1.15 }}
           transition={{ duration: visible ? 0.8 : 0.2, ease: 'easeInOut' }}
           style={{ width: mW, height: mH }}
-          className="relative pointer-events-auto cursor-pointer"
+          className="relative pointer-events-auto cursor-pointer overflow-visible"
           onClick={() => setShowPopup(true)}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
@@ -195,7 +195,7 @@ const FloatingDragon = () => {
             shadow-intensity="2" exposure="1.2" bounds="tight"
             camera-orbit={orbit} // Use the animated 3D orbit
             min-camera-orbit="auto auto 10m" max-camera-orbit="auto auto 10m"
-            field-of-view="25deg" interaction-prompt="none"
+            field-of-view="30deg" interaction-prompt="none"
             style={{ width: '100%', height: '100%' }}
           ></ModelViewer>
 
