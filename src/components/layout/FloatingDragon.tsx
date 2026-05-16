@@ -105,6 +105,7 @@ const FloatingDragon = () => {
   useEffect(() => {
     setMounted(true);
     let frameId: number;
+    let lastTime = performance.now();
 
     const viewportW = typeof window !== 'undefined' ? window.innerWidth : 1200;
     const viewportH = typeof window !== 'undefined' ? window.innerHeight : 800;
@@ -114,7 +115,11 @@ const FloatingDragon = () => {
     let curX = viewportW - modelSize - 24;
     let curY = viewportH * 0.12;
 
-    const update = () => {
+    const update = (now: number) => {
+      // Delta-time in seconds, capped at 100 ms to survive tab-switch hitches
+      const dt = Math.min((now - lastTime) / 1000, 0.1);
+      lastTime = now;
+
       const vW = window.innerWidth;
       const vH = window.innerHeight;
       const mSize = vW < 768 ? 60 : 110;
@@ -122,9 +127,18 @@ const FloatingDragon = () => {
       const targetX = getTargetX(vW, mSize);
       const targetY = getTargetY(vH);
 
-      // Smooth lerp
-      curX += (targetX - curX) * 0.05;
-      curY += (targetY - curY) * 0.05;
+      // ─── Frame-rate-independent exponential lerp ──────────────────────
+      // halfLifeX = 1.8 s  →  the model takes ~1.8 s to cover half the distance
+      // halfLifeY = 0.9 s  →  Y tracks scroll a bit quicker
+      const alphaX = 1 - Math.pow(0.5, dt / 1.8);
+      const alphaY = 1 - Math.pow(0.5, dt / 0.9);
+
+      const dX = (targetX - curX) * alphaX;
+      const dY = (targetY - curY) * alphaY;
+
+      // Dead-zone: skip micro-jitter below 0.5 px
+      if (Math.abs(dX) > 0.5) curX += dX;
+      if (Math.abs(dY) > 0.5) curY += dY;
 
       // Clamp inside viewport
       curX = Math.max(mSize, Math.min(vW - mSize, curX));
@@ -151,7 +165,7 @@ const FloatingDragon = () => {
       frameId = requestAnimationFrame(update);
     };
 
-    update();
+    frameId = requestAnimationFrame(update);
     return () => cancelAnimationFrame(frameId);
   }, [mounted]);
 
