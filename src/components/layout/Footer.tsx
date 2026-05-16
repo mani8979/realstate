@@ -24,7 +24,7 @@ const Footer = async () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
           {/* Brand & Mission */}
           <div className="space-y-8 text-center md:text-left flex flex-col items-center md:items-start">
-            <Link href="/" className="flex items-center gap-3 group">
+            <Link href={content.logoLink || "/"} className="flex items-center gap-3 group">
               {content.footerLogoImage ? (
                 <div className="relative h-14 w-40">
                   <img src={content.footerLogoImage} alt={content.logoTitle} className="h-full w-full object-contain" />
@@ -110,7 +110,7 @@ const Footer = async () => {
                   <MapPin size={18} />
                 </div>
                 <span className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
-                  {content.officeAddress || 'Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026.'}
+                  {content.contactAddress || 'Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026.'}
                 </span>
               </li>
               <li className="flex flex-col md:flex-row items-center gap-4">

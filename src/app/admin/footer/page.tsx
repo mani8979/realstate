@@ -73,14 +73,23 @@ export default function FooterAdmin() {
           <h1 className="text-4xl font-black uppercase text-gray-900 dark:text-white tracking-tighter">Footer Management</h1>
           <p className="text-gray-500 mt-2 font-medium">Customize the global footer information across all pages.</p>
         </div>
-        <button 
-          onClick={handleSave}
-          disabled={saving}
-          className="bg-primary text-black dark:text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-2 hover:shadow-2xl hover:shadow-primary/30 transition-all shadow-xl shadow-primary/20"
-        >
-          <Save size={20} />
-          {saving ? 'Saving...' : 'Save Footer'}
-        </button>
+        <div className="flex items-center gap-4">
+          <a 
+            href="/" 
+            target="_blank" 
+            className="px-6 py-3 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 font-bold hover:bg-gray-50 dark:hover:bg-gray-900 transition-all flex items-center gap-2"
+          >
+            View Site
+          </a>
+          <button 
+            onClick={handleSave}
+            disabled={saving}
+            className="bg-primary text-black dark:text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-2 hover:shadow-2xl hover:shadow-primary/30 transition-all shadow-xl shadow-primary/20"
+          >
+            <Save size={20} />
+            {saving ? 'Saving...' : 'Save Footer'}
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

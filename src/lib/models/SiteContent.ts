@@ -239,6 +239,7 @@ const SiteContentSchema = new Schema<ISiteContent>(
     contactAddress: { type: String, default: "Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026." },
     logoTitle: { type: String, default: "STAR LAND" },
     logoSubtitle: { type: String, default: "DEVELOPERS" },
+    logoLink: { type: String, default: "/" },
     navHome: { type: String, default: "Home" },
     navProperties: { type: String, default: "Properties" },
     navAbout: { type: String, default: "About" },

@@ -81,14 +81,23 @@ export default function BrandingAdmin() {
           <h1 className="text-3xl font-black uppercase text-gray-900 dark:text-white tracking-tighter">Global Branding</h1>
           <p className="text-gray-500">Manage your logos, identity, and browser icons.</p>
         </div>
-        <button 
-          onClick={handleSave}
-          disabled={saving}
-          className="bg-primary text-black dark:text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-2 hover:bg-primary/90 transition-all shadow-xl shadow-primary/20"
-        >
-          <Save size={20} />
-          {saving ? 'Saving...' : 'Save Branding'}
-        </button>
+        <div className="flex items-center gap-4">
+          <a 
+            href="/" 
+            target="_blank" 
+            className="px-6 py-3 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 font-bold hover:bg-gray-50 dark:hover:bg-gray-900 transition-all flex items-center gap-2"
+          >
+            View Site
+          </a>
+          <button 
+            onClick={handleSave}
+            disabled={saving}
+            className="bg-primary text-black dark:text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-2 hover:bg-primary/90 transition-all shadow-xl shadow-primary/20"
+          >
+            <Save size={20} />
+            {saving ? 'Saving...' : 'Save Branding'}
+          </button>
+        </div>
       </div>
 
       <div className="space-y-8">
@@ -157,6 +166,10 @@ export default function BrandingAdmin() {
              <div className="space-y-4">
                 <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Logo Subtitle (Text)</label>
                 <input name="logoSubtitle" value={content.logoSubtitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800" placeholder="e.g. DEVELOPERS" />
+             </div>
+             <div className="space-y-4 md:col-span-2">
+                <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Logo Link URL (Redirect when clicked)</label>
+                <input name="logoLink" value={content.logoLink || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800" placeholder="e.g. /" />
              </div>
           </div>
         </div>

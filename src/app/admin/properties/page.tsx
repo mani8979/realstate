@@ -56,13 +56,22 @@ const AdminProperties = () => {
               <p className="text-gray-500">Manage your listings, prices, and availability.</p>
             </div>
             
-            <Link 
-              href="/admin/properties/add" 
-              className="bg-primary hover:bg-primary-dark text-black dark:text-white font-bold px-8 py-4 rounded-2xl flex items-center gap-2 transition-all shadow-xl shadow-primary/20"
-            >
-              <PlusCircle size={20} />
-              <span>Add New Property</span>
-            </Link>
+            <div className="flex items-center gap-4">
+              <a 
+                href="/properties" 
+                target="_blank" 
+                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-bold px-8 py-4 rounded-2xl flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm"
+              >
+                <span>View All Properties</span>
+              </a>
+              <Link 
+                href="/admin/properties/add" 
+                className="bg-primary hover:bg-primary-dark text-black dark:text-white font-bold px-8 py-4 rounded-2xl flex items-center gap-2 transition-all shadow-xl shadow-primary/20"
+              >
+                <PlusCircle size={20} />
+                <span>Add New Property</span>
+              </Link>
+            </div>
           </div>
 
           <div className="bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">

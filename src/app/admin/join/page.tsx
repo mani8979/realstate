@@ -120,14 +120,23 @@ export default function JoinAdmin() {
           <h1 className="text-3xl font-black uppercase text-gray-900 dark:text-white">Join Page Settings</h1>
           <p className="text-gray-500">Manage recruitment info, rules, and team collaboration links.</p>
         </div>
-        <button 
-          onClick={handleSave}
-          disabled={saving}
-          className="bg-primary text-black dark:text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-2 hover:bg-primary/90 transition-all shadow-xl shadow-primary/20"
-        >
-          <Save size={20} />
-          {saving ? 'Saving...' : 'Save Changes'}
-        </button>
+        <div className="flex items-center gap-4">
+          <a 
+            href="/join" 
+            target="_blank" 
+            className="px-6 py-3 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 font-bold hover:bg-gray-50 dark:hover:bg-gray-900 transition-all flex items-center gap-2"
+          >
+            Preview Page
+          </a>
+          <button 
+            onClick={handleSave}
+            disabled={saving}
+            className="bg-primary text-black dark:text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-2 hover:bg-primary/90 transition-all shadow-xl shadow-primary/20"
+          >
+            <Save size={20} />
+            {saving ? 'Saving...' : 'Save Changes'}
+          </button>
+        </div>
       </div>
 
       <div className="space-y-8">

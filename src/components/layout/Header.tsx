@@ -38,7 +38,7 @@ const Header = () => {
     fetch('/api/content')
       .then(res => res.json())
       .then(data => {
-        if (data.success && data.data) setContent(data.data);
+        if (data.success && data.data) setContent((prev: any) => ({ ...prev, ...data.data }));
       })
       .catch(err => console.error("Error fetching content:", err));
   }, []);
@@ -67,7 +67,7 @@ const Header = () => {
         <div className="max-w-[1400px] mx-auto px-6 md:px-10">
           <nav className="flex items-center justify-between gap-8">
             {/* Logo */}
-            <Link href="/" className="group relative z-10">
+            <Link href={content.logoLink || "/"} className="group relative z-10">
               {content.headerLogoImage ? (
                 <div className="relative h-10 md:h-14 w-auto flex items-center">
                   <img 

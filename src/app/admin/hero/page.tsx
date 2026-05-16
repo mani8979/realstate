@@ -56,14 +56,23 @@ export default function HeroAdmin() {
     <div className="max-w-4xl">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-black uppercase text-gray-900 dark:text-white">Hero Settings</h1>
-        <button 
-          onClick={handleSave}
-          disabled={saving}
-          className="bg-primary text-black dark:text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-primary/90 transition-all"
-        >
-          <Save size={20} />
-          {saving ? 'Saving...' : 'Save Changes'}
-        </button>
+        <div className="flex items-center gap-4">
+          <a 
+            href="/" 
+            target="_blank" 
+            className="px-6 py-3 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 font-bold hover:bg-gray-50 dark:hover:bg-gray-900 transition-all flex items-center gap-2"
+          >
+            Preview Page
+          </a>
+          <button 
+            onClick={handleSave}
+            disabled={saving}
+            className="bg-primary text-black dark:text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-primary/90 transition-all"
+          >
+            <Save size={20} />
+            {saving ? 'Saving...' : 'Save Changes'}
+          </button>
+        </div>
       </div>
 
       <div className="space-y-8">

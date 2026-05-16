@@ -57,14 +57,23 @@ export default function ReadyToClaimAdmin() {
           <h1 className="text-4xl font-black uppercase text-gray-900 dark:text-white tracking-tighter">Ready To Claim</h1>
           <p className="text-gray-500 mt-2 font-medium">Manage the final call-to-action section on the homepage.</p>
         </div>
-        <button 
-          onClick={handleSave}
-          disabled={saving}
-          className="bg-primary text-black dark:text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-2 hover:shadow-2xl hover:shadow-primary/30 transition-all shadow-xl shadow-primary/20"
-        >
-          <Save size={20} />
-          {saving ? 'Saving...' : 'Save CTA'}
-        </button>
+        <div className="flex items-center gap-4">
+          <a 
+            href="/" 
+            target="_blank" 
+            className="px-6 py-3 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 font-bold hover:bg-gray-50 dark:hover:bg-gray-900 transition-all flex items-center gap-2"
+          >
+            Preview Section
+          </a>
+          <button 
+            onClick={handleSave}
+            disabled={saving}
+            className="bg-primary text-black dark:text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-2 hover:shadow-2xl hover:shadow-primary/30 transition-all shadow-xl shadow-primary/20"
+          >
+            <Save size={20} />
+            {saving ? 'Saving...' : 'Save CTA'}
+          </button>
+        </div>
       </div>
 
       <div className="space-y-8">
