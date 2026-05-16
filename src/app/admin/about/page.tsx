@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Save, Info, Upload, X, Users, Plus, Trash2, Layout, Sparkles, ShieldCheck, Target, Award, Camera, Settings, Loader2 } from 'lucide-react';
+import { Save, Info, Upload, X, Users, Plus, Trash2, Layout, Sparkles, ShieldCheck, Target, Award, Camera, Settings, Loader2, Globe } from 'lucide-react';
 import FileDropzone from '@/components/admin/FileDropzone';
 import { cn } from '@/lib/utils';
 
