@@ -1,166 +1,41 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  motion, AnimatePresence,
-  useMotionValue, useSpring,
-  useMotionValueEvent, useScroll,
-} from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Leaf, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 const ModelViewer = 'model-viewer' as any;
 
+interface FruitInstance {
+  id: number;
+  x: number;
+  y: number;
+  vX: number;
+  vY: number;
+  rotX: number;
+  rotY: number;
+  rotZ: number;
+  vRot: { x: number; y: number; z: number };
+  scale: number;
+  driftPhase: number;
+  bounces: number;
+}
+
 const FloatingDragon = () => {
-  const [showPopup,        setShowPopup]        = useState(false);
-  const [currentProperty,  setCurrentProperty]  = useState<any>(null);
-  const [shouldLoad,       setShouldLoad]        = useState(false);
-  const [visible,          setVisible]           = useState(true);
-  const [hovered,          setHovered]           = useState(false);
-  const pathname        = usePathname();
-  const modelViewerRef  = useRef<any>(null);
-  const lastSide        = useRef<'left' | 'right' | null>(null); // tracks which side model is on
-  const { scrollYProgress } = useScroll();
+  const [showPopup, setShowPopup] = useState(false);
+  const [currentProperty, setCurrentProperty] = useState<any>(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
+  const [fruits, setFruits] = useState<FruitInstance[]>([]);
+  const pathname = usePathname();
+  const nextId = useRef(0);
+  const requestRef = useRef<number | undefined>(undefined);
+  const lastTimeRef = useRef<number | undefined>(undefined);
 
-  // ── Motion values bypass React state → zero re-renders, zero drift ─────────
-  const mX      = useMotionValue(typeof window !== 'undefined' ? window.innerWidth - 120 : 900);
-  const mY      = useMotionValue(typeof window !== 'undefined' ? window.innerHeight * 0.12 : 120);
-  
-  // X: snappy spring for left⇔right switch
-  const springX = useSpring(mX, { stiffness: 70, damping: 20, mass: 1 });
-  
-  // Y: EXTREME gravity-feel spring — model "falls" with massive inertia
-  const springY = useSpring(mY, { stiffness: 15, damping: 8, mass: 6 });
-
-  // ── Air resistance / Bobbing effect ───────────────────────────────────────
-  const yBob = useMotionValue(0);
+  // ── Lazy load ──────────────────────────────────────────────────────────────
   useEffect(() => {
-    let frame: number;
-    const start = performance.now();
-    const tick = (now: number) => {
-      const elapsed = (now - start) / 1000;
-      // Constant subtle bobbing to simulate air resistance
-      yBob.set(Math.sin(elapsed * 2) * 12);
-      frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [yBob]);
-
-  // ── Velocity-based rotation for "falling" effect ───────────────────────────
-  const rotateX = useMotionValue(0);
-  const rotateZ = useMotionValue(0);
-
-  useEffect(() => {
-    const unsubY = springY.on('change', () => {
-      const velY = springY.getVelocity();
-      // Aggressive tilt forward when falling down (positive velocity)
-      rotateX.set(Math.min(25, Math.max(-25, velY / 30)));
-    });
-    const unsubX = springX.on('change', () => {
-      const velX = springX.getVelocity();
-      // Tilt sideways when moving horizontally
-      rotateZ.set(Math.min(10, Math.max(-10, -velX / 60)));
-    });
-    return () => { unsubY(); unsubX(); };
-  }, [springX, springY, rotateX, rotateZ]);
-
-  // ── Lazy-load trigger ───────────────────────────────────────────────────────
-  useEffect(() => {
-    const t = setTimeout(() => setShouldLoad(true), 1800);
-    const s = () => { setShouldLoad(true); window.removeEventListener('scroll', s); };
-    window.addEventListener('scroll', s);
-    return () => { clearTimeout(t); window.removeEventListener('scroll', s); };
-  }, []);
-
-  // ── Scroll-driven positioning (ONLY fires when user scrolls) ───────────────
-  useEffect(() => {
-    const PAD = 36;
-
-    const compute = () => {
-      const W   = window.innerWidth;
-      const H   = window.innerHeight;
-      const msz = W < 768 ? 60 : 110;
-
-      // ── Y: direct from scroll progress — zero lag, zero post-scroll drift ──
-      const pageH = Math.max(1, document.body.scrollHeight - H);
-      const prog  = Math.min(1, window.scrollY / pageH);
-      mY.set(Math.max(msz, Math.min(H - msz, H * (0.12 + prog * 0.68))));
-
-      // ── X: section-alignment driven ───────────────────────────────────────
-      if (W < 768) { mX.set(W - msz - PAD); return; }
-
-      const trigTop = H * 0.20;
-      const trigBot = H * 0.80;
-      const sections = Array.from(
-        document.querySelectorAll<HTMLElement>('[data-model-align]')
-      );
-
-      for (const el of sections) {
-        const r = el.getBoundingClientRect();
-        if (r.top < trigBot && r.bottom > trigTop) {
-          const align  = el.dataset.modelAlign ?? 'left';
-          const card   = el.querySelector<HTMLElement>('.glass-card');
-          const cr     = card?.getBoundingClientRect();
-          const newSide: 'left' | 'right' = align === 'right' ? 'left' : 'right';
-
-          let newX: number;
-          if (newSide === 'left') {
-            newX = cr ? Math.max(msz + PAD, cr.left / 2) : msz + PAD;
-          } else {
-            newX = cr
-              ? Math.min(W - msz - PAD, cr.right + (W - cr.right) / 2)
-              : W - msz - PAD;
-          }
-
-          // Always spring — model glides through center when switching sides
-          mX.set(newX);
-          lastSide.current = newSide;
-          return;
-        }
-      }
-
-      // No section in trigger band → glide back to right edge
-      mX.set(W - msz - PAD);
-      lastSide.current = 'right';
-    };
-
-    // Set correct initial position
-    compute();
-    springX.jump(mX.get());
-    // Note: NOT jumping springY so it "falls" into view from the top on load
-
-    // Only recompute when scrollY actually changes
-    let lastY = window.scrollY;
-    const onScroll = () => {
-      const sy = window.scrollY;
-      if (Math.abs(sy - lastY) < 1) return;
-      lastY = sy;
-      compute();
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // ── Visibility check (rAF — cheap, no state churn) ─────────────────────────
-  useEffect(() => {
-    let frame: number;
-    const tick = () => {
-      const H = window.innerHeight;
-      let hide = false;
-      document.querySelectorAll<HTMLElement>(
-        '.dragon-disappear, .model-hide-zone'
-      ).forEach(z => {
-        const r = z.getBoundingClientRect();
-        if (Math.max(0, Math.min(r.bottom, H) - Math.max(r.top, 0)) > H * 0.25)
-          hide = true;
-      });
-      setVisible(!hide);
-      frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
+    const timer = setTimeout(() => setShouldLoad(true), 2000);
+    return () => clearTimeout(timer);
   }, []);
 
   // ── Fetch property data ────────────────────────────────────────────────────
@@ -168,87 +43,135 @@ const FloatingDragon = () => {
     const pid = pathname?.split('/properties/')?.[1]?.split('/')?.[0];
     if (pid && pid.length > 10) {
       fetch(`/api/properties/${pid}?t=${Date.now()}`)
-        .then(r => r.json()).then(setCurrentProperty).catch(() => setCurrentProperty(null));
-    } else setCurrentProperty(null);
+        .then(r => r.json())
+        .then(d => setCurrentProperty(d))
+        .catch(() => setCurrentProperty(null));
+    } else {
+      setCurrentProperty(null);
+    }
   }, [pathname]);
 
-  // ── Camera orbit on scroll ─────────────────────────────────────────────────
-  useMotionValueEvent(scrollYProgress, 'change', v => {
-    if (modelViewerRef.current)
-      modelViewerRef.current.cameraOrbit = `${v * 1080}deg 75deg 10m`;
-  });
+  // ── Spawn Logic ────────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!shouldLoad) return;
 
-  // ── Guards ─────────────────────────────────────────────────────────────────
+    const spawn = () => {
+      setFruits(prev => {
+        if (prev.length > 8) return prev; 
+        
+        const newFruit: FruitInstance = {
+          id: nextId.current++,
+          x: Math.random() * 100,
+          y: -20,
+          vX: (Math.random() - 0.5) * 5,
+          vY: Math.random() * 5 + 2,
+          rotX: Math.random() * 360,
+          rotY: Math.random() * 360,
+          rotZ: Math.random() * 360,
+          vRot: {
+            x: (Math.random() - 0.5) * 2,
+            y: (Math.random() - 0.5) * 2,
+            z: (Math.random() - 0.5) * 2
+          },
+          scale: Math.random() * 0.4 + 0.8,
+          driftPhase: Math.random() * Math.PI * 2,
+          bounces: 0
+        };
+        return [...prev, newFruit];
+      });
+    };
+
+    const interval = setInterval(spawn, 2500);
+    return () => clearInterval(interval);
+  }, [shouldLoad]);
+
+  // ── Physics Engine ─────────────────────────────────────────────────────────
+  useEffect(() => {
+    const animate = (time: number) => {
+      if (lastTimeRef.current !== undefined) {
+        const dt = (time - lastTimeRef.current) / 16;
+        
+        setFruits(prev => {
+          return prev.map(f => {
+            let { x, y, vX, vY, rotX, rotY, rotZ, vRot, driftPhase, bounces } = f;
+            
+            vY += 0.15 * dt;
+            const drift = Math.sin(time / 1000 + driftPhase) * 0.05 * dt;
+            vX += drift;
+            
+            y += vY * dt;
+            x += vX * dt;
+            
+            rotX += vRot.x * dt;
+            rotY += vRot.y * dt;
+            rotZ += vRot.z * dt;
+            
+            const floor = 110; 
+            if (y > floor && bounces < 1) {
+              y = floor;
+              vY = -vY * 0.3; 
+              bounces++;
+            }
+            
+            return { ...f, x, y, vX, vY, rotX, rotY, rotZ, bounces };
+          }).filter(f => f.y < 150); 
+        });
+      }
+      lastTimeRef.current = time;
+      requestRef.current = requestAnimationFrame(animate);
+    };
+
+    requestRef.current = requestAnimationFrame(animate);
+    return () => {
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    };
+  }, []);
+
   if (!shouldLoad || pathname?.startsWith('/admin')) return null;
   const src = currentProperty?.threeDElement;
   if (!src) return null;
 
-  const mob = typeof window !== 'undefined' && window.innerWidth < 768;
-  const mW = mob ? 110 : 170;
-  const mH = mob ? 148 : 225;
-
   return (
     <>
-      {/* ── Floating model ─────────────────────────────────────────────────── */}
-      <motion.div
-        style={{ 
-          x: springX, 
-          y: springY, 
-          translateY: yBob, // Add bobbing offset
-          rotateX: rotateX,
-          rotateZ: rotateZ,
-          translateX: '-50%', 
-          perspective: 1000 
-        }}
-        className="fixed top-0 left-0 pointer-events-none z-[100]"
-      >
-        <motion.div
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0 }}
-          transition={{ duration: visible ? 0.8 : 0.2, ease: 'easeInOut' }}
-          style={{ width: mW, height: mH }}
-          className="relative pointer-events-auto cursor-pointer"
-          onClick={() => setShowPopup(true)}
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-        >
-          {/* Pulse ring */}
-          <motion.div
-            className="absolute inset-0 rounded-full border border-primary/25 pointer-events-none"
-            animate={{ scale: [1, 1.25, 1], opacity: [0.3, 0, 0.3] }}
-            transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-          />
+      <div className="fixed inset-0 pointer-events-none z-[100] overflow-hidden">
+        <AnimatePresence>
+          {fruits.map(f => (
+            <motion.div
+              key={f.id}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: f.scale }}
+              exit={{ opacity: 0, scale: 0 }}
+              style={{
+                position: 'absolute',
+                left: `${f.x}%`,
+                top: `${f.y}%`,
+                width: 150,
+                height: 180,
+                x: '-50%',
+                y: '-50%',
+                rotateX: f.rotX,
+                rotateY: f.rotY,
+                rotateZ: f.rotZ,
+                perspective: 1000
+              }}
+              className="pointer-events-auto cursor-pointer"
+              onClick={() => setShowPopup(true)}
+            >
+              <ModelViewer
+                src={src}
+                alt="Falling Fruit"
+                loading="eager"
+                auto-rotate-delay="0"
+                interaction-prompt="none"
+                shadow-intensity="1"
+                exposure="1"
+                style={{ width: '100%', height: '100%' }}
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
 
-          <ModelViewer
-            ref={modelViewerRef} src={src} alt="3D Model"
-            camera-controls disable-zoom disable-pan
-            shadow-intensity="2" exposure="1.2" bounds="tight"
-            camera-orbit="0deg 75deg 10m"
-            min-camera-orbit="auto auto 10m" max-camera-orbit="auto auto 10m"
-            field-of-view="25deg" interaction-prompt="none"
-            style={{ width: '100%', height: '100%' }}
-          ></ModelViewer>
-
-          <AnimatePresence>
-            {hovered && (
-              <motion.div key="tip"
-                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 8 }} transition={{ duration: 0.15 }}
-                className="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap
-                           bg-black/85 backdrop-blur-md text-white text-[9px]
-                           font-black uppercase tracking-[0.18em] px-4 py-2 rounded-full
-                           border border-primary/40 shadow-[0_0_14px_rgba(16,185,129,0.3)]
-                           pointer-events-none z-10"
-              >
-                <span className="text-primary mr-1">✦</span>
-                View Plantation &amp; Cultivation Info
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
-      </motion.div>
-
-      {/* ── Popup ──────────────────────────────────────────────────────────── */}
       {showPopup && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-10 bg-white/90 dark:bg-black/95 backdrop-blur-3xl"
           onClick={() => setShowPopup(false)}>
