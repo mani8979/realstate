@@ -19,13 +19,14 @@ const FloatingDragon = () => {
   const [hovered,          setHovered]           = useState(false);
   const pathname        = usePathname();
   const modelViewerRef  = useRef<any>(null);
+  const lastSide        = useRef<'left' | 'right' | null>(null); // tracks which side model is on
   const { scrollYProgress } = useScroll();
 
   // ── Motion values bypass React state → zero re-renders, zero drift ─────────
   const mX      = useMotionValue(typeof window !== 'undefined' ? window.innerWidth - 120 : 900);
   const mY      = useMotionValue(typeof window !== 'undefined' ? window.innerHeight * 0.12 : 120);
-  // Slow spring for X (cinematic side-switch), Y is direct (never drifts)
-  const springX = useSpring(mX, { stiffness: 18, damping: 22, mass: 3 });
+  // Fast-settling spring for X — no gravity feel, snappy side switch
+  const springX = useSpring(mX, { stiffness: 70, damping: 20, mass: 1 });
 
   // ── Lazy-load trigger ───────────────────────────────────────────────────────
   useEffect(() => {
@@ -65,20 +66,40 @@ const FloatingDragon = () => {
           const card  = el.querySelector<HTMLElement>('.glass-card');
           const cr    = card?.getBoundingClientRect();
 
-          if (align === 'right') {
-            // text RIGHT → model sits in LEFT empty strip
-            mX.set(cr ? Math.max(msz + PAD, cr.left / 2) : msz + PAD);
+          // Determine which side the model should be on
+          const newSide: 'left' | 'right' = align === 'right' ? 'left' : 'right';
+
+          let newX: number;
+          if (newSide === 'left') {
+            // text RIGHT → model in LEFT empty strip
+            newX = cr ? Math.max(msz + PAD, cr.left / 2) : msz + PAD;
           } else {
-            // text LEFT or CENTER → model sits in RIGHT empty strip
-            mX.set(cr ? Math.min(W - msz - PAD, cr.right + (W - cr.right) / 2)
-                      : W - msz - PAD);
+            // text LEFT/CENTER → model in RIGHT empty strip
+            newX = cr
+              ? Math.min(W - msz - PAD, cr.right + (W - cr.right) / 2)
+              : W - msz - PAD;
           }
+
+          // Side changed → jump instantly so model never sweeps through text
+          if (lastSide.current !== null && lastSide.current !== newSide) {
+            mX.jump(newX);
+            springX.jump(newX);
+          } else {
+            mX.set(newX); // same side → spring fine-tunes smoothly
+          }
+          lastSide.current = newSide;
           return;
         }
       }
 
-      // No section in trigger band → snap to right edge
-      mX.set(W - msz - PAD);
+      // No section in trigger band → right edge (no side change tracking)
+      const noSectionX = W - msz - PAD;
+      if (lastSide.current === 'left') {
+        mX.jump(noSectionX); springX.jump(noSectionX); // jumped away from left
+      } else {
+        mX.set(noSectionX);
+      }
+      lastSide.current = 'right';
     };
 
     // Set correct initial position without spring animation
