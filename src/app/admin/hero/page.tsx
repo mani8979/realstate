@@ -208,7 +208,7 @@ export default function HeroAdmin() {
                      {content.motivationBgImage ? (
                         <div className="relative aspect-video rounded-xl overflow-hidden group">
                            <img src={content.motivationBgImage} alt="Motivation BG" className="w-full h-full object-cover" />
-                           <button onClick={() => setContent({...content, motivationBgImage: ''})} className="absolute inset-0 bg-black/40 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all font-bold">Change Photo</button>
+                           <button onClick={() => setContent({...content, motivationBgImage: ''})} className="absolute inset-0 bg-black/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all font-bold uppercase tracking-widest text-xs">Remove Photo</button>
                         </div>
                      ) : (
                       <FileDropzone

@@ -14,16 +14,21 @@ const MotivationBanner: React.FC<MotivationBannerProps> = ({ content }) => {
 
   return (
     <section className="relative h-[60vh] min-h-[400px] w-full flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
+      {/* Background Image or Gradient */}
       <div className="absolute inset-0 z-0">
-        <Image
-          src={content.motivationBgImage || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2000"}
-          alt="Motivation Background"
-          fill
-          className="object-cover"
-        />
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-[2px] z-10" />
+        {content.motivationBgImage ? (
+          <>
+            <Image
+              src={content.motivationBgImage}
+              alt="Motivation Background"
+              fill
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-[2px] z-10" />
+          </>
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-black to-zinc-900 z-10" />
+        )}
       </div>
 
       <div className="container mx-auto px-6 relative z-20 text-center">
