@@ -43,6 +43,8 @@ export default function AboutAdmin() {
     aboutYearTitle: '',
     aboutYearDesc: '',
     aboutMissionVisionImage: '',
+    aboutTeamImage: '',
+    aboutYearImage: '',
     aboutGallery: []
   });
   const [loading, setLoading] = useState(true);
@@ -379,11 +381,45 @@ export default function AboutAdmin() {
              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-4 p-8 bg-gray-50 dark:bg-black/20 rounded-3xl border border-gray-100 dark:border-gray-800">
                    <h3 className="text-sm font-black uppercase tracking-widest text-primary mb-4">Metric 1 (Team)</h3>
+                   {content.aboutTeamImage ? (
+                     <div className="relative aspect-video rounded-2xl overflow-hidden group mb-4">
+                       <img src={content.aboutTeamImage} className="w-full h-full object-cover" />
+                       <button onClick={() => setContent({...content, aboutTeamImage: ''})} className="absolute inset-0 bg-black/40 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all font-bold">Remove</button>
+                     </div>
+                   ) : (
+                     <FileDropzone
+                       onFilesSelected={(files) => handleUpload(files, 'aboutTeamImage')}
+                       uploading={uploading === 'aboutTeamImage'}
+                       accept="image/*"
+                     >
+                       <div className="flex flex-col items-center justify-center aspect-video rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 hover:border-primary transition-all cursor-pointer bg-white dark:bg-gray-900 mb-4">
+                         {uploading === 'aboutTeamImage' ? <Loader2 className="animate-spin" /> : <Upload size={24} className="text-gray-400" />}
+                         <span className="text-[10px] mt-2 font-bold text-gray-500 uppercase tracking-widest">Upload Metric Photo</span>
+                       </div>
+                     </FileDropzone>
+                   )}
                    <input name="aboutTeamTitle" value={content.aboutTeamTitle || ''} onChange={handleChange} placeholder="e.g. 50+ Experts" className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 mb-4 font-bold" />
                    <textarea name="aboutTeamDesc" rows={2} value={content.aboutTeamDesc || ''} onChange={handleChange} placeholder="Description..." className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900" />
                 </div>
                 <div className="space-y-4 p-8 bg-gray-50 dark:bg-black/20 rounded-3xl border border-gray-100 dark:border-gray-800">
                    <h3 className="text-sm font-black uppercase tracking-widest text-primary mb-4">Metric 2 (Years)</h3>
+                   {content.aboutYearImage ? (
+                     <div className="relative aspect-video rounded-2xl overflow-hidden group mb-4">
+                       <img src={content.aboutYearImage} className="w-full h-full object-cover" />
+                       <button onClick={() => setContent({...content, aboutYearImage: ''})} className="absolute inset-0 bg-black/40 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all font-bold">Remove</button>
+                     </div>
+                   ) : (
+                     <FileDropzone
+                       onFilesSelected={(files) => handleUpload(files, 'aboutYearImage')}
+                       uploading={uploading === 'aboutYearImage'}
+                       accept="image/*"
+                     >
+                       <div className="flex flex-col items-center justify-center aspect-video rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 hover:border-primary transition-all cursor-pointer bg-white dark:bg-gray-900 mb-4">
+                         {uploading === 'aboutYearImage' ? <Loader2 className="animate-spin" /> : <Upload size={24} className="text-gray-400" />}
+                         <span className="text-[10px] mt-2 font-bold text-gray-500 uppercase tracking-widest">Upload Metric Photo</span>
+                       </div>
+                     </FileDropzone>
+                   )}
                    <input name="aboutYearTitle" value={content.aboutYearTitle || ''} onChange={handleChange} placeholder="e.g. 15+ Years" className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 mb-4 font-bold" />
                    <textarea name="aboutYearDesc" rows={2} value={content.aboutYearDesc || ''} onChange={handleChange} placeholder="Description..." className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900" />
                 </div>

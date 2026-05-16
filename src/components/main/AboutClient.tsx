@@ -73,7 +73,7 @@ const AboutClient = ({ content }: { content: any }) => {
         </div>
 
         <div id="about-journey">
-          <WhyChooseUs />
+          <WhyChooseUs content={content} />
         </div>
         
         {/* Mission/Vision Section */}

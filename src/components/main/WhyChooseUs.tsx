@@ -4,40 +4,81 @@ import React from 'react';
 import { ShieldCheck, UserCheck, Zap, Heart, Sparkles, Award } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const features = [
-  {
-    sideHeading: 'Quality First',
-    title: 'Verified Properties',
-    desc: 'Every listing is manually verified by our team.',
-    icon: UserCheck,
-    color: 'text-emerald-500 bg-emerald-500/10'
-  },
-  {
-    sideHeading: 'Legally Secure',
-    title: 'Clear Documentation',
-    desc: '100% legal transparency and title clarity.',
-    icon: ShieldCheck,
-    color: 'text-blue-500 bg-blue-500/10'
-  },
-  {
-    sideHeading: 'Honest Deals',
-    title: '100% Transparency',
-    desc: 'No hidden costs. Direct registration.',
-    icon: Zap,
-    color: 'text-amber-500 bg-amber-500/10'
-  },
-  {
-    sideHeading: 'Vizag Expert',
-    title: 'Personalized Care',
-    desc: 'We help you find the property that matches your lifestyle.',
-    icon: Heart,
-    color: 'text-primary bg-primary/10'
-  }
-];
+const WhyChooseUs = ({ content }: { content?: any }) => {
+  const [data, setData] = React.useState<any>(content || {
+    brandBadge: 'Our Core Pillars',
+    brandTitle1: 'Why',
+    brandTitle2: 'Choose Us',
+    brandDesc: 'Dedicated to creating sustainable and premium living environments.',
+    brandP1Side: 'Quality First',
+    brandP1Title: 'Verified Properties',
+    brandP1Desc: 'Every listing is manually verified by our team.',
+    brandP1Image: '',
+    brandP2Side: 'Legally Secure',
+    brandP2Title: 'Clear Documentation',
+    brandP2Desc: '100% legal transparency and title clarity.',
+    brandP2Image: '',
+    brandP3Side: 'Honest Deals',
+    brandP3Title: '100% Transparency',
+    brandP3Desc: 'No hidden costs. Direct registration.',
+    brandP3Image: '',
+    brandP4Side: 'Vizag Expert',
+    brandP4Title: 'Personalized Care',
+    brandP4Desc: 'We help you find the property that matches your lifestyle.',
+    brandP4Image: '',
+    aboutTeamTitle: 'Real Estate Team Excellence',
+    aboutTeamDesc: 'Collaborative professionals working for your success.',
+    aboutTeamImage: '/uploads/for.webp',
+    aboutYearTitle: '15+ Years of Service',
+    aboutYearDesc: 'A legacy built on results and trust since 2007.',
+    aboutYearImage: '',
+  });
 
-const WhyChooseUs = () => {
+  React.useEffect(() => {
+    if (!content) {
+      fetch('/api/content')
+        .then(res => res.json())
+        .then(res => {
+          if (res.success && res.data) setData((prev: any) => ({ ...prev, ...res.data }));
+        });
+    } else {
+      setData(content);
+    }
+  }, [content]);
+
+  const features = [
+    {
+      sideHeading: data.brandP1Side,
+      title: data.brandP1Title,
+      desc: data.brandP1Desc,
+      icon: UserCheck,
+      color: 'text-emerald-500 bg-emerald-500/10'
+    },
+    {
+      sideHeading: data.brandP2Side,
+      title: data.brandP2Title,
+      desc: data.brandP2Desc,
+      icon: ShieldCheck,
+      color: 'text-blue-500 bg-blue-500/10'
+    },
+    {
+      sideHeading: data.brandP3Side,
+      title: data.brandP3Title,
+      desc: data.brandP3Desc,
+      icon: Zap,
+      color: 'text-amber-500 bg-amber-500/10'
+    },
+    {
+      sideHeading: data.brandP4Side || 'Vizag Expert',
+      title: data.brandP4Title || 'Personalized Care',
+      desc: data.brandP4Desc || 'We help you find the property that matches your lifestyle.',
+      icon: Heart,
+      color: 'text-primary bg-primary/10'
+    }
+  ];
+
   return (
-    <section className="py-32 bg-slate-50 dark:bg-slate-950 overflow-x-hidden">
+    <section id="about-journey" className="py-32 bg-slate-50 dark:bg-slate-950 overflow-x-hidden">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
           <motion.div 
@@ -49,7 +90,7 @@ const WhyChooseUs = () => {
           >
             <div className="relative rounded-[4rem] overflow-hidden shadow-[0_50px_100px_rgba(0,0,0,0.3)] group">
               <img 
-                src="/uploads/for.webp" 
+                src={data.aboutTeamImage || "/uploads/for.webp"} 
                 alt="Real Estate Team" 
                 className="w-full h-[700px] object-cover transition-transform duration-1000 group-hover:scale-110"
               />
@@ -65,10 +106,10 @@ const WhyChooseUs = () => {
               >
                 <div className="flex items-center gap-3 mb-2">
                    <Award size={24} className="text-amber-300" />
-                   <span className="text-[10px] font-black uppercase tracking-[0.3em]">Excellence</span>
+                   <span className="text-[10px] font-black uppercase tracking-[0.3em]">{data.aboutTeamTitle?.split(' ')[0] || 'Excellence'}</span>
                 </div>
-                <div className="text-7xl font-black mb-2 tracking-tighter">15+</div>
-                <div className="text-xs font-black uppercase tracking-widest opacity-80">Years of Service</div>
+                <div className="text-7xl font-black mb-2 tracking-tighter">{data.aboutYearTitle?.split(' ')[0] || '15+'}</div>
+                <div className="text-xs font-black uppercase tracking-widest opacity-80">{data.aboutYearTitle?.split(' ').slice(1).join(' ') || 'Years of Service'}</div>
               </motion.div>
             </div>
             
@@ -85,11 +126,13 @@ const WhyChooseUs = () => {
             >
               <div className="flex items-center gap-2 text-primary font-black uppercase tracking-[0.4em] text-[10px] mb-4">
                  <Sparkles size={14} />
-                 <span>Our Core Pillars</span>
+                 <span>{data.brandBadge || 'Our Core Pillars'}</span>
               </div>
-              <h3 className="text-5xl md:text-7xl font-black text-slate-900 dark:text-black dark:text-white mb-8 leading-[0.9] tracking-tighter uppercase">Why <br /> <span className="text-primary italic">Choose Us</span></h3>
+              <h3 className="text-5xl md:text-7xl font-black text-slate-900 dark:text-black dark:text-white mb-8 leading-[0.9] tracking-tighter uppercase">
+                {data.brandTitle1 || 'Why'} <br /> <span className="text-primary italic">{data.brandTitle2 || 'Choose Us'}</span>
+              </h3>
               <p className="text-gray-500 dark:text-gray-600 dark:text-gray-400 text-xl leading-relaxed font-light">
-                Dedicated to creating sustainable and premium living environments.
+                {data.brandDesc || 'Dedicated to creating sustainable and premium living environments.'}
               </p>
             </motion.div>
 

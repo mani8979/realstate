@@ -30,6 +30,13 @@ export interface ISiteContent extends Document {
   brandP3Side: string;
   brandP3Title: string;
   brandP3Desc: string;
+  brandP4Side: string;
+  brandP4Title: string;
+  brandP4Desc: string;
+  brandP1Image: string;
+  brandP2Image: string;
+  brandP3Image: string;
+  brandP4Image: string;
   galleryBadge: string;
   galleryTitle: string;
   legacyBadge: string;
@@ -222,6 +229,13 @@ const SiteContentSchema = new Schema<ISiteContent>(
     brandP3Side: { type: String, default: "Honest Deals" },
     brandP3Title: { type: String, default: "100% Transparency" },
     brandP3Desc: { type: String, default: "No hidden costs. Direct registration." },
+    brandP4Side: { type: String, default: "Vizag Expert" },
+    brandP4Title: { type: String, default: "Personalized Care" },
+    brandP4Desc: { type: String, default: "We help you find the property that matches your lifestyle." },
+    brandP1Image: { type: String, default: "" },
+    brandP2Image: { type: String, default: "" },
+    brandP3Image: { type: String, default: "" },
+    brandP4Image: { type: String, default: "" },
     galleryBadge: { type: String, default: "Cinematic Showcase" },
     galleryTitle: { type: String, default: "Premium Land Gallery" },
     legacyBadge: { type: String, default: "Our Legacy & Values" },

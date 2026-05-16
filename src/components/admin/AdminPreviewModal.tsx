@@ -54,7 +54,7 @@ const AdminPreviewModal = ({ isOpen, onClose, url, title = 'Site Preview' }: Adm
       />
       
       {/* Modal Container */}
-      <div className={`relative bg-white dark:bg-zinc-950 rounded-[2.5rem] shadow-[0_32px_128px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden border border-white/10 transition-all duration-500 ${isFullscreen ? 'w-full h-full' : 'w-[95%] h-[90%] max-w-7xl'}`}>
+      <div className={`relative bg-white dark:bg-zinc-950 rounded-[2.5rem] shadow-[0_32px_128px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden border border-white/10 transition-all duration-500 ${isFullscreen ? 'w-full h-full' : 'w-[98%] h-[96%] max-w-[1600px]'}`}>
         
         {/* Header */}
         <div className="flex items-center justify-between px-8 py-5 border-b border-gray-100 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md">
