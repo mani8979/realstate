@@ -8,162 +8,148 @@ import { usePathname } from 'next/navigation';
 const ModelViewer = 'model-viewer' as any;
 
 const FloatingDragon = () => {
-  const [showPopup, setShowPopup]           = useState(false);
+  const [showPopup, setShowPopup]             = useState(false);
   const [currentProperty, setCurrentProperty] = useState<any>(null);
-  const [pos, setPos]                       = useState({ x: 0, y: 0 });
-  const [shouldLoad, setShouldLoad]         = useState(false);
-  const [visible, setVisible]               = useState(true);
-  const [mounted, setMounted]               = useState(false);
-  const [hovered, setHovered]               = useState(false);
-  const pathname                            = usePathname();
-  const modelViewerRef                      = useRef<any>(null);
-  const targetRef                           = useRef({ x: 0, y: 0 });
-  const { scrollYProgress }                 = useScroll();
+  const [pos, setPos]                         = useState({ x: 0, y: 0 });
+  const [shouldLoad, setShouldLoad]           = useState(false);
+  const [visible, setVisible]                 = useState(true);
+  const [hovered, setHovered]                 = useState(false);
+  const pathname      = usePathname();
+  const modelViewerRef = useRef<any>(null);
+  const targetRef      = useRef({ x: 0, y: 0 });
+  const { scrollYProgress } = useScroll();
 
+  // ── Lazy load ──────────────────────────────────────────────────────────────
   useEffect(() => {
-    const timer    = setTimeout(() => setShouldLoad(true), 2000);
-    const onScroll = () => { setShouldLoad(true); window.removeEventListener('scroll', onScroll); };
-    window.addEventListener('scroll', onScroll);
-    return () => { clearTimeout(timer); window.removeEventListener('scroll', onScroll); };
+    const t = setTimeout(() => setShouldLoad(true), 2000);
+    const s = () => { setShouldLoad(true); window.removeEventListener('scroll', s); };
+    window.addEventListener('scroll', s);
+    return () => { clearTimeout(t); window.removeEventListener('scroll', s); };
   }, []);
 
+  // ── Core animation (runs once on mount) ────────────────────────────────────
   useEffect(() => {
-    setMounted(true);
+    const vW   = window.innerWidth;
+    const vH   = window.innerHeight;
+    const mSz  = vW < 768 ? 60 : 110;
+    const pad  = 40;
 
-    const vW0   = window.innerWidth;
-    const vH0   = window.innerHeight;
-    const ms0   = vW0 < 768 ? 60 : 110;
-    const pad   = 40;
+    // curX lerps; curY tracks scroll directly (no lag → no drift)
+    let curX = vW - mSz - pad;
 
-    // Start top-right
-    let curX = vW0 - ms0 - pad;
-    let curY = vH0 * 0.15;
-    targetRef.current = { x: curX, y: curY };
-
-    // ── Compute new targets from scroll state ──────────────────────────────
+    // ── Compute where the model should sit ─────────────────────────────────
     const computeTargets = () => {
-      const vW      = window.innerWidth;
-      const vH      = window.innerHeight;
-      const mSize   = vW < 768 ? 60 : 110;
-      const isMob   = vW < 768;
+      const W    = window.innerWidth;
+      const H    = window.innerHeight;
+      const msz  = W < 768 ? 60 : 110;
 
-      // Y: scroll progress → 15 % … 80 % of viewport
-      const pageH    = document.body.scrollHeight - vH;
-      const progress = pageH > 0 ? Math.min(1, window.scrollY / pageH) : 0;
-      const newY     = vH * (0.15 + progress * 0.65);
+      // Y — direct from scroll progress (no lerp so it never drifts)
+      const pageH = Math.max(1, document.body.scrollHeight - H);
+      const prog  = Math.min(1, window.scrollY / pageH);
+      const newY  = H * (0.12 + prog * 0.66);
 
-      // X: read real card rect, place model in opposite empty strip
-      let newX = targetRef.current.x; // hold position by default
+      // X — read actual card rect, place model in opposite empty strip
+      let newX = targetRef.current.x || (W - msz - pad);
 
-      if (!isMob) {
-        const trigTop = vH * 0.25;
-        const trigBot = vH * 0.75;
+      if (W >= 768) {
+        const tTop = H * 0.25;
+        const tBot = H * 0.75;
         const sections = Array.from(
           document.querySelectorAll<HTMLElement>('[data-model-align]')
         );
 
-        let sectionFound = false;
         for (const el of sections) {
           const r = el.getBoundingClientRect();
-          if (r.top < trigBot && r.bottom > trigTop) {
-            sectionFound = true;
-            const align   = el.dataset.modelAlign ?? 'left';
-            const card    = el.querySelector<HTMLElement>('.glass-card');
-            const cr      = card?.getBoundingClientRect();
+          if (r.top < tBot && r.bottom > tTop) {
+            const align = el.dataset.modelAlign ?? 'left';
+            const card  = el.querySelector<HTMLElement>('.glass-card');
+            const cr    = card?.getBoundingClientRect();
 
-            if (align === 'right' && cr) {
-              // Card on RIGHT → empty left strip
-              newX = Math.max(mSize + 16, cr.left / 2);
-            } else if (cr) {
-              // Card on LEFT/CENTER → empty right strip
-              const mid = cr.right + (vW - cr.right) / 2;
-              newX = Math.min(vW - mSize - 16, mid);
+            if (align === 'right' && cr && cr.left > msz * 2) {
+              newX = cr.left / 2;                            // center of left empty strip
+            } else if (cr && cr.right < W - msz * 2) {
+              newX = cr.right + (W - cr.right) / 2;         // center of right empty strip
+            } else if (align === 'right') {
+              newX = msz + pad;
             } else {
-              newX = align === 'right' ? mSize + pad : vW - mSize - pad;
+              newX = W - msz - pad;
             }
             break;
           }
         }
 
-        // No section in band → snap to right edge only when near top
-        if (!sectionFound && window.scrollY < vH * 0.5) {
-          newX = vW - mSize - pad;
+        // No section in band → if near top, reset to right edge
+        const firstSection = sections[0];
+        if (firstSection) {
+          const fr = firstSection.getBoundingClientRect();
+          if (fr.top > H) newX = W - msz - pad;             // above all content → right
         }
       } else {
-        // Mobile: always right
-        newX = vW - ms0 - pad;
+        newX = W - msz - pad;                                // mobile: always right
       }
 
+      newX = Math.max(msz + 12, Math.min(W - msz - 12, newX));
       targetRef.current = { x: newX, y: newY };
     };
 
-    // Initial target
+    // Initial position
     computeTargets();
+    curX = targetRef.current.x;
 
-    // Only recompute on actual scroll
-    let lastSY = window.scrollY;
-    const onScroll = () => {
-      if (Math.abs(window.scrollY - lastSY) > 1) {
-        lastSY = window.scrollY;
-        computeTargets();
-      }
-    };
+    // Recompute on EVERY scroll tick (Lenis fires continuously while scrolling)
+    const onScroll = () => computeTargets();
     window.addEventListener('scroll', onScroll, { passive: true });
 
-    // ── rAF: smooth lerp only — targets never change here ─────────────────
-    let frameId : number;
-    let lastTime = performance.now();
+    // ── rAF: only lerp X; Y is set directly ─────────────────────────────────
+    let frameId: number;
+    let last = performance.now();
 
-    const animate = (now: number) => {
-      const dt = Math.min((now - lastTime) / 1000, 0.1);
-      lastTime = now;
+    const frame = (now: number) => {
+      const dt  = Math.min((now - last) / 1000, 0.1);
+      last = now;
 
       const { x: tx, y: ty } = targetRef.current;
+      const W  = window.innerWidth;
+      const H  = window.innerHeight;
+      const sz = W < 768 ? 60 : 110;
 
-      // halfLifeX = 1.8 s (slow, cinematic) | halfLifeY = 0.65 s (follows scroll)
-      const ax = 1 - Math.pow(0.5, dt / 1.8);
-      const ay = 1 - Math.pow(0.5, dt / 0.65);
-
+      // X: slow cinematic lerp (2 s half-life)
+      const ax = 1 - Math.pow(0.5, dt / 2.0);
       const dx = (tx - curX) * ax;
-      const dy = (ty - curY) * ay;
-
       if (Math.abs(dx) > 0.15) curX += dx;
-      if (Math.abs(dy) > 0.15) curY += dy;
+      curX = Math.max(sz, Math.min(W - sz, curX));
 
-      const vW    = window.innerWidth;
-      const vH    = window.innerHeight;
-      const mSize = vW < 768 ? 60 : 110;
-      curX = Math.max(mSize, Math.min(vW - mSize, curX));
-      curY = Math.max(mSize, Math.min(vH - mSize, curY));
+      // Y: direct — zero lag, zero drift when scroll stops
+      const curY = Math.max(sz, Math.min(H - sz, ty));
 
       setPos({ x: curX, y: curY });
 
-      // Visibility: hide over inventory / enquiry zones
-      const zones = document.querySelectorAll<HTMLElement>(
-        '.dragon-disappear, .model-hide-zone'
-      );
+      // Visibility — hide over inventory / enquiry zones
       let hide = false;
-      zones.forEach(z => {
+      document.querySelectorAll<HTMLElement>(
+        '.dragon-disappear, .model-hide-zone'
+      ).forEach(z => {
         const r = z.getBoundingClientRect();
-        const overlap = Math.max(0, Math.min(r.bottom, vH) - Math.max(r.top, 0));
-        if (overlap > vH * 0.28) hide = true;
+        const overlap = Math.max(0, Math.min(r.bottom, H) - Math.max(r.top, 0));
+        if (overlap > H * 0.25) hide = true;
       });
       setVisible(!hide);
 
-      frameId = requestAnimationFrame(animate);
+      frameId = requestAnimationFrame(frame);
     };
 
-    frameId = requestAnimationFrame(animate);
+    frameId = requestAnimationFrame(frame);
     return () => {
       cancelAnimationFrame(frameId);
       window.removeEventListener('scroll', onScroll);
     };
-  }, [mounted]);
+  }, []); // ← run ONCE only, no mounted dependency that causes double-run
 
+  // ── Fetch property ─────────────────────────────────────────────────────────
   useEffect(() => {
-    const propertyId = pathname?.split('/properties/')?.[1]?.split('/')?.[0];
-    if (propertyId && propertyId.length > 10) {
-      fetch(`/api/properties/${propertyId}?t=${Date.now()}`)
+    const pid = pathname?.split('/properties/')?.[1]?.split('/')?.[0];
+    if (pid && pid.length > 10) {
+      fetch(`/api/properties/${pid}?t=${Date.now()}`)
         .then(r => r.json())
         .then(d => setCurrentProperty(d))
         .catch(() => setCurrentProperty(null));
@@ -172,22 +158,25 @@ const FloatingDragon = () => {
     }
   }, [pathname]);
 
+  // ── Scroll-driven camera ───────────────────────────────────────────────────
   useMotionValueEvent(scrollYProgress, 'change', v => {
     if (modelViewerRef.current)
-      modelViewerRef.current.cameraOrbit = `${v * 360 * 3}deg 75deg 10m`;
+      modelViewerRef.current.cameraOrbit = `${v * 1080}deg 75deg 10m`;
   });
 
-  if (!mounted || !shouldLoad)        return null;
+  // ── Guards ─────────────────────────────────────────────────────────────────
+  if (!shouldLoad)                    return null;
   if (pathname?.startsWith('/admin')) return null;
   const modelSrc = currentProperty?.threeDElement;
   if (!modelSrc)                      return null;
 
-  const isMob  = typeof window !== 'undefined' && window.innerWidth < 768;
-  const mW     = isMob ? 110 : 170;
-  const mH     = isMob ? 148 : 225;
+  const mob = typeof window !== 'undefined' && window.innerWidth < 768;
+  const mW  = mob ? 110 : 170;
+  const mH  = mob ? 148 : 225;
 
   return (
     <>
+      {/* Floating model */}
       <motion.div
         style={{ x: pos.x, y: pos.y, translateX: '-50%', translateY: '-50%' }}
         className="fixed top-0 left-0 pointer-events-none z-[100]"
@@ -195,7 +184,7 @@ const FloatingDragon = () => {
         <motion.div
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0 }}
-          transition={{ duration: visible ? 1.0 : 0.2, ease: 'easeInOut' }}
+          transition={{ duration: visible ? 0.8 : 0.2, ease: 'easeInOut' }}
           style={{ width: mW, height: mH }}
           className="relative pointer-events-auto cursor-pointer"
           onClick={() => setShowPopup(true)}
@@ -204,37 +193,32 @@ const FloatingDragon = () => {
         >
           {/* Pulse ring */}
           <motion.div
-            className="absolute inset-0 rounded-full border border-primary/30 pointer-events-none"
-            animate={{ scale: [1, 1.18, 1], opacity: [0.35, 0, 0.35] }}
-            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute inset-0 rounded-full border border-primary/25 pointer-events-none"
+            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0, 0.3] }}
+            transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
           />
 
           <ModelViewer
-            ref={modelViewerRef}
-            src={modelSrc}
-            alt="Property 3D Model"
+            ref={modelViewerRef} src={modelSrc} alt="3D Model"
             camera-controls disable-zoom disable-pan
             shadow-intensity="2" exposure="1.2" bounds="tight"
             camera-orbit="0deg 75deg 10m"
-            min-camera-orbit="auto auto 10m"
-            max-camera-orbit="auto auto 10m"
+            min-camera-orbit="auto auto 10m" max-camera-orbit="auto auto 10m"
             field-of-view="25deg" interaction-prompt="none"
             style={{ width: '100%', height: '100%' }}
           ></ModelViewer>
 
+          {/* Hover tooltip */}
           <AnimatePresence>
             {hovered && (
-              <motion.div
-                key="tip"
-                initial={{ opacity: 0, y: 8, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0,  scale: 1   }}
-                exit   ={{ opacity: 0, y: 8,  scale: 0.9 }}
-                transition={{ duration: 0.15 }}
+              <motion.div key="tip"
+                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 8 }} transition={{ duration: 0.15 }}
                 className="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap
-                           bg-black/85 backdrop-blur-md text-white
-                           text-[9px] font-black uppercase tracking-[0.18em]
-                           px-4 py-2 rounded-full border border-primary/40
-                           shadow-[0_0_16px_rgba(16,185,129,0.3)] pointer-events-none z-10"
+                           bg-black/85 backdrop-blur-md text-white text-[9px]
+                           font-black uppercase tracking-[0.18em] px-4 py-2 rounded-full
+                           border border-primary/40 shadow-[0_0_14px_rgba(16,185,129,0.3)]
+                           pointer-events-none z-10"
               >
                 <span className="text-primary mr-1">✦</span>
                 View Plantation &amp; Cultivation Info
@@ -244,11 +228,10 @@ const FloatingDragon = () => {
         </motion.div>
       </motion.div>
 
+      {/* Popup */}
       {showPopup && (
-        <div
-          className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-10 bg-white/90 dark:bg-black/95 backdrop-blur-3xl"
-          onClick={() => setShowPopup(false)}
-        >
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-10 bg-white/90 dark:bg-black/95 backdrop-blur-3xl"
+          onClick={() => setShowPopup(false)}>
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -257,14 +240,13 @@ const FloatingDragon = () => {
                        shadow-[0_0_100px_rgba(16,185,129,0.2)] h-auto md:h-[85vh] max-h-[95vh]"
             onClick={e => e.stopPropagation()}
           >
-            <button
-              onClick={() => setShowPopup(false)}
-              className="absolute top-8 right-8 z-[210] bg-black/10 dark:bg-white/10
-                         hover:bg-red-500 text-black dark:text-white p-3 rounded-full transition-all"
-            ><X size={24} /></button>
+            <button onClick={() => setShowPopup(false)}
+              className="absolute top-8 right-8 z-[210] bg-black/10 dark:bg-white/10 hover:bg-red-500 text-black dark:text-white p-3 rounded-full transition-all">
+              <X size={24} />
+            </button>
 
             <div data-lenis-prevent className="w-full md:w-1/2 p-8 md:p-16 overflow-y-auto custom-scrollbar flex flex-col text-left">
-              <div className="bg-primary/20 p-5 rounded-2xl mb-10 border border-primary/20 flex-shrink-0 w-fit">
+              <div className="bg-primary/20 p-5 rounded-2xl mb-10 border border-primary/20 w-fit">
                 <Leaf className="text-primary" size={40} />
               </div>
               <h3 className="text-4xl md:text-6xl font-black text-primary uppercase tracking-tighter mb-8 leading-none">
@@ -281,74 +263,58 @@ const FloatingDragon = () => {
                           <p className="text-primary font-black uppercase tracking-[0.2em] text-sm">{d.heading}</p>
                         </div>
                         {d.isPointed ? (
-                          <ul className="grid grid-cols-1 gap-4">
-                            {d.content.split('\n').filter((l: string) => l.trim()).map((line: string, j: number) => (
-                              <li key={j} className="flex gap-4 items-start bg-black/5 dark:bg-white/5 p-5 rounded-2xl border border-white/5 group hover:border-primary/30 transition-all">
-                                <div className="w-2 h-2 rounded-full bg-primary mt-2.5 flex-shrink-0 group-hover:scale-125 transition-transform" />
-                                <span className="text-lg font-medium text-gray-800 dark:text-gray-200">{line.trim()}</span>
-                              </li>
-                            ))}
-                          </ul>
+                          <ul className="grid gap-4">{d.content.split('\n').filter((l: string) => l.trim()).map((line: string, j: number) => (
+                            <li key={j} className="flex gap-4 items-start bg-white/5 p-5 rounded-2xl border border-white/5 hover:border-primary/30 transition-all">
+                              <div className="w-2 h-2 rounded-full bg-primary mt-2.5 shrink-0" />
+                              <span className="text-lg font-medium text-gray-200">{line.trim()}</span>
+                            </li>
+                          ))}</ul>
                         ) : (
-                          <p className="text-xl leading-relaxed font-medium bg-black/5 dark:bg-white/5 p-6 rounded-2xl border border-white/5 italic whitespace-pre-line">{d.content}</p>
+                          <p className="text-xl leading-relaxed font-medium bg-white/5 p-6 rounded-2xl border border-white/5 italic whitespace-pre-line">{d.content}</p>
                         )}
                       </div>
                     ))}
                   </div>
                 ) : currentProperty?.fruitInfo ? (
-                  <div className="text-xl leading-relaxed font-medium whitespace-pre-line prose dark:prose-invert max-w-none">{currentProperty.fruitInfo}</div>
+                  <div className="text-xl leading-relaxed font-medium whitespace-pre-line">{currentProperty.fruitInfo}</div>
                 ) : (
                   <>
                     <p className="text-xl leading-relaxed font-medium">Dragon fruit cultivation is a high-demand and profitable farming option with long-term benefits.</p>
-                    <div className="space-y-4">
-                      <p className="text-primary font-black uppercase tracking-[0.2em] text-xs">Plantation Details (Per 100 Sq. Yards)</p>
-                      <ul className="grid grid-cols-1 gap-3">
-                        {['40 dragon fruit plants','4 plants per pole','10 poles in each 100 sq. yards'].map((item, i) => (
-                          <li key={i} className="flex gap-3 items-center bg-black/5 dark:bg-white/5 p-4 rounded-xl border border-white/5">
-                            <span className="text-primary font-bold">→</span> {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div className="grid grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <p className="text-primary font-black uppercase tracking-[0.2em] text-[10px]">Plantation Period</p>
-                        <p className="text-black dark:text-white font-bold italic text-lg">May to November</p>
-                      </div>
-                      <div className="space-y-2">
-                        <p className="text-primary font-black uppercase tracking-[0.2em] text-[10px]">Yield Duration</p>
-                        <p className="text-black dark:text-white font-bold italic text-lg">Up to 30 Years</p>
-                      </div>
-                    </div>
+                    <ul className="grid gap-3">{['40 dragon fruit plants', '4 plants per pole', '10 poles in each 100 sq. yards'].map((item, i) => (
+                      <li key={i} className="flex gap-3 items-center bg-white/5 p-4 rounded-xl border border-white/5">
+                        <span className="text-primary font-bold">→</span> {item}
+                      </li>
+                    ))}</ul>
                     <div className="p-8 bg-primary/10 rounded-3xl border border-primary/20 space-y-4">
                       <p className="text-primary font-black uppercase tracking-[0.2em] text-xs text-center">Profit Sharing</p>
                       <div className="flex items-center justify-center gap-10">
-                        <div className="text-center">
-                          <p className="text-4xl font-black text-black dark:text-white">50%</p>
-                          <p className="text-[10px] uppercase font-bold text-gray-600 dark:text-gray-400">Company</p>
-                        </div>
-                        <div className="h-10 w-[1px] bg-primary/30" />
-                        <div className="text-center">
-                          <p className="text-4xl font-black text-primary">50%</p>
-                          <p className="text-[10px] uppercase font-bold text-gray-600 dark:text-gray-400">Client</p>
-                        </div>
+                        {[['50%', 'Company', 'text-white'], ['50%', 'Client', 'text-primary']].map(([pct, label, cls], i) => (
+                          <React.Fragment key={i}>
+                            {i > 0 && <div className="h-10 w-px bg-primary/30" />}
+                            <div className="text-center">
+                              <p className={`text-4xl font-black ${cls}`}>{pct}</p>
+                              <p className="text-[10px] uppercase font-bold text-gray-400">{label}</p>
+                            </div>
+                          </React.Fragment>
+                        ))}
                       </div>
                     </div>
                   </>
                 )}
               </div>
-              <button onClick={() => setShowPopup(false)} className="mt-16 bg-primary text-black font-black uppercase tracking-widest py-6 rounded-2xl hover:bg-white transition-all shadow-2xl shadow-primary/30">
+              <button onClick={() => setShowPopup(false)}
+                className="mt-16 bg-primary text-black font-black uppercase tracking-widest py-6 rounded-2xl hover:bg-white transition-all shadow-2xl shadow-primary/30">
                 Close Details
               </button>
             </div>
 
-            <div className="w-full md:w-1/2 h-64 md:h-full bg-white dark:bg-black/40 relative border-l border-white/5">
+            <div className="w-full md:w-1/2 h-64 md:h-full bg-black/40 relative border-l border-white/5">
               {currentProperty?.threeDElement ? (
                 <ModelViewer src={currentProperty.threeDElement} auto-rotate camera-controls shadow-intensity="2" exposure="1.2" style={{ width: '100%', height: '100%' }}></ModelViewer>
               ) : currentProperty?.fruitImage ? (
-                <img src={currentProperty.fruitImage} alt="Fruit Preview" className="w-full h-full object-cover" />
+                <img src={currentProperty.fruitImage} alt="Preview" className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-700"><Leaf size={100} className="opacity-10" /></div>
+                <div className="w-full h-full flex items-center justify-center"><Leaf size={100} className="opacity-10 text-gray-700" /></div>
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none" />
             </div>
