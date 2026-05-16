@@ -83,59 +83,42 @@ const Footer = async () => {
             </ul>
           </div>
 
-          {/* Collections */}
+          {/* Get In Touch Sections */}
           <div className="text-center md:text-left">
-            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-8">{content.footerCol2Title || 'Portfolios'}</h3>
+            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-8">Get In Touch</h3>
             <ul className="space-y-5">
-              {(content.footerCol2Links ? content.footerCol2Links.split(',').map((l: string) => l.trim()) : ['Farm Lands', 'VMRDA Lands', 'Panchayati Lands']).map((type: string) => {
-                // Better link logic: Search both top-level categories and subcategories
-                let href = `/properties?type=${encodeURIComponent(type)}`;
-                
-                if (content.propertyCategories) {
-                  for (const cat of content.propertyCategories) {
-                    // Match top-level
-                    if (cat.name.toLowerCase() === type.toLowerCase() || 
-                        cat.name.toLowerCase().replace(/\s*lands?$/i, '').trim() === type.toLowerCase().replace(/\s*lands?$/i, '').trim()) {
-                      href = cat.href || `/properties?type=${encodeURIComponent(cat.name)}`;
-                      break;
-                    }
-                    // Match sub-category
-                    if (cat.subCategories?.some((sub: string) => 
-                      sub.toLowerCase() === type.toLowerCase() || 
-                      sub.toLowerCase().replace(/\s*lands?$/i, '').trim() === type.toLowerCase().replace(/\s*lands?$/i, '').trim()
-                    )) {
-                      href = `/properties?type=${encodeURIComponent(cat.name)}&subType=${encodeURIComponent(type)}`;
-                      break;
-                    }
-                  }
-                }
-                
-                return (
-                  <li key={type}>
-                    <Link href={href} className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">{type}</Link>
-                  </li>
-                );
-              })}
+              {(content.footerQuickLinks || [
+                { label: 'Luxury Interior', href: '/services/interior' },
+                { label: 'Exclusive Consultation', href: '/services/consultation' },
+                { label: 'Privacy Policy', href: '/privacy' },
+                { label: 'Terms of Service', href: '/terms' },
+              ]).map((link: any) => (
+                <li key={link.label}>
+                  <Link href={link.href} className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Contact Details */}
           <div className="text-center md:text-left">
-            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-8">{content.footerCol3Title || 'Get In Touch'}</h3>
+            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-8">Contact Info</h3>
             <ul className="space-y-6">
               <li className="flex flex-col md:flex-row items-center gap-4">
                 <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary shrink-0">
                   <MapPin size={18} />
                 </div>
                 <span className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
-                  {content.contactAddress || 'Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026.'}
+                  {content.contactAddress || 'Flat No.202, Backside Complex, Opposite of DMART, Srinagar, Gajuwaka, Visakhapatnam, AP, 530026'}
                 </span>
               </li>
               <li className="flex flex-col md:flex-row items-center gap-4">
                 <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary shrink-0">
                   <Phone size={18} />
                 </div>
-                <span className="text-sm text-gray-600 dark:text-gray-400 font-bold">{content.contactPhone || '91 96660 80645'}</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400 font-bold">{content.contactPhone || '+91 96660 80645'}</span>
               </li>
               <li className="flex flex-col md:flex-row items-center gap-4">
                 <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary shrink-0">

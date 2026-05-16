@@ -78,7 +78,7 @@ const WhyChooseUs = ({ content }: { content?: any }) => {
   ];
 
   return (
-    <section id="about-journey" className="py-32 bg-slate-50 dark:bg-slate-950 overflow-x-hidden">
+    <section id="why-choose-us-section" className="py-32 bg-slate-50 dark:bg-slate-950 overflow-x-hidden">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
           <motion.div 

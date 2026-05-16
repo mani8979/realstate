@@ -167,13 +167,15 @@ export default function AboutAdmin() {
           <p className="text-gray-500 mt-2">Manage the core story, professionals, history, and gallery.</p>
         </div>
         <div className="flex items-center gap-4">
-          <button 
-            onClick={() => setIsPreviewOpen(true)}
-            className="px-6 py-3 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 font-bold hover:bg-gray-50 dark:hover:bg-gray-900 transition-all flex items-center gap-2"
-          >
-            <Globe size={18} />
-            Preview Section
-          </button>
+          {activeTab !== 'gallery' && (
+            <button 
+              onClick={() => setIsPreviewOpen(true)}
+              className="px-6 py-3 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 font-bold hover:bg-gray-50 dark:hover:bg-gray-900 transition-all flex items-center gap-2"
+            >
+              <Globe size={18} />
+              Preview Section
+            </button>
+          )}
           <button 
             onClick={handleSave}
             disabled={saving}

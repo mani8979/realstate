@@ -177,6 +177,11 @@ export interface ISiteContent extends Document {
     href: string;
     subCategories: string[];
   }[];
+  footerQuickLinks: {
+    label: string;
+    href: string;
+    content: string;
+  }[];
 
   // About Section
   aboutTitle: string;
@@ -397,6 +402,19 @@ const SiteContentSchema = new Schema<ISiteContent>(
         { name: 'Farm Lands', icon: 'Warehouse', color: 'bg-green-50 text-green-600', href: '/properties?type=Plot&subType=Farm Land', subCategories: ['Cultivated', 'Organic', 'Mixed'] },
         { name: 'VMRDA Lands', icon: 'Building2', color: 'bg-indigo-50 text-indigo-600', href: '/properties?type=Plot&subType=VMRDA', subCategories: [] },
         { name: 'Panchayati Lands', icon: 'Landmark', color: 'bg-purple-50 text-purple-600', href: '/properties?type=Plot&subType=Panchayati', subCategories: [] },
+      ]
+    },
+    footerQuickLinks: {
+      type: [{
+        label: String,
+        href: String,
+        content: String
+      }],
+      default: [
+        { label: 'Luxury Interior', href: '/services/interior', content: 'Luxury Interior content...' },
+        { label: 'Exclusive Consultation', href: '/services/consultation', content: 'Consultation content...' },
+        { label: 'Privacy Policy', href: '/privacy', content: 'Privacy Policy content...' },
+        { label: 'Terms of Service', href: '/terms', content: 'Terms of Service content...' },
       ]
     },
     // About Section

@@ -212,6 +212,105 @@ export default function BrandingAdmin() {
              </div>
           </div>
         </div>
+        {/* Get In Touch Sections */}
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+          <div className="flex justify-between items-center mb-6 border-b border-gray-100 dark:border-gray-800 pb-4">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+               <Smartphone size={20} className="text-primary" />
+               Get In Touch (Footer Links)
+            </h2>
+            <button 
+              onClick={() => {
+                const newLinks = [...(content.footerQuickLinks || [])];
+                newLinks.push({ label: 'New Section', href: '/services/new', content: '' });
+                setContent({ ...content, footerQuickLinks: newLinks });
+              }}
+              className="px-4 py-2 bg-primary/10 text-primary rounded-xl font-bold text-xs hover:bg-primary/20 transition-all"
+            >
+              + Add Section
+            </button>
+          </div>
+          
+          <div className="space-y-6">
+            {(content.footerQuickLinks || []).map((link: any, idx: number) => (
+              <div key={idx} className="p-6 bg-gray-50 dark:bg-white/5 rounded-3xl border border-gray-100 dark:border-gray-800 relative group">
+                <button 
+                  onClick={() => {
+                    const newLinks = content.footerQuickLinks.filter((_: any, i: number) => i !== idx);
+                    setContent({ ...content, footerQuickLinks: newLinks });
+                  }}
+                  className="absolute top-4 right-4 text-red-500 opacity-0 group-hover:opacity-100 transition-all p-2"
+                >
+                  <X size={18} />
+                </button>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Link Label</label>
+                    <input 
+                      value={link.label} 
+                      onChange={(e) => {
+                        const newLinks = [...content.footerQuickLinks];
+                        newLinks[idx].label = e.target.value;
+                        setContent({ ...content, footerQuickLinks: newLinks });
+                      }}
+                      className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 font-bold"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Link URL / Slug</label>
+                    <input 
+                      value={link.href} 
+                      onChange={(e) => {
+                        const newLinks = [...content.footerQuickLinks];
+                        newLinks[idx].href = e.target.value;
+                        setContent({ ...content, footerQuickLinks: newLinks });
+                      }}
+                      className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 font-bold"
+                    />
+                  </div>
+                  <div className="md:col-span-2 space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Content Matter (HTML/Text)</label>
+                    <textarea 
+                      rows={4}
+                      value={link.content} 
+                      onChange={(e) => {
+                        const newLinks = [...content.footerQuickLinks];
+                        newLinks[idx].content = e.target.value;
+                        setContent({ ...content, footerQuickLinks: newLinks });
+                      }}
+                      className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900"
+                      placeholder="Add matter for this link..."
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Global Contact Info */}
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4 flex items-center gap-2">
+              <Smartphone size={20} className="text-primary" />
+              Footer Contact Info
+           </h2>
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-4">
+                 <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Office Address</label>
+                 <textarea name="contactAddress" rows={3} value={content.contactAddress || ''} onChange={(e: any) => setContent({...content, [e.target.name]: e.target.value})} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800" />
+              </div>
+              <div className="space-y-6">
+                 <div className="space-y-2">
+                    <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Contact Phone</label>
+                    <input name="contactPhone" value={content.contactPhone || ''} onChange={(e: any) => setContent({...content, [e.target.name]: e.target.value})} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold" />
+                 </div>
+                 <div className="space-y-2">
+                    <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Contact Email</label>
+                    <input name="contactEmail" value={content.contactEmail || ''} onChange={(e: any) => setContent({...content, [e.target.name]: e.target.value})} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold" />
+                 </div>
+              </div>
+           </div>
+        </div>
       </div>
     </div>
   );
