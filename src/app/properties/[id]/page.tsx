@@ -507,7 +507,7 @@ const PropertyDetails = () => {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="mt-32 space-y-12"
+              className="mt-32 space-y-12 model-hide-zone"
             >
               <div className="text-center space-y-4">
                  <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-black dark:text-white">Real-time Inventory</h2>
