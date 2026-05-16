@@ -14,7 +14,7 @@ const ModelViewer = 'model-viewer' as any;
 const FloatingDragon = () => {
   const [showPopup,        setShowPopup]        = useState(false);
   const [currentProperty,  setCurrentProperty]  = useState<any>(null);
-  const [shouldLoad,       setShouldLoad]        = useState(false);
+  const [shouldLoad,       setShouldLoad]        = useState(true); // Visible immediately
   const [visible,          setVisible]           = useState(true);
   const [hovered,          setHovered]           = useState(false);
   const pathname        = usePathname();
@@ -24,7 +24,7 @@ const FloatingDragon = () => {
 
   // ── Motion values bypass React state ───────────────────────────────────────
   const mX      = useMotionValue(typeof window !== 'undefined' ? window.innerWidth - 150 : 900);
-  const mY      = useMotionValue(0);
+  const mY      = useMotionValue(typeof window !== 'undefined' ? window.innerHeight * 0.12 : 120);
   
   // Springs with EXTREME inertia for 'falling' feel
   const springX = useSpring(mX, { stiffness: 30, damping: 20, mass: 2 });
@@ -60,12 +60,9 @@ const FloatingDragon = () => {
     return () => cancelAnimationFrame(frame);
   }, [swayX, swayY]);
 
-  // ── Lazy-load trigger ───────────────────────────────────────────────────────
+  // ── Lazy-load trigger (Removed delay) ──────────────────────────────────────
   useEffect(() => {
-    const t = setTimeout(() => setShouldLoad(true), 1800);
-    const s = () => { setShouldLoad(true); window.removeEventListener('scroll', s); };
-    window.addEventListener('scroll', s);
-    return () => { clearTimeout(t); window.removeEventListener('scroll', s); };
+    setShouldLoad(true);
   }, []);
 
   // ── Scroll-driven Empty-Space Tracking ─────────────────────────────────────
