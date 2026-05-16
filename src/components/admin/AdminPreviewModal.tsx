@@ -12,7 +12,14 @@ interface AdminPreviewModalProps {
 
 const AdminPreviewModal = ({ isOpen, onClose, url, title = 'Site Preview' }: AdminPreviewModalProps) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [key, setKey] = useState(0); // For refreshing the iframe
+  const [isLoading, setIsLoading] = useState(true);
+  const [iframeKey, setIframeKey] = useState(0);
+
+  // Force iframe reload when URL changes (especially hash changes)
+  useEffect(() => {
+    setIsLoading(true);
+    setIframeKey(prev => prev + 1);
+  }, [url]);
 
   // Close on Escape
   useEffect(() => {
@@ -47,7 +54,7 @@ const AdminPreviewModal = ({ isOpen, onClose, url, title = 'Site Preview' }: Adm
           
           <div className="flex items-center gap-3">
             <button 
-              onClick={() => setKey(prev => prev + 1)}
+              onClick={() => setIframeKey(prev => prev + 1)}
               className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-xl transition-all text-gray-500"
               title="Refresh Preview"
             >
@@ -81,13 +88,21 @@ const AdminPreviewModal = ({ isOpen, onClose, url, title = 'Site Preview' }: Adm
         {/* Iframe Content */}
         <div className="flex-grow relative bg-gray-50 dark:bg-zinc-900">
           <iframe 
-            key={key}
+            key={iframeKey}
             src={url} 
-            className="w-full h-full border-none"
+            onLoad={() => setIsLoading(false)}
+            className={`w-full h-full border-none transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
             title="Preview"
           />
           
-          {/* Loading Indicator Overlay (optional) */}
+          {/* Loading Indicator Overlay */}
+          {isLoading && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-gray-50 dark:bg-zinc-950/50 backdrop-blur-sm">
+               <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+               <span className="text-[10px] font-black uppercase tracking-widest text-primary animate-pulse">Synchronizing Preview...</span>
+            </div>
+          )}
+
           <div className="absolute top-0 left-0 right-0 h-1 bg-primary/20">
              <div className="h-full bg-primary animate-progress-indefinite" />
           </div>
@@ -96,10 +111,10 @@ const AdminPreviewModal = ({ isOpen, onClose, url, title = 'Site Preview' }: Adm
         {/* Footer / Info Bar */}
         <div className="px-8 py-3 border-t border-gray-100 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-900 flex justify-between items-center">
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest truncate max-w-md">
-              Previewing: {url}
+              Focusing Section: {url.split('#')[1] || 'Main Page'}
             </span>
             <div className="flex gap-4">
-               <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em] animate-pulse">Live Preview Mode</span>
+               <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em] animate-pulse">Editing Mode Active</span>
             </div>
         </div>
       </div>

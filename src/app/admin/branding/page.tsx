@@ -81,7 +81,7 @@ export default function BrandingAdmin() {
       <AdminPreviewModal 
         isOpen={isPreviewOpen} 
         onClose={() => setIsPreviewOpen(false)} 
-        url="/" 
+        url="/#main-header" 
         title="Site Branding Preview"
       />
       <div className="flex justify-between items-center mb-8">

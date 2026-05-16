@@ -58,6 +58,7 @@ const Header = () => {
 
   return (
     <header
+      id="main-header"
       className={cn(
         'fixed top-0 left-0 right-0 z-[110] transition-all duration-500',
         isAdmin ? 'hidden pointer-events-none' : (shouldBeSolid ? 'py-4 bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-gray-100 dark:border-white/10 shadow-lg shadow-black/5' : 'py-8 bg-transparent')

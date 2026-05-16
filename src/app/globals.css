@@ -198,4 +198,38 @@ body.map-expanded .dragon-container {
   100% { outline: 0px solid transparent; outline-offset: 0px; box-shadow: 0 0 0 rgba(212,175,55,0); } 
 }
 
-:target { scroll-margin-top: 150px; animation: section-highlight 4s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 3rem; position: relative; z-index: 50; }
+:target { 
+  scroll-margin-top: 150px; 
+  animation: section-highlight 5s cubic-bezier(0.4, 0, 0.2, 1); 
+  border-radius: 3.5rem; 
+  position: relative; 
+  z-index: 50; 
+  outline: 4px solid #D4AF37 !important;
+  outline-offset: 15px;
+}
+
+:target::before {
+  content: 'FOCUSING SECTION';
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #D4AF37;
+  color: black;
+  padding: 8px 24px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+  opacity: 0;
+  animation: badge-fade 5s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 100;
+}
+
+@keyframes badge-fade {
+  0%, 100% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  10%, 90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
