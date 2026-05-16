@@ -14,12 +14,25 @@ const AdminPreviewModal = ({ isOpen, onClose, url, title = 'Site Preview' }: Adm
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [iframeKey, setIframeKey] = useState(0);
+  const iframeRef = React.useRef<HTMLIFrameElement>(null);
 
   // Force iframe reload when URL changes (especially hash changes)
   useEffect(() => {
     setIsLoading(true);
     setIframeKey(prev => prev + 1);
   }, [url]);
+
+  // Try to scroll the iframe when the URL changes or iframe loads
+  const syncIframeScroll = () => {
+    setIsLoading(false);
+    const hash = url.split('#')[1];
+    if (hash && iframeRef.current?.contentWindow) {
+      iframeRef.current.contentWindow.postMessage({
+        type: 'SCROLL_TO_ANCHOR',
+        anchor: `#${hash}`
+      }, '*');
+    }
+  };
 
   // Close on Escape
   useEffect(() => {
@@ -88,9 +101,10 @@ const AdminPreviewModal = ({ isOpen, onClose, url, title = 'Site Preview' }: Adm
         {/* Iframe Content */}
         <div className="flex-grow relative bg-gray-50 dark:bg-zinc-900">
           <iframe 
+            ref={iframeRef}
             key={iframeKey}
             src={url} 
-            onLoad={() => setIsLoading(false)}
+            onLoad={syncIframeScroll}
             className={`w-full h-full border-none transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
             title="Preview"
           />
