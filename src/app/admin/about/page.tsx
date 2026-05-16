@@ -3,11 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { Save, Info, Upload, X, Users, Plus, Trash2, Layout, Sparkles, ShieldCheck, Target, Award, Camera, Settings, Loader2, Globe } from 'lucide-react';
 import FileDropzone from '@/components/admin/FileDropzone';
+import AdminPreviewModal from '@/components/admin/AdminPreviewModal';
 import { cn } from '@/lib/utils';
 
 type TabType = 'branding' | 'hero' | 'founder' | 'vision' | 'values' | 'journey' | 'gallery';
 
 export default function AboutAdmin() {
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<TabType>('branding');
   const [content, setContent] = useState<any>({
     logoTitle: '',
@@ -143,20 +145,33 @@ export default function AboutAdmin() {
 
   return (
     <div className="max-w-6xl mx-auto pb-20">
+      <AdminPreviewModal 
+        isOpen={isPreviewOpen} 
+        onClose={() => setIsPreviewOpen(false)} 
+        url={
+          activeTab === 'branding' ? '/about#about-hero' :
+          activeTab === 'hero' ? '/about#about-hero' :
+          activeTab === 'founder' ? '/about#about-founder' :
+          activeTab === 'vision' ? '/about#about-vision' :
+          activeTab === 'values' ? '/about#about-values' :
+          activeTab === 'journey' ? '/about#about-journey' :
+          activeTab === 'gallery' ? '/about#about-gallery' : '/about'
+        } 
+        title={`About - ${tabs.find(t => t.id === activeTab)?.label} Preview`}
+      />
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
         <div>
           <h1 className="text-4xl font-black text-gray-900 dark:text-white tracking-tighter uppercase">About Page Settings</h1>
           <p className="text-gray-500 mt-2">Manage the core story, professionals, history, and gallery.</p>
         </div>
         <div className="flex items-center gap-4">
-          <a 
-            href="/about" 
-            target="_blank" 
+          <button 
+            onClick={() => setIsPreviewOpen(true)}
             className="px-6 py-3 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 font-bold hover:bg-gray-50 dark:hover:bg-gray-900 transition-all flex items-center gap-2"
           >
             <Globe size={18} />
-            Preview Page
-          </a>
+            Preview Section
+          </button>
           <button 
             onClick={handleSave}
             disabled={saving}

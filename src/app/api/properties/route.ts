@@ -8,28 +8,50 @@ export async function GET(request: Request) {
     await dbConnect();
     const { searchParams } = new URL(request.url);
     
-    const filters: any = {};
+    const queryConditions: any[] = [];
     
     const location = searchParams.get('location');
     if (location) {
-      filters.$or = [
-        { title: { $regex: location, $options: 'i' } },
-        { location: { $regex: location, $options: 'i' } },
-        { description: { $regex: location, $options: 'i' } }
-      ];
+      queryConditions.push({
+        $or: [
+          { title: { $regex: location, $options: 'i' } },
+          { location: { $regex: location, $options: 'i' } },
+          { description: { $regex: location, $options: 'i' } },
+          { type: { $regex: location, $options: 'i' } },
+          { subType: { $regex: location, $options: 'i' } }
+        ]
+      });
     }
     
     const type = searchParams.get('type');
     if (type) {
-      if (type === 'Land' || type === 'Plot') {
-        filters.type = { $in: ['Land', 'Plot', 'Farm Land'] };
-      } else {
-        filters.type = type;
+      const typeLower = type.toLowerCase();
+      // Clean up common pluralisms like "Lands" -> "Land"
+      const normalizedType = type.replace(/\s*lands?$/i, '').trim();
+      const simpleType = normalizedType.split(' ')[0]; // Get first word (e.g. "Farm" from "Farm Land")
+      
+      const typeConditions: any[] = [
+        { type: { $regex: normalizedType, $options: 'i' } },
+        { subType: { $regex: normalizedType, $options: 'i' } },
+        { type: { $regex: type, $options: 'i' } },
+        { subType: { $regex: type, $options: 'i' } },
+        { type: { $regex: simpleType, $options: 'i' } },
+        { subType: { $regex: simpleType, $options: 'i' } }
+      ];
+      
+      if (typeLower.includes('land') || typeLower.includes('plot') || typeLower.includes('farm') || typeLower.includes('vmrda') || typeLower.includes('panchayat')) {
+        typeConditions.push({ type: { $in: ['Land', 'Plot', 'Farm Land', 'Commercial'] } });
       }
+      
+      queryConditions.push({ $or: typeConditions });
     }
 
     const subType = searchParams.get('subType');
-    if (subType) filters.subType = subType;
+    if (subType) {
+      queryConditions.push({ subType: { $regex: subType, $options: 'i' } });
+    }
+
+    const filters: any = queryConditions.length > 0 ? { $and: queryConditions } : {};
     
     let properties = await Property.find(filters).sort({ createdAt: -1 }).limit(200).lean();
 

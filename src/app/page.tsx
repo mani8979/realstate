@@ -46,20 +46,24 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col bg-white dark:bg-black">
-      <Hero content={serializedContent} />
+      <div id="hero-section">
+        <Hero content={serializedContent} />
+      </div>
       
-      <Founder 
-        name={serializedContent.mainFounderName}
-        role={serializedContent.mainFounderRole}
-        bio={serializedContent.mainFounderBio}
-        vision={serializedContent.mainFounderVision}
-        exp={serializedContent.mainFounderExp}
-        image={serializedContent.mainFounderImage}
-        isMain={true}
-        experienceYears="18+"
-      />
+      <div id="founder-section">
+        <Founder 
+          name={serializedContent.mainFounderName}
+          role={serializedContent.mainFounderRole}
+          bio={serializedContent.mainFounderBio}
+          vision={serializedContent.mainFounderVision}
+          exp={serializedContent.mainFounderExp}
+          image={serializedContent.mainFounderImage}
+          isMain={true}
+          experienceYears="18+"
+        />
+      </div>
       
-      <div className="relative z-10">
+      <div id="featured-properties-section" className="relative z-10">
         <FeaturedProperties 
           properties={serializedLands.filter((l: any) => l.featured === true)} 
           content={serializedContent} 
@@ -79,11 +83,11 @@ export default async function Home() {
         </div>
       </div>
 
-      <div className="relative z-10">
+      <div id="why-choose-us-section" className="relative z-10">
         <BrandValues content={serializedContent} />
       </div>
 
-      <div className="relative z-10 py-20 bg-slate-50 dark:bg-slate-950">
+      <div id="gallery-section" className="relative z-10 py-20 bg-slate-50 dark:bg-slate-950">
          <div className="container mx-auto px-6 mb-12 md:mb-16 text-center">
             <h2 className="text-primary font-black uppercase tracking-[0.3em] md:tracking-[0.4em] text-[8px] md:text-[10px] mb-4">{serializedContent.galleryBadge || 'Cinematic Showcase'}</h2>
             <h3 className="text-3xl md:text-6xl font-black text-black dark:text-white uppercase tracking-tighter leading-none">{serializedContent.galleryTitle || 'Premium Land Gallery'}</h3>
@@ -91,15 +95,15 @@ export default async function Home() {
          <SmoothSlider lands={serializedLands} />
       </div>
 
-      <div className="relative z-20">
+      <div id="plots-section" className="relative z-20">
         <PremiumHome properties={serializedLands} content={serializedContent} />
       </div>
 
-      <div className="relative z-10">
+      <div id="cta-section" className="relative z-10">
         <CTA content={serializedContent} />
       </div>
 
-      <div className="relative z-10">
+      <div id="location-section" className="relative z-10">
         <LocationSection content={serializedContent} />
       </div>
     </div>

@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { Save, Sparkles, MessageCircle, Globe } from 'lucide-react';
+import AdminPreviewModal from '@/components/admin/AdminPreviewModal';
 
 export default function ReadyToClaimAdmin() {
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [content, setContent] = useState<any>({
     ctaSectionTitle: 'Ready to claim\nyour Signature land?',
     ctaSectionDesc: 'Join 1,000+ happy homeowners in Vizag\'s most prestigious communities. Limited units available for immediate registration.',
@@ -52,19 +54,25 @@ export default function ReadyToClaimAdmin() {
 
   return (
     <div className="max-w-4xl pb-20">
+      <AdminPreviewModal 
+        isOpen={isPreviewOpen} 
+        onClose={() => setIsPreviewOpen(false)} 
+        url="/#cta-section" 
+        title="CTA Section Preview"
+      />
       <div className="flex justify-between items-center mb-10">
         <div>
           <h1 className="text-4xl font-black uppercase text-gray-900 dark:text-white tracking-tighter">Ready To Claim</h1>
           <p className="text-gray-500 mt-2 font-medium">Manage the final call-to-action section on the homepage.</p>
         </div>
         <div className="flex items-center gap-4">
-          <a 
-            href="/" 
-            target="_blank" 
+          <button 
+            onClick={() => setIsPreviewOpen(true)}
             className="px-6 py-3 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 font-bold hover:bg-gray-50 dark:hover:bg-gray-900 transition-all flex items-center gap-2"
           >
+            <Globe size={18} />
             Preview Section
-          </a>
+          </button>
           <button 
             onClick={handleSave}
             disabled={saving}

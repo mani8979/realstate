@@ -20,7 +20,7 @@ const JoinPageClient = ({ serializedContent, rules, qualifications, eligibility 
     <>
       <div className="bg-white dark:bg-black text-black dark:text-white min-h-screen">
         {/* Hero Section */}
-        <section className="relative overflow-hidden">
+        <section id="join-hero" className="relative overflow-hidden">
           {/* Dynamic Background */}
           <div className="absolute inset-0 z-0">
             <img 
@@ -49,7 +49,7 @@ const JoinPageClient = ({ serializedContent, rules, qualifications, eligibility 
         </section>
 
         {/* Office & Requirements */}
-        <section className="py-24 border-t border-white/5">
+        <section id="join-requirements" className="py-24 border-t border-white/5">
           <div className="container mx-auto px-6">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
               <div className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-10 rounded-[3rem] space-y-6">
@@ -108,7 +108,7 @@ const JoinPageClient = ({ serializedContent, rules, qualifications, eligibility 
         </section>
 
         {/* Office Gallery */}
-        <section className="py-24 border-t border-white/5">
+        <section id="join-workspace" className="py-24 border-t border-white/5">
           <div className="container mx-auto px-6">
             <div className="flex flex-col gap-12">
               <div className="text-center space-y-4">
@@ -130,7 +130,7 @@ const JoinPageClient = ({ serializedContent, rules, qualifications, eligibility 
         </section>
 
         {/* Join Options */}
-        <section className="py-32 bg-zinc-50 dark:bg-zinc-950 relative overflow-hidden">
+        <section id="join-options" className="py-32 bg-zinc-50 dark:bg-zinc-950 relative overflow-hidden">
           <div className="container mx-auto px-6 relative z-10">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
               <div className="space-y-10">

@@ -21,6 +21,34 @@ const PropertiesPage = () => {
   const [showBudgetSuggestions, setShowBudgetSuggestions] = useState(false);
 
   useEffect(() => {
+    const type = searchParams.get('type') || '';
+    const subType = searchParams.get('subType') || '';
+    const location = searchParams.get('location') || '';
+    const budget = searchParams.get('budget') || '';
+    
+    // Try to match the type with existing categories
+    let matchedType = type;
+    if (type && categories.length > 0) {
+      const normalizedType = type.toLowerCase().replace(/\s*lands?$/i, '').trim();
+      const category = categories.find(c => 
+        c.name.toLowerCase() === type.toLowerCase() || 
+        c.name.toLowerCase().replace(/\s*lands?$/i, '').trim() === normalizedType ||
+        (c.href && c.href.toLowerCase().includes(normalizedType))
+      );
+      if (category) {
+        matchedType = category.name;
+      }
+    }
+
+    setFilters({
+      location: location,
+      type: matchedType,
+      subType: subType,
+      budget: budget,
+    });
+  }, [searchParams, categories]);
+
+  useEffect(() => {
     fetch('/api/content')
       .then(res => res.json())
       .then(data => {

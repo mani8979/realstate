@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Save, Upload, X, Plus, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { Save, Upload, X, Plus, Image as ImageIcon, Loader2, Globe } from 'lucide-react';
 import FileDropzone from '@/components/admin/FileDropzone';
+import AdminPreviewModal from '@/components/admin/AdminPreviewModal';
 
 export default function GalleryAdmin() {
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [content, setContent] = useState<any>({
     aboutGallery: []
   });
@@ -87,19 +89,34 @@ export default function GalleryAdmin() {
 
   return (
     <div id="premium-gallery" className="max-w-6xl pb-20">
+      <AdminPreviewModal 
+        isOpen={isPreviewOpen} 
+        onClose={() => setIsPreviewOpen(false)} 
+        url="/#gallery-section" 
+        title="Gallery Section Preview"
+      />
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12">
         <div>
           <h1 className="text-4xl font-black uppercase text-gray-900 dark:text-white tracking-tight">About Page Gallery</h1>
           <p className="text-gray-500 mt-2 font-medium">Manage the cinematic photo collection for your About Us section.</p>
         </div>
-        <button 
-          onClick={handleSave}
-          disabled={saving}
-          className="bg-primary text-black dark:text-white px-10 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-primary/90 transition-all shadow-2xl shadow-primary/30 disabled:opacity-50"
-        >
-          <Save size={22} />
-          {saving ? 'Saving...' : 'Publish Gallery'}
-        </button>
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={() => setIsPreviewOpen(true)}
+            className="px-6 py-3 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 font-bold hover:bg-gray-50 dark:hover:bg-gray-900 transition-all flex items-center gap-2"
+          >
+            <Globe size={18} />
+            Preview Section
+          </button>
+          <button 
+            onClick={handleSave}
+            disabled={saving}
+            className="bg-primary text-black dark:text-white px-10 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-primary/90 transition-all shadow-2xl shadow-primary/30 disabled:opacity-50"
+          >
+            <Save size={22} />
+            {saving ? 'Saving...' : 'Publish Gallery'}
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">

@@ -3,8 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { Save, Globe, Share2, MapPin, Phone, Mail, Info, FileText, Layout, Loader2 } from 'lucide-react';
 import FileDropzone from '@/components/admin/FileDropzone';
+import AdminPreviewModal from '@/components/admin/AdminPreviewModal';
 
 export default function FooterAdmin() {
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [content, setContent] = useState<any>({
     logoTitle: 'STAR LANDS',
     globalFooterDesc: 'Find your dream property with our expert real estate services. We specialize in buying, selling, and renting premium properties.',
@@ -68,19 +70,25 @@ export default function FooterAdmin() {
 
   return (
     <div className="max-w-6xl pb-20">
+      <AdminPreviewModal 
+        isOpen={isPreviewOpen} 
+        onClose={() => setIsPreviewOpen(false)} 
+        url="/#footer" 
+        title="Footer Preview"
+      />
       <div className="flex justify-between items-center mb-10">
         <div>
           <h1 className="text-4xl font-black uppercase text-gray-900 dark:text-white tracking-tighter">Footer Management</h1>
           <p className="text-gray-500 mt-2 font-medium">Customize the global footer information across all pages.</p>
         </div>
         <div className="flex items-center gap-4">
-          <a 
-            href="/" 
-            target="_blank" 
+          <button 
+            onClick={() => setIsPreviewOpen(true)}
             className="px-6 py-3 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 font-bold hover:bg-gray-50 dark:hover:bg-gray-900 transition-all flex items-center gap-2"
           >
-            View Site
-          </a>
+            <Globe size={18} />
+            Preview Footer
+          </button>
           <button 
             onClick={handleSave}
             disabled={saving}

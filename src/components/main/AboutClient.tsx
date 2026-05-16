@@ -29,7 +29,7 @@ const AboutClient = ({ content }: { content: any }) => {
         </div>
 
         {/* Brand Values */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
+        <div id="about-values" className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
           {[
             { 
               label: content.brandBadge || 'Verified Properties', 
@@ -72,10 +72,12 @@ const AboutClient = ({ content }: { content: any }) => {
           ))}
         </div>
 
-        <WhyChooseUs />
+        <div id="about-journey">
+          <WhyChooseUs />
+        </div>
         
         {/* Mission/Vision Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center py-24 border-t border-black/10 dark:border-white/10">
+        <div id="about-vision" className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center py-24 border-t border-black/10 dark:border-white/10">
           <div className="space-y-8">
             <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white uppercase tracking-tighter">
               {content.aboutMissionTitle || 'Our Mission & Vision'}

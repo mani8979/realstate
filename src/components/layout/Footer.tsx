@@ -89,7 +89,11 @@ const Footer = async () => {
             <ul className="space-y-5">
               {(content.footerCol2Links ? content.footerCol2Links.split(',').map((l: string) => l.trim()) : ['Farm Lands', 'VMRDA Lands', 'Panchayati Lands']).map((type: string) => {
                 // Check if this matches a category name for a better link
-                const category = content.propertyCategories?.find((c: any) => c.name === type);
+                const category = content.propertyCategories?.find((c: any) => 
+                  c.name.toLowerCase() === type.toLowerCase() || 
+                  c.name.toLowerCase().includes(type.toLowerCase()) ||
+                  type.toLowerCase().includes(c.name.toLowerCase())
+                );
                 const href = category ? category.href : `/properties?type=${encodeURIComponent(type)}`;
                 
                 return (

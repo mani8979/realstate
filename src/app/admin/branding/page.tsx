@@ -3,8 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { Save, Upload, X, Globe, Layout, Smartphone, Loader2 } from 'lucide-react';
 import FileDropzone from '@/components/admin/FileDropzone';
+import AdminPreviewModal from '@/components/admin/AdminPreviewModal';
 
 export default function BrandingAdmin() {
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [content, setContent] = useState<any>({
     headerLogoImage: '',
     footerLogoImage: '',
@@ -76,19 +78,25 @@ export default function BrandingAdmin() {
 
   return (
     <div className="max-w-4xl pb-20">
+      <AdminPreviewModal 
+        isOpen={isPreviewOpen} 
+        onClose={() => setIsPreviewOpen(false)} 
+        url="/" 
+        title="Site Branding Preview"
+      />
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-black uppercase text-gray-900 dark:text-white tracking-tighter">Global Branding</h1>
           <p className="text-gray-500">Manage your logos, identity, and browser icons.</p>
         </div>
         <div className="flex items-center gap-4">
-          <a 
-            href="/" 
-            target="_blank" 
+          <button 
+            onClick={() => setIsPreviewOpen(true)}
             className="px-6 py-3 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 font-bold hover:bg-gray-50 dark:hover:bg-gray-900 transition-all flex items-center gap-2"
           >
-            View Site
-          </a>
+            <Globe size={18} />
+            Preview Changes
+          </button>
           <button 
             onClick={handleSave}
             disabled={saving}

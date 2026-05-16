@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Save } from 'lucide-react';
+import { Save, Globe } from 'lucide-react';
+import AdminPreviewModal from '@/components/admin/AdminPreviewModal';
 
 export default function NavigationAdmin() {
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [content, setContent] = useState<any>({
     logoTitle: 'STAR LANDS',
     logoSubtitle: 'DEVELOPERS',
@@ -59,8 +61,22 @@ export default function NavigationAdmin() {
         </div>
       ) : (
         <>
+          <AdminPreviewModal 
+            isOpen={isPreviewOpen} 
+            onClose={() => setIsPreviewOpen(false)} 
+            url="/" 
+            title="Header Navigation Preview"
+          />
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-3xl font-black uppercase text-gray-900 dark:text-white">Navigation Settings</h1>
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setIsPreviewOpen(true)}
+              className="px-6 py-3 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 font-bold hover:bg-gray-50 dark:hover:bg-gray-900 transition-all flex items-center gap-2"
+            >
+              <Globe size={18} />
+              Preview Header
+            </button>
             <button 
               onClick={handleSave}
               disabled={saving}
@@ -69,6 +85,7 @@ export default function NavigationAdmin() {
               <Save size={20} />
               {saving ? 'Saving...' : 'Save Changes'}
             </button>
+          </div>
           </div>
 
           <div className="space-y-8">

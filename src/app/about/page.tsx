@@ -24,13 +24,17 @@ const AboutPage = async () => {
 
   return (
     <div className="bg-white dark:bg-black">
-      <AboutClient content={serializedContent} />
+      <div id="about-hero">
+        <AboutClient content={serializedContent} />
+      </div>
 
       {/* Gallery Section */}
-      <AboutGallery images={serializedContent.aboutGallery} />
+      <div id="about-gallery">
+        <AboutGallery images={serializedContent.aboutGallery} />
+      </div>
       
       {/* Main Founder Section */}
-      <div className="py-12">
+      <div id="about-founder" className="py-12">
         <Founder 
           key={`main-${serializedContent.mainFounderImage}`}
           name={serializedContent.mainFounderName}
@@ -59,7 +63,9 @@ const AboutPage = async () => {
         />
       </div>
 
-      <CTA content={serializedContent} />
+      <div id="cta-section">
+        <CTA content={serializedContent} />
+      </div>
     </div>
   );
 };

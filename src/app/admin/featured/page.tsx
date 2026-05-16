@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Save } from 'lucide-react';
+import { Save, Globe } from 'lucide-react';
+import AdminPreviewModal from '@/components/admin/AdminPreviewModal';
 
 export default function FeaturedAdmin() {
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [content, setContent] = useState<any>({
     featuredBadgeText: 'Investment Opportunities',
     featuredTitle: 'Featured',
@@ -50,16 +52,31 @@ export default function FeaturedAdmin() {
 
   return (
     <div className="max-w-4xl">
+      <AdminPreviewModal 
+        isOpen={isPreviewOpen} 
+        onClose={() => setIsPreviewOpen(false)} 
+        url="/#featured-properties-section" 
+        title="Featured Properties Preview"
+      />
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-black uppercase text-gray-900 dark:text-white">Featured Properties Settings</h1>
-        <button 
-          onClick={handleSave}
-          disabled={saving}
-          className="bg-primary text-black dark:text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-primary/90 transition-all"
-        >
-          <Save size={20} />
-          {saving ? 'Saving...' : 'Save Changes'}
-        </button>
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={() => setIsPreviewOpen(true)}
+            className="px-6 py-3 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 font-bold hover:bg-gray-50 dark:hover:bg-gray-900 transition-all flex items-center gap-2"
+          >
+            <Globe size={18} />
+            Preview Section
+          </button>
+          <button 
+            onClick={handleSave}
+            disabled={saving}
+            className="bg-primary text-black dark:text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-primary/90 transition-all"
+          >
+            <Save size={20} />
+            {saving ? 'Saving...' : 'Save Changes'}
+          </button>
+        </div>
       </div>
 
       <div className="space-y-8">

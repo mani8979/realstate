@@ -4,9 +4,12 @@ import React, { useState, useEffect } from 'react';
 import PropertyForm from '@/components/admin/PropertyForm';
 import { useRouter, useParams } from 'next/navigation';
 import axios from 'axios';
+import AdminPreviewModal from '@/components/admin/AdminPreviewModal';
+import { Globe } from 'lucide-react';
 
 const EditProperty = () => {
   const [loading, setLoading] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [property, setProperty] = useState<any>(null);
   const router = useRouter();
   const { id } = useParams();
@@ -48,9 +51,24 @@ const EditProperty = () => {
         </div>
       ) : (
         <>
-          <div>
-            <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">Edit Property</h1>
-            <p className="text-gray-500">Update the details for "{property?.title}".</p>
+          <AdminPreviewModal 
+            isOpen={isPreviewOpen} 
+            onClose={() => setIsPreviewOpen(false)} 
+            url={`/properties/${id}`} 
+            title={`Preview: ${property?.title}`}
+          />
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">Edit Property</h1>
+              <p className="text-gray-500">Update the details for "{property?.title}".</p>
+            </div>
+            <button 
+              onClick={() => setIsPreviewOpen(true)}
+              className="px-6 py-3 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 font-bold hover:bg-gray-50 dark:hover:bg-gray-900 transition-all flex items-center gap-2"
+            >
+              <Globe size={18} />
+              Live Preview
+            </button>
           </div>
 
           <PropertyForm initialData={property} onSubmit={handleSubmit} loading={loading} />

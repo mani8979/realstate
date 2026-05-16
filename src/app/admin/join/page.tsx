@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Save, Info, Upload, X, Users, Plus, Trash2, Loader2 } from 'lucide-react';
+import { Save, Info, Upload, X, Users, Plus, Trash2, Loader2, Globe } from 'lucide-react';
 import FileDropzone from '@/components/admin/FileDropzone';
+import AdminPreviewModal from '@/components/admin/AdminPreviewModal';
 
 export default function JoinAdmin() {
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [content, setContent] = useState<any>({
     joinBadge: '',
     joinTitle: '',
@@ -115,19 +117,25 @@ export default function JoinAdmin() {
 
   return (
     <div className="max-w-4xl pb-20">
+      <AdminPreviewModal 
+        isOpen={isPreviewOpen} 
+        onClose={() => setIsPreviewOpen(false)} 
+        url="/join" 
+        title="Join Page Preview"
+      />
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-black uppercase text-gray-900 dark:text-white">Join Page Settings</h1>
           <p className="text-gray-500">Manage recruitment info, rules, and team collaboration links.</p>
         </div>
         <div className="flex items-center gap-4">
-          <a 
-            href="/join" 
-            target="_blank" 
+          <button 
+            onClick={() => setIsPreviewOpen(true)}
             className="px-6 py-3 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 font-bold hover:bg-gray-50 dark:hover:bg-gray-900 transition-all flex items-center gap-2"
           >
+            <Globe size={18} />
             Preview Page
-          </a>
+          </button>
           <button 
             onClick={handleSave}
             disabled={saving}

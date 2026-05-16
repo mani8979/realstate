@@ -5,11 +5,14 @@ import { Building, PlusCircle, Pencil, Trash2, MapPin, DollarSign, Search } from
 import Link from 'next/link';
 import Image from 'next/image';
 import axios from 'axios';
+import AdminPreviewModal from '@/components/admin/AdminPreviewModal';
+import { Globe } from 'lucide-react';
 
 const AdminProperties = () => {
   const [properties, setProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const fetchProperties = async () => {
     try {
@@ -50,6 +53,12 @@ const AdminProperties = () => {
         </div>
       ) : (
         <>
+          <AdminPreviewModal 
+            isOpen={isPreviewOpen} 
+            onClose={() => setIsPreviewOpen(false)} 
+            url="/properties" 
+            title="All Properties Preview"
+          />
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
               <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">Property Management</h1>
@@ -57,13 +66,13 @@ const AdminProperties = () => {
             </div>
             
             <div className="flex items-center gap-4">
-              <a 
-                href="/properties" 
-                target="_blank" 
+              <button 
+                onClick={() => setIsPreviewOpen(true)}
                 className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-bold px-8 py-4 rounded-2xl flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm"
               >
+                <Globe size={18} />
                 <span>View All Properties</span>
-              </a>
+              </button>
               <Link 
                 href="/admin/properties/add" 
                 className="bg-primary hover:bg-primary-dark text-black dark:text-white font-bold px-8 py-4 rounded-2xl flex items-center gap-2 transition-all shadow-xl shadow-primary/20"
