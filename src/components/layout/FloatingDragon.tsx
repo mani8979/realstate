@@ -12,59 +12,123 @@ const ModelViewer = 'model-viewer' as any;
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Returns the X-centre (in px) the model should occupy based on the
- * alignment of the content section currently most visible in the viewport.
+ * Real empty-space finder.
  *
- * Layout rule:
- *   text=left   → model goes to the RIGHT empty strip
- *   text=right  → model goes to the LEFT  empty strip
- *   text=center → model goes to the RIGHT empty strip (default)
- *   no sections → model stays RIGHT (top-right default)
+ * At the model's current viewport-Y we:
+ *   1. Scan every content block (.glass-card, .dragon-repel, .dragon-disappear,
+ *      [data-model-align] .glass-card) for its bounding rect.
+ *   2. Merge overlapping horizontal occupied bands.
+ *   3. Find every genuine free gap wide enough for the model.
+ *   4. Prefer the gap on the side *opposite* the active text alignment.
+ *
+ * This means the model truly slots into white-space, not just "right" or "left".
  */
-const getTargetX = (viewportW: number, modelSize: number): number => {
-  const pad = 24;
+const getTargetX = (viewportW: number, modelSize: number, curY: number): number => {
+  const pad = 20;          // breathing room around each content rect
+  const minGap = modelSize * 2; // gap must be at least 2× model width to be usable
 
-  // Read sections tagged by page.tsx with data-model-align
+  // ── 1. Collect occupied horizontal ranges at curY ──────────────────────────
+  const occupied: { left: number; right: number }[] = [];
+
+  const scanSelectors = [
+    // Actual half-width text cards placed by the admin
+    '[data-model-align] .glass-card',
+    // Plot map + inventory panel
+    '.dragon-repel',
+    // Enquiry form / disappear zones
+    '.dragon-disappear',
+  ];
+
+  for (const selector of scanSelectors) {
+    document.querySelectorAll<HTMLElement>(selector).forEach(el => {
+      const r = el.getBoundingClientRect();
+      // Only consider elements whose vertical extent overlaps curY
+      if (r.width < 10 || r.height < 10) return; // skip invisible / zero-size
+      if (r.top < curY + modelSize && r.bottom > curY - modelSize) {
+        occupied.push({
+          left:  Math.max(0, r.left - pad),
+          right: Math.min(viewportW, r.right + pad),
+        });
+      }
+    });
+  }
+
+  // ── 2. Sort + merge overlapping ranges ────────────────────────────────────
+  occupied.sort((a, b) => a.left - b.left);
+  const merged: { left: number; right: number }[] = [];
+  for (const r of occupied) {
+    if (merged.length > 0 && r.left <= merged[merged.length - 1].right) {
+      merged[merged.length - 1].right = Math.max(merged[merged.length - 1].right, r.right);
+    } else {
+      merged.push({ ...r });
+    }
+  }
+
+  // ── 3. Find free gaps ─────────────────────────────────────────────────────
+  const gaps: { center: number; width: number }[] = [];
+  let scanX = modelSize + pad;
+
+  for (const r of merged) {
+    const gapW = r.left - scanX;
+    if (gapW >= minGap) {
+      gaps.push({ center: (scanX + r.left) / 2, width: gapW });
+    }
+    if (r.right > scanX) scanX = r.right;
+  }
+  // Trailing gap on the far right
+  const trailW = viewportW - modelSize - pad - scanX;
+  if (trailW >= minGap) {
+    gaps.push({ center: (scanX + viewportW - modelSize - pad) / 2, width: trailW });
+  }
+
+  // ── 4. Determine preferred side from active section alignment ──────────────
   const sections = Array.from(
     document.querySelectorAll<HTMLElement>('[data-model-align]')
   );
-
-  if (sections.length === 0) {
-    // Default: top-right
-    return viewportW - modelSize - pad;
-  }
-
-  // Find the section most visible in the viewport
-  const vh = window.innerHeight;
-  let bestSection: HTMLElement | null = null;
+  const vH = window.innerHeight;
+  let preferRight = true; // default: right side
   let bestOverlap = 0;
 
   for (const el of sections) {
     const r = el.getBoundingClientRect();
-    const overlap = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0));
+    const overlap = Math.max(0, Math.min(r.bottom, vH) - Math.max(r.top, 0));
     if (overlap > bestOverlap) {
       bestOverlap = overlap;
-      bestSection = el;
+      // text-right → model left; text-left or center → model right
+      preferRight = el.dataset.modelAlign !== 'right';
     }
   }
 
-  const align = bestSection?.dataset.modelAlign ?? 'left';
+  // ── 5. No gaps found → fall back to preferred edge ────────────────────────
+  if (gaps.length === 0) {
+    return preferRight
+      ? viewportW - modelSize - pad
+      : modelSize + pad;
+  }
 
-  if (align === 'right') {
-    // Text is on the right → model goes to left strip
-    return modelSize + pad;
+  // ── 6. Pick widest gap on the preferred side ───────────────────────────────
+  const rightGaps = gaps
+    .filter(g => g.center > viewportW * 0.45)
+    .sort((a, b) => b.width - a.width);
+  const leftGaps = gaps
+    .filter(g => g.center < viewportW * 0.55)
+    .sort((a, b) => b.width - a.width);
+
+  if (preferRight && rightGaps.length > 0) {
+    return Math.min(rightGaps[0].center, viewportW - modelSize - pad);
   }
-  if (align === 'center') {
-    // Text is centered → model goes to right strip
-    return viewportW - modelSize - pad;
+  if (!preferRight && leftGaps.length > 0) {
+    return Math.max(leftGaps[0].center, modelSize + pad);
   }
-  // Default (left-aligned text) → model goes to right strip
-  return viewportW - modelSize - pad;
+
+  // ── 7. Absolute fallback: widest gap anywhere ──────────────────────────────
+  const widest = [...gaps].sort((a, b) => b.width - a.width)[0];
+  return Math.max(modelSize + pad, Math.min(viewportW - modelSize - pad, widest.center));
 };
 
 /**
  * Maps scroll progress to a viewport-Y position.
- * Starts at 12% (top area) and drifts to 80% as the user scrolls.
+ * 12 % of viewport height at the top → 80 % at the bottom.
  */
 const getTargetY = (viewportH: number): number => {
   const pageHeight = document.body.scrollHeight - viewportH;
@@ -124,7 +188,7 @@ const FloatingDragon = () => {
       const vH = window.innerHeight;
       const mSize = vW < 768 ? 60 : 110;
 
-      const targetX = getTargetX(vW, mSize);
+      const targetX = getTargetX(vW, mSize, curY);
       const targetY = getTargetY(vH);
 
       // ─── Frame-rate-independent exponential lerp ──────────────────────
