@@ -514,11 +514,11 @@ const PropertyDetails = () => {
                  <p className="text-gray-500 font-medium uppercase tracking-widest text-[10px] md:text-xs">Explore available plots and secure your future asset today</p>
               </div>
 
-              <div className="flex flex-col xl:flex-row gap-10">
+              <div className="flex flex-col xl:flex-row gap-10 items-start">
                   {/* Map View */}
                   <div 
                      ref={mapContainerRef}
-                     className="dragon-repel flex-grow bg-black/5 dark:bg-white/5 rounded-[3rem] border border-black/10 dark:border-white/10 overflow-auto relative shadow-2xl flex items-center justify-center p-4 md:p-10 min-h-[500px] custom-scrollbar"
+                     className="dragon-repel flex-grow bg-black/5 dark:bg-white/5 rounded-[3rem] border border-black/10 dark:border-white/10 overflow-auto relative shadow-2xl flex items-center justify-center p-4 md:p-10 h-[500px] md:h-[600px] xl:h-[80vh] xl:sticky xl:top-24 custom-scrollbar"
                   >
                      {property.layoutImage ? (
                        <div className="relative w-full h-full flex items-center justify-center">
