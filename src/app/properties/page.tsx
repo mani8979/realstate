@@ -26,24 +26,40 @@ const PropertiesPage = () => {
     const location = searchParams.get('location') || '';
     const budget = searchParams.get('budget') || '';
     
-    // Try to match the type with existing categories
-    let matchedType = type;
+    // Try to match the type and subType with existing categories
+    let finalType = type;
+    let finalSubType = subType;
+
     if (type && categories.length > 0) {
       const normalizedType = type.toLowerCase().replace(/\s*lands?$/i, '').trim();
-      const category = categories.find(c => 
-        c.name.toLowerCase() === type.toLowerCase() || 
-        c.name.toLowerCase().replace(/\s*lands?$/i, '').trim() === normalizedType ||
-        (c.href && c.href.toLowerCase().includes(normalizedType))
-      );
-      if (category) {
-        matchedType = category.name;
+      
+      // Check if the 'type' in URL is actually a subCategory
+      for (const cat of categories) {
+        // If it matches a top-level category
+        if (cat.name.toLowerCase() === type.toLowerCase() || 
+            cat.name.toLowerCase().replace(/\s*lands?$/i, '').trim() === normalizedType) {
+          finalType = cat.name;
+          break;
+        }
+        
+        // If it matches a sub-category
+        const matchedSub = cat.subCategories?.find((sub: string) => 
+          sub.toLowerCase() === type.toLowerCase() || 
+          sub.toLowerCase().replace(/\s*lands?$/i, '').trim() === normalizedType
+        );
+        
+        if (matchedSub) {
+          finalType = cat.name;
+          finalSubType = matchedSub;
+          break;
+        }
       }
     }
 
     setFilters({
       location: location,
-      type: matchedType,
-      subType: subType,
+      type: finalType,
+      subType: finalSubType,
       budget: budget,
     });
   }, [searchParams, categories]);
