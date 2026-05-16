@@ -265,7 +265,7 @@ const SiteContentSchema = new Schema<ISiteContent>(
     ctaSectionTitle: { type: String, default: "Ready to claim\nyour Signature land?" },
     ctaSectionDesc: { type: String, default: "Join 1,000+ happy homeowners in Vizag's most prestigious communities. Limited units available for immediate registration." },
     ctaSectionBtn1: { type: String, default: "Schedule a Site Visit" },
-    ctaSectionBtn2: { type: String, default: "+91 91234 56789" },
+    ctaSectionBtn2: { type: String, default: "+91 96660 80645" },
     globalFooterDesc: { type: String, default: "Find your dream property with our expert real estate services. We specialize in buying, selling, and renting premium properties." },
     globalFooterCopyright: { type: String, default: "© 2026 STAR LAND DEVELOPERS. All rights reserved." },
     footerCol1Title: { type: String, default: "Navigation" },

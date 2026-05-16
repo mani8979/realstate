@@ -79,7 +79,7 @@ export default function ReadyToClaimAdmin() {
                   rows={2} 
                   value={content.ctaSectionTitle || ''} 
                   onChange={handleChange} 
-                  className="w-full p-6 rounded-3xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 text-2xl font-black tracking-tight"
+                  className="w-full p-6 rounded-3xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 text-2xl font-black tracking-tight text-gray-900 dark:text-white"
                 />
              </div>
 
