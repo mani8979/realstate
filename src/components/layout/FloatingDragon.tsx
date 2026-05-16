@@ -23,48 +23,42 @@ const FloatingDragon = () => {
   const { scrollYProgress } = useScroll();
 
   // ── Motion values bypass React state ───────────────────────────────────────
-  const mX      = useMotionValue(typeof window !== 'undefined' ? window.innerWidth - 120 : 900);
-  const mY      = useMotionValue(-200); // Start off-screen top
+  const mX      = useMotionValue(typeof window !== 'undefined' ? window.innerWidth - 150 : 900);
+  const mY      = useMotionValue(0);
   
-  // Springs for smooth movement
-  const springX = useSpring(mX, { stiffness: 40, damping: 20, mass: 2 });
-  const springY = useSpring(mY, { stiffness: 100, damping: 20, mass: 1 }); // Snappy Y for loop reset
+  // Springs with EXTREME inertia for 'falling' feel
+  const springX = useSpring(mX, { stiffness: 30, damping: 20, mass: 2 });
+  const springY = useSpring(mY, { stiffness: 8, damping: 12, mass: 10 }); // Massive lag
 
-  // ── 3D Tumbling & Gravity Fall Loop ────────────────────────────────────────
+  // ── 3D Tumbling & Multi-Directional Sway ───────────────────────────────────
   const [orbit, setOrbit] = useState("0deg 75deg 10m");
+  const swayX = useMotionValue(0);
+  const swayY = useMotionValue(0);
 
   useEffect(() => {
     let frame: number;
     const start = performance.now();
     
-    // Random tumble velocities
+    // Tumble and Sway loop
     const vTumbleX = Math.random() * 80 + 40;
-    const vFall    = 2.5; // Constant downward speed (pixels per frame approx)
 
     const tick = (now: number) => {
       const elapsed = (now - start) / 1000;
-      const H = window.innerHeight;
       
-      // 1. Continuous 3D tumble
+      // 1. Continuous 3D tumble (Real 3D look)
       const rotX = elapsed * vTumbleX;
       const rotY = 75 + Math.sin(elapsed * 0.5) * 15;
       setOrbit(`${rotX}deg ${rotY}deg 10m`);
 
-      // 2. Free Fall: Increase Y constantly
-      let currentY = mY.get() + vFall;
-      
-      // Loop back to top if off-screen bottom
-      if (currentY > H + 200) {
-        currentY = -200;
-        springY.jump(-200); // Reset spring instantly
-      }
-      mY.set(currentY);
+      // 2. Multi-directional swaying (Free movement)
+      swayX.set(Math.sin(elapsed * 0.7) * 40);
+      swayY.set(Math.cos(elapsed * 0.9) * 25);
 
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [mY, springY]);
+  }, [swayX, swayY]);
 
   // ── Lazy-load trigger ───────────────────────────────────────────────────────
   useEffect(() => {
@@ -74,34 +68,38 @@ const FloatingDragon = () => {
     return () => { clearTimeout(t); window.removeEventListener('scroll', s); };
   }, []);
 
-  // ── Dynamic Empty-Space tracking as it falls ───────────────────────────────
+  // ── Scroll-driven Empty-Space Tracking ─────────────────────────────────────
   useEffect(() => {
     const PAD = 40;
-    const computeX = () => {
+    const compute = () => {
       const W = window.innerWidth;
       const H = window.innerHeight;
-      const msz = W < 768 ? 80 : 150; // Increased safety margin
-      const currentY = mY.get();
+      const msz = W < 768 ? 80 : 150;
+      
+      // 1. Y: Follow scroll but with huge lag
+      const pageH = Math.max(1, document.body.scrollHeight - H);
+      const prog  = Math.min(1, window.scrollY / pageH);
+      mY.set(H * (0.12 + prog * 0.68));
 
-      // X: Detect empty spaces based on current Y position
+      // 2. X: Detect tracks based on scroll position
       if (W < 768) { mX.set(W - msz - 20); return; }
 
+      const trigTop = H * 0.20;
+      const trigBot = H * 0.80;
       const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-model-align]'));
-      let targetX = W - msz - PAD; // Default right
+      let targetX = W - msz - PAD; 
       
       for (const el of sections) {
         const r = el.getBoundingClientRect();
-        // Check if the falling fruit's Y is within this section's vertical span
-        // Note: r is relative to viewport, currentY is also relative to viewport top
-        if (currentY > r.top - 100 && currentY < r.bottom + 100) {
+        if (r.top < trigBot && r.bottom > trigTop) {
           const align = el.dataset.modelAlign ?? 'left';
           const card  = el.querySelector<HTMLElement>('.glass-card');
           const cr    = card?.getBoundingClientRect();
 
           if (align === 'right' && cr) {
-            targetX = cr.left / 2; // Left empty space
+            targetX = cr.left / 2; 
           } else if (cr) {
-            targetX = cr.right + (W - cr.right) / 2; // Right empty space
+            targetX = cr.right + (W - cr.right) / 2; 
           }
           break;
         }
@@ -109,9 +107,10 @@ const FloatingDragon = () => {
       mX.set(Math.max(msz + PAD, Math.min(W - msz - PAD, targetX)));
     };
 
-    // Run compute frequently to catch side-switches during fall
-    const interval = setInterval(computeX, 100);
-    return () => clearInterval(interval);
+    compute();
+    const onScroll = () => compute();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, [mX, mY]);
 
   // ── Visibility check (rAF — cheap, no state churn) ─────────────────────────
@@ -167,7 +166,7 @@ const FloatingDragon = () => {
           y: springY, 
           translateX: '-50%',
           translateY: '-50%',
-          perspective: 1500 // Increased perspective depth
+          perspective: 1500 
         }}
         className="fixed top-0 left-0 pointer-events-none z-[100] overflow-visible"
       >
@@ -176,7 +175,12 @@ const FloatingDragon = () => {
           animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0 }}
           whileHover={{ scale: 1.15 }}
           transition={{ duration: visible ? 0.8 : 0.2, ease: 'easeInOut' }}
-          style={{ width: mW, height: mH }}
+          style={{ 
+            width: mW, 
+            height: mH,
+            x: swayX, // All directions movement
+            y: swayY 
+          }}
           className="relative pointer-events-auto cursor-pointer overflow-visible"
           onClick={() => setShowPopup(true)}
           onMouseEnter={() => setHovered(true)}
