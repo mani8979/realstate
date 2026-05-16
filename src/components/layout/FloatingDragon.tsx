@@ -22,48 +22,45 @@ const FloatingDragon = () => {
   const lastSide        = useRef<'left' | 'right' | null>(null); // tracks which side model is on
   const { scrollYProgress } = useScroll();
 
-  // ── Motion values bypass React state → zero re-renders, zero drift ─────────
-  const mX      = useMotionValue(typeof window !== 'undefined' ? window.innerWidth - 120 : 900);
-  const mY      = useMotionValue(typeof window !== 'undefined' ? window.innerHeight * 0.12 : 120);
+  // ── Motion values bypass React state ───────────────────────────────────────
+  const mX      = useMotionValue(typeof window !== 'undefined' ? window.innerWidth / 2 : 500);
+  const mY      = useMotionValue(typeof window !== 'undefined' ? -200 : -200);
   
-  // X: snappy spring for left⇔right switch
-  const springX = useSpring(mX, { stiffness: 70, damping: 20, mass: 1 });
-  
-  // Y: EXTREME gravity-feel spring — model "falls" with massive inertia
-  const springY = useSpring(mY, { stiffness: 15, damping: 8, mass: 6 });
+  // Springs for smooth movement
+  const springX = useSpring(mX, { stiffness: 10, damping: 15, mass: 2 });
+  const springY = useSpring(mY, { stiffness: 15, damping: 10, mass: 4 });
 
-  // ── Air resistance / Bobbing effect ───────────────────────────────────────
-  const yBob = useMotionValue(0);
+  // ── Tumbling / Free-fall rotation ──────────────────────────────────────────
+  const rotX = useMotionValue(0);
+  const rotY = useMotionValue(0);
+  const rotZ = useMotionValue(0);
+  const driftX = useMotionValue(0);
+
   useEffect(() => {
     let frame: number;
     const start = performance.now();
+    
+    // Random tumble velocities
+    const vX = Math.random() * 80 + 40;
+    const vY = Math.random() * 100 + 50;
+    const vZ = Math.random() * 60 + 30;
+
     const tick = (now: number) => {
       const elapsed = (now - start) / 1000;
-      // Constant subtle bobbing to simulate air resistance
-      yBob.set(Math.sin(elapsed * 2) * 12);
+      
+      // Continuous tumbling
+      rotX.set(elapsed * vX);
+      rotY.set(elapsed * vY);
+      rotZ.set(elapsed * vZ);
+      
+      // Horizontal drift (sine wave)
+      driftX.set(Math.sin(elapsed * 0.8) * 100);
+      
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [yBob]);
-
-  // ── Velocity-based rotation for "falling" effect ───────────────────────────
-  const rotateX = useMotionValue(0);
-  const rotateZ = useMotionValue(0);
-
-  useEffect(() => {
-    const unsubY = springY.on('change', () => {
-      const velY = springY.getVelocity();
-      // Aggressive tilt forward when falling down (positive velocity)
-      rotateX.set(Math.min(25, Math.max(-25, velY / 30)));
-    });
-    const unsubX = springX.on('change', () => {
-      const velX = springX.getVelocity();
-      // Tilt sideways when moving horizontally
-      rotateZ.set(Math.min(10, Math.max(-10, -velX / 60)));
-    });
-    return () => { unsubY(); unsubX(); };
-  }, [springX, springY, rotateX, rotateZ]);
+  }, [rotX, rotY, rotZ, driftX]);
 
   // ── Lazy-load trigger ───────────────────────────────────────────────────────
   useEffect(() => {
@@ -73,75 +70,28 @@ const FloatingDragon = () => {
     return () => { clearTimeout(t); window.removeEventListener('scroll', s); };
   }, []);
 
-  // ── Scroll-driven positioning (ONLY fires when user scrolls) ───────────────
+  // ── Free-falling scroll logic ──────────────────────────────────────────────
   useEffect(() => {
-    const PAD = 36;
-
     const compute = () => {
-      const W   = window.innerWidth;
-      const H   = window.innerHeight;
-      const msz = W < 768 ? 60 : 110;
-
-      // ── Y: direct from scroll progress — zero lag, zero post-scroll drift ──
+      const W = window.innerWidth;
+      const H = window.innerHeight;
+      
+      // Y: followers scroll but deeper (like it's falling through the page)
       const pageH = Math.max(1, document.body.scrollHeight - H);
       const prog  = Math.min(1, window.scrollY / pageH);
-      mY.set(Math.max(msz, Math.min(H - msz, H * (0.12 + prog * 0.68))));
-
-      // ── X: section-alignment driven ───────────────────────────────────────
-      if (W < 768) { mX.set(W - msz - PAD); return; }
-
-      const trigTop = H * 0.20;
-      const trigBot = H * 0.80;
-      const sections = Array.from(
-        document.querySelectorAll<HTMLElement>('[data-model-align]')
-      );
-
-      for (const el of sections) {
-        const r = el.getBoundingClientRect();
-        if (r.top < trigBot && r.bottom > trigTop) {
-          const align  = el.dataset.modelAlign ?? 'left';
-          const card   = el.querySelector<HTMLElement>('.glass-card');
-          const cr     = card?.getBoundingClientRect();
-          const newSide: 'left' | 'right' = align === 'right' ? 'left' : 'right';
-
-          let newX: number;
-          if (newSide === 'left') {
-            newX = cr ? Math.max(msz + PAD, cr.left / 2) : msz + PAD;
-          } else {
-            newX = cr
-              ? Math.min(W - msz - PAD, cr.right + (W - cr.right) / 2)
-              : W - msz - PAD;
-          }
-
-          // Always spring — model glides through center when switching sides
-          mX.set(newX);
-          lastSide.current = newSide;
-          return;
-        }
-      }
-
-      // No section in trigger band → glide back to right edge
-      mX.set(W - msz - PAD);
-      lastSide.current = 'right';
+      
+      // Target Y is based on scroll but with a wide range
+      mY.set(H * (0.1 + prog * 1.5)); // Falls further than viewport
+      
+      // Target X is center by default, with drift applied in style
+      mX.set(W / 2);
     };
 
-    // Set correct initial position
     compute();
-    springX.jump(mX.get());
-    // Note: NOT jumping springY so it "falls" into view from the top on load
-
-    // Only recompute when scrollY actually changes
-    let lastY = window.scrollY;
-    const onScroll = () => {
-      const sy = window.scrollY;
-      if (Math.abs(sy - lastY) < 1) return;
-      lastY = sy;
-      compute();
-    };
+    const onScroll = () => compute();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [mX, mY]);
 
   // ── Visibility check (rAF — cheap, no state churn) ─────────────────────────
   useEffect(() => {
@@ -194,10 +144,11 @@ const FloatingDragon = () => {
         style={{ 
           x: springX, 
           y: springY, 
-          translateY: yBob, // Add bobbing offset
-          rotateX: rotateX,
-          rotateZ: rotateZ,
-          translateX: '-50%', 
+          rotateX: rotX,
+          rotateY: rotY,
+          rotateZ: rotZ,
+          translateX: '-50%',
+          translateY: '-50%',
           perspective: 1000 
         }}
         className="fixed top-0 left-0 pointer-events-none z-[100]"
@@ -205,8 +156,9 @@ const FloatingDragon = () => {
         <motion.div
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0 }}
+          whileHover={{ scale: 1.15 }} // Make it look awesome on hover
           transition={{ duration: visible ? 0.8 : 0.2, ease: 'easeInOut' }}
-          style={{ width: mW, height: mH }}
+          style={{ width: mW, height: mH, x: driftX }} // Drift applied here
           className="relative pointer-events-auto cursor-pointer"
           onClick={() => setShowPopup(true)}
           onMouseEnter={() => setHovered(true)}
