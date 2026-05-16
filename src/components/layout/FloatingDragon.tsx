@@ -29,8 +29,23 @@ const FloatingDragon = () => {
   // X: snappy spring for left⇔right switch
   const springX = useSpring(mX, { stiffness: 70, damping: 20, mass: 1 });
   
-  // Y: HEAVY gravity-feel spring — model "falls" with significant inertia
-  const springY = useSpring(mY, { stiffness: 25, damping: 10, mass: 3.5 });
+  // Y: EXTREME gravity-feel spring — model "falls" with massive inertia
+  const springY = useSpring(mY, { stiffness: 15, damping: 8, mass: 6 });
+
+  // ── Air resistance / Bobbing effect ───────────────────────────────────────
+  const yBob = useMotionValue(0);
+  useEffect(() => {
+    let frame: number;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const elapsed = (now - start) / 1000;
+      // Constant subtle bobbing to simulate air resistance
+      yBob.set(Math.sin(elapsed * 2) * 12);
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [yBob]);
 
   // ── Velocity-based rotation for "falling" effect ───────────────────────────
   const rotateX = useMotionValue(0);
@@ -39,8 +54,8 @@ const FloatingDragon = () => {
   useEffect(() => {
     const unsubY = springY.on('change', () => {
       const velY = springY.getVelocity();
-      // Tilt forward when falling down (positive velocity)
-      rotateX.set(Math.min(15, Math.max(-15, velY / 50)));
+      // Aggressive tilt forward when falling down (positive velocity)
+      rotateX.set(Math.min(25, Math.max(-25, velY / 30)));
     });
     const unsubX = springX.on('change', () => {
       const velX = springX.getVelocity();
@@ -179,10 +194,10 @@ const FloatingDragon = () => {
         style={{ 
           x: springX, 
           y: springY, 
+          translateY: yBob, // Add bobbing offset
           rotateX: rotateX,
           rotateZ: rotateZ,
           translateX: '-50%', 
-          translateY: '-50%',
           perspective: 1000 
         }}
         className="fixed top-0 left-0 pointer-events-none z-[100]"
