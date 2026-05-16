@@ -99,7 +99,7 @@ export default function ReadyToClaimAdmin() {
                   rows={3} 
                   value={content.ctaSectionDesc || ''} 
                   onChange={handleChange} 
-                  className="w-full p-6 rounded-3xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:border-gray-800 text-lg"
+                  className="w-full p-6 rounded-3xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:border-gray-800 text-lg text-gray-900 dark:text-white"
                 />
              </div>
 
@@ -113,7 +113,7 @@ export default function ReadyToClaimAdmin() {
                       name="ctaSectionBtn1" 
                       value={content.ctaSectionBtn1 || ''} 
                       onChange={handleChange} 
-                      className="w-full p-5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold"
+                      className="w-full p-5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold text-gray-900 dark:text-white"
                    />
                 </div>
                 <div className="space-y-4">
@@ -125,7 +125,7 @@ export default function ReadyToClaimAdmin() {
                       name="ctaSectionBtn2" 
                       value={content.ctaSectionBtn2 || ''} 
                       onChange={handleChange} 
-                      className="w-full p-5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold"
+                      className="w-full p-5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold text-gray-900 dark:text-white"
                    />
                 </div>
              </div>
