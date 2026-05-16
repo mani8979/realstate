@@ -23,18 +23,15 @@ const FloatingDragon = () => {
   const { scrollYProgress } = useScroll();
 
   // ── Motion values bypass React state ───────────────────────────────────────
-  const mX      = useMotionValue(typeof window !== 'undefined' ? window.innerWidth / 2 : 500);
+  const mX      = useMotionValue(typeof window !== 'undefined' ? window.innerWidth - 120 : 900);
   const mY      = useMotionValue(typeof window !== 'undefined' ? -200 : -200);
   
   // Springs for smooth movement
-  const springX = useSpring(mX, { stiffness: 10, damping: 15, mass: 2 });
-  const springY = useSpring(mY, { stiffness: 15, damping: 10, mass: 4 });
+  const springX = useSpring(mX, { stiffness: 40, damping: 20, mass: 2 });
+  const springY = useSpring(mY, { stiffness: 15, damping: 10, mass: 6 });
 
-  // ── Tumbling / Free-fall rotation ──────────────────────────────────────────
-  const rotX = useMotionValue(0);
-  const rotY = useMotionValue(0);
-  const rotZ = useMotionValue(0);
-  const driftX = useMotionValue(0);
+  // ── 3D Tumbling (Animate the model's camera orbit) ─────────────────────────
+  const [orbit, setOrbit] = useState("0deg 75deg 10m");
 
   useEffect(() => {
     let frame: number;
@@ -42,25 +39,21 @@ const FloatingDragon = () => {
     
     // Random tumble velocities
     const vX = Math.random() * 80 + 40;
-    const vY = Math.random() * 100 + 50;
-    const vZ = Math.random() * 60 + 30;
+    const vY = Math.random() * 60 + 30;
 
     const tick = (now: number) => {
       const elapsed = (now - start) / 1000;
       
-      // Continuous tumbling
-      rotX.set(elapsed * vX);
-      rotY.set(elapsed * vY);
-      rotZ.set(elapsed * vZ);
-      
-      // Horizontal drift (sine wave)
-      driftX.set(Math.sin(elapsed * 0.8) * 100);
+      // Update orbit string for true 3D rotation
+      const rotX = elapsed * vX;
+      const rotY = 75 + Math.sin(elapsed * 0.5) * 15; // oscillate pitch
+      setOrbit(`${rotX}deg ${rotY}deg 10m`);
       
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [rotX, rotY, rotZ, driftX]);
+  }, []);
 
   // ── Lazy-load trigger ───────────────────────────────────────────────────────
   useEffect(() => {
@@ -70,21 +63,45 @@ const FloatingDragon = () => {
     return () => { clearTimeout(t); window.removeEventListener('scroll', s); };
   }, []);
 
-  // ── Free-falling scroll logic ──────────────────────────────────────────────
+  // ── Scroll-driven empty-space logic ────────────────────────────────────────
   useEffect(() => {
+    const PAD = 40;
     const compute = () => {
       const W = window.innerWidth;
       const H = window.innerHeight;
+      const msz = W < 768 ? 60 : 110;
       
-      // Y: followers scroll but deeper (like it's falling through the page)
+      // Y: Falling with scroll
       const pageH = Math.max(1, document.body.scrollHeight - H);
       const prog  = Math.min(1, window.scrollY / pageH);
+      mY.set(H * (0.12 + prog * 0.68));
+
+      // X: Detect empty spaces
+      if (W < 768) { mX.set(W - msz - PAD); return; }
+
+      const trigTop = H * 0.20;
+      const trigBot = H * 0.80;
+      const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-model-align]'));
+
+      let targetX = W - msz - PAD; // Default to top-right
       
-      // Target Y is based on scroll but with a wide range
-      mY.set(H * (0.1 + prog * 1.5)); // Falls further than viewport
-      
-      // Target X is center by default, with drift applied in style
-      mX.set(W / 2);
+      for (const el of sections) {
+        const r = el.getBoundingClientRect();
+        if (r.top < trigBot && r.bottom > trigTop) {
+          const align = el.dataset.modelAlign ?? 'left';
+          const card  = el.querySelector<HTMLElement>('.glass-card');
+          const cr    = card?.getBoundingClientRect();
+
+          if (align === 'right' && cr) {
+            targetX = cr.left / 2; // Left empty space
+          } else if (cr) {
+            targetX = cr.right + (W - cr.right) / 2; // Right empty space
+          }
+          break;
+        }
+      }
+
+      mX.set(Math.max(msz + PAD, Math.min(W - msz - PAD, targetX)));
     };
 
     compute();
@@ -144,9 +161,6 @@ const FloatingDragon = () => {
         style={{ 
           x: springX, 
           y: springY, 
-          rotateX: rotX,
-          rotateY: rotY,
-          rotateZ: rotZ,
           translateX: '-50%',
           translateY: '-50%',
           perspective: 1000 
@@ -156,9 +170,9 @@ const FloatingDragon = () => {
         <motion.div
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0 }}
-          whileHover={{ scale: 1.15 }} // Make it look awesome on hover
+          whileHover={{ scale: 1.15 }}
           transition={{ duration: visible ? 0.8 : 0.2, ease: 'easeInOut' }}
-          style={{ width: mW, height: mH, x: driftX }} // Drift applied here
+          style={{ width: mW, height: mH }}
           className="relative pointer-events-auto cursor-pointer"
           onClick={() => setShowPopup(true)}
           onMouseEnter={() => setHovered(true)}
@@ -175,7 +189,7 @@ const FloatingDragon = () => {
             ref={modelViewerRef} src={src} alt="3D Model"
             camera-controls disable-zoom disable-pan
             shadow-intensity="2" exposure="1.2" bounds="tight"
-            camera-orbit="0deg 75deg 10m"
+            camera-orbit={orbit} // Use the animated 3D orbit
             min-camera-orbit="auto auto 10m" max-camera-orbit="auto auto 10m"
             field-of-view="25deg" interaction-prompt="none"
             style={{ width: '100%', height: '100%' }}
