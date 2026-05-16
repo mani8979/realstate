@@ -134,9 +134,9 @@ export default function AboutAdmin() {
     { id: 'hero', label: 'Hero', icon: Sparkles },
     { id: 'founder', label: 'Founder', icon: Users },
     { id: 'vision', label: 'Vision & Mission', icon: Target },
-    { id: 'journey', label: 'Our Journey', icon: Award },
+    { id: 'journey', label: 'Core Pillars', icon: ShieldCheck },
     { id: 'gallery', label: 'Gallery', icon: Camera },
-    { id: 'values', label: 'Core Values', icon: ShieldCheck },
+    { id: 'values', label: 'Service Values', icon: Award },
   ];
 
   if (loading) return (
@@ -377,52 +377,63 @@ export default function AboutAdmin() {
         )}
 
         {activeTab === 'journey' && (
-          <div className="space-y-10 animate-in fade-in slide-in-from-bottom-2">
+          <div className="space-y-12 animate-in fade-in slide-in-from-bottom-2">
+             <div className="flex justify-between items-center mb-6">
+                <h3 className="text-2xl font-black text-primary uppercase tracking-tighter">Core Pillars Section</h3>
+             </div>
+
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div className="space-y-4">
+                  <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Badge Text</label>
+                  <input name="brandBadge" value={content.brandBadge || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold" />
+                </div>
+                <div className="grid grid-cols-2 gap-6">
+                   <div className="space-y-4">
+                      <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Title Line 1</label>
+                      <input name="brandTitle1" value={content.brandTitle1 || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold" />
+                   </div>
+                   <div className="space-y-4">
+                      <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Title Line 2</label>
+                      <input name="brandTitle2" value={content.brandTitle2 || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold" />
+                   </div>
+                </div>
+             </div>
+
              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-4 p-8 bg-gray-50 dark:bg-black/20 rounded-3xl border border-gray-100 dark:border-gray-800">
-                   <h3 className="text-sm font-black uppercase tracking-widest text-primary mb-4">Metric 1 (Team)</h3>
-                   {content.aboutTeamImage ? (
-                     <div className="relative aspect-video rounded-2xl overflow-hidden group mb-4">
-                       <img src={content.aboutTeamImage} className="w-full h-full object-cover" />
-                       <button onClick={() => setContent({...content, aboutTeamImage: ''})} className="absolute inset-0 bg-black/40 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all font-bold">Remove</button>
+                {[1, 2, 3, 4].map((num) => (
+                  <div key={num} className="p-8 rounded-[2.5rem] bg-gray-50 dark:bg-black/40 border border-gray-100 dark:border-gray-800 space-y-6">
+                     <h4 className="text-lg font-black text-primary uppercase tracking-tighter flex items-center gap-2">
+                        <span className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-[10px]">0{num}</span>
+                        Pillar {num}
+                     </h4>
+
+                     <div className="space-y-4">
+                        <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500">Pillar Image</label>
+                        {content[`brandP${num}Image`] ? (
+                          <div className="relative aspect-video rounded-2xl overflow-hidden group">
+                            <img src={content[`brandP${num}Image`]} className="w-full h-full object-cover" />
+                            <button onClick={() => setContent({...content, [`brandP${num}Image`]: ''})} className="absolute inset-0 bg-black/40 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all font-bold">Remove</button>
+                          </div>
+                        ) : (
+                          <FileDropzone
+                            onFilesSelected={(files) => handleUpload(files, `brandP${num}Image`)}
+                            uploading={uploading === `brandP${num}Image`}
+                            accept="image/*"
+                          >
+                            <div className="flex flex-col items-center justify-center aspect-video rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 hover:border-primary transition-all cursor-pointer bg-white dark:bg-gray-900">
+                              {uploading === `brandP${num}Image` ? <Loader2 className="animate-spin text-primary" /> : <Upload size={24} className="text-gray-400" />}
+                            </div>
+                          </FileDropzone>
+                        )}
                      </div>
-                   ) : (
-                     <FileDropzone
-                       onFilesSelected={(files) => handleUpload(files, 'aboutTeamImage')}
-                       uploading={uploading === 'aboutTeamImage'}
-                       accept="image/*"
-                     >
-                       <div className="flex flex-col items-center justify-center aspect-video rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 hover:border-primary transition-all cursor-pointer bg-white dark:bg-gray-900 mb-4">
-                         {uploading === 'aboutTeamImage' ? <Loader2 className="animate-spin" /> : <Upload size={24} className="text-gray-400" />}
-                         <span className="text-[10px] mt-2 font-bold text-gray-500 uppercase tracking-widest">Upload Metric Photo</span>
-                       </div>
-                     </FileDropzone>
-                   )}
-                   <input name="aboutTeamTitle" value={content.aboutTeamTitle || ''} onChange={handleChange} placeholder="e.g. 50+ Experts" className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 mb-4 font-bold" />
-                   <textarea name="aboutTeamDesc" rows={2} value={content.aboutTeamDesc || ''} onChange={handleChange} placeholder="Description..." className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900" />
-                </div>
-                <div className="space-y-4 p-8 bg-gray-50 dark:bg-black/20 rounded-3xl border border-gray-100 dark:border-gray-800">
-                   <h3 className="text-sm font-black uppercase tracking-widest text-primary mb-4">Metric 2 (Years)</h3>
-                   {content.aboutYearImage ? (
-                     <div className="relative aspect-video rounded-2xl overflow-hidden group mb-4">
-                       <img src={content.aboutYearImage} className="w-full h-full object-cover" />
-                       <button onClick={() => setContent({...content, aboutYearImage: ''})} className="absolute inset-0 bg-black/40 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all font-bold">Remove</button>
+
+                     <div className="space-y-4">
+                        <input name={`brandP${num}Title`} value={content[`brandP${num}Title`] || ''} onChange={handleChange} placeholder="Pillar Title" className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 font-bold" />
+                        <textarea name={`brandP${num}Desc`} rows={3} value={content[`brandP${num}Desc`] || ''} onChange={handleChange} placeholder="Description..." className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900" />
+                        <input name={`brandP${num}Side`} value={content[`brandP${num}Side`] || ''} onChange={handleChange} placeholder="Side Label" className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-xs font-bold uppercase tracking-widest text-primary" />
                      </div>
-                   ) : (
-                     <FileDropzone
-                       onFilesSelected={(files) => handleUpload(files, 'aboutYearImage')}
-                       uploading={uploading === 'aboutYearImage'}
-                       accept="image/*"
-                     >
-                       <div className="flex flex-col items-center justify-center aspect-video rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 hover:border-primary transition-all cursor-pointer bg-white dark:bg-gray-900 mb-4">
-                         {uploading === 'aboutYearImage' ? <Loader2 className="animate-spin" /> : <Upload size={24} className="text-gray-400" />}
-                         <span className="text-[10px] mt-2 font-bold text-gray-500 uppercase tracking-widest">Upload Metric Photo</span>
-                       </div>
-                     </FileDropzone>
-                   )}
-                   <input name="aboutYearTitle" value={content.aboutYearTitle || ''} onChange={handleChange} placeholder="e.g. 15+ Years" className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 mb-4 font-bold" />
-                   <textarea name="aboutYearDesc" rows={2} value={content.aboutYearDesc || ''} onChange={handleChange} placeholder="Description..." className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900" />
-                </div>
+                  </div>
+                ))}
              </div>
           </div>
         )}
