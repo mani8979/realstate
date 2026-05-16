@@ -24,13 +24,13 @@ const FloatingDragon = () => {
 
   // ── Motion values bypass React state ───────────────────────────────────────
   const mX      = useMotionValue(typeof window !== 'undefined' ? window.innerWidth - 120 : 900);
-  const mY      = useMotionValue(typeof window !== 'undefined' ? -200 : -200);
+  const mY      = useMotionValue(-200); // Start off-screen top
   
   // Springs for smooth movement
   const springX = useSpring(mX, { stiffness: 40, damping: 20, mass: 2 });
-  const springY = useSpring(mY, { stiffness: 15, damping: 10, mass: 6 });
+  const springY = useSpring(mY, { stiffness: 100, damping: 20, mass: 1 }); // Snappy Y for loop reset
 
-  // ── 3D Tumbling (Animate the model's camera orbit) ─────────────────────────
+  // ── 3D Tumbling & Gravity Fall Loop ────────────────────────────────────────
   const [orbit, setOrbit] = useState("0deg 75deg 10m");
 
   useEffect(() => {
@@ -38,22 +38,33 @@ const FloatingDragon = () => {
     const start = performance.now();
     
     // Random tumble velocities
-    const vX = Math.random() * 80 + 40;
-    const vY = Math.random() * 60 + 30;
+    const vTumbleX = Math.random() * 80 + 40;
+    const vFall    = 2.5; // Constant downward speed (pixels per frame approx)
 
     const tick = (now: number) => {
       const elapsed = (now - start) / 1000;
+      const H = window.innerHeight;
       
-      // Update orbit string for true 3D rotation
-      const rotX = elapsed * vX;
-      const rotY = 75 + Math.sin(elapsed * 0.5) * 15; // oscillate pitch
+      // 1. Continuous 3D tumble
+      const rotX = elapsed * vTumbleX;
+      const rotY = 75 + Math.sin(elapsed * 0.5) * 15;
       setOrbit(`${rotX}deg ${rotY}deg 10m`);
+
+      // 2. Free Fall: Increase Y constantly
+      let currentY = mY.get() + vFall;
       
+      // Loop back to top if off-screen bottom
+      if (currentY > H + 200) {
+        currentY = -200;
+        springY.jump(-200); // Reset spring instantly
+      }
+      mY.set(currentY);
+
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, []);
+  }, [mY, springY]);
 
   // ── Lazy-load trigger ───────────────────────────────────────────────────────
   useEffect(() => {
@@ -63,31 +74,26 @@ const FloatingDragon = () => {
     return () => { clearTimeout(t); window.removeEventListener('scroll', s); };
   }, []);
 
-  // ── Scroll-driven empty-space logic ────────────────────────────────────────
+  // ── Dynamic Empty-Space tracking as it falls ───────────────────────────────
   useEffect(() => {
     const PAD = 40;
-    const compute = () => {
+    const computeX = () => {
       const W = window.innerWidth;
       const H = window.innerHeight;
       const msz = W < 768 ? 60 : 110;
-      
-      // Y: Falling with scroll
-      const pageH = Math.max(1, document.body.scrollHeight - H);
-      const prog  = Math.min(1, window.scrollY / pageH);
-      mY.set(H * (0.12 + prog * 0.68));
+      const currentY = mY.get();
 
-      // X: Detect empty spaces
+      // X: Detect empty spaces based on current Y position
       if (W < 768) { mX.set(W - msz - PAD); return; }
 
-      const trigTop = H * 0.20;
-      const trigBot = H * 0.80;
       const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-model-align]'));
-
-      let targetX = W - msz - PAD; // Default to top-right
+      let targetX = W - msz - PAD; // Default right
       
       for (const el of sections) {
         const r = el.getBoundingClientRect();
-        if (r.top < trigBot && r.bottom > trigTop) {
+        // Check if the falling fruit's Y is within this section's vertical span
+        // Note: r is relative to viewport, currentY is also relative to viewport top
+        if (currentY > r.top - 100 && currentY < r.bottom + 100) {
           const align = el.dataset.modelAlign ?? 'left';
           const card  = el.querySelector<HTMLElement>('.glass-card');
           const cr    = card?.getBoundingClientRect();
@@ -100,14 +106,12 @@ const FloatingDragon = () => {
           break;
         }
       }
-
       mX.set(Math.max(msz + PAD, Math.min(W - msz - PAD, targetX)));
     };
 
-    compute();
-    const onScroll = () => compute();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    // Run compute frequently to catch side-switches during fall
+    const interval = setInterval(computeX, 100);
+    return () => clearInterval(interval);
   }, [mX, mY]);
 
   // ── Visibility check (rAF — cheap, no state churn) ─────────────────────────
