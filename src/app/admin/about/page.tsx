@@ -40,6 +40,7 @@ export default function AboutAdmin() {
     aboutTeamDesc: '',
     aboutYearTitle: '',
     aboutYearDesc: '',
+    aboutMissionVisionImage: '',
     aboutGallery: []
   });
   const [loading, setLoading] = useState(true);
@@ -298,26 +299,53 @@ export default function AboutAdmin() {
         {activeTab === 'vision' && (
           <div className="space-y-12 animate-in fade-in slide-in-from-bottom-2">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                <div className="space-y-6 p-8 bg-gray-50 dark:bg-black/20 rounded-3xl border border-gray-100 dark:border-gray-800">
-                   <h3 className="text-lg font-bold text-primary">Our Mission</h3>
-                   <div className="space-y-4">
-                      <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500">Mission Title</label>
-                      <input name="aboutMissionTitle" value={content.aboutMissionTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900" />
-                   </div>
-                   <div className="space-y-4">
-                      <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500">Mission Description</label>
-                      <textarea name="aboutMissionDesc" rows={4} value={content.aboutMissionDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900" />
-                   </div>
+                <div className="space-y-8">
+                  <div className="space-y-6 p-8 bg-gray-50 dark:bg-black/20 rounded-3xl border border-gray-100 dark:border-gray-800">
+                    <h3 className="text-lg font-bold text-primary">Our Mission</h3>
+                    <div className="space-y-4">
+                        <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500">Mission Title</label>
+                        <input name="aboutMissionTitle" value={content.aboutMissionTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900" />
+                    </div>
+                    <div className="space-y-4">
+                        <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500">Mission Description</label>
+                        <textarea name="aboutMissionDesc" rows={4} value={content.aboutMissionDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900" />
+                    </div>
+                  </div>
+                  <div className="space-y-6 p-8 bg-gray-50 dark:bg-black/20 rounded-3xl border border-gray-100 dark:border-gray-800">
+                    <h3 className="text-lg font-bold text-primary">Our Vision</h3>
+                    <div className="space-y-4">
+                        <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500">Vision Title</label>
+                        <input name="aboutVisionTitle" value={content.aboutVisionTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900" />
+                    </div>
+                    <div className="space-y-4">
+                        <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500">Vision Description</label>
+                        <textarea name="aboutVisionDesc" rows={4} value={content.aboutVisionDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900" />
+                    </div>
+                  </div>
                 </div>
+
                 <div className="space-y-6 p-8 bg-gray-50 dark:bg-black/20 rounded-3xl border border-gray-100 dark:border-gray-800">
-                   <h3 className="text-lg font-bold text-primary">Our Vision</h3>
+                   <h3 className="text-lg font-bold text-primary">Section Image</h3>
                    <div className="space-y-4">
-                      <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500">Vision Title</label>
-                      <input name="aboutVisionTitle" value={content.aboutVisionTitle || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900" />
-                   </div>
-                   <div className="space-y-4">
-                      <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500">Vision Description</label>
-                      <textarea name="aboutVisionDesc" rows={4} value={content.aboutVisionDesc || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900" />
+                      <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500 text-center">Mission & Vision Image</label>
+                      {content.aboutMissionVisionImage ? (
+                        <div className="relative aspect-video rounded-2xl overflow-hidden group">
+                          <img src={content.aboutMissionVisionImage} className="w-full h-full object-cover" />
+                          <button onClick={() => setContent({...content, aboutMissionVisionImage: ''})} className="absolute inset-0 bg-black/40 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all font-bold">Remove Image</button>
+                        </div>
+                      ) : (
+                        <FileDropzone
+                          onFilesSelected={(files) => handleUpload(files, 'aboutMissionVisionImage')}
+                          uploading={uploading === 'aboutMissionVisionImage'}
+                          accept="image/*"
+                        >
+                          <div className="flex flex-col items-center justify-center aspect-video rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 cursor-pointer hover:border-primary transition-all bg-white dark:bg-gray-900 group">
+                            {uploading === 'aboutMissionVisionImage' ? <Loader2 className="animate-spin" /> : <Upload size={32} className="text-gray-400 group-hover:text-primary transition-colors" />}
+                            <span className="text-xs font-bold text-gray-500 mt-2">Upload Section Image</span>
+                          </div>
+                        </FileDropzone>
+                      )}
+                      <p className="text-[10px] text-gray-400 text-center italic">Recommended size: 1000x800px</p>
                    </div>
                 </div>
              </div>

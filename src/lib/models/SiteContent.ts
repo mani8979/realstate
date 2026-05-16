@@ -187,6 +187,7 @@ export interface ISiteContent extends Document {
   aboutMissionDesc: string;
   aboutVisionTitle: string;
   aboutVisionDesc: string;
+  aboutMissionVisionImage: string;
 }
 
 const SiteContentSchema = new Schema<ISiteContent>(
@@ -236,7 +237,7 @@ const SiteContentSchema = new Schema<ISiteContent>(
     contactEmail: { type: String, default: "hello@starlands.com" },
     contactPhone: { type: String, default: "+91 98765 43210" },
     contactAddress: { type: String, default: "Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026." },
-    logoTitle: { type: String, default: "STAR LANDS" },
+    logoTitle: { type: String, default: "STAR LAND" },
     logoSubtitle: { type: String, default: "DEVELOPERS" },
     navHome: { type: String, default: "Home" },
     navProperties: { type: String, default: "Properties" },
@@ -254,7 +255,7 @@ const SiteContentSchema = new Schema<ISiteContent>(
     footerOfficeLabel: { type: String, default: "Main Office" },
     footerAddress: { type: String, default: "Flat No. 202, Backside Complex, Opposite D-Mart, Srinagar, Gajuwaka, Visakhapatnam – 530026." },
     footerAddressSub: { type: String, default: "Visit us for a coffee and a chat." },
-    footerCopyright: { type: String, default: "© 2026 STAR LANDS DEVELOPERS GROUP" },
+    footerCopyright: { type: String, default: "© 2026 STAR LAND DEVELOPERS. All rights reserved." },
     privacyPolicyContent: { type: String, default: "Privacy Policy Content goes here..." },
     termsOfServiceContent: { type: String, default: "Terms of Service Content goes here..." },
     footerService1: { type: String, default: "Luxury Interior" },
@@ -266,11 +267,11 @@ const SiteContentSchema = new Schema<ISiteContent>(
     ctaSectionBtn1: { type: String, default: "Schedule a Site Visit" },
     ctaSectionBtn2: { type: String, default: "+91 91234 56789" },
     globalFooterDesc: { type: String, default: "Find your dream property with our expert real estate services. We specialize in buying, selling, and renting premium properties." },
-    globalFooterCopyright: { type: String, default: "© 2026 REAL ESTATE. All rights reserved." },
+    globalFooterCopyright: { type: String, default: "© 2026 STAR LAND DEVELOPERS. All rights reserved." },
     footerCol1Title: { type: String, default: "Navigation" },
     footerCol2Title: { type: String, default: "Portfolios" },
     footerCol3Title: { type: String, default: "Get In Touch" },
-    footerCol2Links: { type: String, default: "Premium Lands, Luxury Houses, Modern Apartments, Commercial Hubs" },
+    footerCol2Links: { type: String, default: "Farm Lands, VMRDA Lands, Panchayati Lands" },
     headerLogoImage: { type: String, default: "/branding/header-logo.png" },
     footerLogoImage: { type: String, default: "/branding/footer-logo.png" },
     globalThreeDModel: { type: String, default: "/models/untitled.glb" },
@@ -378,7 +379,8 @@ const SiteContentSchema = new Schema<ISiteContent>(
         { name: 'Apartments', icon: 'Building2', color: 'bg-emerald-50 text-emerald-600', href: '/properties?type=Apartment', subCategories: [] },
         { name: 'Plots', icon: 'Landmark', color: 'bg-amber-50 text-amber-600', href: '/properties?type=Plot', subCategories: ['Residential', 'Commercial', 'Open Plots'] },
         { name: 'Farm Lands', icon: 'Warehouse', color: 'bg-green-50 text-green-600', href: '/properties?type=Plot&subType=Farm Land', subCategories: ['Cultivated', 'Organic', 'Mixed'] },
-        { name: 'Commercial', icon: 'Building2', color: 'bg-indigo-50 text-indigo-600', href: '/properties?type=Commercial', subCategories: ['Shops', 'Showrooms', 'Offices'] },
+        { name: 'VMRDA Lands', icon: 'Building2', color: 'bg-indigo-50 text-indigo-600', href: '/properties?type=Plot&subType=VMRDA', subCategories: [] },
+        { name: 'Panchayati Lands', icon: 'Landmark', color: 'bg-purple-50 text-purple-600', href: '/properties?type=Plot&subType=Panchayati', subCategories: [] },
       ]
     },
     // About Section
@@ -398,6 +400,7 @@ const SiteContentSchema = new Schema<ISiteContent>(
     aboutMissionDesc: { type: String, default: "Transforming Vizag's Landscape" },
     aboutVisionTitle: { type: String, default: 'Our Vision' },
     aboutVisionDesc: { type: String, default: 'Architectural Innovation & Smart Community Living' },
+    aboutMissionVisionImage: { type: String, default: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000' },
   },
   { timestamps: true }
 );

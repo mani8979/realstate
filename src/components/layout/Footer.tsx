@@ -87,11 +87,17 @@ const Footer = async () => {
           <div className="text-center md:text-left">
             <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-8">{content.footerCol2Title || 'Portfolios'}</h3>
             <ul className="space-y-5">
-              {(content.footerCol2Links ? content.footerCol2Links.split(',').map((l: string) => l.trim()) : ['Premium Lands', 'Luxury Houses', 'Modern Apartments', 'Commercial Hubs']).map((type: string) => (
-                <li key={type}>
-                  <Link href={`/properties?type=${encodeURIComponent(type)}`} className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">{type}</Link>
-                </li>
-              ))}
+              {(content.footerCol2Links ? content.footerCol2Links.split(',').map((l: string) => l.trim()) : ['Farm Lands', 'VMRDA Lands', 'Panchayati Lands']).map((type: string) => {
+                // Check if this matches a category name for a better link
+                const category = content.propertyCategories?.find((c: any) => c.name === type);
+                const href = category ? category.href : `/properties?type=${encodeURIComponent(type)}`;
+                
+                return (
+                  <li key={type}>
+                    <Link href={href} className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">{type}</Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 

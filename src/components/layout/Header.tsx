@@ -15,7 +15,7 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const [content, setContent] = useState<any>({
-    logoTitle: "STAR LANDS",
+    logoTitle: "STAR LAND",
     logoSubtitle: "DEVELOPERS",
     navHome: "Home",
     navProperties: "Properties",

@@ -24,7 +24,7 @@ const AboutPage = async () => {
 
   return (
     <div className="bg-white dark:bg-black">
-      <AboutClient />
+      <AboutClient content={serializedContent} />
 
       {/* Gallery Section */}
       <AboutGallery images={serializedContent.aboutGallery} />

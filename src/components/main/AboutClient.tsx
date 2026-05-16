@@ -5,7 +5,7 @@ import WhyChooseUs from '@/components/main/WhyChooseUs';
 import { Award, MapPin, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const AboutClient = () => {
+const AboutClient = ({ content }: { content: any }) => {
   return (
     <div className="pt-32 pb-24 bg-white dark:bg-black">
       <div className="container mx-auto px-4">
@@ -16,7 +16,7 @@ const AboutClient = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-5xl md:text-7xl font-black text-black dark:text-white mb-6 uppercase tracking-tighter"
           >
-            About <span className="text-primary">Star Lands</span>
+            About <span className="text-primary">{content.logoTitle || 'Star Land'}</span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -24,7 +24,7 @@ const AboutClient = () => {
             transition={{ delay: 0.1 }}
             className="text-xl text-gray-600 dark:text-gray-400 leading-relaxed font-light"
           >
-            We are a team of dedicated professionals committed to providing the best real estate solutions. Our mission is to help you find your dream property with ease and transparency.
+            {content.aboutDesc || 'We are a team of dedicated professionals committed to providing the best real estate solutions. Our mission is to help you find your dream property with ease and transparency.'}
           </motion.p>
         </div>
 
@@ -32,21 +32,21 @@ const AboutClient = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
           {[
             { 
-              label: 'Verified Properties', 
-              value: 'Expert Verification', 
-              description: 'Every listing is manually verified by our team for quality and legality.',
+              label: content.brandBadge || 'Verified Properties', 
+              value: content.aboutExpertTitle || 'Expert Verification', 
+              description: content.aboutExpertDesc || 'Every listing is manually verified by our team for quality and legality.',
               icon: Award 
             },
             { 
               label: 'Clear Documentation', 
-              value: '100% Legal Clarity', 
-              description: 'Complete transparency in titles and documentation for every project.',
+              value: content.aboutLegalTitle || '100% Legal Clarity', 
+              description: content.aboutLegalDesc || 'Complete transparency in titles and documentation for every project.',
               icon: MapPin 
             },
             { 
               label: '100% Transparency', 
-              value: 'Zero Hidden Costs', 
-              description: 'No hidden charges. Direct registration. Honest pricing always.',
+              value: content.aboutZeroTitle || 'Zero Hidden Costs', 
+              description: content.aboutZeroDesc || 'No hidden charges. Direct registration. Honest pricing always.',
               icon: Sparkles 
             },
           ].map((stat, i) => (
@@ -74,22 +74,26 @@ const AboutClient = () => {
 
         <WhyChooseUs />
         
-        {/* Mission/Vision - Optional, can be kept or removed depending on Founder content */}
+        {/* Mission/Vision Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center py-24 border-t border-black/10 dark:border-white/10">
           <div className="space-y-8">
-            <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white uppercase tracking-tighter">Our Mission & Vision</h2>
-            <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed font-light">
-              Our vision is to be the most trusted and preferred real estate partner globally, known for our integrity, expertise, and innovative solutions.
-            </p>
-            <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed font-light">
-              We strive to empower our clients through expert guidance, cutting-edge technology, and a deep understanding of the local market.
-            </p>
+            <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white uppercase tracking-tighter">
+              {content.aboutMissionTitle || 'Our Mission & Vision'}
+            </h2>
+            <div className="space-y-6">
+              <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed font-light">
+                {content.aboutMissionDesc || 'Our vision is to be the most trusted and preferred real estate partner globally, known for our integrity, expertise, and innovative solutions.'}
+              </p>
+              <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed font-light">
+                {content.aboutVisionDesc || 'We strive to empower our clients through expert guidance, cutting-edge technology, and a deep understanding of the local market.'}
+              </p>
+            </div>
           </div>
           <div className="relative">
             <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full" />
             <img 
-              src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000" 
-              alt="Office" 
+              src={content.aboutMissionVisionImage || "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000"} 
+              alt="Mission & Vision" 
               className="relative z-10 rounded-[3rem] border border-black/10 dark:border-white/10 shadow-2xl h-[500px] w-full object-cover"
             />
           </div>
