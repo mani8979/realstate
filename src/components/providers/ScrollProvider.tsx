@@ -9,7 +9,7 @@ export const ScrollProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     // Handle initial hash on load
     if (lenis && window.location.hash) {
-      const target = document.querySelector(window.location.hash);
+      const target = document.querySelector(window.location.hash) as HTMLElement;
       if (target) {
         setTimeout(() => {
           lenis.scrollTo(target, { offset: -150, duration: 2 });
@@ -20,7 +20,7 @@ export const ScrollProvider = ({ children }: { children: ReactNode }) => {
     // Handle messages from AdminPreviewModal
     const handleMessage = (e: MessageEvent) => {
       if (e.data.type === 'SCROLL_TO_ANCHOR' && e.data.anchor && lenis) {
-        const target = document.querySelector(e.data.anchor);
+        const target = document.querySelector(e.data.anchor) as HTMLElement;
         if (target) {
           // Force scroll to target
           lenis.scrollTo(target, { offset: -150, duration: 1.5, lerp: 0.1 });
