@@ -62,43 +62,29 @@ const FloatingDragon = () => {
       for (const el of sections) {
         const r = el.getBoundingClientRect();
         if (r.top < trigBot && r.bottom > trigTop) {
-          const align = el.dataset.modelAlign ?? 'left';
-          const card  = el.querySelector<HTMLElement>('.glass-card');
-          const cr    = card?.getBoundingClientRect();
-
-          // Determine which side the model should be on
+          const align  = el.dataset.modelAlign ?? 'left';
+          const card   = el.querySelector<HTMLElement>('.glass-card');
+          const cr     = card?.getBoundingClientRect();
           const newSide: 'left' | 'right' = align === 'right' ? 'left' : 'right';
 
           let newX: number;
           if (newSide === 'left') {
-            // text RIGHT → model in LEFT empty strip
             newX = cr ? Math.max(msz + PAD, cr.left / 2) : msz + PAD;
           } else {
-            // text LEFT/CENTER → model in RIGHT empty strip
             newX = cr
               ? Math.min(W - msz - PAD, cr.right + (W - cr.right) / 2)
               : W - msz - PAD;
           }
 
-          // Side changed → jump instantly so model never sweeps through text
-          if (lastSide.current !== null && lastSide.current !== newSide) {
-            mX.jump(newX);
-            springX.jump(newX);
-          } else {
-            mX.set(newX); // same side → spring fine-tunes smoothly
-          }
+          // Always spring — model glides through center when switching sides
+          mX.set(newX);
           lastSide.current = newSide;
           return;
         }
       }
 
-      // No section in trigger band → right edge (no side change tracking)
-      const noSectionX = W - msz - PAD;
-      if (lastSide.current === 'left') {
-        mX.jump(noSectionX); springX.jump(noSectionX); // jumped away from left
-      } else {
-        mX.set(noSectionX);
-      }
+      // No section in trigger band → glide back to right edge
+      mX.set(W - msz - PAD);
       lastSide.current = 'right';
     };
 
