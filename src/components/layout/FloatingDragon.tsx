@@ -1,139 +1,103 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useMotionValueEvent, useScroll } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValueEvent, useScroll } from 'framer-motion';
 import { Leaf, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 const ModelViewer = 'model-viewer' as any;
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Helpers
+// Core positioning helper
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Real empty-space finder.
+ * Finds the detail section closest to the viewport's mid-line,
+ * reads its .glass-card bounding rect, and returns the target
+ * {x, y} the model should float toward.
  *
- * At the model's current viewport-Y we:
- *   1. Scan every content block (.glass-card, .dragon-repel, .dragon-disappear,
- *      [data-model-align] .glass-card) for its bounding rect.
- *   2. Merge overlapping horizontal occupied bands.
- *   3. Find every genuine free gap wide enough for the model.
- *   4. Prefer the gap on the side *opposite* the active text alignment.
- *
- * This means the model truly slots into white-space, not just "right" or "left".
+ * Rules:
+ *   align=left   → card on LEFT   → model in RIGHT empty strip
+ *   align=right  → card on RIGHT  → model in LEFT  empty strip
+ *   align=center → both sides free → model on RIGHT (default)
+ *   no sections  → top-right corner (hero / before content)
  */
-const getTargetX = (viewportW: number, modelSize: number, curY: number): number => {
-  const pad = 20;          // breathing room around each content rect
-  const minGap = modelSize * 2; // gap must be at least 2× model width to be usable
+const getSectionTarget = (
+  viewportW: number,
+  viewportH: number,
+  modelSize: number
+): { x: number; y: number } => {
+  const pad = 24;
+  const vpMid = viewportH * 0.5;
 
-  // ── 1. Collect occupied horizontal ranges at curY ──────────────────────────
-  const occupied: { left: number; right: number }[] = [];
-
-  const scanSelectors = [
-    // Actual half-width text cards placed by the admin
-    '[data-model-align] .glass-card',
-    // Plot map + inventory panel
-    '.dragon-repel',
-    // Enquiry form / disappear zones
-    '.dragon-disappear',
-  ];
-
-  for (const selector of scanSelectors) {
-    document.querySelectorAll<HTMLElement>(selector).forEach(el => {
-      const r = el.getBoundingClientRect();
-      // Only consider elements whose vertical extent overlaps curY
-      if (r.width < 10 || r.height < 10) return; // skip invisible / zero-size
-      if (r.top < curY + modelSize && r.bottom > curY - modelSize) {
-        occupied.push({
-          left:  Math.max(0, r.left - pad),
-          right: Math.min(viewportW, r.right + pad),
-        });
-      }
-    });
-  }
-
-  // ── 2. Sort + merge overlapping ranges ────────────────────────────────────
-  occupied.sort((a, b) => a.left - b.left);
-  const merged: { left: number; right: number }[] = [];
-  for (const r of occupied) {
-    if (merged.length > 0 && r.left <= merged[merged.length - 1].right) {
-      merged[merged.length - 1].right = Math.max(merged[merged.length - 1].right, r.right);
-    } else {
-      merged.push({ ...r });
-    }
-  }
-
-  // ── 3. Find free gaps ─────────────────────────────────────────────────────
-  const gaps: { center: number; width: number }[] = [];
-  let scanX = modelSize + pad;
-
-  for (const r of merged) {
-    const gapW = r.left - scanX;
-    if (gapW >= minGap) {
-      gaps.push({ center: (scanX + r.left) / 2, width: gapW });
-    }
-    if (r.right > scanX) scanX = r.right;
-  }
-  // Trailing gap on the far right
-  const trailW = viewportW - modelSize - pad - scanX;
-  if (trailW >= minGap) {
-    gaps.push({ center: (scanX + viewportW - modelSize - pad) / 2, width: trailW });
-  }
-
-  // ── 4. Determine preferred side from active section alignment ──────────────
   const sections = Array.from(
     document.querySelectorAll<HTMLElement>('[data-model-align]')
   );
-  const vH = window.innerHeight;
-  let preferRight = true; // default: right side
-  let bestOverlap = 0;
+
+  // ── Default: top-right (hero / no sections visible) ───────────────────────
+  if (sections.length === 0) {
+    return { x: viewportW - modelSize - pad, y: viewportH * 0.15 };
+  }
+
+  // ── Find section whose center is closest to viewport mid-line ─────────────
+  let activeSection: HTMLElement | null = null;
+  let bestDist = Infinity;
 
   for (const el of sections) {
     const r = el.getBoundingClientRect();
-    const overlap = Math.max(0, Math.min(r.bottom, vH) - Math.max(r.top, 0));
-    if (overlap > bestOverlap) {
-      bestOverlap = overlap;
-      // text-right → model left; text-left or center → model right
-      preferRight = el.dataset.modelAlign !== 'right';
+    // Skip sections fully outside the viewport (above or well below)
+    if (r.bottom < 0 || r.top > viewportH * 1.5) continue;
+    const sectionMid = (r.top + r.bottom) / 2;
+    const dist = Math.abs(sectionMid - vpMid);
+    if (dist < bestDist) {
+      bestDist = dist;
+      activeSection = el;
     }
   }
 
-  // ── 5. No gaps found → fall back to preferred edge ────────────────────────
-  if (gaps.length === 0) {
-    return preferRight
-      ? viewportW - modelSize - pad
-      : modelSize + pad;
+  // No section near viewport → stay top-right
+  if (!activeSection) {
+    return { x: viewportW - modelSize - pad, y: viewportH * 0.15 };
   }
 
-  // ── 6. Pick widest gap on the preferred side ───────────────────────────────
-  const rightGaps = gaps
-    .filter(g => g.center > viewportW * 0.45)
-    .sort((a, b) => b.width - a.width);
-  const leftGaps = gaps
-    .filter(g => g.center < viewportW * 0.55)
-    .sort((a, b) => b.width - a.width);
+  const align = activeSection.dataset.modelAlign ?? 'left';
+  const sectionRect = activeSection.getBoundingClientRect();
 
-  if (preferRight && rightGaps.length > 0) {
-    return Math.min(rightGaps[0].center, viewportW - modelSize - pad);
+  // Target Y = section's viewport center, clamped so model stays on screen
+  const rawY = (sectionRect.top + sectionRect.bottom) / 2;
+  const targetY = Math.max(modelSize + pad, Math.min(viewportH - modelSize - pad, rawY));
+
+  // ── Find the .glass-card inside this section for its real pixel width ──────
+  const card = activeSection.querySelector<HTMLElement>('.glass-card');
+  const cardRect = card?.getBoundingClientRect();
+
+  let targetX: number;
+
+  if (align === 'right') {
+    // Card occupies RIGHT side → empty space is LEFT strip
+    if (cardRect && cardRect.left > modelSize * 2) {
+      // Center of the gap: 0 → card.left
+      targetX = cardRect.left / 2;
+    } else {
+      targetX = modelSize + pad;
+    }
+  } else if (align === 'center') {
+    // Card is centered → both sides have space → pick RIGHT
+    targetX = viewportW - modelSize - pad;
+  } else {
+    // align === 'left' (default) → Card occupies LEFT side → empty space is RIGHT strip
+    if (cardRect && cardRect.right < viewportW - modelSize * 2) {
+      // Center of the gap: card.right → viewportW
+      targetX = (cardRect.right + viewportW) / 2;
+    } else {
+      targetX = viewportW - modelSize - pad;
+    }
   }
-  if (!preferRight && leftGaps.length > 0) {
-    return Math.max(leftGaps[0].center, modelSize + pad);
-  }
 
-  // ── 7. Absolute fallback: widest gap anywhere ──────────────────────────────
-  const widest = [...gaps].sort((a, b) => b.width - a.width)[0];
-  return Math.max(modelSize + pad, Math.min(viewportW - modelSize - pad, widest.center));
-};
+  // Final clamp
+  targetX = Math.max(modelSize + pad, Math.min(viewportW - modelSize - pad, targetX));
 
-/**
- * Maps scroll progress to a viewport-Y position.
- * 12 % of viewport height at the top → 80 % at the bottom.
- */
-const getTargetY = (viewportH: number): number => {
-  const pageHeight = document.body.scrollHeight - viewportH;
-  const progress = pageHeight > 0 ? Math.min(1, window.scrollY / pageHeight) : 0;
-  return viewportH * (0.12 + progress * 0.68);
+  return { x: targetX, y: targetY };
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -141,15 +105,16 @@ const getTargetY = (viewportH: number): number => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const FloatingDragon = () => {
-  const [showPopup, setShowPopup] = useState(false);
+  const [showPopup, setShowPopup]           = useState(false);
   const [currentProperty, setCurrentProperty] = useState<any>(null);
-  const [pos, setPos] = useState({ x: 0, y: 0 });
-  const [shouldLoad, setShouldLoad] = useState(false);
-  const [visible, setVisible] = useState(true);
-  const [mounted, setMounted] = useState(false);
-  const pathname = usePathname();
-  const modelViewerRef = useRef<any>(null);
-  const { scrollYProgress } = useScroll();
+  const [pos, setPos]                       = useState({ x: 0, y: 0 });
+  const [shouldLoad, setShouldLoad]         = useState(false);
+  const [visible, setVisible]               = useState(true);
+  const [mounted, setMounted]               = useState(false);
+  const [hovered, setHovered]               = useState(false);
+  const pathname                            = usePathname();
+  const modelViewerRef                      = useRef<any>(null);
+  const { scrollYProgress }                 = useScroll();
 
   // ── Boot: delay model load until page is ready ──────────────────────────
   useEffect(() => {
@@ -171,38 +136,38 @@ const FloatingDragon = () => {
     let frameId: number;
     let lastTime = performance.now();
 
-    const viewportW = typeof window !== 'undefined' ? window.innerWidth : 1200;
-    const viewportH = typeof window !== 'undefined' ? window.innerHeight : 800;
-    const modelSize = viewportW < 768 ? 60 : 110;
+    const vW0 = typeof window !== 'undefined' ? window.innerWidth  : 1200;
+    const vH0 = typeof window !== 'undefined' ? window.innerHeight : 800;
+    const ms0 = vW0 < 768 ? 60 : 110;
 
-    // Initialise top-right
-    let curX = viewportW - modelSize - 24;
-    let curY = viewportH * 0.12;
+    // Start top-right
+    let curX = vW0 - ms0 - 24;
+    let curY = vH0 * 0.15;
 
     const update = (now: number) => {
-      // Delta-time in seconds, capped at 100 ms to survive tab-switch hitches
+      // Delta-time (seconds), capped to survive tab-switch hitches
       const dt = Math.min((now - lastTime) / 1000, 0.1);
       lastTime = now;
 
-      const vW = window.innerWidth;
-      const vH = window.innerHeight;
+      const vW    = window.innerWidth;
+      const vH    = window.innerHeight;
       const mSize = vW < 768 ? 60 : 110;
 
-      const targetX = getTargetX(vW, mSize, curY);
-      const targetY = getTargetY(vH);
+      // ── Target from section-anchored helper ────────────────────────────
+      const { x: targetX, y: targetY } = getSectionTarget(vW, vH, mSize);
 
-      // ─── Frame-rate-independent exponential lerp ──────────────────────
-      // halfLifeX = 1.8 s  →  the model takes ~1.8 s to cover half the distance
-      // halfLifeY = 0.9 s  →  Y tracks scroll a bit quicker
-      const alphaX = 1 - Math.pow(0.5, dt / 1.8);
-      const alphaY = 1 - Math.pow(0.5, dt / 0.9);
+      // ── Frame-rate-independent exponential lerp ────────────────────────
+      // halfLifeX = 2.0 s → very slow, cinematic horizontal glide
+      // halfLifeY = 1.0 s → follows section center a bit quicker
+      const alphaX = 1 - Math.pow(0.5, dt / 2.0);
+      const alphaY = 1 - Math.pow(0.5, dt / 1.0);
 
       const dX = (targetX - curX) * alphaX;
       const dY = (targetY - curY) * alphaY;
 
-      // Dead-zone: skip micro-jitter below 0.5 px
-      if (Math.abs(dX) > 0.5) curX += dX;
-      if (Math.abs(dY) > 0.5) curY += dY;
+      // Dead-zone: ignore sub-pixel jitter
+      if (Math.abs(dX) > 0.4) curX += dX;
+      if (Math.abs(dY) > 0.4) curY += dY;
 
       // Clamp inside viewport
       curX = Math.max(mSize, Math.min(vW - mSize, curX));
@@ -210,15 +175,15 @@ const FloatingDragon = () => {
 
       setPos({ x: curX, y: curY });
 
-      // Hide when overlapping enquiry / disappear zones
+      // ── Hide when overlapping .dragon-disappear zones ──────────────────
       const disappearZones = document.querySelectorAll('.dragon-disappear');
       let shouldHide = false;
       disappearZones.forEach(el => {
         const rect = el.getBoundingClientRect();
         if (
-          curX + mSize > rect.left &&
+          curX + mSize > rect.left  &&
           curX - mSize < rect.right &&
-          curY + mSize > rect.top &&
+          curY + mSize > rect.top   &&
           curY - mSize < rect.bottom
         ) {
           shouldHide = true;
@@ -255,15 +220,15 @@ const FloatingDragon = () => {
   });
 
   // ── Guards ───────────────────────────────────────────────────────────────
-  if (!mounted || !shouldLoad) return null;
-  if (pathname?.startsWith('/admin')) return null;
+  if (!mounted || !shouldLoad)          return null;
+  if (pathname?.startsWith('/admin'))   return null;
 
   const modelSrc = currentProperty?.threeDElement;
   if (!modelSrc) return null;
 
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-  const modelW = isMobile ? 120 : 180;
-  const modelH = isMobile ? 160 : 240;
+  const modelW   = isMobile ? 120 : 180;
+  const modelH   = isMobile ? 160 : 240;
 
   return (
     <>
@@ -282,8 +247,10 @@ const FloatingDragon = () => {
           animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0 }}
           transition={{ duration: visible ? 1.2 : 0.3, ease: 'easeOut' }}
           style={{ width: modelW, height: modelH }}
-          className="pointer-events-auto cursor-pointer"
+          className="pointer-events-auto cursor-pointer relative"
           onClick={() => setShowPopup(true)}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
         >
           <ModelViewer
             ref={modelViewerRef}
@@ -302,6 +269,26 @@ const FloatingDragon = () => {
             interaction-prompt="none"
             style={{ width: '100%', height: '100%' }}
           ></ModelViewer>
+
+          {/* ── Hover tooltip ──────────────────────────────────────────── */}
+          <AnimatePresence>
+            {hovered && (
+              <motion.div
+                initial={{ opacity: 0, y: 6, scale: 0.92 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 6, scale: 0.92 }}
+                transition={{ duration: 0.18, ease: 'easeOut' }}
+                className="absolute -top-14 left-1/2 -translate-x-1/2 whitespace-nowrap
+                           bg-black/90 dark:bg-white/10 backdrop-blur-md
+                           text-white text-[10px] font-black uppercase tracking-widest
+                           px-4 py-2 rounded-full border border-white/20
+                           shadow-[0_4px_20px_rgba(0,0,0,0.4)] pointer-events-none"
+              >
+                <span className="text-primary">✦</span>{' '}
+                View Plantation &amp; Cultivation Info
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       </motion.div>
 
