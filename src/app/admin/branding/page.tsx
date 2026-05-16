@@ -109,6 +109,50 @@ export default function BrandingAdmin() {
       </div>
 
       <div className="space-y-8">
+        {/* Large Get In Touch Section */}
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
+           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4 flex items-center gap-2">
+              <Layout size={20} className="text-primary" />
+              Main Get In Touch Section (Large)
+           </h2>
+           <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Main Title</label>
+                    <input name="getInTouchTitle" value={content.getInTouchTitle || ''} onChange={(e: any) => handleChange(e)} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold text-2xl" />
+                 </div>
+                 <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Inquiry Label</label>
+                    <input name="getInTouchInquiryLabel" value={content.getInTouchInquiryLabel || ''} onChange={(e: any) => handleChange(e)} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold" />
+                 </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Phone Number</label>
+                    <input name="getInTouchPhone" value={content.getInTouchPhone || ''} onChange={(e: any) => handleChange(e)} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold" />
+                 </div>
+                 <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Availability Text</label>
+                    <input name="getInTouchAvailability" value={content.getInTouchAvailability || ''} onChange={(e: any) => handleChange(e)} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold" />
+                 </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Office Label</label>
+                    <input name="getInTouchOfficeLabel" value={content.getInTouchOfficeLabel || ''} onChange={(e: any) => handleChange(e)} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold" />
+                 </div>
+                 <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Office Footer Subtext</label>
+                    <input name="getInTouchFooter" value={content.getInTouchFooter || ''} onChange={(e: any) => handleChange(e)} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold" />
+                 </div>
+              </div>
+              <div className="space-y-2">
+                 <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Office Address (Large)</label>
+                 <textarea name="getInTouchAddress" rows={3} value={content.getInTouchAddress || ''} onChange={(e: any) => handleChange(e)} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold" />
+              </div>
+           </div>
+        </div>
+
         {/* Global Logos */}
         <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
           <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4 flex items-center gap-2">

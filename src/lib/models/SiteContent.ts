@@ -138,6 +138,15 @@ export interface ISiteContent extends Document {
   contactFormPhoneLabel: string;
   contactFormMsgLabel: string;
   contactFormBtnText: string;
+
+  // Get In Touch Section (Large)
+  getInTouchTitle: string;
+  getInTouchInquiryLabel: string;
+  getInTouchPhone: string;
+  getInTouchAvailability: string;
+  getInTouchOfficeLabel: string;
+  getInTouchAddress: string;
+  getInTouchFooter: string;
   // Join Page Specific
   joinBadge: string;
   joinTitle: string;
@@ -435,6 +444,15 @@ const SiteContentSchema = new Schema<ISiteContent>(
     aboutVisionTitle: { type: String, default: 'Our Vision' },
     aboutVisionDesc: { type: String, default: 'Architectural Innovation & Smart Community Living' },
     aboutMissionVisionImage: { type: String, default: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000' },
+    
+    // Get In Touch Section (Large)
+    getInTouchTitle: { type: String, default: 'GET IN TOUCH' },
+    getInTouchInquiryLabel: { type: String, default: 'INQUIRIES' },
+    getInTouchPhone: { type: String, default: '+91 96660 80645' },
+    getInTouchAvailability: { type: String, default: 'Available Daily, 10AM-7PM' },
+    getInTouchOfficeLabel: { type: String, default: 'MAIN OFFICE' },
+    getInTouchAddress: { type: String, default: 'Flat No.202,Backside Complex,Opposite of DMART,Srinagar,Gajuwaka Visakhapatnam, AP,530026' },
+    getInTouchFooter: { type: String, default: 'Visit us for a coffee and a chat.' },
   },
   { timestamps: true }
 );
