@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Save, Sparkles, MessageCircle } from 'lucide-react';
+import { Save, Sparkles, MessageCircle, Globe } from 'lucide-react';
 
 export default function ReadyToClaimAdmin() {
   const [content, setContent] = useState<any>({
@@ -88,7 +88,7 @@ export default function ReadyToClaimAdmin() {
                   rows={2} 
                   value={content.ctaSectionTitle || ''} 
                   onChange={handleChange} 
-                  className="w-full p-6 rounded-3xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 text-2xl font-black tracking-tight text-gray-900 dark:text-white"
+                  className="w-full p-6 rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-zinc-800 text-2xl font-black tracking-tight text-gray-900 dark:text-white focus:ring-2 focus:ring-primary outline-none transition-all"
                 />
              </div>
 
@@ -96,10 +96,10 @@ export default function ReadyToClaimAdmin() {
                 <label className="block text-xs font-black uppercase tracking-widest text-gray-500">Description Text</label>
                 <textarea 
                   name="ctaSectionDesc" 
-                  rows={3} 
+                  rows={4} 
                   value={content.ctaSectionDesc || ''} 
                   onChange={handleChange} 
-                  className="w-full p-6 rounded-3xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:border-gray-800 text-lg text-gray-900 dark:text-white"
+                  className="w-full p-6 rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-zinc-800 text-lg !text-black dark:!text-white focus:ring-2 focus:ring-primary outline-none transition-all min-h-[160px] shadow-inner"
                 />
              </div>
 
@@ -113,7 +113,7 @@ export default function ReadyToClaimAdmin() {
                       name="ctaSectionBtn1" 
                       value={content.ctaSectionBtn1 || ''} 
                       onChange={handleChange} 
-                      className="w-full p-5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold text-gray-900 dark:text-white"
+                      className="w-full p-5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-zinc-800 font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-primary outline-none"
                    />
                 </div>
                 <div className="space-y-4">
@@ -125,7 +125,7 @@ export default function ReadyToClaimAdmin() {
                       name="ctaSectionBtn2" 
                       value={content.ctaSectionBtn2 || ''} 
                       onChange={handleChange} 
-                      className="w-full p-5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold text-gray-900 dark:text-white"
+                      className="w-full p-5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-zinc-800 font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-primary outline-none"
                    />
                 </div>
              </div>
