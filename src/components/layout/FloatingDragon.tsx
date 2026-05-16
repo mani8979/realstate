@@ -25,10 +25,30 @@ const FloatingDragon = () => {
   // ── Motion values bypass React state → zero re-renders, zero drift ─────────
   const mX      = useMotionValue(typeof window !== 'undefined' ? window.innerWidth - 120 : 900);
   const mY      = useMotionValue(typeof window !== 'undefined' ? window.innerHeight * 0.12 : 120);
+  
   // X: snappy spring for left⇔right switch
   const springX = useSpring(mX, { stiffness: 70, damping: 20, mass: 1 });
-  // Y: gravity-feel spring — model "falls" into position as you scroll down
-  const springY = useSpring(mY, { stiffness: 60, damping: 12, mass: 0.8 });
+  
+  // Y: HEAVY gravity-feel spring — model "falls" with significant inertia
+  const springY = useSpring(mY, { stiffness: 25, damping: 10, mass: 3.5 });
+
+  // ── Velocity-based rotation for "falling" effect ───────────────────────────
+  const rotateX = useMotionValue(0);
+  const rotateZ = useMotionValue(0);
+
+  useEffect(() => {
+    const unsubY = springY.on('change', () => {
+      const velY = springY.getVelocity();
+      // Tilt forward when falling down (positive velocity)
+      rotateX.set(Math.min(15, Math.max(-15, velY / 50)));
+    });
+    const unsubX = springX.on('change', () => {
+      const velX = springX.getVelocity();
+      // Tilt sideways when moving horizontally
+      rotateZ.set(Math.min(10, Math.max(-10, -velX / 60)));
+    });
+    return () => { unsubY(); unsubX(); };
+  }, [springX, springY, rotateX, rotateZ]);
 
   // ── Lazy-load trigger ───────────────────────────────────────────────────────
   useEffect(() => {
@@ -90,10 +110,10 @@ const FloatingDragon = () => {
       lastSide.current = 'right';
     };
 
-    // Set correct initial position without spring animation
+    // Set correct initial position
     compute();
     springX.jump(mX.get());
-    springY.jump(mY.get()); // initialise springY too so it doesn’t animate from 0
+    // Note: NOT jumping springY so it "falls" into view from the top on load
 
     // Only recompute when scrollY actually changes
     let lastY = window.scrollY;
@@ -156,7 +176,15 @@ const FloatingDragon = () => {
     <>
       {/* ── Floating model ─────────────────────────────────────────────────── */}
       <motion.div
-        style={{ x: springX, y: springY, translateX: '-50%', translateY: '-50%' }}
+        style={{ 
+          x: springX, 
+          y: springY, 
+          rotateX: rotateX,
+          rotateZ: rotateZ,
+          translateX: '-50%', 
+          translateY: '-50%',
+          perspective: 1000 
+        }}
         className="fixed top-0 left-0 pointer-events-none z-[100]"
       >
         <motion.div
