@@ -9,7 +9,6 @@ import CTA from '@/components/main/CTA';
 import BrandValues from '@/components/main/BrandValues';
 import LocationSection from '@/components/main/LocationSection';
 import Founder from '@/components/main/Founder';
-import MotivationBanner from '@/components/main/MotivationBanner';
 
 export const revalidate = 60; // Enable ISR caching for the home page (revalidate every minute)
 
