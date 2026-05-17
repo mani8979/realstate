@@ -333,6 +333,28 @@ app.post('/api/logout', async (_req, res) => {
   res.json({ success: true, message: 'Session cleared. New QR incoming...' });
 });
 
+app.post('/api/pair', async (req, res) => {
+  const { phoneNumber } = req.body;
+  if (!phoneNumber) {
+    return res.status(400).json({ success: false, message: 'phoneNumber is required' });
+  }
+
+  if (!client) {
+    return res.status(553).json({ success: false, message: 'WhatsApp client is not initialized' });
+  }
+
+  try {
+    const cleanNumber = phoneNumber.replace(/\D/g, '');
+    console.log(`[WA] Requesting pairing code for number: ${cleanNumber}`);
+    const pairingCode = await client.requestPairingCode(cleanNumber);
+    console.log(`[WA] Generated pairing code successfully: ${pairingCode}`);
+    return res.json({ success: true, pairingCode });
+  } catch (e) {
+    console.error('[WA] Failed to generate pairing code:', e.message);
+    return res.status(500).json({ success: false, message: e.message });
+  }
+});
+
 app.post('/api/send', async (req, res) => {
   const { number, message } = req.body;
   if (!number || !message)
