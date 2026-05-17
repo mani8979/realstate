@@ -19,31 +19,47 @@ app.use(express.json());
 // ------------------------------
 // WhatsApp Client setup
 // ------------------------------
-function setupClient() {
+async function setupClient() {
   console.log('[WhatsApp Service] Initializing client...');
   botStatus = 'Initializing WhatsApp...';
   qrCodeData = null;
+
+  const puppeteerOptions = {
+    headless: true,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-accelerated-2d-canvas',
+      '--no-first-run',
+      '--no-zygote',
+      '--disable-gpu',
+      '--disable-backgrounding-occluded-windows',
+      '--disable-renderer-backgrounding',
+      '--disable-blink-features=AutomationControlled'
+    ]
+  };
+
+  // Safe fallback to @sparticuz/chromium for server environments lacking shared libraries (e.g. Render native Node.js runtime)
+  if (process.env.NODE_ENV === 'production' || process.env.RENDER === 'true') {
+    try {
+      console.log('[WhatsApp Service] Production environment detected. Initializing @sparticuz/chromium...');
+      const chromium = require('@sparticuz/chromium');
+      puppeteerOptions.executablePath = await chromium.executablePath();
+      puppeteerOptions.args = chromium.args;
+      puppeteerOptions.headless = chromium.headless;
+      console.log('[WhatsApp Service] Statically linked Chromium configured successfully.');
+    } catch (err) {
+      console.warn('[WhatsApp Service] Could not load @sparticuz/chromium, using standard Puppeteer defaults:', err.message);
+    }
+  }
 
   client = new Client({
     authStrategy: new LocalAuth({
       dataPath: path.join(__dirname, '.wwebjs_auth')
     }),
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    puppeteer: {
-      headless: true,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-accelerated-2d-canvas',
-        '--no-first-run',
-        '--no-zygote',
-        '--disable-gpu',
-        '--disable-backgrounding-occluded-windows',
-        '--disable-renderer-backgrounding',
-        '--disable-blink-features=AutomationControlled'
-      ]
-    }
+    puppeteer: puppeteerOptions
   });
 
   client.on('qr', async (qr) => {
@@ -84,12 +100,10 @@ function setupClient() {
     console.log('[WhatsApp Service] State changed to:', state);
   });
 
-  try {
-    client.initialize();
-  } catch (error) {
-    console.error('[WhatsApp Service] Failed to initialize client:', error);
+  client.initialize().catch((error) => {
+    console.error('[WhatsApp Service] Failed to initialize client (Async):', error);
     botStatus = 'Initialization failed';
-  }
+  });
 }
 
 // ------------------------------

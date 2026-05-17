@@ -4,15 +4,33 @@ const path = require('path');
 console.log('[Startup Orchestrator] Starting background services...');
 
 // 1. Start WhatsApp background service
+const fs = require('fs');
+const logPath = path.join(__dirname, 'whatsapp_error.log');
+
+// Clear previous error log on startup
+try {
+  if (fs.existsSync(logPath)) {
+    fs.unlinkSync(logPath);
+  }
+} catch (_) {}
+
 const whatsappPath = path.join(__dirname, 'whatsapp-service.js');
 console.log(`[Startup Orchestrator] Spawning WhatsApp Service: node ${whatsappPath}`);
 const whatsapp = spawn('node', [whatsappPath], {
-  stdio: 'inherit',
+  stdio: ['inherit', 'inherit', 'pipe'], // pipe stderr so we can capture it
   shell: false,
   env: {
     ...process.env,
     PUPPETEER_CACHE_DIR: path.join(__dirname, '.cache', 'puppeteer')
   }
+});
+
+whatsapp.stderr.on('data', (data) => {
+  const errStr = data.toString();
+  process.stderr.write(errStr); // standard logging to Render
+  try {
+    fs.appendFileSync(logPath, errStr);
+  } catch (_) {}
 });
 
 // 2. Start Next.js production server

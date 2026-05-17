@@ -18,11 +18,22 @@ export async function GET() {
     const data = await res.json();
     return NextResponse.json(data);
   } catch (error: any) {
+    // Read the error log if the service crashed
+    let daemonError = '';
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const logPath = path.join(process.cwd(), 'whatsapp_error.log');
+      if (fs.existsSync(logPath)) {
+        daemonError = fs.readFileSync(logPath, 'utf8');
+      }
+    } catch (_) {}
+
     return NextResponse.json(
       { 
         status: 'WhatsApp Service Offline', 
         qr: null, 
-        error: error.message 
+        error: daemonError || error.message || 'Background WhatsApp microservice is not responding.'
       }, 
       { status: 200 } // Keep 200 to allow the admin UI to gracefully show "Offline / Start Service" status
     );

@@ -120,6 +120,13 @@ const AdminWhatsApp = () => {
             </p>
           </div>
 
+          {statusData.error && (
+            <div className="w-full bg-rose-500/5 dark:bg-rose-500/10 border border-rose-500/10 dark:border-rose-500/20 p-5 rounded-2xl text-left font-mono text-xs text-rose-600 dark:text-rose-400 overflow-x-auto max-h-48 whitespace-pre-wrap shadow-inner">
+              <span className="font-bold block mb-2 uppercase tracking-wider text-[10px] text-rose-500">Daemon Crash Log:</span>
+              {statusData.error}
+            </div>
+          )}
+
           <div className="w-full bg-gray-50 dark:bg-gray-900/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-800 text-left text-sm text-gray-600 dark:text-gray-400 space-y-4">
             <p className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping inline-block" />
