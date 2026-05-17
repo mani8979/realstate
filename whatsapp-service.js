@@ -180,14 +180,7 @@ async function setupClient() {
   }
 
   let executablePath = findChromeBinary();
-  if (executablePath) {
-    console.log('[WA] Found Chrome at:', executablePath);
-  } else {
-    console.warn('[WA] Chrome binary not found in cache folder!');
-  }
-
-  // ── Chromium launch args — minimal, safe, low-memory ───────────────────────
-  const args = [
+  let customArgs = [
     '--no-sandbox',
     '--disable-setuid-sandbox',
     '--disable-dev-shm-usage',       // use /tmp — critical in Docker
@@ -215,9 +208,28 @@ async function setupClient() {
     '--disable-blink-features=AutomationControlled',
   ];
 
+  // ── Integrate @sparticuz/chromium on Linux (Render native mode support!) ───
+  if (process.platform === 'linux') {
+    try {
+      console.log('[WA] Linux platform detected. Loading self-contained @sparticuz/chromium...');
+      const chromium = require('@sparticuz/chromium');
+      
+      const sparticuzPath = await chromium.executablePath();
+      if (sparticuzPath) {
+        executablePath = sparticuzPath;
+        console.log('[WA] Successfully loaded @sparticuz/chromium at:', executablePath);
+        
+        // Merge sparticuz optimized low-memory args with our custom args
+        customArgs = [...new Set([...chromium.args, ...customArgs])];
+      }
+    } catch (err) {
+      console.error('[WA] Failed to load @sparticuz/chromium, falling back to local Chrome scanner:', err.message);
+    }
+  }
+
   const puppeteerOpts = {
     headless: true,
-    args,
+    args: customArgs,
     ...(executablePath ? { executablePath } : {}),
   };
 
