@@ -20,6 +20,17 @@ export async function GET() {
     const data = await res.json();
     return NextResponse.json(data);
   } catch (error: any) {
+    // Check if the container has just booted and the service is in its staggered startup delay
+    const uptime = process.uptime();
+    if (uptime < 95) {
+      const remaining = Math.max(0, Math.ceil(95 - uptime));
+      return NextResponse.json({
+        status: `Initializing WhatsApp service (Staggered boot — ${remaining}s remaining)...`,
+        qr: null,
+        error: `Please wait: The background automation engine is warming up cleanly (Uptime: ${Math.round(uptime)}s / 95s).`
+      });
+    }
+
     // Read the error log if the service crashed
     let daemonError = '';
     try {
