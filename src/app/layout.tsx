@@ -25,8 +25,12 @@ export async function generateMetadata(): Promise<Metadata> {
   await dbConnect();
   const content = await SiteContent.findOne().lean();
   
+  const brandName = content?.logoTitle || "Star Land Developers";
+  const brandSubtitle = content?.logoSubtitle ? ` | ${content.logoSubtitle}` : " | Premium Real Estate & Lands";
+  const fullTitle = `${brandName}${brandSubtitle}`;
+
   return {
-    title: content?.heroTitle || "Star Land Developers | Premium Real Estate & Lands",
+    title: fullTitle,
     description: content?.heroSubtitle || "Star Land Developers offers the best premium lands and luxury properties for sale. Discover your dream asset with us.",
     icons: {
       icon: content?.faviconImage || "/favicon.ico",
