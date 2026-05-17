@@ -135,20 +135,42 @@ async function setupClient() {
     client = null;
   }
 
-  // ── Resolve Chrome executable ───────────────────────────────────────────────
-  // Use puppeteer's own executablePath() — it knows exactly where it put Chrome.
-  let executablePath;
-  try {
-    executablePath = require('puppeteer').executablePath();
-    if (!fs.existsSync(executablePath)) {
-      console.warn('[WA] puppeteer.executablePath() not found at:', executablePath);
-      executablePath = undefined; // let wwebjs / puppeteer find it
-    } else {
-      console.log('[WA] Using Chrome at:', executablePath);
+  // ── Resolve Chrome executable via robust recursive scanner ──────────────────
+  function findChromeBinary() {
+    const cacheDir = process.env.PUPPETEER_CACHE_DIR || path.join(__dirname, '.cache', 'puppeteer');
+    console.log('[WA] Scanning cache directory for Chrome:', cacheDir);
+    if (!fs.existsSync(cacheDir)) return null;
+
+    function search(dir) {
+      try {
+        const files = fs.readdirSync(dir);
+        for (const file of files) {
+          const fullPath = path.join(dir, file);
+          const stat = fs.statSync(fullPath);
+          if (stat.isDirectory()) {
+            const found = search(fullPath);
+            if (found) return found;
+          } else {
+            const isWin = process.platform === 'win32';
+            if (isWin && file === 'chrome.exe') {
+              return fullPath;
+            }
+            if (!isWin && file === 'chrome') {
+              return fullPath;
+            }
+          }
+        }
+      } catch (_) {}
+      return null;
     }
-  } catch (e) {
-    console.warn('[WA] Could not call puppeteer.executablePath():', e.message);
-    executablePath = undefined;
+    return search(cacheDir);
+  }
+
+  let executablePath = findChromeBinary();
+  if (executablePath) {
+    console.log('[WA] Found Chrome at:', executablePath);
+  } else {
+    console.warn('[WA] Chrome binary not found in cache folder!');
   }
 
   // ── Chromium launch args — minimal, safe, low-memory ───────────────────────
