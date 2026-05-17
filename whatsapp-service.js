@@ -385,9 +385,39 @@ async function setupClient() {
 
   // ── Restore session from MongoDB BEFORE initializing client ────────────────
   const authDir = path.join(__dirname, '.wwebjs_auth');
-  if (!fs.existsSync(authDir) || fs.readdirSync(authDir).length === 0) {
-    console.log('[WA] Session directory is empty or missing. Checking MongoDB for backups...');
+  
+  // Connect to MongoDB and check if a verified backup exists
+  let hasBackup = false;
+  try {
+    const mongoose = require('mongoose');
+    const mongoUri = process.env.MONGODB_URI;
+    if (mongoUri) {
+      if (mongoose.connection.readyState === 0) {
+        await mongoose.connect(mongoUri);
+      }
+      const collection = mongoose.connection.collection('whatsapp_sessions');
+      const doc = await collection.findOne({ key: 'session_archive' });
+      if (doc && doc.data) {
+        hasBackup = true;
+      }
+    }
+  } catch (e) {
+    console.error('[WA] MongoDB backup check failed:', e.message);
+  }
+
+  if (hasBackup) {
+    console.log('[WA] Verified backup exists in MongoDB. Restoring to ensure fresh and clean state...');
     await restoreSessionFromMongo();
+  } else {
+    console.log('[WA] No backup found in MongoDB. Starting clean QR scan session, purging dirty leftover files...');
+    try {
+      if (fs.existsSync(authDir)) {
+        fs.rmSync(authDir, { recursive: true, force: true });
+        console.log('[WA] Successfully purged dirty session directory.');
+      }
+    } catch (err) {
+      console.error('[WA] Failed to clear dirty session directory:', err.message);
+    }
   }
 
   // ── Destroy previous client if any ─────────────────────────────────────────
@@ -479,10 +509,6 @@ async function setupClient() {
   try {
     client = new Client({
       authStrategy: new LocalAuth({ dataPath: path.join(__dirname, '.wwebjs_auth') }),
-      webVersionCache: {
-        type: 'remote',
-        remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/{version}.html',
-      },
       puppeteer: puppeteerOpts,
     });
   } catch (e) {
