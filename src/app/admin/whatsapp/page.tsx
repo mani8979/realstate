@@ -42,8 +42,6 @@ const AdminWhatsApp = () => {
   }, []);
 
   const handleLogout = async () => {
-    if (!confirm('Are you sure you want to disconnect WhatsApp? This will log you out of this session and clear saved credentials.')) return;
-    
     setActionLoading(true);
     try {
       const res = await axios.post('/api/whatsapp/logout');
@@ -172,8 +170,8 @@ const AdminWhatsApp = () => {
                 disabled={actionLoading}
                 className="flex items-center justify-center gap-2 bg-rose-500 hover:bg-rose-600 text-white font-bold px-8 py-4 rounded-2xl transition-all shadow-lg shadow-rose-500/20 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 text-sm"
               >
-                {actionLoading ? <Loader2 size={18} className="animate-spin" /> : <LogOut size={18} />}
-                Disconnect WhatsApp
+                {actionLoading ? <Loader2 size={18} className="animate-spin" /> : <RefreshCw size={18} />}
+                Regenerate the QR Code
               </button>
             </div>
           </div>

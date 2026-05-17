@@ -198,28 +198,9 @@ async function setupClient() {
     '--no-sandbox',
     '--disable-setuid-sandbox',
     '--disable-dev-shm-usage',       // use /tmp — critical in Docker
-    '--disable-features=Translate,BackForwardCache,AcceptCHFrame,MediaRouter,OptimizationHints,site-per-process', // force frames to share process — stable 70MB+ RAM saver!
-    '--blink-settings=imagesEnabled=false', // Disable loading of all images (saves up to 100MB+ RAM!)
-    '--disable-gpu',
-    '--disable-accelerated-2d-canvas',
-    '--no-first-run',
-    '--no-zygote',
-    '--disable-backgrounding-occluded-windows',
-    '--disable-renderer-backgrounding',
-    '--disable-background-networking',
-    '--disable-background-timer-throttling',
-    '--disable-client-side-phishing-detection',
-    '--disable-default-apps',
-    '--disable-extensions',
-    '--disable-hang-monitor',
-    '--disable-popup-blocking',
-    '--disable-prompt-on-repost',
-    '--disable-sync',
-    '--disable-translate',
-    '--metrics-recording-only',
-    '--no-default-browser-check',
-    '--safebrowsing-disable-auto-update',
-    '--disable-blink-features=AutomationControlled',
+    '--disable-gpu',                  // disable GPU processing — great for cloud containers
+    '--no-zygote',                    // avoid launching zygote processes to save memory
+    '--disable-blink-features=AutomationControlled', // remove navigator.webdriver flag to avoid detection
   ];
 
   // ── Integrate @sparticuz/chromium on Linux (Render native mode support!) ───
@@ -296,12 +277,30 @@ async function setupClient() {
     console.log('[WA] ✅ Client READY');
   });
 
-  client.on('auth_failure', (msg) => {
+  client.on('auth_failure', async (msg) => {
     qrCodeData   = null;
-    botStatus    = 'Auth failed — reconnecting in 10s';
+    botStatus    = 'Auth failed — clearing session...';
     initializing = false;
     console.error('[WA] Auth failure:', msg);
-    retryTimer   = setTimeout(setupClient, 10000);
+    
+    if (client) {
+      try { await client.destroy().catch(() => {}); } catch (_) {}
+      client = null;
+    }
+
+    const sessionDir = path.join(__dirname, '.wwebjs_auth');
+    try {
+      if (fs.existsSync(sessionDir)) {
+        fs.rmSync(sessionDir, { recursive: true, force: true });
+        console.log('[WA] Cleaned up session directory after auth_failure');
+      }
+    } catch (e) {
+      console.error('[WA] Failed to clear session after auth_failure:', e.message);
+    }
+
+    console.log('[WA] Scheduling client re-initialization in 10 seconds...');
+    clearTimeout(retryTimer);
+    retryTimer = setTimeout(setupClient, 10000);
   });
 
   client.on('disconnected', async (reason) => {
@@ -316,12 +315,12 @@ async function setupClient() {
       client = null;
     }
 
-    if (reason === 'forced-logout' || reason === 'auth_failure') {
+    if (reason === 'forced-logout' || reason === 'auth_failure' || reason === 'NAVIGATION_FAILED_OR_INVALID_PAGE') {
       const sessionDir = path.join(__dirname, '.wwebjs_auth');
       try {
         if (fs.existsSync(sessionDir)) {
           fs.rmSync(sessionDir, { recursive: true, force: true });
-          console.log('[WA] Cleaned up session directory after forced-logout/auth_failure');
+          console.log('[WA] Cleaned up session directory after forced-logout/auth_failure/navigation_failure');
         }
       } catch (e) {
         console.error('[WA] Failed to clear session after disconnect:', e.message);
