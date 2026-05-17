@@ -16,12 +16,12 @@ const Footer = async () => {
   }
 
   return (
-    <footer id="footer" className="bg-zinc-50 dark:bg-zinc-950 text-gray-700 dark:text-gray-300 pt-24 pb-28 md:pb-12 border-t border-white/5 relative overflow-hidden">
+    <footer id="footer" className="bg-zinc-50 dark:bg-zinc-950 text-gray-700 dark:text-gray-300 pt-10 pb-20 md:pt-24 md:pb-12 border-t border-white/5 relative overflow-hidden">
       {/* Decorative Glow */}
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-16 mb-10 md:mb-20">
           {/* Brand & Mission */}
           <div className="space-y-8 text-center md:text-left flex flex-col items-center md:items-start">
             <Link href={content.logoLink || "/"} className="flex items-center gap-3 group">
@@ -67,7 +67,7 @@ const Footer = async () => {
 
           {/* Quick Links */}
           <div className="text-center md:text-left">
-            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-8">{content.footerCol1Title || 'Navigation'}</h3>
+            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-4 md:mb-8">{content.footerCol1Title || 'Navigation'}</h3>
             <ul className="space-y-5">
               {[
                 { name: content.navHome || 'Home', href: '/' },
@@ -85,7 +85,7 @@ const Footer = async () => {
 
           {/* Get In Touch Sections */}
           <div className="text-center md:text-left">
-            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-8">Get In Touch</h3>
+            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-4 md:mb-8">Get In Touch</h3>
             <ul className="space-y-5">
               {(content.footerQuickLinks || [
                 { label: 'Luxury Interior', href: '/services/interior' },
@@ -104,7 +104,7 @@ const Footer = async () => {
 
           {/* Contact Details */}
           <div className="text-center md:text-left">
-            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-8">Contact Info</h3>
+            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-4 md:mb-8">Contact Info</h3>
             <ul className="space-y-6">
               <li className="flex flex-col md:flex-row items-center gap-4">
                 <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary shrink-0">
