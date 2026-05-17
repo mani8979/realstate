@@ -48,7 +48,7 @@ function setupEvents(clientInstance) {
     console.log('[WhatsApp Service] Disconnected:', reason);
     // Restart client to get a new QR code
     try {
-      clientInstance.destroy();
+      clientInstance.destroy().catch(() => {});
     } catch (_) {}
     setTimeout(setupClient, 5000);
   });
@@ -65,7 +65,7 @@ async function setupClient() {
   botStatus = 'Initializing WhatsApp...';
   qrCodeData = null;
 
-  // 1. Define standard, legit Chrome browser options
+  // 1. Define standard, legit Chrome browser options with aggressive low-memory settings
   const standardOptions = {
     headless: true,
     args: [
@@ -76,9 +76,12 @@ async function setupClient() {
       '--no-first-run',
       '--no-zygote',
       '--disable-gpu',
+      '--single-process', // Extremely critical! Runs browser & renderer in a single process, cutting RAM usage in half!
+      '--disable-features=site-per-process', // Reduces multi-process memory footprint
       '--disable-backgrounding-occluded-windows',
       '--disable-renderer-backgrounding',
       '--disable-blink-features=AutomationControlled',
+      '--js-flags=--max-old-space-size=150', // Constrains Chromium V8 RAM usage
       '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
     ]
   };
@@ -91,9 +94,6 @@ async function setupClient() {
       authStrategy: new LocalAuth({
         dataPath: path.join(__dirname, '.wwebjs_auth')
       }),
-      webVersionCache: {
-        type: 'none' // Always fetch the absolute latest, live version directly from WhatsApp to bypass local cache version conflicts
-      },
       userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
       puppeteer: standardOptions
     });
@@ -111,7 +111,7 @@ async function setupClient() {
     console.log('[WhatsApp Service] Falling back to @sparticuz/chromium (headless shell)...');
     try {
       if (client) {
-        try { client.destroy(); } catch (_) {}
+        try { await client.destroy().catch(() => {}); } catch (_) {}
       }
 
       const chromium = require('@sparticuz/chromium');
@@ -119,7 +119,10 @@ async function setupClient() {
         executablePath: await chromium.executablePath(),
         args: [
           ...chromium.args,
+          '--single-process', // Ensure single process on fallback too
+          '--disable-features=site-per-process',
           '--disable-blink-features=AutomationControlled',
+          '--js-flags=--max-old-space-size=150',
           '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
         ],
         headless: chromium.headless
@@ -129,9 +132,6 @@ async function setupClient() {
         authStrategy: new LocalAuth({
           dataPath: path.join(__dirname, '.wwebjs_auth')
         }),
-        webVersionCache: {
-          type: 'none'
-        },
         userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
         puppeteer: fallbackOptions
       });
