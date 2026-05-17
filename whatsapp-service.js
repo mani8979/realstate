@@ -178,7 +178,7 @@ async function setupClient() {
     '--no-sandbox',
     '--disable-setuid-sandbox',
     '--disable-dev-shm-usage',       // use /tmp — critical in Docker
-    '--single-process',              // run all Chrome threads in a single process — huge RAM saver!
+    '--disable-features=site-per-process', // force frames to share process — stable 70MB+ RAM saver!
     '--disable-gpu',
     '--disable-accelerated-2d-canvas',
     '--no-first-run',
@@ -265,12 +265,15 @@ async function setupClient() {
 
   client.on('disconnected', (reason) => {
     qrCodeData   = null;
-    botStatus    = `Disconnected (${reason}) — reconnecting in 5s`;
+    botStatus    = `Disconnected (${reason}) — restarting container...`;
     initializing = false;
     console.log('[WA] Disconnected:', reason);
-    try { client.destroy().catch(() => {}); } catch (_) {}
-    client     = null;
-    retryTimer = setTimeout(setupClient, 5000);
+    
+    // Gracefully exit the parent process to trigger a clean container restart on Render
+    // This terminates all helper processes, clears any RAM leaks, and re-links with a fresh memory state!
+    setTimeout(() => {
+      process.exit(0);
+    }, 1000);
   });
 
   // ── Initialize (launches Chrome) ───────────────────────────────────────────
