@@ -17,6 +17,47 @@ let botStatus = 'Starting WhatsApp...';
 app.use(express.json());
 
 // ------------------------------
+// Helper to register events on a client instance
+function setupEvents(clientInstance) {
+  clientInstance.on('qr', async (qr) => {
+    try {
+      qrCodeData = await QRCode.toDataURL(qr);
+      botStatus = 'Scan the QR code with WhatsApp';
+      console.log('[WhatsApp Service] New QR Code generated successfully.');
+    } catch (err) {
+      console.error('[WhatsApp Service] Error generating QR code URL:', err);
+      botStatus = 'Error generating QR code';
+    }
+  });
+
+  clientInstance.on('ready', () => {
+    qrCodeData = null;
+    botStatus = 'WhatsApp is ready';
+    console.log('[WhatsApp Service] Client is READY and authenticated!');
+  });
+
+  clientInstance.on('auth_failure', (msg) => {
+    qrCodeData = null;
+    botStatus = 'Authentication failed';
+    console.error('[WhatsApp Service] Authentication failed:', msg);
+  });
+
+  clientInstance.on('disconnected', (reason) => {
+    qrCodeData = null;
+    botStatus = `Disconnected: ${reason}`;
+    console.log('[WhatsApp Service] Disconnected:', reason);
+    // Restart client to get a new QR code
+    try {
+      clientInstance.destroy();
+    } catch (_) {}
+    setTimeout(setupClient, 5000);
+  });
+
+  clientInstance.on('change_state', (state) => {
+    console.log('[WhatsApp Service] State changed to:', state);
+  });
+}
+
 // WhatsApp Client setup
 // ------------------------------
 async function setupClient() {
@@ -24,7 +65,8 @@ async function setupClient() {
   botStatus = 'Initializing WhatsApp...';
   qrCodeData = null;
 
-  const puppeteerOptions = {
+  // 1. Define standard, legit Chrome browser options
+  const standardOptions = {
     headless: true,
     args: [
       '--no-sandbox',
@@ -41,80 +83,67 @@ async function setupClient() {
     ]
   };
 
-  // Safe fallback to @sparticuz/chromium for server environments lacking shared libraries (e.g. Render native Node.js runtime)
-  if (process.env.NODE_ENV === 'production' || process.env.RENDER === 'true') {
-    try {
-      console.log('[WhatsApp Service] Production environment detected. Initializing @sparticuz/chromium...');
-      const chromium = require('@sparticuz/chromium');
-      puppeteerOptions.executablePath = await chromium.executablePath();
-      
-      // Merge sparticuz/chromium arguments with our critical bot evasion flags
-      const extraArgs = [
-        ...chromium.args,
-        '--disable-blink-features=AutomationControlled',
-        '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
-      ];
-      puppeteerOptions.args = Array.from(new Set(extraArgs));
-      puppeteerOptions.headless = chromium.headless;
-      console.log('[WhatsApp Service] Statically linked Chromium configured with merged bot-evasion flags.');
-    } catch (err) {
-      console.warn('[WhatsApp Service] Could not load @sparticuz/chromium, using standard Puppeteer defaults:', err.message);
-    }
+  let initSuccess = false;
+
+  try {
+    console.log('[WhatsApp Service] Attempting to launch with standard, full-featured Puppeteer (Legit Chrome)...');
+    client = new Client({
+      authStrategy: new LocalAuth({
+        dataPath: path.join(__dirname, '.wwebjs_auth')
+      }),
+      webVersionCache: {
+        type: 'none' // Always fetch the absolute latest, live version directly from WhatsApp to bypass local cache version conflicts
+      },
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+      puppeteer: standardOptions
+    });
+
+    setupEvents(client);
+    await client.initialize();
+    initSuccess = true;
+    console.log('[WhatsApp Service] Standard Puppeteer initialized successfully!');
+  } catch (err) {
+    console.error('[WhatsApp Service] Standard Puppeteer failed to initialize:', err.message);
   }
 
-  client = new Client({
-    authStrategy: new LocalAuth({
-      dataPath: path.join(__dirname, '.wwebjs_auth')
-    }),
-    webVersionCache: {
-      type: 'none' // Always fetch the absolute latest, live version directly from WhatsApp to bypass local cache version conflicts
-    },
-    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-    puppeteer: puppeteerOptions
-  });
-
-  client.on('qr', async (qr) => {
+  // 2. If standard Puppeteer failed, fall back to @sparticuz/chromium (headless shell)
+  if (!initSuccess) {
+    console.log('[WhatsApp Service] Falling back to @sparticuz/chromium (headless shell)...');
     try {
-      qrCodeData = await QRCode.toDataURL(qr);
-      botStatus = 'Scan the QR code with WhatsApp';
-      console.log('[WhatsApp Service] New QR Code generated successfully.');
-    } catch (err) {
-      console.error('[WhatsApp Service] Error generating QR code URL:', err);
-      botStatus = 'Error generating QR code';
+      if (client) {
+        try { client.destroy(); } catch (_) {}
+      }
+
+      const chromium = require('@sparticuz/chromium');
+      const fallbackOptions = {
+        executablePath: await chromium.executablePath(),
+        args: [
+          ...chromium.args,
+          '--disable-blink-features=AutomationControlled',
+          '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
+        ],
+        headless: chromium.headless
+      };
+
+      client = new Client({
+        authStrategy: new LocalAuth({
+          dataPath: path.join(__dirname, '.wwebjs_auth')
+        }),
+        webVersionCache: {
+          type: 'none'
+        },
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+        puppeteer: fallbackOptions
+      });
+
+      setupEvents(client);
+      await client.initialize();
+      console.log('[WhatsApp Service] @sparticuz/chromium initialized successfully!');
+    } catch (fallbackErr) {
+      console.error('[WhatsApp Service] Critical failure: both standard and fallback clients failed to initialize:', fallbackErr.message);
+      botStatus = 'Initialization failed';
     }
-  });
-
-  client.on('ready', () => {
-    qrCodeData = null;
-    botStatus = 'WhatsApp is ready';
-    console.log('[WhatsApp Service] Client is READY and authenticated!');
-  });
-
-  client.on('auth_failure', (msg) => {
-    qrCodeData = null;
-    botStatus = 'Authentication failed';
-    console.error('[WhatsApp Service] Authentication failed:', msg);
-  });
-
-  client.on('disconnected', (reason) => {
-    qrCodeData = null;
-    botStatus = `Disconnected: ${reason}`;
-    console.log('[WhatsApp Service] Disconnected:', reason);
-    // Restart client to get a new QR code
-    try {
-      client.destroy();
-    } catch (_) {}
-    setTimeout(setupClient, 5000);
-  });
-
-  client.on('change_state', (state) => {
-    console.log('[WhatsApp Service] State changed to:', state);
-  });
-
-  client.initialize().catch((error) => {
-    console.error('[WhatsApp Service] Failed to initialize client (Async):', error);
-    botStatus = 'Initialization failed';
-  });
+  }
 }
 
 // ------------------------------
