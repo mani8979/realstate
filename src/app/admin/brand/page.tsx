@@ -162,45 +162,22 @@ export default function WhyChooseUsAdmin() {
                       </h3>
                    </div>
 
-                   <div className="space-y-6">
-                      <div className="grid grid-cols-1 gap-6">
+                    <div className="space-y-6">
+                      <div className="space-y-4">
                          <div className="space-y-2">
-                            <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500">Background Image (Optional)</label>
-                            {content[`brandP${num}Image`] ? (
-                              <div className="relative aspect-video rounded-2xl overflow-hidden group/img">
-                                <img src={content[`brandP${num}Image`]} className="w-full h-full object-cover" />
-                                <button onClick={() => setContent({...content, [`brandP${num}Image`]: ''})} className="absolute inset-0 bg-black/40 flex items-center justify-center text-white opacity-0 group-hover/img:opacity-100 transition-all"><X size={24} /></button>
-                              </div>
-                            ) : (
-                              <FileDropzone
-                                onFilesSelected={(files) => handleUpload(files, `brandP${num}Image`)}
-                                uploading={uploading === `brandP${num}Image`}
-                                accept="image/*"
-                              >
-                                <div className="flex flex-col items-center justify-center aspect-video rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 hover:border-primary transition-all cursor-pointer bg-gray-50 dark:bg-gray-800/50">
-                                  {uploading === `brandP${num}Image` ? <Loader2 className="animate-spin text-primary" /> : <Upload size={32} className="text-gray-400" />}
-                                  <span className="text-[10px] font-bold text-gray-500 mt-2 uppercase">Upload Photo</span>
-                                </div>
-                              </FileDropzone>
-                            )}
+                            <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500">Side Label / Badge</label>
+                            <input name={`brandP${num}Side`} value={content[`brandP${num}Side`] || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold" />
                          </div>
-
-                         <div className="space-y-4">
-                            <div className="space-y-2">
-                               <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500">Side Label / Badge</label>
-                               <input name={`brandP${num}Side`} value={content[`brandP${num}Side`] || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold" />
-                            </div>
-                            <div className="space-y-2">
-                               <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500">Pillar Title</label>
-                               <input name={`brandP${num}Title`} value={content[`brandP${num}Title`] || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-black text-xl" />
-                            </div>
-                            <div className="space-y-2">
-                               <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500">Description</label>
-                               <textarea name={`brandP${num}Desc`} rows={3} value={content[`brandP${num}Desc`] || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-medium" />
-                            </div>
+                         <div className="space-y-2">
+                            <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500">Pillar Title</label>
+                            <input name={`brandP${num}Title`} value={content[`brandP${num}Title`] || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-black text-xl" />
+                         </div>
+                         <div className="space-y-2">
+                            <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500">Description</label>
+                            <textarea name={`brandP${num}Desc`} rows={3} value={content[`brandP${num}Desc`] || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-medium" />
                          </div>
                       </div>
-                   </div>
+                    </div>
                 </div>
              </div>
            ))}
