@@ -82,6 +82,7 @@ const nextProcess = spawn(
     shell: false,
     env: {
       ...process.env,
+      DEBUG: 'puppeteer:*', // Enable detailed Puppeteer tracing logs
       UV_THREADPOOL_SIZE: '4', // Limit libuv thread pool to save memory
     },
   }
