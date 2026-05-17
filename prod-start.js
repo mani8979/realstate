@@ -114,8 +114,8 @@ function startInProcessWhatsApp() {
   }
 }
 
-// Start WhatsApp after 5 seconds
-setTimeout(startInProcessWhatsApp, 5000);
+// Start WhatsApp after 45 seconds (gives Next.js ample time to pass Render's initial health checks)
+setTimeout(startInProcessWhatsApp, 45000);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 3. Graceful shutdown
