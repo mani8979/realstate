@@ -166,15 +166,15 @@ const WhyChooseUs = ({ content }: { content?: any }) => {
                       }
                     }
                   }}
-                  className={`group flex flex-col gap-4 sm:gap-6 p-4 sm:p-8 rounded-2xl sm:rounded-3xl hover:bg-gray-50 dark:hover:bg-black/5 dark:bg-white/5 transition-all duration-500 border border-transparent hover:border-gray-100 dark:hover:border-black/10 dark:border-white/10 ${index < 2 ? 'col-span-1' : 'col-span-2 sm:col-span-1'}`}
+                   className={`group flex flex-col gap-4 sm:gap-6 p-4 sm:p-8 rounded-2xl sm:rounded-3xl hover:bg-gray-50 dark:hover:bg-black/5 dark:bg-white/5 transition-all duration-500 border border-transparent hover:border-gray-100 dark:hover:border-black/10 dark:border-white/10 min-w-0 w-full ${index < 2 ? 'col-span-1' : 'col-span-2 sm:col-span-1'}`}
                 >
                   <div className={`w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:rotate-[15deg] transform ${feature.color}`}>
                     <feature.icon size={24} className="sm:size-32" />
                   </div>
                   <div>
                     <div className="text-[8px] sm:text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-1 sm:mb-2">{feature.sideHeading}</div>
-                    <h4 className="text-lg sm:text-2xl font-black text-slate-900 dark:text-black dark:text-white mb-2 sm:mb-3 uppercase tracking-tight leading-tight">{feature.title}</h4>
-                    <p className="text-gray-500 dark:text-gray-600 dark:text-gray-400 text-xs sm:text-base leading-relaxed font-medium">
+                    <h4 className="text-[11px] sm:text-2xl font-black text-slate-900 dark:text-black dark:text-white mb-2 sm:mb-3 uppercase tracking-tight leading-tight break-all w-full">{feature.title}</h4>
+                    <p className="text-[10px] sm:text-base text-gray-500 dark:text-gray-600 dark:text-gray-400 leading-relaxed font-medium break-words">
                       {feature.desc}
                     </p>
                   </div>

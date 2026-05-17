@@ -29,7 +29,7 @@ const AboutClient = ({ content }: { content: any }) => {
         </div>
 
         {/* Brand Values */}
-        <div id="about-values" className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
+        <div id="about-values" className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 mb-32">
           {[
             { 
               label: content.brandBadge || 'Verified Properties', 
@@ -60,14 +60,14 @@ const AboutClient = ({ content }: { content: any }) => {
                 delay: i * 0.1, 
                 ease: [0.21, 1.11, 0.81, 0.99] 
               }}
-              className="bg-black/5 dark:bg-white/5 p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border border-black/10 dark:border-white/10 flex flex-col items-center text-center group hover:border-primary transition-all w-full overflow-hidden"
+              className={`bg-black/5 dark:bg-white/5 p-4 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border border-black/10 dark:border-white/10 flex flex-col items-center text-center group hover:border-primary transition-all overflow-hidden min-w-0 w-full ${i === 2 ? 'col-span-2 md:col-span-1' : 'col-span-1'}`}
             >
-              <div className="bg-primary/10 text-primary p-4 rounded-2xl mb-6 group-hover:bg-primary group-hover:text-black dark:text-white transition-all">
-                <stat.icon size={32} />
+              <div className="bg-primary/10 text-primary p-3 md:p-4 rounded-xl md:rounded-2xl mb-4 md:mb-6 group-hover:bg-primary group-hover:text-black dark:text-white transition-all flex-shrink-0">
+                <stat.icon className="size-6 md:size-8" />
               </div>
-              <h3 className="text-xl md:text-3xl font-black text-black dark:text-white mb-4 uppercase tracking-tighter break-words w-full">{stat.value}</h3>
-              <p className="text-primary font-bold uppercase tracking-widest text-[8px] md:text-[10px] mb-4 break-words w-full">{stat.label}</p>
-              <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm leading-relaxed break-words">{stat.description}</p>
+              <h3 className="text-xs sm:text-sm md:text-3xl font-black text-black dark:text-white mb-2 md:mb-4 uppercase tracking-normal md:tracking-tighter break-all w-full">{stat.value}</h3>
+              <p className="text-primary font-bold uppercase tracking-widest text-[7px] md:text-[10px] mb-2 md:mb-4 break-all w-full">{stat.label}</p>
+              <p className="text-gray-600 dark:text-gray-400 text-[10px] md:text-sm leading-relaxed break-words">{stat.description}</p>
             </motion.div>
           ))}
         </div>
