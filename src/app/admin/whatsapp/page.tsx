@@ -114,17 +114,28 @@ const AdminWhatsApp = () => {
             <WifiOff size={48} />
           </div>
           <div className="space-y-2">
-            <h3 className="text-2xl font-black text-gray-900 dark:text-white uppercase tracking-tight">WhatsApp Service Offline</h3>
+            <h3 className="text-2xl font-black text-gray-900 dark:text-white uppercase tracking-tight">System Status: Offline</h3>
             <p className="text-gray-600 dark:text-gray-400 max-w-md">
-              The local background WhatsApp server process is not running. Please make sure you have started it.
+              The background WhatsApp automation service is offline or starting up. If you just triggered a deployment, please allow a few minutes for the container to initialize.
             </p>
           </div>
 
-          <div className="w-full bg-gray-50 dark:bg-gray-900/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-800 text-left font-mono text-xs text-gray-600 dark:text-gray-400 space-y-2">
-            <p className="font-bold text-gray-900 dark:text-white">🚀 How to run the background service:</p>
-            <p>1. Open a new terminal in your workspace (<code className="bg-black/5 dark:bg-white/10 px-1 py-0.5 rounded">d:\reals</code>)</p>
-            <p>2. Execute the service script:</p>
-            <pre className="bg-black dark:bg-black/80 text-emerald-400 p-4 rounded-xl mt-2 select-all overflow-x-auto">node whatsapp-service.js</pre>
+          <div className="w-full bg-gray-50 dark:bg-gray-900/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-800 text-left text-sm text-gray-600 dark:text-gray-400 space-y-4">
+            <p className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping inline-block" />
+              Connection Troubleshooting:
+            </p>
+            <ul className="space-y-3 pl-4 list-decimal">
+              <li>
+                <span className="font-bold text-gray-850 dark:text-gray-200">Wait for Initialization:</span> If the cloud container has just booted, Chromium takes 30-60 seconds to download dependencies and launch.
+              </li>
+              <li>
+                <span className="font-bold text-gray-850 dark:text-gray-200">Re-Poll Service:</span> Click the <span className="bg-gray-250 dark:bg-gray-800 px-2 py-0.5 rounded font-mono text-xs">Refresh Connection</span> button above to trigger an instant handshake attempt.
+              </li>
+              <li>
+                <span className="font-bold text-gray-850 dark:text-gray-200">Verify Server Logs:</span> If the offline state persists for more than 5 minutes, check your Render dashboard service logs to ensure the WhatsApp daemon started successfully.
+              </li>
+            </ul>
           </div>
         </div>
       ) : isReady ? (
