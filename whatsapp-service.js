@@ -30,6 +30,18 @@ function setupEvents(clientInstance) {
     }
   });
 
+  clientInstance.on('authenticated', () => {
+    qrCodeData = null; // Hide QR code immediately upon scan success!
+    botStatus = 'Authenticated. Synchronizing chats...';
+    console.log('[WhatsApp Service] Client is AUTHENTICATED!');
+  });
+
+  clientInstance.on('loading_screen', (percent, message) => {
+    qrCodeData = null; // Ensure QR is hidden
+    botStatus = `Synchronizing: ${percent}% - ${message}`;
+    console.log(`[WhatsApp Service] Loading screen: ${percent}% - ${message}`);
+  });
+
   clientInstance.on('ready', () => {
     qrCodeData = null;
     botStatus = 'WhatsApp is ready';
@@ -65,7 +77,7 @@ async function setupClient() {
   botStatus = 'Initializing WhatsApp...';
   qrCodeData = null;
 
-  // 1. Define standard, legit Chrome browser options with aggressive low-memory settings
+  // 1. Define standard, legit Chrome browser options with aggressive low-memory settings (No single-process to ensure ready event fires!)
   const standardOptions = {
     headless: true,
     args: [
@@ -76,8 +88,6 @@ async function setupClient() {
       '--no-first-run',
       '--no-zygote',
       '--disable-gpu',
-      '--single-process', // Extremely critical! Runs browser & renderer in a single process, cutting RAM usage in half!
-      '--disable-features=site-per-process', // Reduces multi-process memory footprint
       '--disable-backgrounding-occluded-windows',
       '--disable-renderer-backgrounding',
       '--disable-blink-features=AutomationControlled',
@@ -119,8 +129,6 @@ async function setupClient() {
         executablePath: await chromium.executablePath(),
         args: [
           ...chromium.args,
-          '--single-process', // Ensure single process on fallback too
-          '--disable-features=site-per-process',
           '--disable-blink-features=AutomationControlled',
           '--js-flags=--max-old-space-size=150',
           '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
