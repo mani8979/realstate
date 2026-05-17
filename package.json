@@ -6,7 +6,7 @@
     "dev": "next dev",
     "dev:ngrok": "next dev -H 0.0.0.0",
     "build": "npx puppeteer browsers install chrome && next build",
-    "start": "node prod-start.js",
+    "start": "node --max-old-space-size=180 prod-start.js",
     "lint": "eslint"
   },
   "dependencies": {

@@ -178,6 +178,7 @@ async function setupClient() {
     '--no-sandbox',
     '--disable-setuid-sandbox',
     '--disable-dev-shm-usage',       // use /tmp — critical in Docker
+    '--single-process',              // run all Chrome threads in a single process — huge RAM saver!
     '--disable-gpu',
     '--disable-accelerated-2d-canvas',
     '--no-first-run',

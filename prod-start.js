@@ -30,22 +30,28 @@ process.on('unhandledRejection', (reason, promise) => {
 const logPath = path.join(__dirname, 'whatsapp_error.log');
 try { if (fs.existsSync(logPath)) fs.unlinkSync(logPath); } catch (_) {}
 
-// ── Redirect stdout & stderr to whatsapp_error.log for status page visibility ──
-const originalStdoutWrite = process.stdout.write;
-const originalStderrWrite = process.stderr.write;
+// ── Safe global console overrides to capture all logs in whatsapp_error.log ──
+const originalLog   = console.log;
+const originalError = console.error;
 
-function appendToLog(chunk) {
-  try { fs.appendFileSync(logPath, chunk); } catch (_) {}
+function appendToLog(prefix, args) {
+  try {
+    const msg = args.map(arg => {
+      if (arg instanceof Error) return arg.stack;
+      return typeof arg === 'object' ? JSON.stringify(arg) : arg;
+    }).join(' ');
+    fs.appendFileSync(logPath, `[${new Date().toISOString()}] [${prefix}] ${msg}\n`);
+  } catch (_) {}
 }
 
-process.stdout.write = function (chunk, encoding, callback) {
-  appendToLog(chunk);
-  return originalStdoutWrite.apply(process.stdout, arguments);
+console.log = function (...args) {
+  appendToLog('LOG', args);
+  originalLog.apply(console, args);
 };
 
-process.stderr.write = function (chunk, encoding, callback) {
-  appendToLog(chunk);
-  return originalStderrWrite.apply(process.stderr, arguments);
+console.error = function (...args) {
+  appendToLog('ERROR', args);
+  originalError.apply(console, args);
 };
 
 // ── Shared Puppeteer cache path (must match Dockerfile ENV) ───────────────────
@@ -66,7 +72,7 @@ console.log(`[Orchestrator] Spawning Next.js on 0.0.0.0:${port}...`);
 const nextProcess = spawn(
   'node',
   [
-    '--max-old-space-size=200', // Node V8 heap cap for Next.js
+    '--max-old-space-size=150', // Node V8 heap cap for Next.js
     nextBin,
     'start',
     '-H', '0.0.0.0',
