@@ -213,9 +213,6 @@ async function setupClient() {
   try {
     client = new Client({
       authStrategy: new LocalAuth({ dataPath: path.join(__dirname, '.wwebjs_auth') }),
-      // Use local web version cache — avoids re-downloading WhatsApp Web
-      // on every restart while still working with Render's ephemeral filesystem
-      webVersionCache: { type: 'local', path: path.join(__dirname, '.wwebjs_cache') },
       userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
       puppeteer: puppeteerOpts,
     });
