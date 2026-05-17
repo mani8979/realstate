@@ -524,7 +524,7 @@ const PropertyDetails = () => {
                   {/* Map View */}
                   <div 
                      ref={mapContainerRef}
-                     className="dragon-repel flex-grow bg-black/5 dark:bg-white/5 rounded-[3rem] border border-black/10 dark:border-white/10 overflow-auto relative shadow-2xl flex items-center justify-center p-4 md:p-10 h-[500px] md:h-[600px] xl:h-[80vh] xl:sticky xl:top-24 custom-scrollbar"
+                     className="dragon-repel flex-grow bg-black/5 dark:bg-white/5 rounded-[3rem] border border-black/10 dark:border-white/10 overflow-hidden relative shadow-2xl flex items-center justify-center p-4 md:p-10 h-[500px] md:h-[600px] xl:h-[80vh] xl:sticky xl:top-24 custom-scrollbar"
                   >
                      {property.layoutImage ? (
                        <div className="relative w-full h-full flex items-center justify-center">
@@ -537,14 +537,13 @@ const PropertyDetails = () => {
                             <Maximize size={20} />
                           </button>
                           
-                          <div className="relative group/map min-w-full min-h-full flex items-center justify-center">
+                          <div className="relative group/map inline-block max-w-full max-h-full">
                             <Image 
                               src={property.layoutImage} 
                               alt="Plot Layout" 
                               width={4000} 
                               height={3000} 
-                              className="w-auto h-auto max-w-none max-h-none object-contain rounded-2xl"
-                              style={{ minWidth: '100%', minHeight: '100%' }}
+                              className="w-auto h-auto max-w-full max-h-[40vh] md:max-h-[50vh] xl:max-h-[68vh] object-contain rounded-2xl block"
                             />
                             <svg 
                               className="absolute inset-0 w-full h-full pointer-events-none" 
