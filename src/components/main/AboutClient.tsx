@@ -14,7 +14,7 @@ const AboutClient = ({ content }: { content: any }) => {
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-5xl md:text-7xl font-black text-black dark:text-white mb-6 uppercase tracking-tighter"
+            className="text-4xl md:text-7xl font-black text-black dark:text-white mb-6 uppercase tracking-tighter break-words"
           >
             About <span className="text-primary">{content.logoTitle || 'Star Land'}</span>
           </motion.h1>
@@ -60,14 +60,14 @@ const AboutClient = ({ content }: { content: any }) => {
                 delay: i * 0.1, 
                 ease: [0.21, 1.11, 0.81, 0.99] 
               }}
-              className="bg-black/5 dark:bg-white/5 p-10 rounded-[2.5rem] border border-black/10 dark:border-white/10 flex flex-col items-center text-center group hover:border-primary transition-all"
+              className="bg-black/5 dark:bg-white/5 p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border border-black/10 dark:border-white/10 flex flex-col items-center text-center group hover:border-primary transition-all w-full overflow-hidden"
             >
               <div className="bg-primary/10 text-primary p-4 rounded-2xl mb-6 group-hover:bg-primary group-hover:text-black dark:text-white transition-all">
                 <stat.icon size={32} />
               </div>
-              <h3 className="text-3xl font-black text-black dark:text-white mb-4 uppercase tracking-tighter">{stat.value}</h3>
-              <p className="text-primary font-bold uppercase tracking-widest text-[10px] mb-4">{stat.label}</p>
-              <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{stat.description}</p>
+              <h3 className="text-xl md:text-3xl font-black text-black dark:text-white mb-4 uppercase tracking-tighter break-words w-full">{stat.value}</h3>
+              <p className="text-primary font-bold uppercase tracking-widest text-[8px] md:text-[10px] mb-4 break-words w-full">{stat.label}</p>
+              <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm leading-relaxed break-words">{stat.description}</p>
             </motion.div>
           ))}
         </div>

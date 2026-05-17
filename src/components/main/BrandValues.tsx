@@ -125,11 +125,11 @@ const BrandValues = ({ content: propContent }: { content?: any }) => {
                     </div>
                     
                     <div>
-                      <h4 className="text-sm md:text-3xl font-black text-white group-hover:text-slate-900 mb-3 md:mb-6 uppercase tracking-tighter leading-tight transition-colors">
+                      <h4 className="text-xs sm:text-sm md:text-3xl font-black text-white group-hover:text-slate-900 mb-3 md:mb-6 uppercase tracking-tighter leading-tight transition-colors break-words w-full">
                         {item.title}
                       </h4>
                       
-                      <p className="text-[10px] md:text-base text-white/60 group-hover:text-slate-600 leading-snug md:leading-relaxed font-medium transition-colors">
+                      <p className="text-[10px] md:text-base text-white/60 group-hover:text-slate-600 leading-snug md:leading-relaxed font-medium transition-colors break-words">
                         {item.desc}
                       </p>
                     </div>

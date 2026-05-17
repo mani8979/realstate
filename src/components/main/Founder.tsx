@@ -82,14 +82,14 @@ const Founder: React.FC<FounderProps> = ({
             viewport={{ once: true }}
             className="lg:col-span-7 space-y-10 md:space-y-12"
           >
-            <div className="space-y-6">
+             <div className="space-y-6">
               <div className="flex flex-col gap-3">
                 <span className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary w-fit">
                    <Target size={14} className="animate-pulse" />
                    <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em]">Leadership Profile</span>
                 </span>
               </div>
-              <h3 className="text-4xl md:text-7xl font-black text-black dark:text-white uppercase tracking-tighter leading-[1.1] md:leading-[0.95]">
+              <h3 className="text-3xl sm:text-4xl md:text-7xl font-black text-black dark:text-white uppercase tracking-tighter leading-[1.1] md:leading-[0.95] break-words">
                 The {isMain ? "Founder's" : "Co-Founder's"} <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-900 dark:from-white via-primary to-amber-400 drop-shadow-sm">Vision</span>
               </h3>
@@ -97,30 +97,30 @@ const Founder: React.FC<FounderProps> = ({
 
             <div className="relative">
               <Quote size={48} className="md:size-16 absolute -top-6 -left-6 md:-top-8 md:-left-8 text-primary/10" />
-              <p className="text-xl md:text-3xl text-gray-900 dark:text-gray-100 font-medium leading-relaxed italic relative z-10 pl-8 md:pl-10 border-l-4 border-primary/50 py-2">
+              <p className="text-lg sm:text-xl md:text-3xl text-gray-900 dark:text-gray-100 font-medium leading-relaxed italic relative z-10 pl-6 md:pl-10 border-l-4 border-primary/50 py-2 break-words">
                 "{vision || "Our vision is to provide trusted, legally verified, and value-driven real estate opportunities while building long-term relationships through transparency and commitment."}"
               </p>
             </div>
 
-            <div className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] space-y-6 backdrop-blur-sm">
+            <div className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] space-y-6 backdrop-blur-sm">
               <h4 className="text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-primary">Executive Summary</h4>
-              <p className="text-gray-700 dark:text-gray-300 text-base md:text-lg leading-relaxed font-medium italic">
+              <p className="text-sm md:text-lg leading-relaxed font-medium italic text-gray-700 dark:text-gray-300 break-words">
                 {bio}
               </p>
             </div>
 
-            <div className="grid grid-cols-3 gap-4 md:gap-16 pt-8 border-t border-black/10 dark:border-white/10 text-center md:text-left">
+            <div className="grid grid-cols-3 gap-2 md:gap-16 pt-8 border-t border-black/10 dark:border-white/10 text-center md:text-left">
               <div className="space-y-2">
-                <p className="text-3xl md:text-5xl font-black text-black dark:text-white">{experienceYears}</p>
-                <p className="text-[8px] md:text-[10px] font-black uppercase text-primary tracking-[0.2em] md:tracking-[0.3em]">Trust</p>
+                <p className="text-2xl md:text-5xl font-black text-black dark:text-white">{experienceYears}</p>
+                <p className="text-[7px] md:text-[10px] font-black uppercase text-primary tracking-[0.1em] md:tracking-[0.3em] break-words w-full">Trust</p>
               </div>
               <div className="space-y-2">
-                <p className="text-3xl md:text-5xl font-black text-black dark:text-white">100%</p>
-                <p className="text-[8px] md:text-[10px] font-black uppercase text-primary tracking-[0.2em] md:tracking-[0.3em]">Honesty</p>
+                <p className="text-2xl md:text-5xl font-black text-black dark:text-white">100%</p>
+                <p className="text-[7px] md:text-[10px] font-black uppercase text-primary tracking-[0.1em] md:tracking-[0.3em] break-words w-full">Honesty</p>
               </div>
               <div className="space-y-2">
-                <p className="text-3xl md:text-5xl font-black text-black dark:text-white">Full</p>
-                <p className="text-[8px] md:text-[10px] font-black uppercase text-primary tracking-[0.2em] md:tracking-[0.3em]">Value</p>
+                <p className="text-2xl md:text-5xl font-black text-black dark:text-white">Full</p>
+                <p className="text-[7px] md:text-[10px] font-black uppercase text-primary tracking-[0.1em] md:tracking-[0.3em] break-words w-full">Value</p>
               </div>
             </div>
           </motion.div>
