@@ -94,7 +94,7 @@ const BrandValues = ({ content: propContent }: { content?: any }) => {
         </div>
 
         {/* Emerald Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
           {values.map((item, i) => (
             <motion.div 
               key={i}
@@ -104,7 +104,7 @@ const BrandValues = ({ content: propContent }: { content?: any }) => {
               transition={{ duration: 0.8, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
               className="group"
             >
-              <div className="h-full p-8 md:p-10 rounded-[3rem] bg-white/5 border border-white/10 backdrop-blur-lg transition-all duration-700 hover:bg-white hover:border-white hover:-translate-y-4 overflow-hidden relative flex flex-col justify-between min-h-[500px]">
+              <div className="h-full p-4 md:p-10 rounded-[2rem] md:rounded-[3rem] bg-white/5 border border-white/10 backdrop-blur-lg transition-all duration-700 hover:bg-white hover:border-white hover:-translate-y-4 overflow-hidden relative flex flex-col justify-between min-h-[290px] md:min-h-[500px]">
                 {/* Image Background */}
                 {item.image && (
                   <div className="absolute inset-0 z-0 opacity-20 group-hover:opacity-40 transition-opacity">
@@ -114,27 +114,29 @@ const BrandValues = ({ content: propContent }: { content?: any }) => {
                 )}
 
                 {/* Massive background number */}
-                <div className="absolute -bottom-4 -right-4 md:-bottom-8 md:-right-8 text-6xl md:text-[10rem] font-black text-white/[0.03] group-hover:text-primary/10 transition-colors pointer-events-none">
+                <div className="absolute -bottom-4 -right-4 md:-bottom-8 md:-right-8 text-5xl md:text-[10rem] font-black text-white/[0.03] group-hover:text-primary/10 transition-colors pointer-events-none">
                   {i + 1}
                 </div>
 
-                <div className="relative z-10 h-full flex flex-col">
-                  <div className="w-14 h-14 md:w-16 md:h-16 bg-[#10b981] group-hover:bg-primary text-white rounded-2xl flex items-center justify-center mb-8 shadow-2xl transition-all duration-500 group-hover:rotate-[360deg]">
-                    <Sparkles size={28} />
-                  </div>
-                  
-                  <div className="flex-grow">
-                    <h4 className="text-2xl md:text-3xl font-black text-white group-hover:text-slate-900 mb-6 uppercase tracking-tighter leading-tight transition-colors">
-                      {item.title}
-                    </h4>
+                <div className="relative z-10 h-full flex flex-col justify-between">
+                  <div>
+                    <div className="w-9 h-9 md:w-16 md:h-16 bg-[#10b981] group-hover:bg-primary text-white rounded-xl md:rounded-2xl flex items-center justify-center mb-4 md:mb-8 shadow-2xl transition-all duration-500 group-hover:rotate-[360deg]">
+                      <Sparkles className="size-[18px] md:size-[28px]" />
+                    </div>
                     
-                    <p className="text-white/60 group-hover:text-slate-600 leading-relaxed font-medium text-sm md:text-base transition-colors">
-                      {item.desc}
-                    </p>
+                    <div>
+                      <h4 className="text-sm md:text-3xl font-black text-white group-hover:text-slate-900 mb-3 md:mb-6 uppercase tracking-tighter leading-tight transition-colors">
+                        {item.title}
+                      </h4>
+                      
+                      <p className="text-[10px] md:text-base text-white/60 group-hover:text-slate-600 leading-snug md:leading-relaxed font-medium transition-colors">
+                        {item.desc}
+                      </p>
+                    </div>
                   </div>
                   
-                  <div className="mt-10 inline-flex items-center gap-3 text-[#10b981] font-black uppercase tracking-[0.4em] text-[8px] md:text-[10px] py-3 px-5 bg-white/5 rounded-full group-hover:bg-primary/10 transition-colors w-fit">
-                    <div className="w-2 h-2 rounded-full bg-[#10b981]" />
+                  <div className="mt-4 md:mt-10 inline-flex items-center gap-1.5 md:gap-3 text-[#10b981] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-[7px] md:text-[10px] py-1.5 px-3 md:py-3 md:px-5 bg-white/5 rounded-full group-hover:bg-primary/10 transition-colors w-fit shrink-0">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#10b981]" />
                     {item.sideHeading}
                   </div>
                 </div>

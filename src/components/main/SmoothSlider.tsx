@@ -266,13 +266,13 @@ const SmoothSlider = ({ lands }: SmoothSliderProps) => {
       <div className="absolute right-10 bottom-10 z-[100] flex gap-4">
         <button 
           onClick={prevSlide}
-          className="w-14 h-14 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center text-black dark:text-white hover:bg-white hover:text-black transition-all group backdrop-blur-md"
+          className="w-14 h-14 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center text-black dark:text-white md:hover:bg-white md:hover:text-black transition-all group backdrop-blur-md"
         >
           <ChevronLeft size={24} className="group-hover:-translate-x-1 transition-transform" />
         </button>
         <button 
           onClick={nextSlide}
-          className="w-14 h-14 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center text-black dark:text-white hover:bg-white hover:text-black transition-all group backdrop-blur-md"
+          className="w-14 h-14 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center text-black dark:text-white md:hover:bg-white md:hover:text-black transition-all group backdrop-blur-md"
         >
           <ChevronRight size={24} className="group-hover:translate-x-1 transition-transform" />
         </button>
