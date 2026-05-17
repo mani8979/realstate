@@ -168,7 +168,9 @@ async function setupClient() {
     '--no-default-browser-check',
     '--safebrowsing-disable-auto-update',
     '--disable-blink-features=AutomationControlled',
-    '--js-flags=--max-old-space-size=96', // cap Chrome V8 heap at 96 MB
+    // NOTE: do NOT add --js-flags=--max-old-space-size here!
+    // WhatsApp Web needs 200-300MB of V8 heap — any hard cap below that
+    // causes the renderer to crash exactly when all JS modules load (~30s after QR).
   ];
 
   const puppeteerOpts = {
@@ -181,6 +183,9 @@ async function setupClient() {
   try {
     client = new Client({
       authStrategy: new LocalAuth({ dataPath: path.join(__dirname, '.wwebjs_auth') }),
+      // Use local web version cache — avoids re-downloading WhatsApp Web
+      // on every restart while still working with Render's ephemeral filesystem
+      webVersionCache: { type: 'local', path: path.join(__dirname, '.wwebjs_cache') },
       puppeteer: puppeteerOpts,
     });
   } catch (e) {
