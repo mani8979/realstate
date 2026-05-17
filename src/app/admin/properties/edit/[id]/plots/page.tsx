@@ -491,10 +491,9 @@ const AdminPlotManagement = () => {
                          : 'Select a plot below to position it on the map'}
                     </p>
                  </div>
-                 
-                 <div 
+                              <div 
                     ref={mapContainerRef}
-                    className="dragon-repel relative flex-grow bg-black flex items-center justify-center overflow-auto p-4 cursor-crosshair group/map-canvas custom-scrollbar"
+                    className="dragon-repel relative flex-grow bg-black flex overflow-auto p-4 cursor-crosshair group/map-canvas custom-scrollbar"
                     onWheel={handleWheel}
                     onClick={handleMapClick}
                   >
@@ -507,13 +506,13 @@ const AdminPlotManagement = () => {
                     </button>
 
                     <div 
-                      className="relative transition-transform duration-200 ease-out inline-block"
+                      className="m-auto relative transition-transform duration-200 ease-out inline-block origin-center"
                       style={{ transform: `scale(${zoom})` }}
                     >
                       <img 
                         src={property.layoutImage} 
                         alt="Layout" 
-                        className="max-w-full max-h-[70vh] object-contain rounded-xl select-none"
+                        className="w-auto h-auto max-w-full max-h-[60vh] md:max-h-[70vh] object-contain rounded-xl select-none"
                       />
                       
                       {/* Plot Markers Removed as requested */}
@@ -627,19 +626,19 @@ const AdminPlotManagement = () => {
                <X size={32} className="group-hover:rotate-90 transition-transform duration-300" />
              </button>
 
-             <div className="w-full h-full relative flex items-center justify-center overflow-auto custom-scrollbar" onClick={() => setIsFullscreenMap(false)}>
+              <div className="w-full h-full relative flex overflow-auto custom-scrollbar" onClick={() => setIsFullscreenMap(false)}>
                 <div 
-                  className="relative transition-transform duration-200"
+                  className="m-auto relative transition-transform duration-200 ease-out origin-center"
                   style={{ transform: `scale(${zoom * 1.5})` }}
                   onClick={(e) => e.stopPropagation()}
                 >
                   <img 
                     src={property.layoutImage} 
                     alt="Layout Expanded" 
-                    className="max-w-full max-h-[85vh] object-contain rounded-3xl shadow-2xl"
+                    className="w-auto h-auto max-w-[90vw] max-h-[85vh] object-contain rounded-3xl shadow-2xl block"
                   />
                 </div>
-             </div>
+              </div>
           </motion.div>
         )}
       </AnimatePresence>
