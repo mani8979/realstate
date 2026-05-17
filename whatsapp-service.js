@@ -36,7 +36,8 @@ async function setupClient() {
       '--disable-gpu',
       '--disable-backgrounding-occluded-windows',
       '--disable-renderer-backgrounding',
-      '--disable-blink-features=AutomationControlled'
+      '--disable-blink-features=AutomationControlled',
+      '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
     ]
   };
 
@@ -46,9 +47,16 @@ async function setupClient() {
       console.log('[WhatsApp Service] Production environment detected. Initializing @sparticuz/chromium...');
       const chromium = require('@sparticuz/chromium');
       puppeteerOptions.executablePath = await chromium.executablePath();
-      puppeteerOptions.args = chromium.args;
+      
+      // Merge sparticuz/chromium arguments with our critical bot evasion flags
+      const extraArgs = [
+        ...chromium.args,
+        '--disable-blink-features=AutomationControlled',
+        '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
+      ];
+      puppeteerOptions.args = Array.from(new Set(extraArgs));
       puppeteerOptions.headless = chromium.headless;
-      console.log('[WhatsApp Service] Statically linked Chromium configured successfully.');
+      console.log('[WhatsApp Service] Statically linked Chromium configured with merged bot-evasion flags.');
     } catch (err) {
       console.warn('[WhatsApp Service] Could not load @sparticuz/chromium, using standard Puppeteer defaults:', err.message);
     }
@@ -58,7 +66,10 @@ async function setupClient() {
     authStrategy: new LocalAuth({
       dataPath: path.join(__dirname, '.wwebjs_auth')
     }),
-    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    webVersionCache: {
+      type: 'none' // Always fetch the absolute latest, live version directly from WhatsApp to bypass local cache version conflicts
+    },
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
     puppeteer: puppeteerOptions
   });
 

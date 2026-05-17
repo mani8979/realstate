@@ -292,6 +292,15 @@ const AdminWhatsApp = () => {
               <span className="h-1.5 w-1.5 bg-amber-500 rounded-full inline-block" />
               STATUS: {statusData.status}
             </div>
+
+            <button
+              onClick={handleLogout}
+              disabled={actionLoading}
+              className="w-full flex items-center justify-center gap-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-bold px-4 py-2.5 rounded-xl transition-all text-xs active:scale-[0.98] disabled:opacity-50"
+            >
+              {actionLoading ? <Loader2 size={12} className="animate-spin" /> : <RefreshCw size={12} />}
+              Reset Session & New QR
+            </button>
           </div>
         </div>
       )}
