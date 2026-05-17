@@ -78,7 +78,7 @@ const nextProcess = spawn(
     '-p', String(port),
   ],
   {
-    stdio: 'inherit',
+    stdio: 'pipe',
     shell: false,
     env: {
       ...process.env,
@@ -86,6 +86,22 @@ const nextProcess = spawn(
     },
   }
 );
+
+// Pipe and log stdout from the child Next.js process
+nextProcess.stdout.on('data', (data) => {
+  process.stdout.write(data);
+  try {
+    fs.appendFileSync(logPath, data);
+  } catch (_) {}
+});
+
+// Pipe and log stderr from the child Next.js process
+nextProcess.stderr.on('data', (data) => {
+  process.stderr.write(data);
+  try {
+    fs.appendFileSync(logPath, data);
+  } catch (_) {}
+});
 
 nextProcess.on('error', (err) => {
   console.error('[Orchestrator] Next.js spawn error:', err.message);
