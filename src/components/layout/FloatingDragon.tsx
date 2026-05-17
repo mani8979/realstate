@@ -6,7 +6,7 @@ import {
   useMotionValue, useSpring,
   useMotionValueEvent, useScroll,
 } from 'framer-motion';
-import { Leaf, X } from 'lucide-react';
+import { Leaf, X, ArrowRight } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 const ModelViewer = 'model-viewer' as any;
@@ -224,62 +224,62 @@ const FloatingDragon = () => {
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-10 bg-white/90 dark:bg-black/95 backdrop-blur-3xl"
           onClick={() => setShowPopup(false)}>
           <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-            className="relative w-full max-w-6xl bg-[#0a0a0a] border-2 border-primary/30 rounded-[3rem] overflow-hidden flex flex-col md:flex-row shadow-[0_0_100px_rgba(16,185,129,0.2)] h-auto md:h-[85vh] max-h-[95vh]"
+            className="relative w-full max-w-6xl bg-[#0a0a0a] border-2 border-primary/30 rounded-[2.5rem] md:rounded-[3rem] overflow-hidden flex flex-col md:flex-row shadow-[0_0_100px_rgba(16,185,129,0.2)] h-[90vh] md:h-[85vh] max-h-[95vh]"
             onClick={e => e.stopPropagation()}>
             <button onClick={() => setShowPopup(false)}
-              className="absolute top-8 right-8 z-[210] bg-white/10 hover:bg-red-500 text-white p-3 rounded-full transition-all">
-              <X size={24} />
+              className="absolute top-4 right-4 md:top-8 md:right-8 z-[210] bg-white/10 hover:bg-red-500 text-white p-2.5 md:p-3 rounded-full transition-all">
+              <X size={20} className="md:size-[24px]" />
             </button>
 
-            <div data-lenis-prevent className="w-full md:w-1/2 p-8 md:p-16 overflow-y-auto custom-scrollbar flex flex-col text-left">
-              <div className="bg-primary/20 p-5 rounded-2xl mb-10 border border-primary/20 w-fit">
-                <Leaf className="text-primary" size={40} />
+            <div data-lenis-prevent className="w-full md:w-1/2 p-6 md:p-16 overflow-y-auto custom-scrollbar flex flex-col text-left h-[55%] md:h-full shrink-0">
+              <div className="bg-primary/20 p-3.5 md:p-5 rounded-2xl mb-6 md:mb-10 border border-primary/20 w-fit">
+                <Leaf className="text-primary size-6 md:size-10" />
               </div>
-              <h3 className="text-4xl md:text-6xl font-black text-primary uppercase tracking-tighter mb-8 leading-none">
+              <h3 className="text-3xl md:text-6xl font-black text-primary uppercase tracking-tighter mb-4 md:mb-8 leading-none">
                 {currentProperty?.title?.toLowerCase().includes('sandalwood') ? 'Plantation' : 'Cultivation'}
                 <br /><span className="text-white">Model</span>
               </h3>
-              <div className="space-y-10 text-gray-300">
+              <div className="space-y-6 md:space-y-10 text-gray-300">
                 {currentProperty?.fruitDetails?.length > 0 ? (
-                  <div className="space-y-12">
+                  <div className="space-y-6 md:space-y-12">
                     {currentProperty.fruitDetails.map((d: any, i: number) => (
-                      <div key={i} className="space-y-6">
-                        <div className="flex items-center gap-4">
-                          {d.showArrow && <span className="text-primary font-bold text-2xl">→</span>}
-                          <p className="text-primary font-black uppercase tracking-[0.2em] text-sm">{d.heading}</p>
+                      <div key={i} className="space-y-4 md:space-y-6">
+                        <div className="flex items-center gap-3 md:gap-4">
+                          {d.showArrow && <ArrowRight className="text-primary shrink-0" size={18} />}
+                          <p className="text-primary font-black uppercase tracking-[0.2em] text-xs md:text-sm">{d.heading}</p>
                         </div>
                         {d.isPointed ? (
-                          <ul className="grid gap-4">{d.content.split('\n').filter((l: string) => l.trim()).map((line: string, j: number) => (
-                            <li key={j} className="flex gap-4 items-start bg-white/5 p-5 rounded-2xl border border-white/5 hover:border-primary/30 transition-all">
-                              <div className="w-2 h-2 rounded-full bg-primary mt-2.5 shrink-0" />
-                              <span className="text-lg font-medium text-gray-200">{line.trim()}</span>
+                          <ul className="grid gap-3 md:gap-4">{d.content.split('\n').filter((l: string) => l.trim()).map((line: string, j: number) => (
+                            <li key={j} className="flex gap-3 md:gap-4 items-start bg-white/5 p-4 md:p-5 rounded-2xl border border-white/5 hover:border-primary/30 transition-all">
+                              <div className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />
+                              <span className="text-sm md:text-lg font-medium text-gray-200">{line.trim()}</span>
                             </li>
                           ))}</ul>
                         ) : (
-                          <p className="text-xl leading-relaxed font-medium bg-white/5 p-6 rounded-2xl border border-white/5 italic whitespace-pre-line">{d.content}</p>
+                          <p className="text-sm md:text-xl leading-relaxed font-medium bg-white/5 p-4 md:p-6 rounded-2xl border border-white/5 italic whitespace-pre-line">{d.content}</p>
                         )}
                       </div>
                     ))}
                   </div>
                 ) : currentProperty?.fruitInfo ? (
-                  <div className="text-xl leading-relaxed whitespace-pre-line">{currentProperty.fruitInfo}</div>
+                  <div className="text-sm md:text-xl leading-relaxed whitespace-pre-line">{currentProperty.fruitInfo}</div>
                 ) : (
                   <>
-                    <p className="text-xl leading-relaxed">Dragon fruit cultivation is a high-demand and profitable farming option with long-term benefits.</p>
-                    <ul className="grid gap-3">{['40 dragon fruit plants','4 plants per pole','10 poles in each 100 sq. yards'].map((item,i)=>(
-                      <li key={i} className="flex gap-3 items-center bg-white/5 p-4 rounded-xl border border-white/5">
-                        <span className="text-primary font-bold">→</span>{item}
+                    <p className="text-sm md:text-xl leading-relaxed">Dragon fruit cultivation is a high-demand and profitable farming option with long-term benefits.</p>
+                    <ul className="grid gap-3.5">{['40 dragon fruit plants','4 plants per pole','10 poles in each 100 sq. yards'].map((item,i)=>(
+                      <li key={i} className="flex gap-3 items-center bg-white/5 p-3.5 rounded-xl border border-white/5 text-sm md:text-base">
+                        <ArrowRight className="text-primary shrink-0" size={14} />{item}
                       </li>
                     ))}</ul>
-                    <div className="p-8 bg-primary/10 rounded-3xl border border-primary/20 space-y-4">
-                      <p className="text-primary font-black uppercase tracking-[0.2em] text-xs text-center">Profit Sharing</p>
-                      <div className="flex items-center justify-center gap-10">
+                    <div className="p-5 md:p-8 bg-primary/10 rounded-3xl border border-primary/20 space-y-4">
+                      <p className="text-primary font-black uppercase tracking-[0.2em] text-[10px] md:text-xs text-center">Profit Sharing</p>
+                      <div className="flex items-center justify-center gap-6 md:gap-10">
                         {[['50%','Company','text-white'],['50%','Client','text-primary']].map(([p,l,c],i)=>(
                           <React.Fragment key={i}>
-                            {i>0&&<div className="h-10 w-px bg-primary/30"/>}
+                            {i>0&&<div className="h-8 md:h-10 w-px bg-primary/30"/>}
                             <div className="text-center">
-                              <p className={`text-4xl font-black ${c}`}>{p}</p>
-                              <p className="text-[10px] uppercase font-bold text-gray-400">{l}</p>
+                              <p className={`text-2xl md:text-4xl font-black ${c}`}>{p}</p>
+                              <p className="text-[9px] md:text-[10px] uppercase font-bold text-gray-400">{l}</p>
                             </div>
                           </React.Fragment>
                         ))}
@@ -289,19 +289,19 @@ const FloatingDragon = () => {
                 )}
               </div>
               <button onClick={() => setShowPopup(false)}
-                className="mt-16 bg-primary text-black font-black uppercase tracking-widest py-6 rounded-2xl hover:bg-white transition-all shadow-2xl shadow-primary/30">
+                className="mt-8 md:mt-16 bg-primary text-black font-black uppercase tracking-widest py-4 md:py-6 rounded-2xl hover:bg-white transition-all shadow-2xl shadow-primary/30 text-xs md:text-sm shrink-0">
                 Close Details
               </button>
             </div>
 
-            <div className="w-full md:w-1/2 h-64 md:h-full bg-black/40 relative border-l border-white/5">
+            <div className="w-full md:w-1/2 h-[45%] md:h-full bg-black/40 relative border-t md:border-t-0 md:border-l border-white/5 flex-grow">
               {currentProperty?.threeDElement ? (
                 <ModelViewer src={currentProperty.threeDElement} auto-rotate camera-controls shadow-intensity="2" exposure="1.2" style={{width:'100%',height:'100%'}}></ModelViewer>
               ) : currentProperty?.fruitImage ? (
                 <img src={currentProperty.fruitImage} alt="Preview" className="w-full h-full object-cover"/>
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
-                  <Leaf size={100} className="opacity-10 text-gray-700"/>
+                  <Leaf size={80} className="opacity-10 text-gray-700"/>
                 </div>
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none"/>

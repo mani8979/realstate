@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { MapPin, Phone, MessageSquare, Send, ArrowLeft, Share2, X, Leaf, Download, Save, Calendar, Search, Maximize } from 'lucide-react';
+import { MapPin, Phone, MessageSquare, Send, ArrowLeft, ArrowRight, Share2, X, Leaf, Download, Save, Calendar, Search, Maximize } from 'lucide-react';
 import Link from 'next/link';
 import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
@@ -463,7 +463,7 @@ const PropertyDetails = () => {
                   }`}>
                     <div className={`flex items-start gap-4 md:gap-5 ${isCenter ? 'justify-center' : 'justify-start'}`}>
                       {detail.showArrow && !isCenter && (
-                        <span className="text-primary font-bold text-xl md:text-2xl w-6 md:w-8 shrink-0 flex justify-center mt-1">→</span>
+                        <ArrowRight size={22} className="text-primary shrink-0 mt-1 md:mt-1.5" />
                       )}
                       <div className="flex-grow">
                         <h2 className="text-2xl md:text-5xl font-black uppercase tracking-tighter text-black dark:text-white leading-tight md:leading-[0.9] mb-6 md:mb-8">
