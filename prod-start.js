@@ -97,24 +97,7 @@ nextProcess.on('close', (code) => {
   process.exit(code || 1);
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 2. Start WhatsApp service IN-PROCESS
-//    We load the service directly in-process after a 5 second delay to let
-//    Next.js fully bind to port 10000 and pass Render's health checks.
-// ─────────────────────────────────────────────────────────────────────────────
-function startInProcessWhatsApp() {
-  console.log('[Orchestrator] Initializing WhatsApp service in-process (Saving Node process RAM)...');
-  try {
-    // Load the express app and whatsapp client inside the current node process
-    require('./whatsapp-service.js');
-    console.log('[Orchestrator] WhatsApp service loaded in-process successfully.');
-  } catch (err) {
-    console.error('[Orchestrator] Error loading WhatsApp service in-process:', err);
-  }
-}
-
-// Start WhatsApp after 90 seconds (gives Next.js ample time to pass Render's initial boot health checks cleanly)
-setTimeout(startInProcessWhatsApp, 90000);
+// WhatsApp service is loaded directly inside Next.js process on startup (see next.config.ts)
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 3. Graceful shutdown

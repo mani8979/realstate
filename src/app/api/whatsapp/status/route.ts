@@ -22,12 +22,12 @@ export async function GET() {
   } catch (error: any) {
     // Check if the container has just booted and the service is in its staggered startup delay
     const uptime = process.uptime();
-    if (uptime < 95) {
-      const remaining = Math.max(0, Math.ceil(95 - uptime));
+    if (uptime < 20) {
+      const remaining = Math.max(0, Math.ceil(20 - uptime));
       return NextResponse.json({
         status: `Initializing WhatsApp service (Staggered boot — ${remaining}s remaining)...`,
         qr: null,
-        error: `Please wait: The background automation engine is warming up cleanly (Uptime: ${Math.round(uptime)}s / 95s).`
+        error: `Please wait: The background automation engine is warming up cleanly (Uptime: ${Math.round(uptime)}s / 20s).`
       });
     }
 
