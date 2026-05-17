@@ -69,21 +69,36 @@ try {
               
               // Inject bypasses BEFORE any scripts run
               await page.evaluateOnNewDocument(() => {
+                const uaStr = navigator.userAgent;
+                const isLinux = uaStr.toLowerCase().includes('linux');
+                
+                // Extract exact Chrome major version to align userAgentData
+                const chromeMatch = uaStr.match(/Chrom(?:ium)?\/([0-9]+)\./);
+                const chromeVersion = chromeMatch ? chromeMatch[1] : '133';
+                
+                const platformVal = isLinux ? 'Linux' : 'Windows';
+                const rendererVal = isLinux 
+                  ? 'ANGLE (Google, SwiftShader Device (Subzero), SwiftShader)' 
+                  : 'ANGLE (Intel, Intel(R) UHD Graphics Direct3D11, D3D11)';
+                const vendorVal = isLinux ? 'Google Inc. (Google)' : 'Google Inc. (Intel)';
+
                 // 1. Hide webdriver property
                 Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
                 
-                // 2. Mock userAgentData (Google Chrome / Windows)
-                Object.defineProperty(navigator, 'userAgentData', {
-                  get: () => ({
-                    brands: [
-                      { brand: 'Not(A:Brand', version: '99' },
-                      { brand: 'Google Chrome', version: '133' },
-                      { brand: 'Chromium', version: '133' }
-                    ],
-                    mobile: false,
-                    platform: 'Windows'
-                  })
-                });
+                // 2. Mock userAgentData to align perfectly with User-Agent OS and Chrome version
+                if (navigator.userAgentData) {
+                  Object.defineProperty(navigator, 'userAgentData', {
+                    get: () => ({
+                      brands: [
+                        { brand: 'Not(A:Brand', version: '99' },
+                        { brand: 'Google Chrome', version: chromeVersion },
+                        { brand: 'Chromium', version: chromeVersion }
+                      ],
+                      mobile: false,
+                      platform: platformVal
+                    })
+                  });
+                }
                 
                 // 3. Populate plugins (mimic real Chrome)
                 const mockPlugins = [
@@ -112,7 +127,7 @@ try {
                   }
                 };
                 
-                // 6. WebGL Vendor & Renderer spoofing
+                // 6. WebGL Vendor & Renderer spoofing (OS aligned)
                 const originalGetContext = HTMLCanvasElement.prototype.getContext;
                 HTMLCanvasElement.prototype.getContext = function (type, attributes) {
                   const context = originalGetContext.apply(this, arguments);
@@ -120,8 +135,8 @@ try {
                     const gl = context;
                     const originalGetParameter = gl.getParameter;
                     gl.getParameter = function (pname) {
-                      if (pname === 37445) return 'Google Inc. (Intel)'; // UNMASKED_VENDOR_WEBGL
-                      if (pname === 37446) return 'ANGLE (Intel, Intel(R) UHD Graphics Direct3D11, D3D11)'; // UNMASKED_RENDERER_WEBGL
+                      if (pname === 37445) return vendorVal; // UNMASKED_VENDOR_WEBGL
+                      if (pname === 37446) return rendererVal; // UNMASKED_RENDERER_WEBGL
                       return originalGetParameter.apply(this, arguments);
                     };
                   }
