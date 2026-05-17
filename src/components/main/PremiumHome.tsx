@@ -302,7 +302,7 @@ const PremiumHome = ({ properties, content }: PremiumHomeProps) => {
 
 
       {/* Footer Reveal Section */}
-      <div ref={footerContainerRef} className="relative z-0 min-h-screen py-24 md:py-0 md:h-screen w-full bg-zinc-50 dark:bg-[#050505] text-black dark:text-white flex flex-col items-center justify-center">
+      <div ref={footerContainerRef} className="relative z-0 min-h-fit py-12 md:py-0 md:min-h-screen md:h-screen w-full bg-zinc-50 dark:bg-[#050505] text-black dark:text-white flex flex-col items-center justify-center">
         <div className="text-center px-6 w-full max-w-6xl">
            <p className="text-[#10b981] uppercase text-[10px] font-black tracking-[0.5em] mb-8">Ready to Invest?</p>
            <h2 className="text-5xl md:text-9xl font-black uppercase tracking-tighter mb-16 md:mb-24">{content?.footerTitle || 'GET IN TOUCH'}</h2>
