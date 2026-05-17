@@ -166,7 +166,7 @@ const WhyChooseUs = ({ content }: { content?: any }) => {
                       }
                     }
                   }}
-                   className={`group flex flex-col gap-4 sm:gap-6 p-4 sm:p-8 rounded-2xl sm:rounded-3xl hover:bg-gray-50 dark:hover:bg-black/5 dark:bg-white/5 transition-all duration-500 border border-transparent hover:border-gray-100 dark:hover:border-black/10 dark:border-white/10 min-w-0 w-full ${index < 2 ? 'col-span-1' : 'col-span-2 sm:col-span-1'}`}
+                   className={`group flex flex-col gap-4 sm:gap-6 p-4 sm:p-8 rounded-2xl sm:rounded-3xl hover:bg-gray-50 dark:hover:bg-black/5 dark:bg-white/5 transition-all duration-500 border border-transparent hover:border-gray-100 dark:hover:border-black/10 dark:border-white/10 min-w-0 w-full col-span-1`}
                 >
                   <div className={`w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:rotate-[15deg] transform ${feature.color}`}>
                     <feature.icon size={24} className="sm:size-32" />
