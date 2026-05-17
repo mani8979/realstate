@@ -15,8 +15,8 @@ try {
 } catch (_) {}
 
 const whatsappPath = path.join(__dirname, 'whatsapp-service.js');
-console.log(`[Startup Orchestrator] Spawning WhatsApp Service: node --max-old-space-size=100 ${whatsappPath}`);
-const whatsapp = spawn('node', ['--max-old-space-size=100', whatsappPath], {
+console.log(`[Startup Orchestrator] Spawning WhatsApp Service: node --max-old-space-size=150 ${whatsappPath}`);
+const whatsapp = spawn('node', ['--max-old-space-size=150', whatsappPath], {
   stdio: ['inherit', 'inherit', 'pipe'], // pipe stderr so we can capture it
   shell: false,
   env: {
