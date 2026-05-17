@@ -37,6 +37,7 @@ const navigation = [
     title: 'Site Settings',
     items: [
       { name: 'Global Branding', href: '/admin/branding', icon: Layout },
+      { name: 'Get In Touch', href: '/admin/get-in-touch', icon: Phone },
       { name: 'Header Settings', href: '/admin/navigation', icon: Menu },
       { name: 'Footer & Location', href: '/admin/footer', icon: MapPin },
       { name: 'Property Categories', href: '/admin/categories', icon: List },
