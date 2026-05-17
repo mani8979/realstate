@@ -9,11 +9,7 @@ console.log(`[Startup Orchestrator] Spawning WhatsApp Service: node ${whatsappPa
 const whatsapp = spawn('node', [whatsappPath], {
   stdio: 'inherit',
   shell: true,
-  env: {
-    ...process.env,
-    // Ensure cache directory is synchronized inside the runtime container
-    PUPPETEER_CACHE_DIR: process.env.PUPPETEER_CACHE_DIR || path.join(__dirname, '.cache', 'puppeteer')
-  }
+  env: process.env
 });
 
 // 2. Start Next.js production server
