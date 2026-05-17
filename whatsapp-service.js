@@ -355,6 +355,22 @@ app.post('/api/pair', async (req, res) => {
   }
 });
 
+app.get('/api/screenshot', async (req, res) => {
+  if (!client || !client.pupPage) {
+    return res.status(503).json({ success: false, message: 'Browser page is not available' });
+  }
+
+  try {
+    console.log('[WA] Capturing debug screenshot of the browser page...');
+    const screenshotBuffer = await client.pupPage.screenshot({ type: 'png' });
+    res.setHeader('Content-Type', 'image/png');
+    return res.send(screenshotBuffer);
+  } catch (e) {
+    console.error('[WA] Screenshot capture failed:', e.message);
+    return res.status(500).json({ success: false, message: e.message });
+  }
+});
+
 app.post('/api/send', async (req, res) => {
   const { number, message } = req.body;
   if (!number || !message)
@@ -536,6 +552,11 @@ async function setupClient() {
     }
   }
 
+  const isWin = process.platform === 'win32';
+  const customUserAgent = isWin
+    ? 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+    : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
+
   const puppeteerOpts = {
     headless: true,
     args: customArgs,
@@ -547,6 +568,7 @@ async function setupClient() {
     client = new Client({
       authStrategy: new LocalAuth({ dataPath: path.join(__dirname, '.wwebjs_auth') }),
       puppeteer: puppeteerOpts,
+      userAgent: customUserAgent,
     });
   } catch (e) {
     console.error('[WA] new Client() failed:', e.message);

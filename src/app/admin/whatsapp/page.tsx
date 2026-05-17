@@ -20,6 +20,18 @@ const AdminWhatsApp = () => {
   const [pairingLoading, setPairingLoading] = useState(false);
   const [pairingError, setPairingError] = useState('');
 
+  // Live screenshot debugging states
+  const [screenshotUrl, setScreenshotUrl] = useState<string | null>(null);
+  const [screenshotLoading, setScreenshotLoading] = useState(false);
+
+  const handleCaptureScreenshot = () => {
+    setScreenshotLoading(true);
+    // Force browser cache busting
+    setScreenshotUrl(`/api/whatsapp/screenshot?t=${Date.now()}`);
+    setTimeout(() => setScreenshotLoading(false), 800);
+  };
+
+
   const fetchStatus = async (showLoading = false) => {
     if (showLoading) setLoading(true);
     try {
@@ -479,13 +491,80 @@ const AdminWhatsApp = () => {
                 STATUS: {statusData.status}
               </div>
 
-              <button
-                onClick={handleLogout}
-                disabled={actionLoading}
-                className="w-full flex items-center justify-center gap-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-bold px-4 py-2.5 rounded-xl transition-all text-xs active:scale-[0.98] disabled:opacity-50"
+              <div className="w-full pt-2 border-t border-dashed border-gray-200 dark:border-gray-800/80 flex flex-col gap-2">
+                <button
+                  onClick={handleLogout}
+                  disabled={actionLoading}
+                  className="w-full flex items-center justify-center gap-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-bold px-4 py-2.5 rounded-xl transition-all text-xs active:scale-[0.98] disabled:opacity-50"
+                >
+                  {actionLoading ? <Loader2 size={12} className="animate-spin" /> : <RefreshCw size={12} />}
+                  Reset Session & Clean QR
+                </button>
+
+                <button
+                  onClick={handleCaptureScreenshot}
+                  disabled={screenshotLoading || actionLoading}
+                  className="w-full flex items-center justify-center gap-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 font-bold px-4 py-2.5 rounded-xl transition-all text-xs active:scale-[0.98]"
+                >
+                  {screenshotLoading ? <Loader2 size={12} className="animate-spin" /> : <Smartphone size={12} />}
+                  Stuck? Capture Live Browser Screen
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Floating live screenshot debugging modal */}
+      {screenshotUrl && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 md:p-8 animate-[fadeIn_0.3s_ease-out]">
+          <div className="bg-white dark:bg-gray-900 rounded-[2.5rem] border border-gray-150 dark:border-gray-800 shadow-2xl overflow-hidden max-w-4xl w-full flex flex-col">
+            <div className="px-8 py-5 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gray-50 dark:bg-gray-950/50">
+              <div>
+                <h3 className="font-black text-gray-900 dark:text-white flex items-center gap-2 text-sm uppercase tracking-wider">
+                  <Smartphone className="text-indigo-500" size={16} />
+                  Container Browser Screen (Live Debug)
+                </h3>
+                <p className="text-[10px] text-gray-400">Captured in real-time from the cloud container running on Render.</p>
+              </div>
+              <button 
+                onClick={() => setScreenshotUrl(null)}
+                className="px-4 py-2 text-xs font-bold bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl transition-all"
               >
-                {actionLoading ? <Loader2 size={12} className="animate-spin" /> : <RefreshCw size={12} />}
-                Reset Session & Clean QR
+                Close View
+              </button>
+            </div>
+            
+            <div className="p-6 bg-gray-100 dark:bg-gray-950 flex justify-center items-center overflow-auto min-h-[300px] max-h-[60vh]">
+              {screenshotLoading ? (
+                <div className="flex flex-col items-center justify-center space-y-3 py-12">
+                  <Loader2 size={36} className="animate-spin text-indigo-500" />
+                  <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Capturing live feed...</p>
+                </div>
+              ) : (
+                <img 
+                  src={screenshotUrl} 
+                  alt="WhatsApp Browser Debug Screen" 
+                  className="rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg object-contain max-w-full"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='100%25' height='100%25' fill='%23fee2e2'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='14' font-weight='bold' fill='%23ef4444'%3EBROWSER STANDBY / BOOTING (TRY AGAIN IN 5s)%3C/text%3E%3C/svg%3E";
+                  }}
+                />
+              )}
+            </div>
+            
+            <div className="px-8 py-5 bg-gray-50 dark:bg-gray-950/50 border-t border-gray-100 dark:border-gray-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <span className="text-[10px] text-gray-400 leading-relaxed max-w-md">
+                <b>Stealth Status:</b> Fully dynamic Chrome Major Version 146 spoofing and WebGL software SwiftShader bypass is active.
+              </span>
+              <button 
+                onClick={handleCaptureScreenshot}
+                disabled={screenshotLoading}
+                className="flex items-center gap-2 px-5 py-2.5 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-xl shadow-md transition-all text-xs active:scale-[0.98]"
+              >
+                <RefreshCw size={14} className={screenshotLoading ? 'animate-spin' : ''} />
+                Refresh Screen
               </button>
             </div>
           </div>
