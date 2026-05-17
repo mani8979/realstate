@@ -30,11 +30,22 @@ process.on('unhandledRejection', (reason, promise) => {
 const logPath = path.join(__dirname, 'whatsapp_error.log');
 try { if (fs.existsSync(logPath)) fs.unlinkSync(logPath); } catch (_) {}
 
-// ── Redirect stderr to whatsapp_error.log for status page visibility ──────────
-const originalWrite = process.stderr.write;
-process.stderr.write = function (chunk, encoding, callback) {
+// ── Redirect stdout & stderr to whatsapp_error.log for status page visibility ──
+const originalStdoutWrite = process.stdout.write;
+const originalStderrWrite = process.stderr.write;
+
+function appendToLog(chunk) {
   try { fs.appendFileSync(logPath, chunk); } catch (_) {}
-  return originalWrite.apply(process.stderr, arguments);
+}
+
+process.stdout.write = function (chunk, encoding, callback) {
+  appendToLog(chunk);
+  return originalStdoutWrite.apply(process.stdout, arguments);
+};
+
+process.stderr.write = function (chunk, encoding, callback) {
+  appendToLog(chunk);
+  return originalStderrWrite.apply(process.stderr, arguments);
 };
 
 // ── Shared Puppeteer cache path (must match Dockerfile ENV) ───────────────────
