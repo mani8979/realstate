@@ -1,6 +1,7 @@
 const { spawn } = require('child_process');
 const path = require('path');
 
+const isWin = process.platform === 'win32';
 console.log('[Startup Orchestrator] Starting background services...');
 
 // 1. Start WhatsApp background service
@@ -8,7 +9,7 @@ const whatsappPath = path.join(__dirname, 'whatsapp-service.js');
 console.log(`[Startup Orchestrator] Spawning WhatsApp Service: node ${whatsappPath}`);
 const whatsapp = spawn('node', [whatsappPath], {
   stdio: 'inherit',
-  shell: true,
+  shell: isWin,
   env: {
     ...process.env,
     PUPPETEER_CACHE_DIR: path.join(__dirname, '.cache', 'puppeteer')
@@ -20,7 +21,7 @@ const port = process.env.PORT || 10000;
 console.log(`[Startup Orchestrator] Spawning Next.js Server: npx next start -H 0.0.0.0 -p ${port}`);
 const next = spawn('npx', ['next', 'start', '-H', '0.0.0.0', '-p', port.toString()], {
   stdio: 'inherit',
-  shell: true,
+  shell: isWin,
   env: process.env
 });
 
