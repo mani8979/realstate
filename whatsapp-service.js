@@ -88,10 +88,6 @@ async function setupClient() {
       '--no-first-run',
       '--no-zygote',
       '--disable-gpu',
-      '--disable-features=site-per-process', // Reduces multi-process memory footprint without lockups
-      '--disable-site-isolation-trials',     // Disables process isolation trials
-      '--disable-extensions',                 // Disables browser extensions to save memory
-      '--disable-default-apps',              // Disables default apps
       '--disable-backgrounding-occluded-windows',
       '--disable-renderer-backgrounding',
       '--disable-blink-features=AutomationControlled',
@@ -133,10 +129,6 @@ async function setupClient() {
         executablePath: await chromium.executablePath(),
         args: [
           ...chromium.args,
-          '--disable-features=site-per-process',
-          '--disable-site-isolation-trials',
-          '--disable-extensions',
-          '--disable-default-apps',
           '--disable-blink-features=AutomationControlled',
           '--js-flags=--max-old-space-size=150',
           '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
