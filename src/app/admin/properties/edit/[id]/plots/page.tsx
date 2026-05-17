@@ -638,8 +638,8 @@ const AdminPlotManagement = () => {
                     src={property.layoutImage} 
                     alt="Layout Expanded" 
                     style={{ 
-                      maxWidth: `${zoom * 1.5 * 90}vw`,
-                      maxHeight: `${zoom * 1.5 * 85}vh`
+                      maxWidth: `${zoom * 90}vw`,
+                      maxHeight: `${zoom * 82}vh`
                     }}
                     className="w-auto h-auto object-contain rounded-3xl shadow-2xl block transition-all duration-200 ease-out"
                   />
