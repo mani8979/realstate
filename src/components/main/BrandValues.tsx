@@ -106,7 +106,7 @@ const BrandValues = ({ content: propContent }: { content?: any }) => {
             >
               <div className="h-full p-4 md:p-10 rounded-[2rem] md:rounded-[3rem] bg-white/5 border border-white/10 backdrop-blur-lg transition-all duration-700 hover:bg-white hover:border-white hover:-translate-y-4 overflow-hidden relative flex flex-col justify-between min-h-[290px] md:min-h-[500px] min-w-0 w-full">
                 {/* Image Background */}
-                {item.image && (
+                {item.image && !item.title?.toLowerCase().includes('verified') && (
                   <div className="absolute inset-0 z-0 opacity-20 group-hover:opacity-40 transition-opacity">
                     <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-b from-[#064e3b] via-transparent to-[#064e3b]" />
