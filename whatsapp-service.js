@@ -130,6 +130,19 @@ async function setupClient() {
   }
 
   // ── Destroy previous client if any ─────────────────────────────────────────
+  // ── Clean up any stale Chromium SingletonLock files to prevent hangs ────────
+  try {
+    const authDir = path.join(__dirname, '.wwebjs_auth');
+    const lockPath = path.join(authDir, 'session', 'SingletonLock');
+    if (fs.existsSync(lockPath)) {
+      console.log('[WA] Found stale Chromium SingletonLock! Deleting to prevent launch hang...');
+      fs.unlinkSync(lockPath);
+    }
+  } catch (err) {
+    console.warn('[WA] Warning: Failed to clear SingletonLock:', err.message);
+  }
+
+  // ── Destroy previous client if any ─────────────────────────────────────────
   if (client) {
     try { await client.destroy().catch(() => {}); } catch (_) {}
     client = null;
@@ -178,7 +191,8 @@ async function setupClient() {
     '--no-sandbox',
     '--disable-setuid-sandbox',
     '--disable-dev-shm-usage',       // use /tmp — critical in Docker
-    '--disable-features=site-per-process', // force frames to share process — stable 70MB+ RAM saver!
+    '--disable-features=Translate,BackForwardCache,AcceptCHFrame,MediaRouter,OptimizationHints,site-per-process', // force frames to share process — stable 70MB+ RAM saver!
+    '--blink-settings=imagesEnabled=false', // Disable loading of all images (saves up to 100MB+ RAM!)
     '--disable-gpu',
     '--disable-accelerated-2d-canvas',
     '--no-first-run',
@@ -199,9 +213,6 @@ async function setupClient() {
     '--no-default-browser-check',
     '--safebrowsing-disable-auto-update',
     '--disable-blink-features=AutomationControlled',
-    // NOTE: do NOT add --js-flags=--max-old-space-size here!
-    // WhatsApp Web needs 200-300MB of V8 heap — any hard cap below that
-    // causes the renderer to crash exactly when all JS modules load (~30s after QR).
   ];
 
   const puppeteerOpts = {
