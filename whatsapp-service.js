@@ -28,9 +28,130 @@ process.on('unhandledRejection', (reason, promise) => {
 const express = require('express');
 const path    = require('path');
 const fs      = require('fs');
+const os      = require('os');
+const { execSync } = require('child_process');
 
 const app  = express();
 const PORT = process.env.WHATSAPP_PORT || 3001;
+
+// ── MONGODB SESSION PERSISTENCE HELPERS ──────────────────────────────────────
+async function backupSessionToMongo() {
+  const sessionDir = path.join(__dirname, '.wwebjs_auth');
+  if (!fs.existsSync(sessionDir)) {
+    console.log('[WA] No session directory found to backup.');
+    return;
+  }
+  
+  const tempFile = path.join(os.tmpdir(), 'wa_session.tar.gz');
+  try {
+    if (fs.existsSync(tempFile)) {
+      fs.unlinkSync(tempFile);
+    }
+    
+    console.log(`[WA] Archiving session folder from ${sessionDir} to ${tempFile}...`);
+    execSync(`tar -czf "${tempFile}" -C "${sessionDir}" .`, { stdio: 'ignore' });
+    
+    if (!fs.existsSync(tempFile)) {
+      throw new Error('Tar archive creation failed.');
+    }
+    
+    const archiveBuffer = fs.readFileSync(tempFile);
+    console.log(`[WA] Session archived. Size: ${archiveBuffer.length} bytes.`);
+    
+    const mongoose = require('mongoose');
+    const mongoUri = process.env.MONGODB_URI;
+    if (!mongoUri) {
+      console.error('[WA] MONGODB_URI not found in env. Skipping MongoDB backup.');
+      return;
+    }
+    
+    if (mongoose.connection.readyState === 0) {
+      await mongoose.connect(mongoUri);
+    }
+    
+    const collection = mongoose.connection.collection('whatsapp_sessions');
+    await collection.updateOne(
+      { key: 'session_archive' },
+      { $set: { data: archiveBuffer.toString('base64'), updatedAt: new Date() } },
+      { upsert: true }
+    );
+    console.log('[WA] ✅ Session successfully backed up to MongoDB.');
+  } catch (e) {
+    console.error('[WA] Failed to backup session to MongoDB:', e.message);
+  } finally {
+    try {
+      if (fs.existsSync(tempFile)) {
+        fs.unlinkSync(tempFile);
+      }
+    } catch (_) {}
+  }
+}
+
+async function restoreSessionFromMongo() {
+  const sessionDir = path.join(__dirname, '.wwebjs_auth');
+  const tempFile = path.join(os.tmpdir(), 'wa_session.tar.gz');
+  
+  try {
+    const mongoose = require('mongoose');
+    const mongoUri = process.env.MONGODB_URI;
+    if (!mongoUri) {
+      console.warn('[WA] MONGODB_URI not found. Skipping MongoDB restore.');
+      return false;
+    }
+    
+    if (mongoose.connection.readyState === 0) {
+      await mongoose.connect(mongoUri);
+    }
+    
+    const collection = mongoose.connection.collection('whatsapp_sessions');
+    const doc = await collection.findOne({ key: 'session_archive' });
+    if (!doc || !doc.data) {
+      console.log('[WA] No backed-up session found in MongoDB.');
+      return false;
+    }
+    
+    console.log('[WA] Backed-up session found in MongoDB. Restoring...');
+    
+    const archiveBuffer = Buffer.from(doc.data, 'base64');
+    fs.writeFileSync(tempFile, archiveBuffer);
+    
+    if (fs.existsSync(sessionDir)) {
+      fs.rmSync(sessionDir, { recursive: true, force: true });
+    }
+    fs.mkdirSync(sessionDir, { recursive: true });
+    
+    execSync(`tar -xzf "${tempFile}" -C "${sessionDir}"`, { stdio: 'ignore' });
+    console.log('[WA] ✅ Session successfully restored from MongoDB.');
+    return true;
+  } catch (e) {
+    console.error('[WA] Failed to restore session from MongoDB:', e.message);
+    return false;
+  } finally {
+    try {
+      if (fs.existsSync(tempFile)) {
+        fs.unlinkSync(tempFile);
+      }
+    } catch (_) {}
+  }
+}
+
+async function deleteSessionFromMongo() {
+  try {
+    const mongoose = require('mongoose');
+    const mongoUri = process.env.MONGODB_URI;
+    if (!mongoUri) return;
+    
+    if (mongoose.connection.readyState === 0) {
+      await mongoose.connect(mongoUri);
+    }
+    
+    const collection = mongoose.connection.collection('whatsapp_sessions');
+    await collection.deleteOne({ key: 'session_archive' });
+    console.log('[WA] Deleted session archive from MongoDB.');
+  } catch (e) {
+    console.error('[WA] Failed to delete session from MongoDB:', e.message);
+  }
+}
 
 // ── Puppeteer cache: must match what the Dockerfile bakes in ──────────────────
 const CACHE_DIR = process.env.PUPPETEER_CACHE_DIR
@@ -73,6 +194,9 @@ app.post('/api/logout', async (_req, res) => {
   } catch (e) {
     console.error('[WA] Could not clear session dir:', e.message);
   }
+
+  // Clear remote MongoDB backup
+  await deleteSessionFromMongo();
 
   retryTimer = setTimeout(setupClient, 2000);
   res.json({ success: true, message: 'Session cleared. New QR incoming...' });
@@ -141,6 +265,13 @@ async function setupClient() {
     initializing = false;
     retryTimer   = setTimeout(setupClient, 10000);
     return;
+  }
+
+  // ── Restore session from MongoDB BEFORE initializing client ────────────────
+  const authDir = path.join(__dirname, '.wwebjs_auth');
+  if (!fs.existsSync(authDir) || fs.readdirSync(authDir).length === 0) {
+    console.log('[WA] Session directory is empty or missing. Checking MongoDB for backups...');
+    await restoreSessionFromMongo();
   }
 
   // ── Destroy previous client if any ─────────────────────────────────────────
@@ -262,6 +393,9 @@ async function setupClient() {
     qrCodeData = null;
     botStatus  = 'Authenticated — syncing chats...';
     console.log('[WA] Authenticated!');
+    
+    // Backup session immediately on authentication!
+    setTimeout(backupSessionToMongo, 5000);
   });
 
   client.on('loading_screen', (pct, msg) => {
@@ -270,11 +404,18 @@ async function setupClient() {
     console.log(`[WA] Loading ${pct}% — ${msg}`);
   });
 
-  client.on('ready', () => {
+  client.on('ready', async () => {
     qrCodeData   = null;
     botStatus    = 'WhatsApp is ready';
     initializing = false;
     console.log('[WA] ✅ Client READY');
+    
+    // Backup session to MongoDB!
+    await backupSessionToMongo();
+    
+    // Schedule additional backups at 30 seconds and 3 minutes to capture any initial syncing database updates
+    setTimeout(backupSessionToMongo, 30000);
+    setTimeout(backupSessionToMongo, 180000);
   });
 
   client.on('auth_failure', async (msg) => {
@@ -297,6 +438,9 @@ async function setupClient() {
     } catch (e) {
       console.error('[WA] Failed to clear session after auth_failure:', e.message);
     }
+
+    // Delete invalid session from MongoDB
+    await deleteSessionFromMongo();
 
     console.log('[WA] Scheduling client re-initialization in 10 seconds...');
     clearTimeout(retryTimer);
@@ -325,6 +469,9 @@ async function setupClient() {
       } catch (e) {
         console.error('[WA] Failed to clear session after disconnect:', e.message);
       }
+
+      // Delete invalid session from MongoDB too
+      await deleteSessionFromMongo();
     }
 
     console.log('[WA] Scheduling client re-initialization in 5 seconds...');
