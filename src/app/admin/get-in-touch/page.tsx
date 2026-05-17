@@ -140,7 +140,7 @@ export default function GetInTouchAdmin() {
                 name="getInTouchTitle"
                 value={content.getInTouchTitle || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-850 font-bold text-xl"
+                className="w-full p-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-bold text-xl"
                 placeholder="e.g. GET IN TOUCH"
               />
             </div>
@@ -151,7 +151,7 @@ export default function GetInTouchAdmin() {
                 name="getInTouchInquiryLabel"
                 value={content.getInTouchInquiryLabel || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-850 font-bold text-xl"
+                className="w-full p-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-bold text-xl"
                 placeholder="e.g. INQUIRIES"
               />
             </div>
@@ -162,7 +162,7 @@ export default function GetInTouchAdmin() {
                 name="getInTouchPhone"
                 value={content.getInTouchPhone || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-850 font-bold text-xl"
+                className="w-full p-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-bold text-xl"
                 placeholder="e.g. +91 96660 80645"
               />
             </div>
@@ -173,7 +173,7 @@ export default function GetInTouchAdmin() {
                 name="getInTouchAvailability"
                 value={content.getInTouchAvailability || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-850 font-bold text-xl"
+                className="w-full p-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-bold text-xl"
                 placeholder="e.g. Available Daily, 10AM-7PM"
               />
             </div>
@@ -184,7 +184,7 @@ export default function GetInTouchAdmin() {
                 name="getInTouchOfficeLabel"
                 value={content.getInTouchOfficeLabel || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-850 font-bold text-xl"
+                className="w-full p-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-bold text-xl"
                 placeholder="e.g. MAIN OFFICE"
               />
             </div>
@@ -195,7 +195,7 @@ export default function GetInTouchAdmin() {
                 name="getInTouchFooter"
                 value={content.getInTouchFooter || ''}
                 onChange={handleChange}
-                className="w-full p-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-850 font-bold text-xl"
+                className="w-full p-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white font-bold text-xl"
                 placeholder="e.g. Visit us for a coffee and a chat."
               />
             </div>
@@ -207,7 +207,7 @@ export default function GetInTouchAdmin() {
                 rows={3}
                 value={content.getInTouchAddress || ''}
                 onChange={handleChange}
-                className="w-full p-5 rounded-3xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-850 text-lg font-bold"
+                className="w-full p-5 rounded-3xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white text-lg font-bold"
                 placeholder="Enter address..."
               />
             </div>
@@ -253,7 +253,7 @@ export default function GetInTouchAdmin() {
                     <input
                       value={link.label || ''}
                       onChange={(e) => handleLinkChange(idx, 'label', e.target.value)}
-                      className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 font-bold"
+                      className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-bold"
                       placeholder="e.g. Luxury Interior"
                     />
                   </div>
@@ -262,7 +262,7 @@ export default function GetInTouchAdmin() {
                     <input
                       value={link.href || ''}
                       onChange={(e) => handleLinkChange(idx, 'href', e.target.value)}
-                      className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 font-bold"
+                      className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-bold"
                       placeholder="e.g. /services/interior"
                     />
                   </div>
@@ -279,7 +279,7 @@ export default function GetInTouchAdmin() {
                     rows={6}
                     value={link.content || ''}
                     onChange={(e) => handleLinkChange(idx, 'content', e.target.value)}
-                    className="w-full p-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 font-mono text-sm leading-relaxed"
+                    className="w-full p-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono text-sm leading-relaxed"
                     placeholder="Provide detailed custom content details for this dynamic page here..."
                   />
                 </div>
