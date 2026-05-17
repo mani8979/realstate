@@ -1,6 +1,7 @@
 import { Metadata, ResolvingMetadata } from 'next';
 import dbConnect from '@/lib/db';
 import Property from '@/lib/models/Property';
+import SiteContent from '@/lib/models/SiteContent';
 import React from 'react';
 
 type Props = {
@@ -16,14 +17,20 @@ export async function generateMetadata(
   try {
     await dbConnect();
     const property = await Property.findById(id);
+    const content = await SiteContent.findOne().lean();
 
     if (!property) {
+      const brandName = content?.logoTitle || "Star Land Developers";
       return {
-        title: 'Property Not Found',
+        title: `Property Not Found | ${brandName}`,
+        icons: {
+          icon: content?.faviconImage || "/favicon.ico",
+        },
       };
     }
 
-    const title = property.title;
+    const brandName = content?.logoTitle || "Star Land Developers";
+    const title = `${property.title} | ${brandName}`;
     const description = property.description?.substring(0, 160) || `Check out this amazing property in ${property.location}.`;
     
     const image = (property.images && property.images.length > 0) 
@@ -33,6 +40,9 @@ export async function generateMetadata(
     return {
       title: title,
       description: description,
+      icons: {
+        icon: content?.faviconImage || "/favicon.ico",
+      },
       openGraph: {
         title: title,
         description: description,
