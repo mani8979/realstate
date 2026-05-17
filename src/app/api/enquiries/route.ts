@@ -62,7 +62,7 @@ export async function POST(request: Request) {
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 4000);
           
-          const serviceUrl = process.env.WHATSAPP_SERVICE_URL || 'http://localhost:3001';
+          const serviceUrl = process.env.WHATSAPP_SERVICE_URL || 'http://127.0.0.1:3001';
           await fetch(`${serviceUrl}/api/send`, {
             method: 'POST',
             headers: { 

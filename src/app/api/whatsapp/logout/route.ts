@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST() {
   try {
-    const serviceUrl = process.env.WHATSAPP_SERVICE_URL || 'http://localhost:3001';
+    const serviceUrl = process.env.WHATSAPP_SERVICE_URL || 'http://127.0.0.1:3001';
     const res = await fetch(`${serviceUrl}/api/logout`, {
       method: 'POST',
       headers: {
