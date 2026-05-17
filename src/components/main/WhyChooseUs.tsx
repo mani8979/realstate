@@ -173,7 +173,13 @@ const WhyChooseUs = ({ content }: { content?: any }) => {
                   </div>
                   <div>
                     <div className="text-[8px] sm:text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-1 sm:mb-2">{feature.sideHeading}</div>
-                    <h4 className="text-[11px] sm:text-2xl font-black text-slate-900 dark:text-black dark:text-white mb-2 sm:mb-3 uppercase tracking-tight leading-tight break-all w-full">{feature.title}</h4>
+                    <h4 className="text-[11px] sm:text-2xl font-black text-slate-900 dark:text-black dark:text-white mb-2 sm:mb-3 uppercase tracking-tight leading-tight w-full">
+                      {feature.title ? feature.title.split(' ').map((word: string, idx: number) => (
+                        <span key={idx} className="block sm:inline sm:mr-1.5 last:mr-0">
+                          {word}
+                        </span>
+                      )) : ''}
+                    </h4>
                     <p className="text-[10px] sm:text-base text-gray-500 dark:text-gray-600 dark:text-gray-400 leading-relaxed font-medium break-words">
                       {feature.desc}
                     </p>
