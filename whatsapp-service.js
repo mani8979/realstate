@@ -4,6 +4,9 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 const fs = require('fs');
 const path = require('path');
 
+// Synchronize Puppeteer Cache Directory locally
+process.env.PUPPETEER_CACHE_DIR = path.join(__dirname, '.cache', 'puppeteer');
+
 const app = express();
 const PORT = process.env.WHATSAPP_PORT || 3001;
 
