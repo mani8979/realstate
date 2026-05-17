@@ -28,6 +28,122 @@ process.on('unhandledRejection', (reason, promise) => {
 const express = require('express');
 const path    = require('path');
 const fs      = require('fs');
+
+// ── Monkey-patch Puppeteer launch globally for 100% Stealth & Bot-Detection Bypass ──
+try {
+  const patchLaunch = (puppeteerModule) => {
+    if (!puppeteerModule || !puppeteerModule.launch) return;
+    const originalLaunch = puppeteerModule.launch;
+    puppeteerModule.launch = async function (opts) {
+      console.log('[WA STEALTH] Intercepting puppeteer.launch() to inject bypass scripts...');
+      
+      // Inject standard stealth flags to args if missing
+      if (opts && opts.args) {
+        opts.args = [...new Set([...opts.args, 
+          '--disable-blink-features=AutomationControlled',
+          '--use-gl=angle',
+          '--use-angle=swiftshader',
+          '--window-size=1280,800'
+        ])];
+      }
+      
+      const browser = await originalLaunch.call(puppeteerModule, opts);
+      
+      browser.on('targetcreated', async (target) => {
+        try {
+          if (target.type() === 'page') {
+            const page = await target.page();
+            if (page) {
+              console.log('[WA STEALTH] Injecting humanizing finger-print overrides into new page...');
+              
+              // 1. Get native user-agent and remove 'HeadlessChrome/'
+              let ua = await browser.userAgent();
+              ua = ua.replace('HeadlessChrome/', 'Chrome/');
+              await page.setUserAgent(ua);
+              
+              // Enable JavaScript on page
+              await page.setJavaScriptEnabled(true);
+              
+              // Set viewport size
+              await page.setViewport({ width: 1280, height: 800, deviceScaleFactor: 1 });
+              
+              // Inject bypasses BEFORE any scripts run
+              await page.evaluateOnNewDocument(() => {
+                // 1. Hide webdriver property
+                Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+                
+                // 2. Mock userAgentData (Google Chrome / Windows)
+                Object.defineProperty(navigator, 'userAgentData', {
+                  get: () => ({
+                    brands: [
+                      { brand: 'Not(A:Brand', version: '99' },
+                      { brand: 'Google Chrome', version: '133' },
+                      { brand: 'Chromium', version: '133' }
+                    ],
+                    mobile: false,
+                    platform: 'Windows'
+                  })
+                });
+                
+                // 3. Populate plugins (mimic real Chrome)
+                const mockPlugins = [
+                  { name: 'PDF Viewer', filename: 'internal-pdf-viewer', description: 'Portable Document Format' },
+                  { name: 'Chrome PDF Viewer', filename: 'mhjfbmdlmjbgihfiocmenkejgajgjnib', description: 'Google Chrome PDF Viewer' }
+                ];
+                Object.defineProperty(navigator, 'plugins', { get: () => mockPlugins });
+                
+                // 4. Populate languages
+                Object.defineProperty(navigator, 'languages', { get: () => ['en-US', 'en'] });
+                
+                // 5. Mock Chrome object
+                window.chrome = {
+                  app: {
+                    isInstalled: false,
+                    InstallState: { DISABLED: 'disabled', INSTALLED: 'installed', NOT_INSTALLED: 'not_installed' },
+                    RunningState: { CAN_RUN: 'can_run', CANNOT_RUN: 'cannot_run', RUNNING: 'running' }
+                  },
+                  runtime: {
+                    OnInstalledReason: { INSTALL: 'install', UPDATE: 'update', CHROME_UPDATE: 'chrome_update', SHARED_MODULE_UPDATE: 'shared_module_update' },
+                    OnRestartRequiredReason: { APP_UPDATE: 'app_update', OS_UPDATE: 'os_update', PERIODIC: 'periodic' },
+                    PlatformArch: { ARM: 'arm', ARM64: 'arm64', X86_32: 'x86-32', X86_64: 'x86-64', MIPS: 'mips', MIPS64: 'mips64' },
+                    PlatformNaclArch: { ARM: 'arm', ARM64: 'arm64', X86_32: 'x86-32', X86_64: 'x86-64', MIPS: 'mips', MIPS64: 'mips64' },
+                    PlatformOs: { MAC: 'mac', WIN: 'win', ANDROID: 'android', CROS: 'cros', LINUX: 'linux', OPENBSD: 'openbsd' },
+                    RequestUpdateCheckStatus: { THROTTLED: 'throttled', NO_UPDATE: 'no_update', UPDATE_AVAILABLE: 'update_available' }
+                  }
+                };
+                
+                // 6. WebGL Vendor & Renderer spoofing
+                const originalGetContext = HTMLCanvasElement.prototype.getContext;
+                HTMLCanvasElement.prototype.getContext = function (type, attributes) {
+                  const context = originalGetContext.apply(this, arguments);
+                  if (context && (type === 'webgl' || type === 'experimental-webgl')) {
+                    const gl = context;
+                    const originalGetParameter = gl.getParameter;
+                    gl.getParameter = function (pname) {
+                      if (pname === 37445) return 'Google Inc. (Intel)'; // UNMASKED_VENDOR_WEBGL
+                      if (pname === 37446) return 'ANGLE (Intel, Intel(R) UHD Graphics Direct3D11, D3D11)'; // UNMASKED_RENDERER_WEBGL
+                      return originalGetParameter.apply(this, arguments);
+                    };
+                  }
+                  return context;
+                };
+              });
+            }
+          }
+        } catch (err) {
+          console.error('[WA STEALTH ERROR] Target creation hook failed:', err.message);
+        }
+      });
+      
+      return browser;
+    };
+  };
+
+  try { patchLaunch(require('puppeteer-core')); } catch (_) {}
+  try { patchLaunch(require('puppeteer')); } catch (_) {}
+} catch (e) {
+  console.error('[WA STEALTH] Failed to initialize global launcher hooks:', e.message);
+}
 const os      = require('os');
 const { execSync } = require('child_process');
 
@@ -367,7 +483,6 @@ async function setupClient() {
         type: 'remote',
         remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/{version}.html',
       },
-      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
       puppeteer: puppeteerOpts,
     });
   } catch (e) {
