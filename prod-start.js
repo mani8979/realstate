@@ -36,11 +36,15 @@ whatsapp.stderr.on('data', (data) => {
 // 2. Start Next.js production server
 const port = process.env.PORT || 10000;
 const nextPath = path.join(__dirname, 'node_modules', 'next', 'dist', 'bin', 'next');
-console.log(`[Startup Orchestrator] Spawning Next.js Server: node ${nextPath} start -H 0.0.0.0 -p ${port}`);
-const next = spawn('node', [nextPath, 'start', '-H', '0.0.0.0', '-p', port.toString()], {
+console.log(`[Startup Orchestrator] Spawning Next.js Server: node --max-old-space-size=200 ${nextPath} start -H 0.0.0.0 -p ${port}`);
+const next = spawn('node', ['--max-old-space-size=200', nextPath, 'start', '-H', '0.0.0.0', '-p', port.toString()], {
   stdio: 'inherit',
   shell: false,
-  env: process.env
+  env: {
+    ...process.env,
+    EXPERIMENTAL_CPUS: '1',
+    NEXT_CPU_LIMIT: '1'
+  }
 });
 
 // Handle process termination gracefully
