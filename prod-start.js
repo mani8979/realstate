@@ -1,79 +1,84 @@
 const { spawn } = require('child_process');
 const path = require('path');
-
-console.log('[Startup Orchestrator] Starting background services...');
-
-// 1. Start WhatsApp background service
 const fs = require('fs');
+
+console.log('[Startup Orchestrator] Starting all services...');
+
+// ─── Error Log ─────────────────────────────────────────────────────────────────
 const logPath = path.join(__dirname, 'whatsapp_error.log');
+try { if (fs.existsSync(logPath)) fs.unlinkSync(logPath); } catch (_) {}
 
-// Clear previous error log on startup
-try {
-  if (fs.existsSync(logPath)) {
-    fs.unlinkSync(logPath);
-  }
-} catch (_) {}
-
+// ─── 1. WhatsApp Background Service ───────────────────────────────────────────
 const whatsappPath = path.join(__dirname, 'whatsapp-service.js');
-console.log(`[Startup Orchestrator] Spawning WhatsApp Service: node --max-old-space-size=150 ${whatsappPath}`);
-const whatsapp = spawn('node', ['--max-old-space-size=150', whatsappPath], {
-  stdio: ['inherit', 'inherit', 'pipe'], // pipe stderr so we can capture it
-  shell: false,
-  env: {
-    ...process.env,
-    PUPPETEER_CACHE_DIR: path.join(__dirname, '.cache', 'puppeteer')
-  }
-});
 
-whatsapp.stderr.on('data', (data) => {
-  const errStr = data.toString();
-  process.stderr.write(errStr); // standard logging to Render
-  try {
-    fs.appendFileSync(logPath, errStr);
-  } catch (_) {}
-});
+function spawnWhatsApp() {
+  console.log('[Startup Orchestrator] Spawning WhatsApp service...');
 
-// 2. Start Next.js production server
+  const whatsapp = spawn('node', ['--max-old-space-size=256', whatsappPath], {
+    stdio: ['inherit', 'inherit', 'pipe'],
+    shell: false,
+    env: {
+      ...process.env,
+      // The Chrome binary installed by "npx puppeteer browsers install chrome" in the Dockerfile
+      // lives at this path inside the Docker container image.
+      PUPPETEER_CACHE_DIR: process.env.PUPPETEER_CACHE_DIR || path.join(__dirname, '.cache', 'puppeteer'),
+    },
+  });
+
+  whatsapp.stderr.on('data', (data) => {
+    const errStr = data.toString();
+    process.stderr.write(errStr);
+    try { fs.appendFileSync(logPath, errStr); } catch (_) {}
+  });
+
+  whatsapp.on('close', (code) => {
+    console.log(`[Startup Orchestrator] WhatsApp service exited with code ${code}. Restarting in 10s...`);
+    // Auto-restart the WhatsApp service after a crash — NEVER kill Next.js for this
+    setTimeout(spawnWhatsApp, 10000);
+  });
+
+  whatsapp.on('error', (err) => {
+    console.error('[Startup Orchestrator] WhatsApp spawn error:', err.message);
+    setTimeout(spawnWhatsApp, 10000);
+  });
+
+  return whatsapp;
+}
+
+spawnWhatsApp();
+
+// ─── 2. Next.js Production Server ─────────────────────────────────────────────
 const port = process.env.PORT || 10000;
 const nextPath = path.join(__dirname, 'node_modules', 'next', 'dist', 'bin', 'next');
-console.log(`[Startup Orchestrator] Spawning Next.js Server: node --max-old-space-size=200 ${nextPath} start -H 0.0.0.0 -p ${port}`);
-const next = spawn('node', ['--max-old-space-size=200', nextPath, 'start', '-H', '0.0.0.0', '-p', port.toString()], {
+
+console.log(`[Startup Orchestrator] Spawning Next.js on 0.0.0.0:${port}...`);
+
+const next = spawn('node', ['--max-old-space-size=384', nextPath, 'start', '-H', '0.0.0.0', '-p', port.toString()], {
   stdio: 'inherit',
   shell: false,
   env: {
     ...process.env,
-    EXPERIMENTAL_CPUS: '1',
-    NEXT_CPU_LIMIT: '1'
-  }
+    // Limit Next.js worker count to avoid OOM on Render's free tier (512MB RAM)
+    UV_THREADPOOL_SIZE: '4',
+  },
 });
 
-// Handle process termination gracefully
+// ─── Graceful Shutdown ─────────────────────────────────────────────────────────
 const killAll = () => {
-  console.log('[Startup Orchestrator] Stopping all services...');
-  try {
-    whatsapp.kill();
-  } catch (err) {
-    // Already stopped
-  }
-  try {
-    next.kill();
-  } catch (err) {
-    // Already stopped
-  }
+  console.log('[Startup Orchestrator] Shutting down...');
   process.exit(0);
 };
 
 process.on('SIGINT', killAll);
 process.on('SIGTERM', killAll);
-process.on('exit', killAll);
 
-// Handle crash of child processes
-whatsapp.on('close', (code) => {
-  console.log(`[Startup Orchestrator] WhatsApp Service exited with code ${code}`);
-  // If one fails, we don't necessarily kill the other, but we log it
+// If Next.js dies the whole container should restart (502 from Render means Next.js is down)
+next.on('close', (code) => {
+  console.log(`[Startup Orchestrator] Next.js exited with code ${code}. Container will restart.`);
+  process.exit(1); // Non-zero exit triggers Render container restart
 });
 
-next.on('close', (code) => {
-  console.log(`[Startup Orchestrator] Next.js Server exited with code ${code}`);
-  killAll();
+next.on('error', (err) => {
+  console.error('[Startup Orchestrator] Next.js spawn error:', err.message);
+  process.exit(1);
 });

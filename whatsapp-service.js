@@ -4,8 +4,11 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 const fs = require('fs');
 const path = require('path');
 
-// Synchronize Puppeteer Cache Directory locally
-process.env.PUPPETEER_CACHE_DIR = path.join(__dirname, '.cache', 'puppeteer');
+// ─── Cache Dir ─────────────────────────────────────────────────────────────────
+// Must match what the Dockerfile sets and what "npx puppeteer browsers install chrome"
+// writes into. Puppeteer reads this env var to locate the downloaded Chrome binary.
+const CACHE_DIR = process.env.PUPPETEER_CACHE_DIR || path.join(__dirname, '.cache', 'puppeteer');
+process.env.PUPPETEER_CACHE_DIR = CACHE_DIR;
 
 const app = express();
 const PORT = process.env.WHATSAPP_PORT || 3001;
@@ -13,255 +16,231 @@ const PORT = process.env.WHATSAPP_PORT || 3001;
 let client = null;
 let qrCodeData = null;
 let botStatus = 'Starting WhatsApp...';
+let isInitializing = false;
 
 app.use(express.json());
 
-// ------------------------------
-// Helper to register events on a client instance
+// ─── Helpers ───────────────────────────────────────────────────────────────────
+
+/**
+ * Find the Chrome executable that was installed by "npx puppeteer browsers install chrome"
+ * inside the Docker image. Returns null if not found (triggers fallback to system Chromium).
+ */
+function findChromePath() {
+  // Puppeteer stores Chrome as: <CACHE_DIR>/chrome/<platform>-<version>/chrome-<platform>/chrome
+  const chromePlatformDir = path.join(CACHE_DIR, 'chrome');
+  try {
+    if (!fs.existsSync(chromePlatformDir)) return null;
+    const platforms = fs.readdirSync(chromePlatformDir);
+    for (const platform of platforms) {
+      // e.g. "linux64-146.0.7680.31"
+      const versionDir = path.join(chromePlatformDir, platform);
+      const inner = fs.readdirSync(versionDir);
+      for (const dir of inner) {
+        // e.g. "chrome-linux64"
+        const exeDir = path.join(versionDir, dir);
+        const candidates = ['chrome', 'chrome-linux', 'google-chrome'];
+        for (const exe of candidates) {
+          const full = path.join(exeDir, exe);
+          if (fs.existsSync(full)) {
+            console.log(`[WhatsApp Service] Found Chrome at: ${full}`);
+            return full;
+          }
+        }
+      }
+    }
+  } catch (e) {
+    console.warn('[WhatsApp Service] Error scanning Chrome path:', e.message);
+  }
+  return null;
+}
+
+// ─── Events ────────────────────────────────────────────────────────────────────
 function setupEvents(clientInstance) {
   clientInstance.on('qr', async (qr) => {
     try {
       qrCodeData = await QRCode.toDataURL(qr);
       botStatus = 'Scan the QR code with WhatsApp';
-      console.log('[WhatsApp Service] New QR Code generated successfully.');
+      console.log('[WhatsApp Service] QR Code generated. Waiting for scan...');
     } catch (err) {
-      console.error('[WhatsApp Service] Error generating QR code URL:', err);
+      console.error('[WhatsApp Service] Error generating QR code:', err);
       botStatus = 'Error generating QR code';
     }
   });
 
   clientInstance.on('authenticated', () => {
-    qrCodeData = null; // Hide QR code immediately upon scan success!
+    qrCodeData = null;
     botStatus = 'Authenticated. Synchronizing chats...';
-    console.log('[WhatsApp Service] Client is AUTHENTICATED!');
+    console.log('[WhatsApp Service] Client AUTHENTICATED!');
   });
 
   clientInstance.on('loading_screen', (percent, message) => {
-    qrCodeData = null; // Ensure QR is hidden
-    botStatus = `Synchronizing: ${percent}% - ${message}`;
-    console.log(`[WhatsApp Service] Loading screen: ${percent}% - ${message}`);
+    qrCodeData = null;
+    botStatus = `Synchronizing: ${percent}% — ${message}`;
+    console.log(`[WhatsApp Service] Loading: ${percent}% — ${message}`);
   });
 
   clientInstance.on('ready', () => {
     qrCodeData = null;
     botStatus = 'WhatsApp is ready';
-    console.log('[WhatsApp Service] Client is READY and authenticated!');
+    isInitializing = false;
+    console.log('[WhatsApp Service] Client is READY!');
   });
 
   clientInstance.on('auth_failure', (msg) => {
     qrCodeData = null;
     botStatus = 'Authentication failed';
-    console.error('[WhatsApp Service] Authentication failed:', msg);
+    isInitializing = false;
+    console.error('[WhatsApp Service] Auth failure:', msg);
+    // Restart after auth failure
+    setTimeout(setupClient, 8000);
   });
 
   clientInstance.on('disconnected', (reason) => {
     qrCodeData = null;
     botStatus = `Disconnected: ${reason}`;
+    isInitializing = false;
     console.log('[WhatsApp Service] Disconnected:', reason);
-    // Restart client to get a new QR code
-    try {
-      clientInstance.destroy().catch(() => {});
-    } catch (_) {}
+    try { clientInstance.destroy().catch(() => {}); } catch (_) {}
     setTimeout(setupClient, 5000);
   });
 
   clientInstance.on('change_state', (state) => {
-    console.log('[WhatsApp Service] State changed to:', state);
+    console.log('[WhatsApp Service] State:', state);
   });
 }
 
-// WhatsApp Client setup
-// ------------------------------
+// ─── Client Setup ──────────────────────────────────────────────────────────────
 async function setupClient() {
-  console.log('[WhatsApp Service] Initializing client...');
+  if (isInitializing) {
+    console.log('[WhatsApp Service] Already initializing, skipping duplicate call.');
+    return;
+  }
+  isInitializing = true;
+
+  console.log('[WhatsApp Service] Setting up WhatsApp client...');
   botStatus = 'Initializing WhatsApp...';
   qrCodeData = null;
 
-  // 1. Define standard, legit Chrome browser options with aggressive low-memory settings (No single-process to ensure ready event fires!)
-  const standardOptions = {
+  // Destroy previous client if it exists
+  if (client) {
+    try { await client.destroy().catch(() => {}); } catch (_) {}
+    client = null;
+  }
+
+  // Find the Chrome binary installed at Docker build time
+  const executablePath = findChromePath();
+
+  const puppeteerArgs = [
+    '--no-sandbox',
+    '--disable-setuid-sandbox',
+    '--disable-dev-shm-usage',   // use /tmp instead of /dev/shm (critical for Docker)
+    '--disable-gpu',
+    '--disable-accelerated-2d-canvas',
+    '--no-first-run',
+    '--no-zygote',
+    '--disable-backgrounding-occluded-windows',
+    '--disable-renderer-backgrounding',
+    '--disable-blink-features=AutomationControlled',
+    '--js-flags=--max-old-space-size=200',
+  ];
+
+  const puppeteerOptions = {
     headless: true,
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-accelerated-2d-canvas',
-      '--no-first-run',
-      '--no-zygote',
-      '--disable-gpu',
-      '--disable-backgrounding-occluded-windows',
-      '--disable-renderer-backgrounding',
-      '--disable-blink-features=AutomationControlled',
-      '--js-flags=--max-old-space-size=150', // Constrains Chromium V8 RAM usage
-      '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
-    ]
+    args: puppeteerArgs,
+    ...(executablePath ? { executablePath } : {}), // use found Chrome; let Puppeteer auto-find if not found
   };
 
-  let initSuccess = false;
+  console.log('[WhatsApp Service] Chrome executable:', executablePath || '(auto-detect by Puppeteer)');
 
   try {
-    console.log('[WhatsApp Service] Attempting to launch with standard, full-featured Puppeteer (Legit Chrome)...');
     client = new Client({
       authStrategy: new LocalAuth({
-        dataPath: path.join(__dirname, '.wwebjs_auth')
+        dataPath: path.join(__dirname, '.wwebjs_auth'),
       }),
-      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-      puppeteer: standardOptions
+      puppeteer: puppeteerOptions,
     });
 
     setupEvents(client);
     await client.initialize();
-    initSuccess = true;
-    console.log('[WhatsApp Service] Standard Puppeteer initialized successfully!');
+    // Note: isInitializing is set to false inside the 'ready' and error handlers
+    console.log('[WhatsApp Service] client.initialize() completed successfully.');
   } catch (err) {
-    console.error('[WhatsApp Service] Standard Puppeteer failed to initialize:', err.message);
-  }
-
-  // 2. If standard Puppeteer failed, fall back to @sparticuz/chromium (headless shell)
-  if (!initSuccess) {
-    console.log('[WhatsApp Service] Falling back to @sparticuz/chromium (headless shell)...');
-    try {
-      if (client) {
-        try { await client.destroy().catch(() => {}); } catch (_) {}
-      }
-
-      const chromium = require('@sparticuz/chromium');
-      const fallbackOptions = {
-        executablePath: await chromium.executablePath(),
-        args: [
-          ...chromium.args,
-          '--disable-blink-features=AutomationControlled',
-          '--js-flags=--max-old-space-size=150',
-          '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
-        ],
-        headless: chromium.headless
-      };
-
-      client = new Client({
-        authStrategy: new LocalAuth({
-          dataPath: path.join(__dirname, '.wwebjs_auth')
-        }),
-        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-        puppeteer: fallbackOptions
-      });
-
-      setupEvents(client);
-      await client.initialize();
-      console.log('[WhatsApp Service] @sparticuz/chromium initialized successfully!');
-    } catch (fallbackErr) {
-      console.error('[WhatsApp Service] Critical failure: both standard and fallback clients failed to initialize:', fallbackErr.message);
-      botStatus = 'Initialization failed';
-    }
+    isInitializing = false;
+    console.error('[WhatsApp Service] CRITICAL: Failed to initialize client:', err.message);
+    botStatus = 'Initialization failed — retrying in 30s';
+    // Retry after 30 seconds instead of immediately (gives the container breathing room)
+    setTimeout(setupClient, 30000);
   }
 }
 
-// ------------------------------
-// API Routes
-// ------------------------------
+// ─── API Routes ────────────────────────────────────────────────────────────────
 
-// 1. Get status and QR
+// GET /api/status
 app.get('/api/status', (req, res) => {
-  res.json({
-    status: botStatus,
-    qr: qrCodeData
-  });
+  res.json({ status: botStatus, qr: qrCodeData });
 });
 
-// 2. Logout and clear session
+// POST /api/logout — reset session and generate new QR
 app.post('/api/logout', async (req, res) => {
-  console.log('[WhatsApp Service] Received logout request');
+  console.log('[WhatsApp Service] Logout requested...');
+  isInitializing = false; // allow restart
+
   try {
     if (client) {
-      botStatus = 'Logging out...';
-      try {
-        await client.logout();
-      } catch (err) {
-        console.warn('[WhatsApp Service] Native logout failed (probably already offline):', err.message);
-      }
-      try {
-        await client.destroy();
-      } catch (err) {
-        console.warn('[WhatsApp Service] Native destroy failed:', err.message);
-      }
+      try { await client.logout(); } catch (_) {}
+      try { await client.destroy(); } catch (_) {}
+      client = null;
     }
-    
-    // Explicitly delete session directory to guarantee fresh login QR
+
+    // Wipe local session data
     const sessionDir = path.join(__dirname, '.wwebjs_auth');
     if (fs.existsSync(sessionDir)) {
-      try {
-        fs.rmSync(sessionDir, { recursive: true, force: true });
-        console.log('[WhatsApp Service] Cleaned session directory.');
-      } catch (dirErr) {
-        console.error('[WhatsApp Service] Failed to clean session directory:', dirErr);
-      }
+      fs.rmSync(sessionDir, { recursive: true, force: true });
+      console.log('[WhatsApp Service] Session directory cleared.');
     }
 
-    // Re-initialize client
+    // Re-initialize after a short delay
     setTimeout(setupClient, 2000);
 
-    res.json({
-      success: true,
-      message: 'Successfully logged out and session cleared. Generating a new QR code...'
-    });
+    res.json({ success: true, message: 'Session cleared. New QR will be generated shortly.' });
   } catch (error) {
     console.error('[WhatsApp Service] Logout error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to fully log out. Please check logs.'
-    });
+    res.status(500).json({ success: false, message: 'Logout failed: ' + error.message });
   }
 });
 
-// 3. Send message
+// POST /api/send — send a WhatsApp message
 app.post('/api/send', async (req, res) => {
+  const { number, message } = req.body;
+
+  if (!number || !message) {
+    return res.status(400).json({ success: false, message: 'number and message are required.' });
+  }
+
+  if (botStatus !== 'WhatsApp is ready') {
+    return res.status(503).json({ success: false, message: `WhatsApp not ready. Status: ${botStatus}` });
+  }
+
   try {
-    const { number, message } = req.body;
-
-    if (!number || !message) {
-      return res.status(400).json({
-        success: false,
-        message: 'Mobile number and message are required.'
-      });
-    }
-
-    if (botStatus !== 'WhatsApp is ready') {
-      return res.status(400).json({
-        success: false,
-        message: 'WhatsApp is not ready. Please connect/scan the QR code first.'
-      });
-    }
-
-    // Clean customer number
     const cleanNumber = number.replace(/\D/g, '');
+    const formattedNumber = cleanNumber.length === 10 ? `91${cleanNumber}` : cleanNumber;
+    const chatId = `${formattedNumber}@c.us`;
 
-    // Support standard 10-digit Indian numbers by adding 91 prefix
-    let formattedNumber = cleanNumber;
-    if (cleanNumber.length === 10) {
-      formattedNumber = `91${cleanNumber}`;
-    }
+    console.log(`[WhatsApp Service] Sending message to ${chatId}`);
+    await client.sendMessage(chatId, message);
+    console.log(`[WhatsApp Service] Message sent to ${chatId}`);
 
-    const customerChatId = `${formattedNumber}@c.us`;
-
-    console.log(`[WhatsApp Service] Sending message to ${customerChatId}...`);
-    await client.sendMessage(customerChatId, message);
-    console.log(`[WhatsApp Service] Message successfully sent to ${customerChatId}.`);
-
-    return res.json({
-      success: true,
-      message: 'WhatsApp message sent successfully.'
-    });
+    return res.json({ success: true, message: 'Message sent successfully.' });
   } catch (error) {
-    console.error('[WhatsApp Service] Failed to send WhatsApp message:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Failed to send WhatsApp message. Error: ' + error.message
-    });
+    console.error('[WhatsApp Service] Send error:', error);
+    return res.status(500).json({ success: false, message: 'Send failed: ' + error.message });
   }
 });
 
-// ------------------------------
-// Server Startup
-// ------------------------------
-app.listen(PORT, () => {
-  console.log(`[WhatsApp Service] Running on http://localhost:${PORT}`);
-  setupClient();
+// ─── Server Startup ────────────────────────────────────────────────────────────
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`[WhatsApp Service] HTTP server listening on port ${PORT}`);
+  // Give the process a moment to settle before launching Chrome
+  setTimeout(setupClient, 1000);
 });
