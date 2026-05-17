@@ -26,10 +26,10 @@ process.on('unhandledRejection', (reason, promise) => {
   console.error('[Orchestrator CRITICAL] Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
-// ── Error log path (Next.js status endpoint reads this if offline) ────────────
-const logPath = path.join(__dirname, 'whatsapp_error.log');
+// ── Server log path (Next.js status endpoint reads this if offline) ────────────
+const logPath = path.join(__dirname, 'whatsapp_server.log');
 
-// ── Safe global console overrides to capture all logs in whatsapp_error.log ──
+// ── Safe global console overrides to capture all logs in whatsapp_server.log ──
 const originalLog   = console.log;
 const originalError = console.error;
 

@@ -36,7 +36,7 @@ export async function GET() {
     try {
       const fs = require('fs');
       const path = require('path');
-      const logPath = path.join(process.cwd(), 'whatsapp_error.log');
+      const logPath = path.join(process.cwd(), 'whatsapp_server.log');
       if (fs.existsSync(logPath)) {
         daemonError = fs.readFileSync(logPath, 'utf8');
       }

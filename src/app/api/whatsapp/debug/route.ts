@@ -7,11 +7,11 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     const cwd = process.cwd();
-    const logPath = path.join(cwd, 'whatsapp_error.log');
-    let errorLog = 'File not found';
+    const logPath = path.join(cwd, 'whatsapp_server.log');
+    let serverLogs = 'File not found';
     
     if (fs.existsSync(logPath)) {
-      errorLog = fs.readFileSync(logPath, 'utf8');
+      serverLogs = fs.readFileSync(logPath, 'utf8');
     }
 
     // Gather basic container health statistics
@@ -26,7 +26,7 @@ export async function GET() {
         PORT: process.env.PORT,
         WHATSAPP_SERVICE_URL: process.env.WHATSAPP_SERVICE_URL,
       },
-      errorLog,
+      serverLogs,
     };
 
     return NextResponse.json(diagnostics);
