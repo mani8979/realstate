@@ -28,7 +28,6 @@ process.on('unhandledRejection', (reason, promise) => {
 
 // ── Error log path (Next.js status endpoint reads this if offline) ────────────
 const logPath = path.join(__dirname, 'whatsapp_error.log');
-try { if (fs.existsSync(logPath)) fs.unlinkSync(logPath); } catch (_) {}
 
 // ── Safe global console overrides to capture all logs in whatsapp_error.log ──
 const originalLog   = console.log;
@@ -72,7 +71,7 @@ console.log(`[Orchestrator] Spawning Next.js on 0.0.0.0:${port}...`);
 const nextProcess = spawn(
   'node',
   [
-    '--max-old-space-size=150', // Node V8 heap cap for Next.js
+    '--max-old-space-size=220', // Node V8 heap cap for Next.js
     nextBin,
     'start',
     '-H', '0.0.0.0',
