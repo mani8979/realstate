@@ -2,12 +2,11 @@
  * prod-start.js — Render deployment orchestrator
  * ─────────────────────────────────────────────────────────────────────────────
  * Memory budget (Render free tier = 512 MB total):
- *   orchestrator  ~20 MB
- *   Next.js       ~150 MB  (capped at 180 MB via --max-old-space-size)
- *   WA Node       ~70  MB  (capped at 128 MB via --max-old-space-size)
- *   Chrome        ~150 MB  (capped at 96 MB V8 heap inside wwebjs args)
+ *   orchestrator + WA node (In-Process!) ~90 MB  (consolidated!)
+ *   Next.js child process                ~180 MB (capped at 200 MB via --max-old-space-size)
+ *   Chrome browser process               ~150 MB
  *   ─────────────────────────────────────────────────────────────────
- *   TOTAL         ~390 MB  (safe margin under 512 MB)
+ *   TOTAL                                ~420 MB (safe margin under 512 MB)
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
@@ -17,72 +16,35 @@ const { spawn } = require('child_process');
 const path      = require('path');
 const fs        = require('fs');
 
-console.log('[Orchestrator] Starting...');
+console.log('[Orchestrator] Starting production environment...');
 
-// ── Error log ─────────────────────────────────────────────────────────────────
+// ── Global uncaught exception handlers to make orchestrator crash-proof ───────
+process.on('uncaughtException', (err) => {
+  console.error('[Orchestrator CRITICAL] Uncaught Exception:', err);
+});
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[Orchestrator CRITICAL] Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+// ── Error log path (Next.js status endpoint reads this if offline) ────────────
 const logPath = path.join(__dirname, 'whatsapp_error.log');
 try { if (fs.existsSync(logPath)) fs.unlinkSync(logPath); } catch (_) {}
+
+// ── Redirect stderr to whatsapp_error.log for status page visibility ──────────
+const originalWrite = process.stderr.write;
+process.stderr.write = function (chunk, encoding, callback) {
+  try { fs.appendFileSync(logPath, chunk); } catch (_) {}
+  return originalWrite.apply(process.stderr, arguments);
+};
 
 // ── Shared Puppeteer cache path (must match Dockerfile ENV) ───────────────────
 const PUPPETEER_CACHE_DIR =
   process.env.PUPPETEER_CACHE_DIR || path.join(__dirname, '.cache', 'puppeteer');
+process.env.PUPPETEER_CACHE_DIR = PUPPETEER_CACHE_DIR;
+process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = 'true';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 1. WhatsApp background service
-//    Crashes are caught and auto-restarted — NEVER affect Next.js / port 10000
-// ─────────────────────────────────────────────────────────────────────────────
-const whatsappPath = path.join(__dirname, 'whatsapp-service.js');
-let waProcess = null;
-let waRestartCount = 0;
-
-function spawnWhatsApp() {
-  waRestartCount++;
-  console.log(`[Orchestrator] Spawning WhatsApp service (attempt #${waRestartCount})...`);
-
-  waProcess = spawn(
-    'node',
-    [
-      '--max-old-space-size=128', // Node V8 heap cap for the WA process
-      whatsappPath,
-    ],
-    {
-      stdio: ['inherit', 'inherit', 'pipe'],
-      shell: false,
-      env: {
-        ...process.env,
-        PUPPETEER_CACHE_DIR,
-        // Suppress Puppeteer's noisy "Downloading Chrome..." messages
-        PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true',
-      },
-    }
-  );
-
-  // Pipe stderr to our error log AND to Render's log stream
-  waProcess.stderr.on('data', (data) => {
-    const str = data.toString();
-    process.stderr.write(str);
-    try { fs.appendFileSync(logPath, str); } catch (_) {}
-  });
-
-  waProcess.on('error', (err) => {
-    console.error('[Orchestrator] WhatsApp spawn error:', err.message);
-    scheduleWaRestart();
-  });
-
-  waProcess.on('close', (code, signal) => {
-    console.log(`[Orchestrator] WhatsApp service exited (code=${code} signal=${signal}). Restarting in 3s...`);
-    scheduleWaRestart();
-  });
-}
-
-function scheduleWaRestart() {
-  // Back off slightly if crashing very frequently (every restart after 5 uses 10s)
-  const delay = waRestartCount > 5 ? 10000 : 3000;
-  setTimeout(spawnWhatsApp, delay);
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 2. Next.js production server
+// 1. Next.js production server
 //    This is the main service — if it dies, exit so Render restarts container
 // ─────────────────────────────────────────────────────────────────────────────
 const port     = process.env.PORT || 10000;
@@ -93,7 +55,7 @@ console.log(`[Orchestrator] Spawning Next.js on 0.0.0.0:${port}...`);
 const nextProcess = spawn(
   'node',
   [
-    '--max-old-space-size=180', // Node V8 heap cap for Next.js
+    '--max-old-space-size=200', // Node V8 heap cap for Next.js
     nextBin,
     'start',
     '-H', '0.0.0.0',
@@ -104,36 +66,46 @@ const nextProcess = spawn(
     shell: false,
     env: {
       ...process.env,
-      // Limit libuv thread pool — reduces idle memory
-      UV_THREADPOOL_SIZE: '4',
+      UV_THREADPOOL_SIZE: '4', // Limit libuv thread pool to save memory
     },
   }
 );
 
 nextProcess.on('error', (err) => {
   console.error('[Orchestrator] Next.js spawn error:', err.message);
-  process.exit(1); // trigger Render container restart
+  process.exit(1); // Trigger Render container restart
 });
 
 nextProcess.on('close', (code) => {
-  console.log(`[Orchestrator] Next.js exited (code=${code}). Triggering container restart.`);
+  console.log(`[Orchestrator] Next.js server exited (code=${code}). Restarting container.`);
   process.exit(code || 1);
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 3. Start WhatsApp service AFTER Next.js is spawned
+// 2. Start WhatsApp service IN-PROCESS
+//    We load the service directly in-process after a 5 second delay to let
+//    Next.js fully bind to port 10000 and pass Render's health checks.
 // ─────────────────────────────────────────────────────────────────────────────
-// Delay WA start by 5 seconds so Next.js can bind to port 10000 first.
-// This ensures Render's health check passes before Chrome consumes RAM.
-setTimeout(spawnWhatsApp, 5000);
+function startInProcessWhatsApp() {
+  console.log('[Orchestrator] Initializing WhatsApp service in-process (Saving Node process RAM)...');
+  try {
+    // Load the express app and whatsapp client inside the current node process
+    require('./whatsapp-service.js');
+    console.log('[Orchestrator] WhatsApp service loaded in-process successfully.');
+  } catch (err) {
+    console.error('[Orchestrator] Error loading WhatsApp service in-process:', err);
+  }
+}
+
+// Start WhatsApp after 5 seconds
+setTimeout(startInProcessWhatsApp, 5000);
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 4. Graceful shutdown
+// 3. Graceful shutdown
 // ─────────────────────────────────────────────────────────────────────────────
 function shutdown() {
-  console.log('[Orchestrator] Shutting down...');
-  try { if (waProcess)      waProcess.kill();    } catch (_) {}
-  try { if (nextProcess)    nextProcess.kill();  } catch (_) {}
+  console.log('[Orchestrator] Gracefully shutting down services...');
+  try { if (nextProcess) nextProcess.kill(); } catch (_) {}
   process.exit(0);
 }
 

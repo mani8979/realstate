@@ -11,6 +11,14 @@
 'use strict';
 
 // ── Only load lightweight built-ins at the top ────────────────────────────────
+// ── Catch-all exception and promise rejection handlers to make it 100% crash-proof ──
+process.on('uncaughtException', (err) => {
+  console.error('[WA CRITICAL] Uncaught Exception:', err);
+});
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[WA CRITICAL] Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
 const express = require('express');
 const path    = require('path');
 const fs      = require('fs');
@@ -186,6 +194,7 @@ async function setupClient() {
       // Use local web version cache — avoids re-downloading WhatsApp Web
       // on every restart while still working with Render's ephemeral filesystem
       webVersionCache: { type: 'local', path: path.join(__dirname, '.wwebjs_cache') },
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
       puppeteer: puppeteerOpts,
     });
   } catch (e) {
