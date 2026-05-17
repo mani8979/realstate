@@ -506,13 +506,16 @@ const AdminPlotManagement = () => {
                     </button>
 
                     <div 
-                      className="m-auto relative transition-transform duration-200 ease-out inline-block origin-center"
-                      style={{ transform: `scale(${zoom})` }}
+                      className="m-auto relative flex items-center justify-center"
                     >
                       <img 
                         src={property.layoutImage} 
                         alt="Layout" 
-                        className="w-auto h-auto max-w-full max-h-[60vh] md:max-h-[70vh] object-contain rounded-xl select-none"
+                        style={{ 
+                          maxWidth: `${zoom * 100}%`,
+                          maxHeight: `${zoom * 70}vh`
+                        }}
+                        className="w-auto h-auto object-contain rounded-xl select-none transition-all duration-200 ease-out"
                       />
                       
                       {/* Plot Markers Removed as requested */}
@@ -626,16 +629,19 @@ const AdminPlotManagement = () => {
                <X size={32} className="group-hover:rotate-90 transition-transform duration-300" />
              </button>
 
-              <div className="w-full h-full relative flex overflow-auto custom-scrollbar" onClick={() => setIsFullscreenMap(false)}>
+              <div className="w-full h-full relative flex overflow-auto custom-scrollbar p-6 md:p-10" onClick={() => setIsFullscreenMap(false)}>
                 <div 
-                  className="m-auto relative transition-transform duration-200 ease-out origin-center"
-                  style={{ transform: `scale(${zoom * 1.5})` }}
+                  className="m-auto relative flex items-center justify-center"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <img 
                     src={property.layoutImage} 
                     alt="Layout Expanded" 
-                    className="w-auto h-auto max-w-[90vw] max-h-[85vh] object-contain rounded-3xl shadow-2xl block"
+                    style={{ 
+                      maxWidth: `${zoom * 1.5 * 90}vw`,
+                      maxHeight: `${zoom * 1.5 * 85}vh`
+                    }}
+                    className="w-auto h-auto object-contain rounded-3xl shadow-2xl block transition-all duration-200 ease-out"
                   />
                 </div>
               </div>
