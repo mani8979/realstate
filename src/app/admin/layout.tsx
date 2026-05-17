@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { LayoutDashboard, Home, MessageSquare, LogOut, PlusCircle, Building, Menu, Star, ShieldCheck, Users, Image, Phone, MapPin, Sparkles, List, Info, Target, Layout } from 'lucide-react';
+import { LayoutDashboard, Home, MessageSquare, LogOut, PlusCircle, Building, Menu, Star, ShieldCheck, Users, Image, Phone, MapPin, Sparkles, List, Info, Target, Layout, QrCode } from 'lucide-react';
 
 const navigation = [
   {
@@ -13,6 +13,7 @@ const navigation = [
       { name: 'Manage Properties', href: '/admin/properties', icon: Building },
       { name: 'Add New Property', href: '/admin/properties/add', icon: PlusCircle },
       { name: 'Enquiries / Leads', href: '/admin/enquiries', icon: MessageSquare },
+      { name: 'WhatsApp Login', href: '/admin/whatsapp', icon: QrCode },
     ]
   },
   {
