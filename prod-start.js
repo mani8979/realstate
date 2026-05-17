@@ -16,8 +16,9 @@ const whatsapp = spawn('node', [whatsappPath], {
 });
 
 // 2. Start Next.js production server
-console.log('[Startup Orchestrator] Spawning Next.js Server: npx next start');
-const next = spawn('npx', ['next', 'start'], {
+const port = process.env.PORT || 10000;
+console.log(`[Startup Orchestrator] Spawning Next.js Server: npx next start -H 0.0.0.0 -p ${port}`);
+const next = spawn('npx', ['next', 'start', '-H', '0.0.0.0', '-p', port.toString()], {
   stdio: 'inherit',
   shell: true,
   env: process.env
