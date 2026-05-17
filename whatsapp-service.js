@@ -10,6 +10,12 @@
 
 'use strict';
 
+if (global.__whatsappServiceLoaded) {
+  console.log('[WA] WhatsApp service already loaded in this process. Skipping duplicate initialization.');
+  return;
+}
+global.__whatsappServiceLoaded = true;
+
 // ── Only load lightweight built-ins at the top ────────────────────────────────
 // ── Catch-all exception and promise rejection handlers to make it 100% crash-proof ──
 process.on('uncaughtException', (err) => {
@@ -95,10 +101,18 @@ app.post('/api/send', async (req, res) => {
 // ─────────────────────────────────────────────────────────────────────────────
 // START HTTP SERVER FIRST — before any heavy module loading
 // ─────────────────────────────────────────────────────────────────────────────
-app.listen(PORT, '0.0.0.0', () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`[WA] HTTP server ready on port ${PORT}`);
   // Delay Chrome launch slightly so the process settles
   retryTimer = setTimeout(setupClient, 2000);
+});
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.log(`[WA] Port ${PORT} is already in use. This instance will not run a duplicate WhatsApp client.`);
+  } else {
+    console.error('[WA] Express server error:', err);
+  }
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -237,7 +251,11 @@ async function setupClient() {
   try {
     client = new Client({
       authStrategy: new LocalAuth({ dataPath: path.join(__dirname, '.wwebjs_auth') }),
-      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+      webVersionCache: {
+        type: 'remote',
+        remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/{version}.html',
+      },
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
       puppeteer: puppeteerOpts,
     });
   } catch (e) {
@@ -286,17 +304,33 @@ async function setupClient() {
     retryTimer   = setTimeout(setupClient, 10000);
   });
 
-  client.on('disconnected', (reason) => {
+  client.on('disconnected', async (reason) => {
     qrCodeData   = null;
-    botStatus    = `Disconnected (${reason}) — restarting container...`;
+    botStatus    = `Disconnected (${reason}) — reconnecting...`;
     initializing = false;
     console.log('[WA] Disconnected:', reason);
     
-    // Gracefully exit the parent process to trigger a clean container restart on Render
-    // This terminates all helper processes, clears any RAM leaks, and re-links with a fresh memory state!
-    setTimeout(() => {
-      process.exit(0);
-    }, 1000);
+    // Gracefully destroy the client and schedule a retry without crashing the entire Next.js parent process
+    if (client) {
+      try { await client.destroy().catch(() => {}); } catch (_) {}
+      client = null;
+    }
+
+    if (reason === 'forced-logout' || reason === 'auth_failure') {
+      const sessionDir = path.join(__dirname, '.wwebjs_auth');
+      try {
+        if (fs.existsSync(sessionDir)) {
+          fs.rmSync(sessionDir, { recursive: true, force: true });
+          console.log('[WA] Cleaned up session directory after forced-logout/auth_failure');
+        }
+      } catch (e) {
+        console.error('[WA] Failed to clear session after disconnect:', e.message);
+      }
+    }
+
+    console.log('[WA] Scheduling client re-initialization in 5 seconds...');
+    clearTimeout(retryTimer);
+    retryTimer = setTimeout(setupClient, 5000);
   });
 
   // ── Initialize (launches Chrome) ───────────────────────────────────────────
