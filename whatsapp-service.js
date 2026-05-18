@@ -605,6 +605,9 @@ async function setupClient() {
 
   // ── Resolve Chrome executable via robust recursive scanner ──────────────────
   function findChromeBinary() {
+    if (process.platform === 'win32') {
+      return null; // Let Puppeteer resolve its own local Chrome binary instantly on Windows!
+    }
     const cacheDir = process.env.PUPPETEER_CACHE_DIR || path.join(__dirname, '.cache', 'puppeteer');
     console.log('[WA] Scanning cache directory for Chrome:', cacheDir);
     if (!fs.existsSync(cacheDir)) return null;
@@ -641,7 +644,7 @@ async function setupClient() {
     '--disable-dev-shm-usage',       // use /tmp — critical in Docker
     '--disable-gpu',                  // disable GPU processing — great for cloud containers
     '--no-zygote',                    // avoid launching zygote processes to save memory
-    '--single-process',               // run browser/render threads in a single process to slash RAM footprint!
+    ...(process.platform === 'linux' ? ['--single-process'] : []), // Exclude --single-process on Windows to prevent deadlocks/delays!
     '--disable-blink-features=AutomationControlled', // remove navigator.webdriver flag to avoid detection
     '--js-flags=--max-old-space-size=180', // Cap V8 heap memory inside headless Chrome to 180MB (increased to support heavy chat synchronization without crashes)
     '--disable-extensions',
