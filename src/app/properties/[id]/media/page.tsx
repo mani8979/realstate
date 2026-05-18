@@ -379,10 +379,10 @@ const MediaPage = () => {
               key="brochure"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="absolute inset-0 flex flex-col p-4 md:p-10 min-h-0"
+              className="absolute inset-0 flex flex-col p-2 md:p-4 min-h-0"
             >
               <div className="w-full h-full flex flex-col min-h-0">
-                <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center justify-between mb-2">
                   <div className="space-y-1">
                     <h2 className="text-2xl md:text-4xl font-black uppercase tracking-tighter">Brochure Book</h2>
                     <p className="text-primary text-[10px] font-bold uppercase tracking-widest">Interactive Flip-Book Experience</p>
@@ -407,7 +407,7 @@ const MediaPage = () => {
                 </div>
 
                 {/* Book View */}
-                <div className="flex-grow relative flex items-center justify-center overflow-hidden px-4 md:px-10 min-h-0">
+                <div className="flex-grow relative flex items-center justify-center overflow-hidden px-2 md:px-4 min-h-0">
                    <AnimatePresence mode="wait">
                      <motion.div 
                         key={brochurePageIndex}
@@ -464,7 +464,7 @@ const MediaPage = () => {
                 </div>
                 
                 {/* Page Thumbnails */}
-                <div className="flex items-center justify-center gap-2 mt-8 py-4 overflow-x-auto max-w-full">
+                <div className="flex items-center justify-center gap-2 mt-2 py-2 overflow-x-auto max-w-full">
                    {getBrochurePages(property.landBrochure).map((_, i) => (
                       <button 
                         key={i}
