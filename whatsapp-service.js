@@ -700,6 +700,11 @@ async function setupClient() {
     }
   }
 
+  const isWin = process.platform === 'win32';
+  const customUserAgent = isWin
+    ? 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36'
+    : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36';
+
   const puppeteerOpts = {
     headless: true,
     args: customArgs,
@@ -711,6 +716,7 @@ async function setupClient() {
     client = new Client({
       authStrategy: new LocalAuth({ dataPath: path.join(__dirname, '.wwebjs_auth') }),
       puppeteer: puppeteerOpts,
+      userAgent: customUserAgent,
       qrTimeoutMs: 360000,   // Extend QR code expiration timeout to 6 minutes (prevents loops on slow container syncs!)
       authTimeoutMs: 360000, // Extend Auth timeout to 6 minutes
     });
