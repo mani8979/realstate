@@ -426,6 +426,46 @@ async function setupClient() {
   // Lazy-require heavy packages HERE (not at module top)
   let Client, LocalAuth, QRCode;
   try {
+    // Monkey-patch Puppeteer utility in whatsapp-web.js to bypass the "window is not defined" crash
+    try {
+      const PuppeteerUtils = require('whatsapp-web.js/src/util/Puppeteer');
+      if (PuppeteerUtils && PuppeteerUtils.exposeFunctionIfAbsent) {
+        const originalExpose = PuppeteerUtils.exposeFunctionIfAbsent;
+        PuppeteerUtils.exposeFunctionIfAbsent = async function(page, name, fn) {
+          if (name === 'onAuthAppStateChangedEvent') {
+            console.log('[WA PATCH] Injecting safe wrapper for onAuthAppStateChangedEvent to fix "window is not defined" crash');
+            const originalFn = fn;
+            fn = async function(state) {
+              if (state === 'UNPAIRED_IDLE') {
+                console.log('[WA PATCH] Intercepted UNPAIRED_IDLE state change. Executing refreshQR safely inside page context...');
+                await page.evaluate(() => {
+                  try {
+                    window.require('WAWebCmd').Cmd.refreshQR();
+                  } catch (err) {
+                    console.error('[WA PATCH] Failed to refresh QR in page:', err.message);
+                  }
+                }).catch(() => {});
+                return;
+              }
+              try {
+                return await originalFn(state);
+              } catch (err) {
+                if (err.message && err.message.includes('window is not defined')) {
+                  console.log('[WA PATCH] Suppressed window is not defined error in onAuthAppStateChangedEvent');
+                  return;
+                }
+                throw err;
+              }
+            };
+          }
+          return originalExpose.call(this, page, name, fn);
+        };
+        console.log('[WA PATCH] Successfully registered whatsapp-web.js exposed function interceptor!');
+      }
+    } catch (patchErr) {
+      console.error('[WA PATCH ERROR] Failed to patch whatsapp-web.js exposeFunction:', patchErr.message);
+    }
+
     ({ Client, LocalAuth } = require('whatsapp-web.js'));
     QRCode = require('qrcode');
   } catch (e) {
