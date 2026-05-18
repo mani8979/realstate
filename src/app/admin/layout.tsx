@@ -13,7 +13,6 @@ const navigation = [
       { name: 'Manage Properties', href: '/admin/properties', icon: Building },
       { name: 'Add New Property', href: '/admin/properties/add', icon: PlusCircle },
       { name: 'Enquiries / Leads', href: '/admin/enquiries', icon: MessageSquare },
-      { name: 'WhatsApp Login', href: '/admin/whatsapp', icon: QrCode },
     ]
   },
   {
