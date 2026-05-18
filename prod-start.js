@@ -71,7 +71,7 @@ console.log(`[Orchestrator] Spawning Next.js on 0.0.0.0:${port}...`);
 const nextProcess = spawn(
   'node',
   [
-    '--max-old-space-size=320', // Node V8 heap cap for Next.js & WhatsApp (increased to prevent sync OOM)
+    '--max-old-space-size=460', // Increase Node V8 heap to 460MB to give Next.js and the background WhatsApp service maximum breathing room within the 512MB container
     nextBin,
     'start',
     '-H', '0.0.0.0',

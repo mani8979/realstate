@@ -666,7 +666,7 @@ async function setupClient() {
     '--disable-dev-shm-usage',       // use /tmp — critical in Docker
     '--disable-gpu',                  // disable GPU processing — great for cloud containers
     '--disable-blink-features=AutomationControlled', // remove navigator.webdriver flag to avoid detection
-    '--js-flags=--max-old-space-size=180', // Cap V8 heap memory inside headless Chrome to 180MB (increased to support heavy chat synchronization without crashes)
+    '--js-flags=--max-old-space-size=512', // Allow V8 to allocate sufficient heap inside Chrome to compile WhatsApp's heavy JS bundles cleanly
     '--disable-extensions',
     '--disable-component-extensions-with-background-pages',
     '--disable-default-apps',
