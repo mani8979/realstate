@@ -809,12 +809,12 @@ async function setupClient() {
       client = null;
     }
 
-    if (reason === 'forced-logout' || reason === 'auth_failure' || reason === 'NAVIGATION_FAILED_OR_INVALID_PAGE') {
+    if (reason === 'forced-logout') {
       const sessionDir = path.join(__dirname, '.wwebjs_auth');
       try {
         if (fs.existsSync(sessionDir)) {
           fs.rmSync(sessionDir, { recursive: true, force: true });
-          console.log('[WA] Cleaned up session directory after forced-logout/auth_failure/navigation_failure');
+          console.log('[WA] Cleaned up session directory after forced-logout');
         }
       } catch (e) {
         console.error('[WA] Failed to clear session after disconnect:', e.message);
