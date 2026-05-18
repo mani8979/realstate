@@ -86,10 +86,9 @@ try {
             if (page) {
               console.log('[WA STEALTH] Injecting humanizing finger-print overrides into new page...');
               
-              // 1. Get native user-agent and remove 'HeadlessChrome/'
-              let ua = await browser.userAgent();
-              ua = ua.replace('HeadlessChrome/', 'Chrome/');
-              await page.setUserAgent(ua);
+              // 1. Set clean Windows 10 User-Agent to bypass Linux-browser scanning blocks
+              const cleanUA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36';
+              await page.setUserAgent(cleanUA);
               
               // Enable aggressive request interception to save RAM & CPU ONLY in production (Render Free)
               const isProd = process.env.NODE_ENV === 'production';
@@ -698,10 +697,7 @@ async function setupClient() {
     }
   }
 
-  const isWin = process.platform === 'win32';
-  const customUserAgent = isWin
-    ? 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36'
-    : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36';
+  const customUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36';
 
   const puppeteerOpts = {
     headless: true,
