@@ -606,6 +606,9 @@ async function setupClient() {
     '--disable-component-extensions-with-background-pages',
     '--disable-default-apps',
     '--mute-audio',
+    '--disable-backgrounding-occluded-windows', // Prevent Chromium from freezing occluded background tabs (critical for headless sync!)
+    '--disable-renderer-backgrounding',        // Keep rendering active in headless mode
+    '--disable-background-timer-throttling',   // Avoid throttling background setTimeout/setInterval timers
   ];
 
   // ── Integrate @sparticuz/chromium on Linux (Render native mode support!) ───
