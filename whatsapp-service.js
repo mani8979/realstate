@@ -214,6 +214,26 @@ async function backupSessionToMongo() {
     return;
   }
   
+  // Clean non-essential folders to shrink package size before compression
+  const cleanList = [
+    'session/Default/Cache',
+    'session/Default/Code Cache',
+    'session/Default/GPUCache',
+    'session/Default/Service Worker',
+    'session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.blob',
+    'session/BrowserMetrics-spare.pma',
+    'session/Crashpad'
+  ];
+  for (const f of cleanList) {
+    const fullPath = path.join(sessionDir, f);
+    try {
+      if (fs.existsSync(fullPath)) {
+        fs.rmSync(fullPath, { recursive: true, force: true });
+        console.log(`[WA] Purged non-essential cache folder: ${f}`);
+      }
+    } catch (_) {}
+  }
+  
   const tempFile = path.join(os.tmpdir(), 'wa_session.tar.gz');
   try {
     if (fs.existsSync(tempFile)) {
@@ -244,7 +264,7 @@ async function backupSessionToMongo() {
     const collection = mongoose.connection.collection('whatsapp_sessions');
     await collection.updateOne(
       { key: 'session_archive' },
-      { $set: { data: archiveBuffer.toString('base64'), updatedAt: new Date() } },
+      { $set: { data: archiveBuffer, updatedAt: new Date() } }, // Save raw Binary Buffer directly (33% smaller than base64!)
       { upsert: true }
     );
     console.log('[WA] ✅ Session successfully backed up to MongoDB.');
@@ -284,7 +304,17 @@ async function restoreSessionFromMongo() {
     
     console.log('[WA] Backed-up session found in MongoDB. Restoring...');
     
-    const archiveBuffer = Buffer.from(doc.data, 'base64');
+    let archiveBuffer;
+    if (Buffer.isBuffer(doc.data)) {
+      archiveBuffer = doc.data;
+    } else if (doc.data && doc.data.buffer && Buffer.isBuffer(doc.data.buffer)) {
+      archiveBuffer = doc.data.buffer;
+    } else if (typeof doc.data === 'string') {
+      archiveBuffer = Buffer.from(doc.data, 'base64');
+    } else {
+      archiveBuffer = Buffer.from(doc.data);
+    }
+    
     fs.writeFileSync(tempFile, archiveBuffer);
     
     if (fs.existsSync(sessionDir)) {
