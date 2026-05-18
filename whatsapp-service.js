@@ -682,7 +682,7 @@ async function setupClient() {
   ];
 
   // ── Integrate @sparticuz/chromium on Linux (Render native mode support!) ───
-  if (process.platform === 'linux') {
+  if (process.platform === 'linux' && !executablePath) {
     try {
       console.log('[WA] Linux platform detected. Loading self-contained @sparticuz/chromium...');
       const chromium = require('@sparticuz/chromium');
