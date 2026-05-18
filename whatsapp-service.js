@@ -91,6 +91,17 @@ try {
               ua = ua.replace('HeadlessChrome/', 'Chrome/');
               await page.setUserAgent(ua);
               
+              // Enable aggressive request interception to save RAM & CPU on low-tier hosting (Render Free)
+              await page.setRequestInterception(true);
+              page.on('request', (req) => {
+                const type = req.resourceType();
+                if (['image', 'media', 'font'].includes(type)) {
+                  req.abort();
+                } else {
+                  req.continue();
+                }
+              });
+              
               // Enable JavaScript on page
               await page.setJavaScriptEnabled(true);
               
@@ -600,6 +611,7 @@ async function setupClient() {
     '--disable-dev-shm-usage',       // use /tmp — critical in Docker
     '--disable-gpu',                  // disable GPU processing — great for cloud containers
     '--no-zygote',                    // avoid launching zygote processes to save memory
+    '--single-process',               // run browser/render threads in a single process to slash RAM footprint!
     '--disable-blink-features=AutomationControlled', // remove navigator.webdriver flag to avoid detection
     '--js-flags=--max-old-space-size=180', // Cap V8 heap memory inside headless Chrome to 180MB (increased to support heavy chat synchronization without crashes)
     '--disable-extensions',
@@ -649,6 +661,8 @@ async function setupClient() {
       authStrategy: new LocalAuth({ dataPath: path.join(__dirname, '.wwebjs_auth') }),
       puppeteer: puppeteerOpts,
       userAgent: customUserAgent,
+      qrTimeoutMs: 360000,   // Extend QR code expiration timeout to 6 minutes (prevents loops on slow container syncs!)
+      authTimeoutMs: 360000, // Extend Auth timeout to 6 minutes
     });
   } catch (e) {
     console.error('[WA] new Client() failed:', e.message);
