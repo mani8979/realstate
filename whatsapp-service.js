@@ -458,7 +458,12 @@ app.post('/api/send', async (req, res) => {
   if (!number || !message)
     return res.status(400).json({ success: false, message: 'number and message required' });
 
-  if (botStatus !== 'WhatsApp is ready')
+  const isServiceActive = 
+    botStatus === 'WhatsApp is ready' || 
+    botStatus === 'Authenticated — syncing chats...' || 
+    (botStatus && botStatus.startsWith('Syncing:'));
+
+  if (!isServiceActive)
     return res.status(503).json({ success: false, message: `Not ready: ${botStatus}` });
 
   try {

@@ -4,15 +4,14 @@ export const dynamic = 'force-dynamic';
 
 let serviceLoaded = false;
 
-function ensureWhatsAppService() {
+async function ensureWhatsAppService() {
   if (serviceLoaded) return;
   serviceLoaded = true;
   console.log('[API status] Lazily spawning in-process WhatsApp service...');
   try {
-    const path = require('path');
-    const servicePath = path.resolve(process.cwd(), 'whatsapp-service.js');
-    const globalEval = (global as any)['ev' + 'al'];
-    globalEval('require')(servicePath);
+    const { createRequire } = await import('module');
+    const localRequire = createRequire(process.cwd() + '/package.json');
+    localRequire('./whatsapp-service.js');
     console.log('[API status] WhatsApp service spawned successfully!');
   } catch (err: any) {
     console.error('[API status] Failed to spawn WhatsApp service:', err.message);
@@ -22,7 +21,7 @@ function ensureWhatsAppService() {
 
 export async function GET() {
   // Ensure the service is loaded on the first active request
-  ensureWhatsAppService();
+  await ensureWhatsAppService();
 
   try {
     const serviceUrl = process.env.WHATSAPP_SERVICE_URL || 'http://127.0.0.1:3001';

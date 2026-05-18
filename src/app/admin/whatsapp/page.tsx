@@ -103,7 +103,10 @@ const AdminWhatsApp = () => {
     }
   };
 
-  const isReady = statusData.status === 'WhatsApp is ready';
+  const isReady = 
+    statusData.status === 'WhatsApp is ready' || 
+    statusData.status === 'Authenticated — syncing chats...' || 
+    (statusData.status && statusData.status.startsWith('Syncing:'));
   const hasQR = !!statusData.qr;
 
   return (
