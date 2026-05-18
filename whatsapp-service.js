@@ -91,16 +91,19 @@ try {
               ua = ua.replace('HeadlessChrome/', 'Chrome/');
               await page.setUserAgent(ua);
               
-              // Enable aggressive request interception to save RAM & CPU on low-tier hosting (Render Free)
-              await page.setRequestInterception(true);
-              page.on('request', (req) => {
-                const type = req.resourceType();
-                if (['image', 'media', 'font'].includes(type)) {
-                  req.abort();
-                } else {
-                  req.continue();
-                }
-              });
+              // Enable aggressive request interception to save RAM & CPU ONLY in production (Render Free)
+              const isProd = process.env.NODE_ENV === 'production';
+              if (isProd) {
+                await page.setRequestInterception(true);
+                page.on('request', (req) => {
+                  const type = req.resourceType();
+                  if (['image', 'media', 'font'].includes(type)) {
+                    req.abort();
+                  } else {
+                    req.continue();
+                  }
+                });
+              }
               
               // Enable JavaScript on page
               await page.setJavaScriptEnabled(true);
@@ -697,11 +700,6 @@ async function setupClient() {
     }
   }
 
-  const isWin = process.platform === 'win32';
-  const customUserAgent = isWin
-    ? 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36'
-    : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36';
-
   const puppeteerOpts = {
     headless: true,
     args: customArgs,
@@ -713,7 +711,6 @@ async function setupClient() {
     client = new Client({
       authStrategy: new LocalAuth({ dataPath: path.join(__dirname, '.wwebjs_auth') }),
       puppeteer: puppeteerOpts,
-      userAgent: customUserAgent,
       qrTimeoutMs: 360000,   // Extend QR code expiration timeout to 6 minutes (prevents loops on slow container syncs!)
       authTimeoutMs: 360000, // Extend Auth timeout to 6 minutes
     });
