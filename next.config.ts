@@ -7,7 +7,13 @@ import path from "path";
 // ─────────────────────────────────────────────────────────────────────────────
 const phase = process.env.NEXT_PHASE;
 const isNextBuild = phase === 'phase-production-build' || process.argv.some(arg => arg.includes('build') || arg.includes('lint'));
-const isNextStart = !isNextBuild && (phase === 'phase-development-server' || phase === 'phase-production-server' || process.argv.some(arg => arg.includes('start-server.js')));
+const isNextStart = !isNextBuild && (
+  phase === 'phase-development-server' || 
+  phase === 'phase-production-server' || 
+  process.argv.includes('start') || 
+  process.argv.includes('dev') || 
+  process.argv.some(arg => arg.includes('start-server.js'))
+);
 
 console.log('[Next.js Config] NEXT_PHASE is:', phase, 'isNextStart (server runtime):', isNextStart, 'isNextBuild (build/lint):', isNextBuild);
 
