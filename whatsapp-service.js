@@ -367,6 +367,17 @@ let botStatus    = 'Starting WhatsApp service...';
 let initializing = false;
 let retryTimer   = null;
 
+// ── Safe Background Client Destruction Utility to Prevent Deadlocks ──────────
+function destroyClientSafe(oldClient) {
+  if (!oldClient) return;
+  console.log('[WA] Safely destroying old client in the background (fire-and-forget)...');
+  // Race client.destroy against a 4-second hard timeout to guarantee execution flow never deadlocks
+  Promise.race([
+    oldClient.destroy().catch(() => {}),
+    new Promise(resolve => setTimeout(resolve, 4000))
+  ]).catch(() => {});
+}
+
 app.use(express.json());
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -383,8 +394,8 @@ app.post('/api/logout', async (_req, res) => {
   initializing = false;
 
   if (client) {
-    try { await client.logout();  } catch (_) {}
-    try { await client.destroy(); } catch (_) {}
+    try { await client.logout().catch(() => {}); } catch (_) {}
+    destroyClientSafe(client);
     client = null;
   }
 
@@ -603,7 +614,7 @@ async function setupClient() {
 
   // ── Destroy previous client if any ─────────────────────────────────────────
   if (client) {
-    try { await client.destroy().catch(() => {}); } catch (_) {}
+    destroyClientSafe(client);
     client = null;
   }
 
@@ -756,7 +767,7 @@ async function setupClient() {
     console.error('[WA] Auth failure:', msg);
     
     if (client) {
-      try { await client.destroy().catch(() => {}); } catch (_) {}
+      destroyClientSafe(client);
       client = null;
     }
 
@@ -786,7 +797,7 @@ async function setupClient() {
     
     // Gracefully destroy the client and schedule a retry without crashing the entire Next.js parent process
     if (client) {
-      try { await client.destroy().catch(() => {}); } catch (_) {}
+      destroyClientSafe(client);
       client = null;
     }
 
@@ -822,7 +833,7 @@ async function setupClient() {
     console.error('[WA] initialize() threw:', e.message);
     botStatus    = 'Browser launch failed — retrying in 15s';
     initializing = false;
-    try { client.destroy().catch(() => {}); } catch (_) {}
+    destroyClientSafe(client);
     client     = null;
     retryTimer = setTimeout(setupClient, 15000);
   }
