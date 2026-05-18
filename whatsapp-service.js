@@ -666,8 +666,6 @@ async function setupClient() {
     '--disable-setuid-sandbox',
     '--disable-dev-shm-usage',       // use /tmp — critical in Docker
     '--disable-gpu',                  // disable GPU processing — great for cloud containers
-    '--no-zygote',                    // avoid launching zygote processes to save memory
-    ...(process.platform === 'linux' ? ['--single-process'] : []), // Exclude --single-process on Windows to prevent deadlocks/delays!
     '--disable-blink-features=AutomationControlled', // remove navigator.webdriver flag to avoid detection
     '--js-flags=--max-old-space-size=180', // Cap V8 heap memory inside headless Chrome to 180MB (increased to support heavy chat synchronization without crashes)
     '--disable-extensions',
