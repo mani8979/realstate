@@ -1,9 +1,4 @@
 import type { NextConfig } from "next";
-import path from "path";
-
-// WhatsApp service is now loaded exactly once via Next.js standard instrumentation hook in src/instrumentation.ts
-
-
 
 const nextConfig: NextConfig = {
   images: {
