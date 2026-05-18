@@ -90,19 +90,7 @@ try {
               const cleanUA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36';
               await page.setUserAgent(cleanUA);
               
-              // Enable aggressive request interception to save RAM & CPU ONLY in production (Render Free)
-              const isProd = process.env.NODE_ENV === 'production';
-              if (isProd) {
-                await page.setRequestInterception(true);
-                page.on('request', (req) => {
-                  const type = req.resourceType();
-                  if (['image', 'media', 'font'].includes(type)) {
-                    req.abort();
-                  } else {
-                    req.continue();
-                  }
-                });
-              }
+              // JavaScript is enabled natively on page
               
               // Enable JavaScript on page
               await page.setJavaScriptEnabled(true);
