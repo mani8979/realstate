@@ -7,6 +7,16 @@ let serviceLoaded = false;
 async function ensureWhatsAppService() {
   if (serviceLoaded) return;
   serviceLoaded = true;
+
+  // Guard to prevent lazy-spawning during static build pre-rendering phase
+  const isDev = process.env.NODE_ENV === 'development';
+  const isStart = process.env.IS_NEXT_START === 'true';
+  if (!isDev && !isStart) {
+    console.log('[API status] Bypassing lazy WhatsApp spawn during build phase.');
+    serviceLoaded = false;
+    return;
+  }
+
   console.log('[API status] Lazily spawning in-process WhatsApp service...');
   try {
     const { createRequire } = await import('module');

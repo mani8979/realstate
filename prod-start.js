@@ -83,6 +83,7 @@ const nextProcess = spawn(
     env: {
       ...process.env,
       UV_THREADPOOL_SIZE: '4', // Limit libuv thread pool to save memory
+      IS_NEXT_START: 'true',   // Flag to indicate actual runtime vs compilation/build
     },
   }
 );
