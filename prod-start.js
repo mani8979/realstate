@@ -117,13 +117,27 @@ nextProcess.on('close', (code) => {
 // WhatsApp service is loaded directly inside Next.js process on startup (see next.config.ts)
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 3. Graceful shutdown
-// ─────────────────────────────────────────────────────────────────────────────
+let isShuttingDown = false;
 function shutdown() {
+  if (isShuttingDown) return;
+  isShuttingDown = true;
   console.log('[Orchestrator] Gracefully shutting down services...');
-  try { if (nextProcess) nextProcess.kill(); } catch (_) {}
-  process.exit(0);
+  if (nextProcess) {
+    nextProcess.once('exit', (code) => {
+      console.log(`[Orchestrator] Next.js process exited (code=${code}). Exiting orchestrator.`);
+      process.exit(0);
+    });
+    nextProcess.kill('SIGTERM');
+    // Set a safety timeout of 10 seconds to force exit if child hangs
+    setTimeout(() => {
+      console.log('[Orchestrator] Graceful shutdown timeout reached. Force exiting.');
+      process.exit(1);
+    }, 10000);
+  } else {
+    process.exit(0);
+  }
 }
 
 process.on('SIGINT',  shutdown);
 process.on('SIGTERM', shutdown);
+

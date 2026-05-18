@@ -5,10 +5,13 @@ import path from "path";
 // Consolidate WhatsApp microservice directly inside Next.js Node process!
 // This saves a massive 130MB of RAM by avoiding a duplicate V8 engine.
 // ─────────────────────────────────────────────────────────────────────────────
-const isNextStart = process.argv.includes('start') || process.argv.some(arg => arg.endsWith('next'));
-const isNextBuild = process.argv.includes('build');
+const phase = process.env.NEXT_PHASE;
+const isNextBuild = phase === 'phase-production-build' || process.argv.some(arg => arg.includes('build') || arg.includes('lint'));
+const isNextStart = !isNextBuild && (phase === 'phase-development-server' || phase === 'phase-production-server' || process.argv.some(arg => arg.includes('start-server.js')));
 
-if (isNextStart && !isNextBuild && typeof window === 'undefined') {
+console.log('[Next.js Config] NEXT_PHASE is:', phase, 'isNextStart (server runtime):', isNextStart, 'isNextBuild (build/lint):', isNextBuild);
+
+if (isNextStart && typeof window === 'undefined') {
   console.log('[Next.js Config] Spawning in-process WhatsApp service inside Next.js Node process instantly...');
   try {
     const servicePath = path.join(process.cwd(), 'whatsapp-service.js');
@@ -18,6 +21,8 @@ if (isNextStart && !isNextBuild && typeof window === 'undefined') {
     console.error('[Next.js Config] Error loading WhatsApp service in-process:', err);
   }
 }
+
+
 
 const nextConfig: NextConfig = {
   images: {

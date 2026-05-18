@@ -25,6 +25,36 @@ process.on('unhandledRejection', (reason, promise) => {
   console.error('[WA CRITICAL] Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
+// Graceful session persistence on process shutdown
+let isGracefulShuttingDown = false;
+async function handleGracefulShutdown(signal) {
+  if (isGracefulShuttingDown) return;
+  isGracefulShuttingDown = true;
+  console.log(`[WA] Graceful shutdown triggered via ${signal}. Saving current session to MongoDB...`);
+  
+  if (client) {
+    try {
+      console.log('[WA] Destroying active WhatsApp client context...');
+      await client.destroy();
+      console.log('[WA] WhatsApp client destroyed.');
+    } catch (err) {
+      console.error('[WA] Error destroying client during shutdown:', err.message);
+    }
+  }
+  
+  try {
+    await backupSessionToMongo();
+  } catch (err) {
+    console.error('[WA] Error backing up session during shutdown:', err.message);
+  }
+  
+  console.log('[WA] Graceful session backup finalized. Exiting process.');
+  process.exit(0);
+}
+
+process.once('SIGTERM', () => handleGracefulShutdown('SIGTERM'));
+process.once('SIGINT', () => handleGracefulShutdown('SIGINT'));
+
 const express = require('express');
 const path    = require('path');
 const fs      = require('fs');
@@ -196,7 +226,7 @@ async function backupSessionToMongo() {
       return;
     }
     
-    if (mongoose.connection.readyState === 0) {
+    if (mongoose.connection.readyState !== 1) {
       await mongoose.connect(mongoUri);
     }
     
@@ -230,7 +260,7 @@ async function restoreSessionFromMongo() {
       return false;
     }
     
-    if (mongoose.connection.readyState === 0) {
+    if (mongoose.connection.readyState !== 1) {
       await mongoose.connect(mongoUri);
     }
     
@@ -272,7 +302,7 @@ async function deleteSessionFromMongo() {
     const mongoUri = process.env.MONGODB_URI;
     if (!mongoUri) return;
     
-    if (mongoose.connection.readyState === 0) {
+    if (mongoose.connection.readyState !== 1) {
       await mongoose.connect(mongoUri);
     }
     
@@ -485,7 +515,7 @@ async function setupClient() {
     const mongoose = require('mongoose');
     const mongoUri = process.env.MONGODB_URI;
     if (mongoUri) {
-      if (mongoose.connection.readyState === 0) {
+      if (mongoose.connection.readyState !== 1) {
         await mongoose.connect(mongoUri);
       }
       const collection = mongoose.connection.collection('whatsapp_sessions');
@@ -571,6 +601,11 @@ async function setupClient() {
     '--disable-gpu',                  // disable GPU processing — great for cloud containers
     '--no-zygote',                    // avoid launching zygote processes to save memory
     '--disable-blink-features=AutomationControlled', // remove navigator.webdriver flag to avoid detection
+    '--js-flags=--max-old-space-size=120', // Cap V8 heap memory inside headless Chrome to 120MB to prevent OOM
+    '--disable-extensions',
+    '--disable-component-extensions-with-background-pages',
+    '--disable-default-apps',
+    '--mute-audio',
   ];
 
   // ── Integrate @sparticuz/chromium on Linux (Render native mode support!) ───
