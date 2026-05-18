@@ -71,7 +71,7 @@ console.log(`[Orchestrator] Spawning Next.js on 0.0.0.0:${port}...`);
 const nextProcess = spawn(
   'node',
   [
-    '--max-old-space-size=220', // Node V8 heap cap for Next.js
+    '--max-old-space-size=320', // Node V8 heap cap for Next.js & WhatsApp (increased to prevent sync OOM)
     nextBin,
     'start',
     '-H', '0.0.0.0',
@@ -82,7 +82,6 @@ const nextProcess = spawn(
     shell: false,
     env: {
       ...process.env,
-      DEBUG: 'puppeteer:*', // Enable detailed Puppeteer tracing logs
       UV_THREADPOOL_SIZE: '4', // Limit libuv thread pool to save memory
     },
   }

@@ -601,7 +601,7 @@ async function setupClient() {
     '--disable-gpu',                  // disable GPU processing — great for cloud containers
     '--no-zygote',                    // avoid launching zygote processes to save memory
     '--disable-blink-features=AutomationControlled', // remove navigator.webdriver flag to avoid detection
-    '--js-flags=--max-old-space-size=120', // Cap V8 heap memory inside headless Chrome to 120MB to prevent OOM
+    '--js-flags=--max-old-space-size=180', // Cap V8 heap memory inside headless Chrome to 180MB (increased to support heavy chat synchronization without crashes)
     '--disable-extensions',
     '--disable-component-extensions-with-background-pages',
     '--disable-default-apps',
@@ -609,6 +609,8 @@ async function setupClient() {
     '--disable-backgrounding-occluded-windows', // Prevent Chromium from freezing occluded background tabs (critical for headless sync!)
     '--disable-renderer-backgrounding',        // Keep rendering active in headless mode
     '--disable-background-timer-throttling',   // Avoid throttling background setTimeout/setInterval timers
+    '--disk-cache-size=0',                     // Disable disk cache to prevent filesystem writes slowing down the container
+    '--media-cache-size=0',                    // Disable media cache
   ];
 
   // ── Integrate @sparticuz/chromium on Linux (Render native mode support!) ───
