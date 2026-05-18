@@ -9,13 +9,17 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
+    console.log('API GET request for ID:', id);
     await dbConnect();
     const property = await Property.findById(id);
+    console.log('API GET Property search result:', property ? property.title : 'NULL');
     if (!property) {
+      console.log('API GET Property not found in DB! Returning 404.');
       return NextResponse.json({ error: 'Property not found' }, { status: 404 });
     }
     return NextResponse.json(property);
   } catch (error: any) {
+    console.error('API GET Error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

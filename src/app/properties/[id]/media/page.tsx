@@ -275,7 +275,7 @@ const MediaPage = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              className="w-full h-full p-4 md:p-10"
+              className="absolute inset-0 p-4 md:p-10"
             >
               <div className="w-full h-full bg-black/5 dark:bg-white/5 rounded-[3rem] overflow-hidden border border-black/10 dark:border-white/10 relative shadow-2xl">
                 <ModelViewer
@@ -302,7 +302,7 @@ const MediaPage = () => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.7 }}
-              className="w-full h-full relative"
+              className="absolute inset-0"
               onMouseEnter={() => setIsAutoScroll(false)}
               onMouseLeave={() => setIsAutoScroll(true)}
             >
@@ -351,7 +351,7 @@ const MediaPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="w-full h-full p-4 md:p-20"
+              className="absolute inset-0 p-4 md:p-20"
             >
               <div className="w-full h-full bg-black/5 dark:bg-white/5 rounded-[3rem] overflow-hidden border border-black/10 dark:border-white/10 relative shadow-2xl">
                 {property.videoUrl.includes('youtube') || property.videoUrl.includes('youtu.be') ? (
@@ -379,7 +379,7 @@ const MediaPage = () => {
               key="brochure"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="w-full h-full flex flex-col items-center justify-center p-4 md:p-10 min-h-0"
+              className="absolute inset-0 flex flex-col items-center justify-center p-4 md:p-10 min-h-0"
             >
               <div className="w-full h-full flex flex-col min-h-0">
                 <div className="flex items-center justify-between mb-8">
@@ -421,9 +421,9 @@ const MediaPage = () => {
                            {getBrochurePages(property.landBrochure)[brochurePageIndex]?.map((img: string, i: number) => (
                               <div 
                                 key={i} 
-                                className={`w-full flex justify-center items-center h-full bg-white dark:bg-zinc-900 shadow-2xl rounded-sm p-1 md:p-2 ${
+                                className={`flex justify-center items-center h-full bg-white dark:bg-zinc-900 shadow-2xl rounded-sm p-1 md:p-2 ${
                                   getBrochurePages(property.landBrochure)[brochurePageIndex].length === 1 
-                                    ? '' 
+                                    ? 'max-w-full w-auto' 
                                     : 'flex-1'
                                 }`}
                                 style={{
@@ -482,7 +482,7 @@ const MediaPage = () => {
               key="plot_plan"
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="w-full h-full flex flex-col md:flex-row gap-8 p-4 md:p-8 overflow-hidden"
+              className="absolute inset-0 flex flex-col md:flex-row gap-8 p-4 md:p-8 overflow-hidden"
             >
               {/* Left Side: Layout Image */}
               <div 
@@ -729,7 +729,7 @@ const MediaPage = () => {
               key="map"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="w-full h-full p-4 md:p-10"
+              className="absolute inset-0 p-4 md:p-10"
             >
               <div className="w-full h-full bg-black/5 dark:bg-white/5 rounded-[3rem] overflow-hidden border border-black/10 dark:border-white/10 relative shadow-2xl flex flex-col items-center justify-center">
                  {mapInfo?.isEmbed ? (
