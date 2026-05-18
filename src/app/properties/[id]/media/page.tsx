@@ -379,7 +379,7 @@ const MediaPage = () => {
               key="brochure"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="absolute inset-0 flex flex-col items-center justify-center p-4 md:p-10 min-h-0"
+              className="absolute inset-0 flex flex-col p-4 md:p-10 min-h-0"
             >
               <div className="w-full h-full flex flex-col min-h-0">
                 <div className="flex items-center justify-between mb-8">
