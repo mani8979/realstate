@@ -50,8 +50,8 @@ export async function POST(request: Request) {
     if (data.phone) {
       try {
         const cleanNumber = data.phone.replace(/\D/g, '');
-        // Only send if it looks like a valid 10-digit mobile number
-        if (cleanNumber.length === 10) {
+        // Support both 10-digit local mobile numbers and 11-14 digit country-coded numbers
+        if (cleanNumber.length >= 10 && cleanNumber.length <= 14) {
           const isSiteVisit = data.type === 'Site Visit';
           
           // Build custom professional message
