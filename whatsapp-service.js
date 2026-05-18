@@ -550,30 +550,34 @@ async function setupClient() {
   // ── Restore session from MongoDB BEFORE initializing client ────────────────
   const authDir = path.join(__dirname, '.wwebjs_auth');
   
-  // Connect to MongoDB and check if a verified backup exists
+  // On localhost, we bypass restoring the production session on boot to guarantee instant, clean QR codes!
+  const isRender = !!process.env.RENDER;
   let hasBackup = false;
-  try {
-    const mongoose = require('mongoose');
-    const mongoUri = process.env.MONGODB_URI;
-    if (mongoUri) {
-      if (mongoose.connection.readyState !== 1) {
-        await mongoose.connect(mongoUri);
+  
+  if (isRender) {
+    try {
+      const mongoose = require('mongoose');
+      const mongoUri = process.env.MONGODB_URI;
+      if (mongoUri) {
+        if (mongoose.connection.readyState !== 1) {
+          await mongoose.connect(mongoUri);
+        }
+        const collection = mongoose.connection.collection('whatsapp_sessions');
+        const doc = await collection.findOne({ key: 'session_archive' });
+        if (doc && doc.data) {
+          hasBackup = true;
+        }
       }
-      const collection = mongoose.connection.collection('whatsapp_sessions');
-      const doc = await collection.findOne({ key: 'session_archive' });
-      if (doc && doc.data) {
-        hasBackup = true;
-      }
+    } catch (e) {
+      console.error('[WA] MongoDB backup check failed:', e.message);
     }
-  } catch (e) {
-    console.error('[WA] MongoDB backup check failed:', e.message);
   }
 
   if (hasBackup) {
     console.log('[WA] Verified backup exists in MongoDB. Restoring to ensure fresh and clean state...');
     await restoreSessionFromMongo();
   } else {
-    console.log('[WA] No backup found in MongoDB. Starting clean QR scan session, purging dirty leftover files...');
+    console.log('[WA] Starting clean QR scan session, purging dirty leftover files...');
     try {
       if (fs.existsSync(authDir)) {
         fs.rmSync(authDir, { recursive: true, force: true });
