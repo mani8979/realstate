@@ -78,9 +78,9 @@ try {
                 
                 const platformVal = isLinux ? 'Linux' : 'Windows';
                 const rendererVal = isLinux 
-                  ? 'ANGLE (Google, SwiftShader Device (Subzero), SwiftShader)' 
+                  ? 'Mesa Intel(R) UHD Graphics (CML GT2)' 
                   : 'ANGLE (Intel, Intel(R) UHD Graphics Direct3D11, D3D11)';
-                const vendorVal = isLinux ? 'Google Inc. (Google)' : 'Google Inc. (Intel)';
+                const vendorVal = isLinux ? 'Intel Open Source Technology Center' : 'Google Inc. (Intel)';
 
                 // 1. Hide webdriver property
                 Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
@@ -127,11 +127,11 @@ try {
                   }
                 };
                 
-                // 6. WebGL Vendor & Renderer spoofing (OS aligned)
+                // 6. WebGL Vendor & Renderer spoofing (OS aligned - handles WebGL, experimental, and WebGL2)
                 const originalGetContext = HTMLCanvasElement.prototype.getContext;
                 HTMLCanvasElement.prototype.getContext = function (type, attributes) {
                   const context = originalGetContext.apply(this, arguments);
-                  if (context && (type === 'webgl' || type === 'experimental-webgl')) {
+                  if (context && (type === 'webgl' || type === 'experimental-webgl' || type === 'webgl2')) {
                     const gl = context;
                     const originalGetParameter = gl.getParameter;
                     gl.getParameter = function (pname) {
