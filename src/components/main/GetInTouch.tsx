@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 const GetInTouch = ({ content }: { content?: any }) => {
   return (
-    <section className="bg-black text-white py-12 md:py-32 overflow-hidden">
+    <section className="bg-black text-white pt-28 pb-12 md:pt-40 md:pb-32 overflow-hidden">
       <div className="container mx-auto px-6">
         {/* Large Heading */}
         <motion.h2 
