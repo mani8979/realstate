@@ -5,7 +5,8 @@ import Image from 'next/image';
 import { 
   X, ArrowLeft, Play, Image as ImageIcon, 
   Map as MapIcon, Download, ChevronLeft, ChevronRight,
-  Maximize2, MousePointer2, LayoutGrid, Box, Maximize
+  Maximize2, MousePointer2, LayoutGrid, Box, Maximize,
+  Search
 } from 'lucide-react';
 
 // Bypass TypeScript error for custom element
@@ -40,9 +41,16 @@ const MediaPage = () => {
   const [isAutoScroll, setIsAutoScroll] = useState(true);
   const [brochurePageIndex, setBrochurePageIndex] = useState(0);
   const [statusFilter, setStatusFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const [zoom, setZoom] = useState(1);
   const [hoveredPlot, setHoveredPlot] = useState<string | null>(null);
   const [isMapExpanded, setIsMapExpanded] = useState(false);
+
+  const filteredPlots = property?.plots?.filter((p: any) => {
+    const matchesStatus = statusFilter === 'all' || p.status === statusFilter;
+    const matchesSearch = searchQuery === '' || p.number.toString().toLowerCase().includes(searchQuery.trim().toLowerCase());
+    return matchesStatus && matchesSearch;
+  }) || [];
 
   useEffect(() => {
     if (isMapExpanded) {
@@ -509,30 +517,36 @@ const MediaPage = () => {
                     viewBox="0 0 100 100" 
                     preserveAspectRatio="none"
                   >
-                    {property.plots?.map((plot: any, idx: number) => (
-                      <motion.rect
-                        key={idx}
-                        x={plot.x}
-                        y={plot.y}
-                        width={plot.width || 5}
-                        height={plot.height || 3}
-                        className="pointer-events-auto cursor-pointer"
-                        initial={{ opacity: 0 }}
-                        animate={{ 
-                          opacity: hoveredPlot === plot.number ? 0.6 : 0,
-                        }}
-                        style={{
-                          fill: plot.status === 'sold' ? (property.soldColor || '#fac915') :
-                                plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
-                                (property.availableColor || '#ffffff'),
-                          stroke: hoveredPlot === plot.number ? '#fff' : 'transparent',
-                          strokeWidth: 0.5
-                        }}
-                        onMouseEnter={() => setHoveredPlot(plot.number)}
-                        onMouseLeave={() => setHoveredPlot(null)}
-                        onClick={() => openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`)}
-                      />
-                    ))}
+                    {property.plots?.map((plot: any, idx: number) => {
+                      const isMatch = !searchQuery || plot.number.toString().toLowerCase().includes(searchQuery.trim().toLowerCase());
+                      const isHovered = hoveredPlot === plot.number;
+                      const isExactMatch = searchQuery && plot.number.toString().toLowerCase() === searchQuery.trim().toLowerCase();
+                      
+                      return (
+                        <motion.rect
+                          key={idx}
+                          x={plot.x}
+                          y={plot.y}
+                          width={plot.width || 5}
+                          height={plot.height || 3}
+                          className="pointer-events-auto cursor-pointer"
+                          initial={{ opacity: 0 }}
+                          animate={{ 
+                            opacity: isHovered ? 0.6 : (isExactMatch ? 0.5 : (searchQuery && isMatch ? 0.3 : 0)),
+                          }}
+                          style={{
+                            fill: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                  plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                  (property.availableColor || '#ffffff'),
+                            stroke: (isHovered || isExactMatch) ? '#fff' : 'transparent',
+                            strokeWidth: (isHovered || isExactMatch) ? 0.5 : 0
+                          }}
+                          onMouseEnter={() => setHoveredPlot(plot.number)}
+                          onMouseLeave={() => setHoveredPlot(null)}
+                          onClick={() => openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`)}
+                        />
+                      );
+                    })}
                   </svg>
                 </div>
                 
@@ -630,8 +644,30 @@ const MediaPage = () => {
                         <p className="text-[9px] font-bold text-primary uppercase tracking-widest">Real-time availability</p>
                       </div>
                       <div className="bg-primary/10 px-3 py-1.5 rounded-xl border border-primary/20">
-                         <span className="text-[9px] font-black text-primary uppercase tracking-widest">{property.plots?.length || 0} Units</span>
+                         <span className="text-[9px] font-black text-primary uppercase tracking-widest">
+                           {searchQuery || statusFilter !== 'all' ? `${filteredPlots.length} / ${property.plots?.length || 0}` : `${property.plots?.length || 0}`} Units
+                         </span>
                       </div>
+                    </div>
+
+                    {/* Search Bar */}
+                    <div className="relative">
+                      <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-primary animate-pulse" size={16} />
+                      <input
+                        type="text"
+                        placeholder="Search Plot Number (e.g. 15)..."
+                        className="w-full pl-11 pr-10 py-2.5 bg-black/10 dark:bg-white/5 rounded-xl text-xs font-bold focus:outline-none focus:ring-1 focus:ring-primary/50 transition-all border border-black/10 dark:border-white/10 placeholder-gray-500 text-black dark:text-white"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                      />
+                      {searchQuery && (
+                        <button
+                          onClick={() => setSearchQuery('')}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+                        >
+                          <X size={14} />
+                        </button>
+                      )}
                     </div>
 
                     {/* Status Selectors */}
@@ -658,48 +694,53 @@ const MediaPage = () => {
                     style={{ minHeight: '400px' }}
                   >
                     <div className="space-y-2">
-                      {property.plots?.filter((p: any) => statusFilter === 'all' || p.status === statusFilter).length > 0 ? (
-                        property.plots?.filter((p: any) => statusFilter === 'all' || p.status === statusFilter).map((plot: any, idx: number) => (
-                          <div 
-                            key={idx} 
-                            data-plot={plot.number}
-                            onMouseEnter={() => setHoveredPlot(plot.number)}
-                            onMouseLeave={() => setHoveredPlot(null)}
-                            className={`
-                              bg-white dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-2xl p-4 flex items-center justify-between group transition-all shadow-sm cursor-pointer
-                              ${hoveredPlot === plot.number ? 'ring-2 ring-primary bg-black/5 dark:bg-white/10 scale-[1.02]' : 'hover:bg-black/5 dark:hover:bg-white/10'}
-                            `}
-                          >
-                            <div className="flex items-center gap-4">
-                              <div className="w-1.5 h-8 rounded-full transition-all" style={{
-                                height: hoveredPlot === plot.number ? '1.5rem' : '1rem',
-                                backgroundColor: plot.status === 'sold' ? (property.soldColor || '#fac915') :
-                                                plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
-                                                (property.availableColor || '#ffffff')
-                              }}></div>
-                              <div className="flex flex-col">
-                                <span className="text-sm font-black text-black dark:text-white">Plot {plot.number}</span>
-                                <span className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40" style={{
-                                  color: plot.status === 'sold' ? (property.soldColor || '#fac915') :
-                                         plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
-                                         'inherit'
-                                }}>
-                                  {plot.status}
-                                </span>
-                              </div>
-                            </div>
-                            
-                            <button 
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`);
-                              }}
-                              className="text-[8px] font-black uppercase tracking-widest px-4 py-2 rounded-xl transition-all border border-primary/20 bg-primary/5 text-primary hover:bg-primary hover:text-black"
+                      {filteredPlots.length > 0 ? (
+                        filteredPlots.map((plot: any, idx: number) => {
+                          const isExactMatch = searchQuery && plot.number.toString().toLowerCase() === searchQuery.trim().toLowerCase();
+                          return (
+                            <div 
+                              key={idx} 
+                              data-plot={plot.number}
+                              onMouseEnter={() => setHoveredPlot(plot.number)}
+                              onMouseLeave={() => setHoveredPlot(null)}
+                              className={`
+                                bg-white dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-2xl p-4 flex items-center justify-between group transition-all shadow-sm cursor-pointer
+                                ${hoveredPlot === plot.number || isExactMatch
+                                  ? 'ring-2 ring-primary bg-black/5 dark:bg-white/10 scale-[1.02]' 
+                                  : 'hover:bg-black/5 dark:hover:bg-white/10'}
+                              `}
                             >
-                              Enquire
-                            </button>
-                          </div>
-                        ))
+                              <div className="flex items-center gap-4">
+                                <div className="w-1.5 h-8 rounded-full transition-all" style={{
+                                  height: (hoveredPlot === plot.number || isExactMatch) ? '1.5rem' : '1rem',
+                                  backgroundColor: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                                  plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                                  (property.availableColor || '#ffffff')
+                                }}></div>
+                                <div className="flex flex-col">
+                                  <span className="text-sm font-black text-black dark:text-white">Plot {plot.number}</span>
+                                  <span className="text-[8px] font-bold uppercase tracking-[0.2em] opacity-40" style={{
+                                    color: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                           plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                           'inherit'
+                                  }}>
+                                    {plot.status}
+                                  </span>
+                                </div>
+                              </div>
+                              
+                              <button 
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`);
+                                }}
+                                className="text-[8px] font-black uppercase tracking-widest px-4 py-2 rounded-xl transition-all border border-primary/20 bg-primary/5 text-primary hover:bg-primary hover:text-black"
+                              >
+                                Enquire
+                              </button>
+                            </div>
+                          );
+                        })
                       ) : (
                         <div className="flex flex-col items-center justify-center h-full py-10 opacity-30 text-center">
                            <LayoutGrid size={40} className="mb-4" />
@@ -822,34 +863,40 @@ const MediaPage = () => {
                     viewBox="0 0 100 100" 
                     preserveAspectRatio="none"
                   >
-                    {property.plots?.map((plot: any, idx: number) => (
-                      <motion.rect
-                        key={idx}
-                        x={plot.x}
-                        y={plot.y}
-                        width={plot.width || 5}
-                        height={plot.height || 3}
-                        className="pointer-events-auto cursor-pointer"
-                        initial={{ opacity: 0.3 }}
-                        animate={{ 
-                          opacity: hoveredPlot === plot.number ? 0.8 : 0.3,
-                          scale: hoveredPlot === plot.number ? 1.05 : 1
-                        }}
-                        style={{
-                          fill: plot.status === 'sold' ? (property.soldColor || '#fac915') :
-                                plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
-                                (property.availableColor || '#ffffff'),
-                          stroke: hoveredPlot === plot.number ? '#fff' : 'transparent',
-                          strokeWidth: 0.5
-                        }}
-                        onMouseEnter={() => setHoveredPlot(plot.number)}
-                        onMouseLeave={() => setHoveredPlot(null)}
-                        onClick={() => {
-                          setIsMapExpanded(false);
-                          openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`);
-                        }}
-                      />
-                    ))}
+                    {property.plots?.map((plot: any, idx: number) => {
+                      const isMatch = !searchQuery || plot.number.toString().toLowerCase().includes(searchQuery.trim().toLowerCase());
+                      const isHovered = hoveredPlot === plot.number;
+                      const isExactMatch = searchQuery && plot.number.toString().toLowerCase() === searchQuery.trim().toLowerCase();
+                      
+                      return (
+                        <motion.rect
+                          key={idx}
+                          x={plot.x}
+                          y={plot.y}
+                          width={plot.width || 5}
+                          height={plot.height || 3}
+                          className="pointer-events-auto cursor-pointer"
+                          initial={{ opacity: 0.3 }}
+                          animate={{ 
+                            opacity: isHovered ? 0.8 : (isExactMatch ? 0.7 : (searchQuery ? (isMatch ? 0.5 : 0.1) : 0.3)),
+                            scale: isHovered ? 1.05 : 1
+                          }}
+                          style={{
+                            fill: plot.status === 'sold' ? (property.soldColor || '#fac915') :
+                                  plot.status === 'booked' ? (property.bookedColor || '#22c55e') :
+                                  (property.availableColor || '#ffffff'),
+                            stroke: (isHovered || isExactMatch) ? '#fff' : 'transparent',
+                            strokeWidth: (isHovered || isExactMatch) ? 0.5 : 0
+                          }}
+                          onMouseEnter={() => setHoveredPlot(plot.number)}
+                          onMouseLeave={() => setHoveredPlot(null)}
+                          onClick={() => {
+                            setIsMapExpanded(false);
+                            openContactDialog('whatsapp', `I'm interested in Plot ${plot.number} of ${property.title}`);
+                          }}
+                        />
+                      );
+                    })}
                   </svg>
                 </div>
              </div>
