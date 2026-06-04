@@ -3,14 +3,17 @@ import Link from 'next/link';
 import { Home, Phone, Mail, MapPin } from 'lucide-react';
 import dbConnect from '@/lib/db';
 import SiteContent from '@/lib/models/SiteContent';
+import Property from '@/lib/models/Property';
 import ShareAction from '@/components/main/ShareAction';
 
 const Footer = async () => {
   let content: any = {};
+  let propertyTypes: string[] = [];
   try {
     await dbConnect();
     const result = await SiteContent.findOne().lean();
     if (result) content = result;
+    propertyTypes = await Property.distinct('type');
   } catch (error) {
     console.error("Failed to load footer content:", error);
   }
@@ -83,19 +86,24 @@ const Footer = async () => {
             </ul>
           </div>
 
-          {/* Get In Touch Sections */}
+          {/* Portfolio Sections */}
           <div className="text-center md:text-left">
-            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-4 md:mb-8">Get In Touch</h3>
+            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-4 md:mb-8">Portfolio</h3>
             <ul className="space-y-5">
-              {(content.footerQuickLinks || [
-                { label: 'Luxury Interior', href: '/services/interior' },
-                { label: 'Exclusive Consultation', href: '/services/consultation' },
-                { label: 'Privacy Policy', href: '/privacy' },
-                { label: 'Terms of Service', href: '/terms' },
-              ]).map((link: any) => (
-                <li key={link.label}>
-                  <Link href={link.href} className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">
-                    {link.label}
+              <li>
+                <Link href="/terms" className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">
+                  Terms and Conditions
+                </Link>
+              </li>
+              <li>
+                <Link href="/properties" className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">
+                  Properties
+                </Link>
+              </li>
+              {propertyTypes.filter(Boolean).map((type: string) => (
+                <li key={type}>
+                  <Link href={`/properties?type=${encodeURIComponent(type)}`} className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">
+                    {type}
                   </Link>
                 </li>
               ))}
