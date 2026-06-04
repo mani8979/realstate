@@ -16,7 +16,11 @@ const AboutClient = ({ content }: { content: any }) => {
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-7xl font-black text-black dark:text-white mb-6 uppercase tracking-tighter break-words"
           >
-            About <span className="text-primary">{content.logoTitle || 'Star Land'}</span>
+            {content.aboutTitle ? (
+              <span dangerouslySetInnerHTML={{ __html: content.aboutTitle.replace('STAR', '<span class="text-primary">STAR</span>') }} />
+            ) : (
+              <>About {content.logoTitle} <span className="text-primary">{content.logoSubtitle}</span></>
+            )}
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
