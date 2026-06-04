@@ -210,6 +210,8 @@ export interface ISiteContent extends Document {
   aboutVisionTitle: string;
   aboutVisionDesc: string;
   aboutMissionVisionImage: string;
+  aboutTeamImage: string;
+  aboutYearImage: string;
 }
 
 const SiteContentSchema = new Schema<ISiteContent>(
@@ -444,6 +446,8 @@ const SiteContentSchema = new Schema<ISiteContent>(
     aboutVisionTitle: { type: String, default: 'Our Vision' },
     aboutVisionDesc: { type: String, default: 'Architectural Innovation & Smart Community Living' },
     aboutMissionVisionImage: { type: String, default: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000' },
+    aboutTeamImage: { type: String, default: '/uploads/for.webp' },
+    aboutYearImage: { type: String, default: '' },
     
     // Get In Touch Section (Large)
     getInTouchTitle: { type: String, default: 'GET IN TOUCH' },

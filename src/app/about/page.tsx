@@ -6,6 +6,7 @@ import AboutGallery from '@/components/main/AboutGallery';
 import Founder from '@/components/main/Founder';
 import CTA from '@/components/main/CTA';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 0; // Disable static caching for the about page
 
 async function getContent() {
