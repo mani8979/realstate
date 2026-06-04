@@ -3,17 +3,14 @@ import Link from 'next/link';
 import { Home, Phone, Mail, MapPin } from 'lucide-react';
 import dbConnect from '@/lib/db';
 import SiteContent from '@/lib/models/SiteContent';
-import Property from '@/lib/models/Property';
 import ShareAction from '@/components/main/ShareAction';
 
 const Footer = async () => {
   let content: any = {};
-  let propertyTypes: string[] = [];
   try {
     await dbConnect();
     const result = await SiteContent.findOne().lean();
     if (result) content = result;
-    propertyTypes = await Property.distinct('type');
   } catch (error) {
     console.error("Failed to load footer content:", error);
   }
@@ -24,7 +21,7 @@ const Footer = async () => {
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-16 mb-10 md:mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 md:gap-8 mb-10 md:mb-20">
           {/* Brand & Mission */}
           <div className="space-y-8 text-center md:text-left flex flex-col items-center md:items-start">
             <Link href={content.logoLink || "/"} className="flex items-center gap-3 group">
@@ -90,23 +87,30 @@ const Footer = async () => {
           <div className="text-center md:text-left">
             <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-4 md:mb-8">Portfolio</h3>
             <ul className="space-y-5">
-              <li>
-                <Link href="/terms" className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">
-                  Terms and Conditions
-                </Link>
-              </li>
-              <li>
-                <Link href="/properties" className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">
-                  Properties
-                </Link>
-              </li>
-              {propertyTypes.filter(Boolean).map((type: string) => (
-                <li key={type}>
-                  <Link href={`/properties?type=${encodeURIComponent(type)}`} className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">
-                    {type}
+              {(content.propertyCategories || []).map((cat: any) => (
+                <li key={cat.name}>
+                  <Link href={cat.href} className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">
+                    {cat.name}
                   </Link>
                 </li>
               ))}
+            </ul>
+          </div>
+
+          {/* Terms Sections */}
+          <div className="text-center md:text-left">
+            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-4 md:mb-8">Terms & Conditions</h3>
+            <ul className="space-y-5">
+              <li>
+                <Link href="/terms" className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy" className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">
+                  Privacy Policy
+                </Link>
+              </li>
             </ul>
           </div>
 
