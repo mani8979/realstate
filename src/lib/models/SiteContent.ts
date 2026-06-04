@@ -301,7 +301,7 @@ const SiteContentSchema = new Schema<ISiteContent>(
     globalFooterDesc: { type: String, default: "Find your dream property with our expert real estate services. We specialize in buying, selling, and renting premium properties." },
     globalFooterCopyright: { type: String, default: "© 2026 STAR LAND DEVELOPERS. All rights reserved." },
     footerCol1Title: { type: String, default: "Navigation" },
-    footerCol2Title: { type: String, default: "Portfolios" },
+    footerCol2Title: { type: String, default: "Portfolio" },
     footerCol3Title: { type: String, default: "Get In Touch" },
     footerCol2Links: { type: String, default: "Farm Lands, VMRDA Lands, Panchayati Lands" },
     headerLogoImage: { type: String, default: "/branding/header-logo.png" },

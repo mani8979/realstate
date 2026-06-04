@@ -16,7 +16,7 @@ export default function FooterAdmin() {
     navContact: 'Contact',
     navJoin: 'Join',
     footerCol1Title: 'Navigation',
-    footerCol2Title: 'Portfolios',
+    footerCol2Title: 'Portfolio',
     footerCol2Links: 'Premium Farm lands, Commercial Lands, Residential Lands, VMRDA Lands',
     footerCol3Title: 'Get In Touch',
     contactAddress: 'Flat No.202,Backside Complex,Opposite DMART,Srinagar,Gajuwaka,Visakhapatnam-530026',
@@ -209,12 +209,12 @@ export default function FooterAdmin() {
           <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
             <h2 className="text-lg font-black uppercase tracking-widest text-primary mb-6 flex items-center gap-2">
                <Globe size={18} />
-               Portfolios Column
+               Portfolio Column
             </h2>
             <div className="space-y-4">
                <div>
-                  <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Column Title</label>
-                  <input name="footerCol2Title" value={content.footerCol2Title || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold" />
+                  <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Portfolio Heading (shown in footer)</label>
+                  <input name="footerCol2Title" value={content.footerCol2Title || ''} onChange={handleChange} placeholder="e.g. Portfolio" className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold" />
                </div>
                <div>
                   <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Links (Comma-separated)</label>

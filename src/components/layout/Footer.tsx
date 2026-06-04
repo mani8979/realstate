@@ -85,7 +85,7 @@ const Footer = async () => {
 
           {/* Portfolio Sections */}
           <div className="text-center md:text-left">
-            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-4 md:mb-8">Portfolio</h3>
+            <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-4 md:mb-8">{content.footerCol2Title || 'Portfolio'}</h3>
             <ul className="space-y-5">
               {(content.propertyCategories || []).map((cat: any) => (
                 <li key={cat.name} className="flex flex-col gap-3">
