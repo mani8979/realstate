@@ -125,12 +125,8 @@ const BrandValues = ({ content: propContent }: { content?: any }) => {
                     </div>
                     
                     <div>
-                      <h4 className="text-[11px] sm:text-sm md:text-3xl font-black text-white group-hover:text-slate-900 mb-3 md:mb-6 uppercase tracking-normal md:tracking-tighter leading-tight md:leading-tight transition-colors w-full">
-                        {item.title ? item.title.split(' ').map((word: string, idx: number) => (
-                          <span key={idx} className="block md:inline md:mr-1.5 last:mr-0">
-                            {word}
-                          </span>
-                        )) : ''}
+                      <h4 className="text-sm md:text-xl lg:text-2xl font-black text-white group-hover:text-slate-900 mb-3 md:mb-6 uppercase tracking-normal md:tracking-tighter leading-tight md:leading-tight transition-colors w-full break-words">
+                        {item.title}
                       </h4>
                       
                       <p className="text-[10px] md:text-base text-white/60 group-hover:text-slate-600 leading-snug md:leading-relaxed font-medium transition-colors break-words">
