@@ -17,8 +17,6 @@ export default function FooterAdmin() {
     navJoin: 'Join',
     footerCol1Title: 'Navigation',
     footerCol2Title: 'Portfolio',
-    footerCol2Links: 'Premium Farm lands, Commercial Lands, Residential Lands, VMRDA Lands',
-    footerCol3Title: 'Get In Touch',
     contactAddress: 'Flat No.202,Backside Complex,Opposite DMART,Srinagar,Gajuwaka,Visakhapatnam-530026',
     contactPhone: '+91 9666080645',
     contactEmail: 'starlanddevelopers2@gmail.com',
@@ -207,7 +205,7 @@ export default function FooterAdmin() {
           </div>
 
           <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
-            <h2 className="text-lg font-black uppercase tracking-widest text-primary mb-6 flex items-center gap-2">
+             <h2 className="text-lg font-black uppercase tracking-widest text-primary mb-6 flex items-center gap-2">
                <Globe size={18} />
                Portfolio Column
             </h2>
@@ -216,29 +214,27 @@ export default function FooterAdmin() {
                   <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Portfolio Heading (shown in footer)</label>
                   <input name="footerCol2Title" value={content.footerCol2Title || ''} onChange={handleChange} placeholder="e.g. Portfolio" className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold" />
                </div>
-               <div>
-                  <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Links (Comma-separated)</label>
-                  <textarea name="footerCol2Links" rows={3} value={content.footerCol2Links || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-medium" />
+               <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-dashed border-gray-200 dark:border-gray-700">
+                  <p className="text-[10px] font-bold text-gray-600 dark:text-gray-400 uppercase tracking-widest text-center">
+                    Portfolio categories are automatically generated from your active Properties Categories.
+                  </p>
                </div>
             </div>
           </div>
         </div>
 
-        {/* Column 3: Get In Touch */}
+        {/* Column 3: Contact Info */}
         <div className="lg:col-span-2 bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800">
            <h2 className="text-lg font-black uppercase tracking-widest text-primary mb-6 flex items-center gap-2">
               <Phone size={18} />
-              Get In Touch Column
+              Contact Info Column
            </h2>
            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="md:col-span-2">
-                  <label className="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Column Title</label>
-                  <input name="footerCol3Title" value={content.footerCol3Title || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-bold mb-6" />
-                  
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                        <label className="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2 flex items-center gap-2"><MapPin size={10} /> Office Address (Global)</label>
-                       <textarea name="officeAddress" rows={3} value={content.officeAddress || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-medium" />
+                       <textarea name="contactAddress" rows={3} value={content.contactAddress || ''} onChange={handleChange} className="w-full p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 font-medium" />
                     </div>
                     <div className="space-y-6">
                        <div>
