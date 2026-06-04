@@ -376,7 +376,10 @@ const PropertyDetails = () => {
               }`}>
                 {(property.fruitImage || property.fruitInfo) && (
                   <button 
-                    onClick={() => setShowFruitPopup(true)}
+                    onClick={() => {
+                      setShowFruitPopup(true);
+                      window.dispatchEvent(new Event('open-dragon-popup'));
+                    }}
                     className="inline-flex items-center gap-3 bg-[#10b981] hover:bg-white text-black px-6 md:px-10 py-4 rounded-full font-black uppercase tracking-widest text-xs transition-all duration-300 shadow-[0_0_30px_rgba(16,185,129,0.3)] hover:scale-105 group"
                   >
                     <Leaf size={18} className="group-hover:scale-110 transition-transform" />

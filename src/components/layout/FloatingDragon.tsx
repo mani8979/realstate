@@ -36,6 +36,12 @@ const FloatingDragon = () => {
   const swayY = useMotionValue(0);
 
   useEffect(() => {
+    const handleOpen = () => setShowPopup(true);
+    window.addEventListener('open-dragon-popup', handleOpen);
+    return () => window.removeEventListener('open-dragon-popup', handleOpen);
+  }, []);
+
+  useEffect(() => {
     let frame: number;
     const start = performance.now();
     

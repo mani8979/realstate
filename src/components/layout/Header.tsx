@@ -110,6 +110,12 @@ const Header = () => {
                     <Link
                       key={link.name}
                       href={link.href}
+                      onClick={(e) => {
+                        if (link.href === '/properties') {
+                          e.preventDefault();
+                          window.location.href = '/properties';
+                        }
+                      }}
                       className={cn(
                         'px-6 py-2 rounded-full text-sm font-bold uppercase tracking-widest transition-all duration-300 relative group',
                         isActive 
@@ -189,7 +195,13 @@ const Header = () => {
                 <Link
                   key={link.name}
                   href={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={(e) => {
+                    if (link.href === '/properties') {
+                      e.preventDefault();
+                      window.location.href = '/properties';
+                    }
+                    setIsMobileMenuOpen(false);
+                  }}
                   className={cn(
                     "p-4 md:p-3 rounded-2xl text-xl md:text-lg font-black uppercase tracking-tight border transition-all",
                     pathname === link.href 

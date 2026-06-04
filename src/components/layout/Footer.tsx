@@ -77,7 +77,21 @@ const Footer = async () => {
                 { name: content.navJoin || 'Join', href: '/join' },
               ].map((link) => (
                 <li key={link.name}>
-                  <Link href={link.href} className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">{link.name}</Link>
+                  {link.href === '/properties' ? (
+                    <a 
+                      href={link.href}
+                      className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest"
+                    >
+                      {link.name}
+                    </a>
+                  ) : (
+                    <Link 
+                      href={link.href} 
+                      className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest"
+                    >
+                      {link.name}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
