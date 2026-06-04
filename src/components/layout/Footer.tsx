@@ -88,10 +88,26 @@ const Footer = async () => {
             <h3 className="text-black dark:text-white font-black uppercase tracking-widest text-xs mb-4 md:mb-8">Portfolio</h3>
             <ul className="space-y-5">
               {(content.propertyCategories || []).map((cat: any) => (
-                <li key={cat.name}>
+                <li key={cat.name} className="flex flex-col gap-3">
                   <Link href={cat.href} className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-widest">
                     {cat.name}
                   </Link>
+                  {cat.subCategories && cat.subCategories.length > 0 && (
+                    <ul className="pl-3 space-y-3 border-l-2 border-primary/20 ml-1">
+                      {cat.subCategories.map((sub: string) => {
+                        const href = cat.href.includes('?') 
+                          ? `${cat.href}&subType=${encodeURIComponent(sub)}`
+                          : `${cat.href}?subType=${encodeURIComponent(sub)}`;
+                        return (
+                          <li key={sub}>
+                            <Link href={href} className="text-gray-500 dark:text-gray-500 hover:text-primary transition-colors text-xs font-semibold uppercase tracking-widest">
+                              {sub}
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
                 </li>
               ))}
             </ul>
