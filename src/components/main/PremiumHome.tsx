@@ -321,12 +321,13 @@ const PremiumHome = ({ properties, content }: PremiumHomeProps) => {
            </div>
            
            <div className="mt-32 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-12">
-              <p className="text-[10px] text-gray-700 font-black uppercase tracking-[0.5em] text-center md:text-left">{content?.footerCopyright || '© 2026 STAR LANDS DEVELOPERS GROUP'}</p>
+              <p className="text-[10px] text-gray-700 font-black uppercase tracking-[0.5em] text-center md:text-left">{content?.footerCopyright || '© 2026 STAR LAND DEVELOPERS'}</p>
               <div className="flex flex-wrap justify-center gap-6 md:gap-12">
-                 <a href="/interior" target="_blank" className="text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-black dark:text-white transition-colors">{content?.footerService1 || 'Luxury Interior'}</a>
-                 <a href="/consultation" target="_blank" className="text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-black dark:text-white transition-colors">{content?.footerService2 || 'Exclusive Consultation'}</a>
-                 <a href="/privacy" target="_blank" className="text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-black dark:text-white transition-colors">Privacy Policy</a>
-                 <a href="/terms" target="_blank" className="text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-black dark:text-white transition-colors">Terms of Service</a>
+                 {(content?.propertyCategories || []).map((cat: any) => (
+                   <a key={cat.name} href={cat.href} className="text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-black dark:text-white transition-colors">{cat.name}</a>
+                 ))}
+                 <a href="/privacy" className="text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-black dark:text-white transition-colors">Privacy Policy</a>
+                 <a href="/terms" className="text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-black dark:text-white transition-colors">Terms of Service</a>
               </div>
            </div>
         </div>
