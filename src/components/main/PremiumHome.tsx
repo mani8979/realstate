@@ -230,7 +230,7 @@ const PremiumHome = ({ properties, content }: PremiumHomeProps) => {
       if (!cards.length) return;
 
       const firstCardHeight = cards[0].offsetHeight;
-      const stackPositionPx = (containerHeight - firstCardHeight) / 2;
+      const stackPositionPx = Math.max(140, (containerHeight - firstCardHeight) / 2);
       const scaleEndPositionPx = stackPositionPx - (BASE_CONFIG.stackPosition - BASE_CONFIG.scaleEndPosition) * containerHeight;
 
       cards.forEach((card, i) => {
