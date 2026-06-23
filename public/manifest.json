@@ -1,6 +1,6 @@
 {
   "name": "Star Land Developers",
-  "short_name": "Star Lands",
+  "short_name": "Star Land",
   "description": "Premium Real Estate & Lands",
   "start_url": "/",
   "display": "standalone",
@@ -8,8 +8,13 @@
   "theme_color": "#10b981",
   "icons": [
     {
-      "src": "/icon.png",
-      "sizes": "144x144",
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ]
