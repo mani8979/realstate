@@ -32,12 +32,19 @@ export async function generateMetadata(): Promise<Metadata> {
   const description = content?.heroSubtitle || "Star Land Developers offers the best premium lands and luxury properties for sale. Discover your dream asset with us.";
 
   return {
-    title: fullTitle,
+    metadataBase: new URL('https://www.starlanddevelopers.online'),
+    title: {
+      default: fullTitle,
+      template: `%s | ${brandName}`
+    },
     description: description,
+    alternates: {
+      canonical: '/',
+    },
     openGraph: {
       title: fullTitle,
       description: description,
-      url: "https://starlanddevelopers.online",
+      url: "https://www.starlanddevelopers.online",
       siteName: brandName,
       images: [
         {
@@ -57,7 +64,9 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     icons: {
       icon: content?.faviconImage || "/favicon.ico",
+      apple: content?.faviconImage || "/favicon.ico",
     },
+    manifest: '/manifest.json',
     verification: {
       google: "Albkr2wppfA5kwkizBcCKw7sxYyJTphBo776pDl6Leg",
     },

@@ -3,6 +3,7 @@ import dbConnect from '@/lib/db';
 import Property from '@/lib/models/Property';
 import SiteContent from '@/lib/models/SiteContent';
 import React from 'react';
+import Script from 'next/script';
 
 type Props = {
   params: Promise<{ id: string }>
@@ -62,6 +63,9 @@ export async function generateMetadata(
         description: description,
         images: [image],
       },
+      alternates: {
+        canonical: `/properties/${id}`,
+      },
     };
   } catch (error) {
     return {
@@ -70,10 +74,100 @@ export async function generateMetadata(
   }
 }
 
-export default function PropertyLayout({
+export default async function PropertyLayout({
   children,
+  params,
 }: {
   children: React.ReactNode
+  params: Promise<{ id: string }>
 }) {
-  return <>{children}</>;
+  const { id } = await params;
+  await dbConnect();
+  const property = await Property.findById(id).lean();
+
+  if (!property) return <>{children}</>;
+
+  const baseUrl = 'https://www.starlanddevelopers.online';
+  const propertyUrl = `${baseUrl}/properties/${id}`;
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": baseUrl
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Properties",
+        "item": `${baseUrl}/properties`
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": property.title,
+        "item": propertyUrl
+      }
+    ]
+  };
+
+  const listingSchema = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateListing",
+    "name": property.title,
+    "description": property.description || "Premium Real Estate Property",
+    "url": propertyUrl,
+    "image": property.images?.[0] || `${baseUrl}/cover.jpg`,
+    "datePosted": property.createdAt || new Date().toISOString(),
+    "offers": {
+      "@type": "Offer",
+      "price": property.price || 0,
+      "priceCurrency": "INR",
+      "availability": "https://schema.org/InStock"
+    }
+  };
+
+  const faqs = property.details
+    ?.filter((d: any) => d.heading?.toLowerCase().includes("faq") || d.heading?.toLowerCase().includes("question"))
+    .map((d: any) => ({
+      "@type": "Question",
+      "name": d.sideHeading || "Question",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": d.content
+      }
+    })) || [];
+
+  const faqSchema = faqs.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs
+  } : null;
+
+  return (
+    <>
+      <Script
+        id={`breadcrumb-schema-${id}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <Script
+        id={`listing-schema-${id}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(listingSchema) }}
+      />
+      {faqSchema && (
+        <Script
+          id={`faq-schema-${id}`}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
+      {children}
+    </>
+  );
 }
