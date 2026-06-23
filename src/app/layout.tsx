@@ -74,7 +74,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 import { ContactDialog } from "@/components/layout/ContactDialog";
-import FloatingDragon from "@/components/layout/FloatingDragon";
+import dynamic from 'next/dynamic';
+
+const FloatingDragon = dynamic(() => import("@/components/layout/FloatingDragon"), { ssr: false });
 
 export default function RootLayout({
   children,

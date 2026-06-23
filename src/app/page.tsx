@@ -1,14 +1,16 @@
 import dbConnect from '@/lib/db';
 import Property from '@/lib/models/Property';
 import SiteContent from '@/lib/models/SiteContent';
-import SmoothSlider from '@/components/main/SmoothSlider';
-import PremiumHome from '@/components/main/PremiumHome';
 import Hero from '@/components/main/Hero';
-import FeaturedProperties from '@/components/main/FeaturedProperties';
-import CTA from '@/components/main/CTA';
-import BrandValues from '@/components/main/BrandValues';
-import LocationSection from '@/components/main/LocationSection';
 import Founder from '@/components/main/Founder';
+import dynamic from 'next/dynamic';
+
+const SmoothSlider = dynamic(() => import('@/components/main/SmoothSlider'));
+const PremiumHome = dynamic(() => import('@/components/main/PremiumHome'));
+const FeaturedProperties = dynamic(() => import('@/components/main/FeaturedProperties'));
+const CTA = dynamic(() => import('@/components/main/CTA'));
+const BrandValues = dynamic(() => import('@/components/main/BrandValues'));
+const LocationSection = dynamic(() => import('@/components/main/LocationSection'));
 
 export const revalidate = 60; // Enable ISR caching for the home page (revalidate every minute)
 
