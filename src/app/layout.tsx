@@ -35,6 +35,9 @@ export async function generateMetadata(): Promise<Metadata> {
     icons: {
       icon: content?.faviconImage || "/favicon.ico",
     },
+    verification: {
+      google: "Albkr2wppfA5kwkizBcCKw7sxYyJTphBo776pDl6Leg",
+    },
   };
 }
 
