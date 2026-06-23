@@ -34,11 +34,20 @@ export async function generateMetadata(
       brandName = dbLogoTitle;
     }
 
+    // Resolve favicon to a square representation
+    const dbFaviconImage = (content?.faviconImage || "").trim();
+    const dbHeaderLogo = (content?.headerLogoImage || "").trim();
+    const dbFooterLogo = (content?.footerLogoImage || "").trim();
+
+    const faviconUrl = (dbFaviconImage && dbFaviconImage !== dbHeaderLogo && dbFaviconImage !== dbFooterLogo)
+      ? dbFaviconImage
+      : "/icon.png";
+
     if (!property) {
       return {
         title: `Property Not Found | ${brandName}`,
         icons: {
-          icon: content?.faviconImage || "/favicon.ico",
+          icon: faviconUrl,
         },
       };
     }
@@ -54,7 +63,7 @@ export async function generateMetadata(
       title: title,
       description: description,
       icons: {
-        icon: content?.faviconImage || "/favicon.ico",
+        icon: faviconUrl,
       },
       openGraph: {
         title: title,

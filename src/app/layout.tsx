@@ -44,6 +44,15 @@ export async function generateMetadata(): Promise<Metadata> {
     brandName = dbLogoTitle;
   }
 
+  // Resolve favicon to a square representation
+  const dbFaviconImage = (content?.faviconImage || "").trim();
+  const dbHeaderLogo = (content?.headerLogoImage || "").trim();
+  const dbFooterLogo = (content?.footerLogoImage || "").trim();
+
+  const faviconUrl = (dbFaviconImage && dbFaviconImage !== dbHeaderLogo && dbFaviconImage !== dbFooterLogo)
+    ? dbFaviconImage
+    : "/icon.png";
+
   const fullTitle = `${brandName} | ${brandSubtitle}`;
   const description = content?.heroSubtitle || "Star Land Developers offers the best premium lands and luxury properties for sale. Discover your dream asset with us.";
 
@@ -79,8 +88,8 @@ export async function generateMetadata(): Promise<Metadata> {
       images: [content?.heroImage || "/cover.jpg"],
     },
     icons: {
-      icon: content?.faviconImage || "/favicon.ico",
-      apple: content?.faviconImage || "/favicon.ico",
+      icon: faviconUrl,
+      apple: faviconUrl,
     },
     manifest: '/manifest.json',
     verification: {
