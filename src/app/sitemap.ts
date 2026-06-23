@@ -3,7 +3,7 @@ import dbConnect from '@/lib/db';
 import Property from '@/lib/models/Property';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://realstate-1-t4cu.onrender-com';
+  const baseUrl = 'https://starlanddevelopers.online';
 
   // Base routes
   const routes = [

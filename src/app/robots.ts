@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/admin', '/api'],
       },
     ],
-    sitemap: 'https://realstate-1-t4cu.onrender-com/sitemap.xml',
+    sitemap: 'https://starlanddevelopers.online/sitemap.xml',
   };
 }

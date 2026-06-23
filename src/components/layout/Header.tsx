@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Phone, MessageSquare, Menu, X, Home, Sparkles } from 'lucide-react';
+import { Phone, MessageSquare, Menu, X, Home, Sparkles, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -136,6 +136,17 @@ const Header = () => {
             {/* Action Buttons */}
             <div className="flex items-center gap-2 md:gap-4">
               <div className="hidden lg:flex items-center gap-3">
+                <button
+                  className={cn(
+                    "p-2 rounded-xl transition-all duration-500 flex items-center justify-center",
+                    shouldBeSolid 
+                      ? "bg-gray-100 dark:bg-white/5 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-white/10" 
+                      : "bg-white/10 text-white hover:bg-white/20 backdrop-blur-md border border-white/20"
+                  )}
+                  aria-label="Search"
+                >
+                  <Search size={20} />
+                </button>
                 <ThemeToggle />
                 <button
                   onClick={() => openContactDialog('call')}
@@ -160,6 +171,17 @@ const Header = () => {
 
               {/* Mobile Actions (Theme + Menu) */}
               <div className="flex items-center gap-2 lg:hidden">
+                <button
+                  className={cn(
+                    "p-2 rounded-xl transition-all duration-500 flex items-center justify-center",
+                    shouldBeSolid 
+                      ? "bg-gray-100 dark:bg-white/5 text-gray-900 dark:text-white" 
+                      : "bg-white/10 text-white backdrop-blur-md"
+                  )}
+                  aria-label="Search"
+                >
+                  <Search size={20} />
+                </button>
                 <div className={cn(
                   "rounded-xl transition-all duration-500 overflow-hidden",
                   shouldBeSolid ? "bg-gray-100 dark:bg-white/5" : "bg-white/10 backdrop-blur-md"

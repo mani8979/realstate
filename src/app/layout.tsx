@@ -29,9 +29,32 @@ export async function generateMetadata(): Promise<Metadata> {
   const brandSubtitle = content?.logoSubtitle ? ` | ${content.logoSubtitle}` : " | Premium Real Estate & Lands";
   const fullTitle = `${brandName}${brandSubtitle}`;
 
+  const description = content?.heroSubtitle || "Star Land Developers offers the best premium lands and luxury properties for sale. Discover your dream asset with us.";
+
   return {
     title: fullTitle,
-    description: content?.heroSubtitle || "Star Land Developers offers the best premium lands and luxury properties for sale. Discover your dream asset with us.",
+    description: description,
+    openGraph: {
+      title: fullTitle,
+      description: description,
+      url: "https://starlanddevelopers.online",
+      siteName: brandName,
+      images: [
+        {
+          url: content?.heroImage || "/cover.jpg",
+          width: 1200,
+          height: 630,
+        }
+      ],
+      locale: "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: fullTitle,
+      description: description,
+      images: [content?.heroImage || "/cover.jpg"],
+    },
     icons: {
       icon: content?.faviconImage || "/favicon.ico",
     },
@@ -52,6 +75,19 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${outfit.variable} antialiased`}>
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "RealEstateAgent",
+              "name": "Star Land Developers",
+              "url": "https://starlanddevelopers.online",
+              "logo": "https://starlanddevelopers.online/favicon.ico",
+              "description": "Star Land Developers offers the best premium lands and luxury properties for sale."
+            })
+          }}
+        />
         <Script 
           src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js" 
           strategy="lazyOnload"
