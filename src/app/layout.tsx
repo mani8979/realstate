@@ -25,10 +25,26 @@ export async function generateMetadata(): Promise<Metadata> {
   await dbConnect();
   const content = await SiteContent.findOne().lean();
   
-  const brandName = content?.logoTitle || "Star Land Developers";
-  const brandSubtitle = content?.logoSubtitle ? ` | ${content.logoSubtitle}` : " | Premium Real Estate & Lands";
-  const fullTitle = `${brandName}${brandSubtitle}`;
+  // Clean up and format the brand name to avoid Google rewriting the title.
+  let brandName = "Star Land Developers";
+  let brandSubtitle = "Premium Real Estate & Lands";
+  
+  const dbLogoTitle = (content?.logoTitle || "").trim();
+  const dbLogoSubtitle = (content?.logoSubtitle || "").trim();
 
+  if (dbLogoTitle && dbLogoSubtitle) {
+    if (dbLogoTitle.toUpperCase() === "STAR" && dbLogoSubtitle.toUpperCase() === "LAND DEVELOPERS") {
+      brandName = "Star Land Developers";
+      brandSubtitle = "Premium Real Estate & Lands";
+    } else {
+      brandName = `${dbLogoTitle} ${dbLogoSubtitle}`;
+      brandSubtitle = "Premium Real Estate & Lands";
+    }
+  } else if (dbLogoTitle) {
+    brandName = dbLogoTitle;
+  }
+
+  const fullTitle = `${brandName} | ${brandSubtitle}`;
   const description = content?.heroSubtitle || "Star Land Developers offers the best premium lands and luxury properties for sale. Discover your dream asset with us.";
 
   return {

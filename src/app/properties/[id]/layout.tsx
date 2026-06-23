@@ -20,8 +20,21 @@ export async function generateMetadata(
     const property = await Property.findById(id);
     const content = await SiteContent.findOne().lean();
 
+    let brandName = "Star Land Developers";
+    const dbLogoTitle = (content?.logoTitle || "").trim();
+    const dbLogoSubtitle = (content?.logoSubtitle || "").trim();
+
+    if (dbLogoTitle && dbLogoSubtitle) {
+      if (dbLogoTitle.toUpperCase() === "STAR" && dbLogoSubtitle.toUpperCase() === "LAND DEVELOPERS") {
+        brandName = "Star Land Developers";
+      } else {
+        brandName = `${dbLogoTitle} ${dbLogoSubtitle}`;
+      }
+    } else if (dbLogoTitle) {
+      brandName = dbLogoTitle;
+    }
+
     if (!property) {
-      const brandName = content?.logoTitle || "Star Land Developers";
       return {
         title: `Property Not Found | ${brandName}`,
         icons: {
@@ -30,7 +43,6 @@ export async function generateMetadata(
       };
     }
 
-    const brandName = content?.logoTitle || "Star Land Developers";
     const title = `${property.title} | ${brandName}`;
     const description = property.description?.substring(0, 160) || `Check out this amazing property in ${property.location}.`;
     
