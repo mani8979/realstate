@@ -6,13 +6,17 @@ import { usePathname } from 'next/navigation';
 import { Phone, MessageSquare, Menu, X, Home, Sparkles, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import dynamic from 'next/dynamic';
 
 import ThemeToggle from './ThemeToggle';
 import { openContactDialog } from './ContactDialog';
 
+const SearchModal = dynamic(() => import('./SearchModal'), { ssr: false });
+
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const pathname = usePathname();
   const [content, setContent] = useState<any>({
     logoTitle: "STAR LAND",
@@ -32,6 +36,17 @@ const Header = () => {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsSearchOpen(true);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   useEffect(() => {
@@ -137,6 +152,7 @@ const Header = () => {
             <div className="flex items-center gap-2 md:gap-4">
               <div className="hidden lg:flex items-center gap-3">
                 <button
+                  onClick={() => setIsSearchOpen(true)}
                   className={cn(
                     "p-2 rounded-xl transition-all duration-500 flex items-center justify-center",
                     shouldBeSolid 
@@ -172,6 +188,10 @@ const Header = () => {
               {/* Mobile Actions (Theme + Menu) */}
               <div className="flex items-center gap-2 lg:hidden">
                 <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    setIsSearchOpen(true);
+                  }}
                   className={cn(
                     "p-2 rounded-xl transition-all duration-500 flex items-center justify-center",
                     shouldBeSolid 
@@ -259,6 +279,10 @@ const Header = () => {
             </div>
           </motion.div>
         )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isSearchOpen && <SearchModal onClose={() => setIsSearchOpen(false)} />}
       </AnimatePresence>
     </header>
   );
