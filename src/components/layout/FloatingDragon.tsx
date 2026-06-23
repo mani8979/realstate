@@ -17,18 +17,28 @@ const FloatingDragon = () => {
   const [shouldLoad,       setShouldLoad]        = useState(true); // Visible immediately
   const [visible,          setVisible]           = useState(true);
   const [hovered,          setHovered]           = useState(false);
+  const [isMobile,         setIsMobile]          = useState(false);
   const pathname        = usePathname();
   const modelViewerRef  = useRef<any>(null);
   const lastSide        = useRef<'left' | 'right' | null>(null); // tracks which side model is on
   const { scrollYProgress } = useScroll();
 
   // ── Motion values bypass React state ───────────────────────────────────────
-  const mX      = useMotionValue(typeof window !== 'undefined' ? window.innerWidth - 150 : 900);
-  const mY      = useMotionValue(typeof window !== 'undefined' ? window.innerHeight * 0.12 : 120);
+  const mX      = useMotionValue(900);
+  const mY      = useMotionValue(120);
   
   // Springs with EXTREME inertia for 'falling' feel
   const springX = useSpring(mX, { stiffness: 30, damping: 20, mass: 2 });
   const springY = useSpring(mY, { stiffness: 8, damping: 12, mass: 10 }); // Massive lag
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+    mX.set(window.innerWidth - 150);
+    mY.set(window.innerHeight * 0.12);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [mX, mY]);
 
   // ── 3D Tumbling & Multi-Directional Sway ───────────────────────────────────
   const [orbit, setOrbit] = useState("0deg 75deg 10m");
@@ -156,9 +166,8 @@ const FloatingDragon = () => {
   const src = currentProperty?.threeDElement;
   if (!src) return null;
 
-  const mob = typeof window !== 'undefined' && window.innerWidth < 768;
-  const mW = mob ? 140 : 220; // Increased width
-  const mH = mob ? 180 : 280; // Increased height
+  const mW = isMobile ? 140 : 220; // Increased width
+  const mH = isMobile ? 180 : 280; // Increased height
 
   return (
     <>
