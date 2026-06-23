@@ -39,9 +39,14 @@ export async function generateMetadata(
     const dbHeaderLogo = (content?.headerLogoImage || "").trim();
     const dbFooterLogo = (content?.footerLogoImage || "").trim();
 
-    const faviconUrl = (dbFaviconImage && dbFaviconImage !== dbHeaderLogo && dbFaviconImage !== dbFooterLogo)
-      ? dbFaviconImage
-      : "/icon.png";
+    const isRectangularLogo = !dbFaviconImage ||
+                              dbFaviconImage.includes("p5xexc0k8mwdyh0rorrm") || 
+                              dbFaviconImage.includes("tb4vvhnvjdkaneuwzl1v") || 
+                              dbFaviconImage.includes("r1oekta6ap3rplofqb5j") ||
+                              dbFaviconImage === dbHeaderLogo || 
+                              dbFaviconImage === dbFooterLogo;
+
+    const faviconUrl = isRectangularLogo ? "/icon.png" : dbFaviconImage;
 
     if (!property) {
       return {
