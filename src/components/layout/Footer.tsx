@@ -180,7 +180,7 @@ const Footer = async () => {
             </p>
             {/* WhatsApp Icon */}
             <a
-              href={`https://wa.me/${(content.contactPhone || '+919666080645').replace(/[^0-9]/g, '')}`}
+              href={`https://wa.me/${(content.contactPhone || '+919581108448').replace(/[^0-9]/g, '')}`}
               target="_blank"
               rel="noopener noreferrer"
               title="Chat with us on WhatsApp"
