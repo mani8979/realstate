@@ -23,6 +23,13 @@ export async function POST(request: Request) {
       adminPassword = adminPassword.slice(1, -1);
     }
 
+    // DIAGNOSTIC: Log lengths and first/last chars to Vercel Function Logs
+    console.log('[AUTH_DIAG] envUser len:', adminUsername.length, '| first:', adminUsername.charCodeAt(0), '| last:', adminUsername.charCodeAt(adminUsername.length - 1));
+    console.log('[AUTH_DIAG] envPass len:', adminPassword.length, '| first:', adminPassword.charCodeAt(0), '| last:', adminPassword.charCodeAt(adminPassword.length - 1));
+    console.log('[AUTH_DIAG] inputUser len:', username.length, '| first:', username.charCodeAt(0), '| last:', username.charCodeAt(username.length - 1));
+    console.log('[AUTH_DIAG] inputPass len:', password.length, '| first:', password.charCodeAt(0), '| last:', password.charCodeAt(password.length - 1));
+    console.log('[AUTH_DIAG] userMatch:', username === adminUsername, '| passMatch:', password === adminPassword);
+
     if (username === adminUsername && password === adminPassword) {
       return NextResponse.json({ success: true });
     } else {
